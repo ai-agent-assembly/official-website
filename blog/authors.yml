@@ -1,0 +1,6 @@
+team:
+  name: Agent Assembly Team
+  title: Building the runtime boundary for AI agents
+  url: https://github.com/ai-agent-assembly
+  image_url: https://github.com/ai-agent-assembly.png
+  page: true
