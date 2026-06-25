@@ -54,10 +54,10 @@ export function Hero(): ReactNode {
               ✗ denied egress host not in allow-list
             </span>
             {'\n'}
-            <span className={styles.muted}> secret </span>STRIPE_KEY
+            <span className={styles.muted}> secret </span>
+            {'STRIPE_KEY'}
             <span className={styles.muted}>
-              {' '}
-              injected at runtime — never in context
+              {' injected at runtime — never in context'}
             </span>
           </pre>
         </div>
