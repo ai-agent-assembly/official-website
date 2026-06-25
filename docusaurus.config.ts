@@ -9,7 +9,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Agent Assembly',
   tagline: 'Define the boundaries of autonomous agents.',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
 
   future: {v4: true},
 
@@ -48,11 +48,11 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/social-card.png',
     colorMode: {defaultMode: 'dark', respectPrefersColorScheme: true},
     navbar: {
       title: 'Agent Assembly',
-      logo: {alt: 'Agent Assembly', src: 'img/logo.svg'},
+      logo: {alt: 'Agent Assembly', src: 'img/icon.png'},
       items: [
         {to: '/product', label: 'Product', position: 'left'},
         {
