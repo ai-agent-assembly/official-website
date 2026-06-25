@@ -1,0 +1,15 @@
+# Local git hooks. Run `pnpm lefthook install` once after cloning.
+[pre-commit]
+parallel = true
+
+[pre-commit.commands.lint]
+glob = "*.{ts,tsx,js,jsx}"
+run = "pnpm eslint {staged_files}"
+
+[pre-commit.commands.format]
+glob = "*.{ts,tsx,js,jsx,json,css,md,mdx}"
+run = "pnpm prettier --check {staged_files}"
+
+[pre-commit.commands.typecheck]
+glob = "*.{ts,tsx}"
+run = "pnpm typecheck"

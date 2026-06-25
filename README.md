@@ -13,7 +13,11 @@ pnpm install
 pnpm start          # dev server at http://localhost:3000
 pnpm build          # production build to ./build
 pnpm serve          # preview the production build
-pnpm typecheck      # tsc --noEmit
+pnpm lint            # eslint
+ pnpm format         # prettier --write
+ pnpm format:check   # prettier --check
+ pnpm typecheck      # tsc --noEmit
+ pnpm lefthook install  # one-time: enable pre-commit hooks
 ```
 
 ## Structure

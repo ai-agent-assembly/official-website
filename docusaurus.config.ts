@@ -55,10 +55,22 @@ const config: Config = {
       logo: {alt: 'Agent Assembly', src: 'img/logo.svg'},
       items: [
         {to: '/product', label: 'Product', position: 'left'},
-        {href: 'https://docs.agent-assembly.com', label: 'Docs', position: 'left'},
+        {
+          href: 'https://docs.agent-assembly.com',
+          label: 'Docs',
+          position: 'left',
+        },
         {to: '/blog', label: 'Blog', position: 'left'},
-        {href: 'https://github.com/ai-agent-assembly', label: 'GitHub', position: 'right'},
-        {href: 'https://app.agent-assembly.com', label: 'Cloud Console', position: 'right'},
+        {
+          href: 'https://github.com/ai-agent-assembly',
+          label: 'GitHub',
+          position: 'right',
+        },
+        {
+          href: 'https://app.agent-assembly.com',
+          label: 'Cloud Console',
+          position: 'right',
+        },
         {
           to: 'https://docs.agent-assembly.com/getting-started',
           html: '<span class="navbar-cta">Get started</span>',
@@ -73,7 +85,10 @@ const config: Config = {
           title: 'Product',
           items: [
             {label: 'Overview', to: '/product'},
-            {label: 'Get started', href: 'https://docs.agent-assembly.com/getting-started'},
+            {
+              label: 'Get started',
+              href: 'https://docs.agent-assembly.com/getting-started',
+            },
             {label: 'Cloud Console', href: 'https://app.agent-assembly.com'},
           ],
         },
@@ -88,8 +103,14 @@ const config: Config = {
           title: 'Community',
           items: [
             {label: 'GitHub', href: 'https://github.com/ai-agent-assembly'},
-            {label: 'Discussions', href: 'https://github.com/ai-agent-assembly/agent-assembly/discussions'},
-            {label: 'Security', href: 'https://github.com/ai-agent-assembly/.github/blob/master/SECURITY.md'},
+            {
+              label: 'Discussions',
+              href: 'https://github.com/ai-agent-assembly/agent-assembly/discussions',
+            },
+            {
+              label: 'Security',
+              href: 'https://github.com/ai-agent-assembly/.github/blob/master/SECURITY.md',
+            },
           ],
         },
       ],
