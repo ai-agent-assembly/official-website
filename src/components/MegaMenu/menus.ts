@@ -57,12 +57,25 @@ export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
       {
         title: 'Reference',
         links: [
-          {label: 'Policy reference', href: `${DOCS}/policy-reference.html`},
-          {label: 'Security model', href: `${DOCS}/security-model.html`},
-          {label: 'Comparison', href: `${DOCS}/comparison.html`},
+          {
+            label: 'Policy reference',
+            href: `${DOCS}/policy-reference.html`,
+            desc: 'Full policy schema — every rule type, field, and section explained',
+          },
+          {
+            label: 'Security model',
+            href: `${DOCS}/security-model.html`,
+            desc: 'Threat model, trust boundaries, and the guarantees each layer enforces',
+          },
+          {
+            label: 'Comparison',
+            href: `${DOCS}/comparison.html`,
+            desc: 'Why Agent Assembly, and how it differs from agent frameworks',
+          },
           {
             label: 'Open-core boundary',
             href: `${DOCS}/open-core-boundary.html`,
+            desc: 'What lives in the open-source core vs the hosted Cloud',
           },
         ],
       },
