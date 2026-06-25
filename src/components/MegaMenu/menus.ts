@@ -4,6 +4,8 @@ export interface MegaMenuLink {
   label: string;
   href: string;
   desc?: string;
+  /** Path to an icon under static/img/lang/ (e.g. 'python.svg'). */
+  icon?: string;
 }
 
 export interface MegaMenuColumn {
@@ -39,9 +41,17 @@ export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
       {
         title: 'SDKs',
         links: [
-          {label: 'Python SDK', href: `${GH_PAGES}/python-sdk/`},
-          {label: 'Node.js SDK', href: `${GH_PAGES}/node-sdk/`},
-          {label: 'Go SDK', href: `${GH_PAGES}/go-sdk/`},
+          {
+            label: 'Python SDK',
+            href: `${GH_PAGES}/python-sdk/`,
+            icon: 'python.svg',
+          },
+          {
+            label: 'Node.js SDK',
+            href: `${GH_PAGES}/node-sdk/`,
+            icon: 'nodejs.svg',
+          },
+          {label: 'Go SDK', href: `${GH_PAGES}/go-sdk/`, icon: 'go.svg'},
         ],
       },
       {
@@ -83,7 +93,6 @@ export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
             href: `${DOCS}/quickstart-saas.html`,
             desc: 'Get going on the hosted control plane',
           },
-          {label: 'Cloud deployment', href: `${DOCS}/cloud-deployment.html`},
           {
             label: 'Cloud Console',
             href: 'https://app.agent-assembly.com',
