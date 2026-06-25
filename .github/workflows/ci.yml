@@ -81,3 +81,22 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Build
         run: pnpm build
+
+  sonar:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Skips cleanly until the SONAR_TOKEN secret is provisioned, so CI
+      # stays green in the meantime. Requires Automatic Analysis to be
+      # disabled in the SonarCloud project (CI scan and Automatic Analysis
+      # are mutually exclusive).
+      - name: SonarCloud Scan
+        if: ${{ env.SONAR_TOKEN != '' }}
+        uses: SonarSource/sonarqube-scan-action@713881670b6b3676cda39549040e2d88c70d582e # v8.2.0
+        env:
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
