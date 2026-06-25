@@ -143,7 +143,8 @@
 
 .linkDesc {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
   color: var(--aa-text-dim, #9fb0bf);
   margin-top: 0.1rem;
 }

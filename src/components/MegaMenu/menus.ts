@@ -60,22 +60,22 @@ export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
           {
             label: 'Policy reference',
             href: `${DOCS}/policy-reference.html`,
-            desc: 'Full policy schema — every rule type, field, and section explained',
+            desc: 'Every rule type, field, and section',
           },
           {
             label: 'Security model',
             href: `${DOCS}/security-model.html`,
-            desc: 'Threat model, trust boundaries, and the guarantees each layer enforces',
+            desc: 'Threat model and enforcement guarantees',
           },
           {
             label: 'Comparison',
             href: `${DOCS}/comparison.html`,
-            desc: 'Why Agent Assembly, and how it differs from agent frameworks',
+            desc: 'How it differs from agent frameworks',
           },
           {
             label: 'Open-core boundary',
             href: `${DOCS}/open-core-boundary.html`,
-            desc: 'What lives in the open-source core vs the hosted Cloud',
+            desc: 'Open-source core vs hosted Cloud',
           },
         ],
       },
