@@ -57,12 +57,25 @@ export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
       {
         title: 'Reference',
         links: [
-          {label: 'Policy reference', href: `${DOCS}/policy-reference.html`},
-          {label: 'Security model', href: `${DOCS}/security-model.html`},
-          {label: 'Comparison', href: `${DOCS}/comparison.html`},
+          {
+            label: 'Policy reference',
+            href: `${DOCS}/policy-reference.html`,
+            desc: 'Policy schema, rules, and fields',
+          },
+          {
+            label: 'Security model',
+            href: `${DOCS}/security-model.html`,
+            desc: 'Threat model and trust boundaries',
+          },
+          {
+            label: 'Comparison',
+            href: `${DOCS}/comparison.html`,
+            desc: 'How it compares to alternatives',
+          },
           {
             label: 'Open-core boundary',
             href: `${DOCS}/open-core-boundary.html`,
+            desc: "What's open-source vs Cloud",
           },
         ],
       },
