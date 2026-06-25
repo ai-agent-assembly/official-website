@@ -12,7 +12,7 @@ secrets sitting inside the model's context window.
 
 {/* truncate */}
 
-Agent frameworks make agents *capable*. They don't give an agent an identity, constrain
+Agent frameworks make agents _capable_. They don't give an agent an identity, constrain
 its authority, or keep secrets out of the model's reach. That gap is what Agent Assembly
 closes: a runtime boundary that gives every agent an identity, limits what it can do, and
 injects secrets at execution time so they never enter the context the model can see.
