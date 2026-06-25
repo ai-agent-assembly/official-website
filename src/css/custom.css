@@ -26,6 +26,9 @@
   --aa-accent: #0d9488;
   --aa-accent-2: #5b63d6;
   --aa-hover: rgba(15, 23, 32, 0.05);
+
+  /* Layout (theme-independent) */
+  --aa-max: 1120px;
 }
 
 [data-theme='dark'] {
