@@ -1,7 +1,7 @@
 import React, {type ReactNode} from 'react';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import {MENUS, type MegaMenuKey} from './menus';
+import {MENUS, type MegaMenuKey, type MegaMenuLink} from './menus';
 import styles from './styles.module.css';
 
 function Icon({
@@ -27,6 +27,25 @@ function Icon({
   );
 }
 
+function RowInner({link}: {link: MegaMenuLink}): ReactNode {
+  return (
+    <>
+      <Icon icon={link.icon} className={styles.icon} />
+      <span className={styles.linkText}>
+        <span className={styles.linkLabel}>
+          {link.label}
+          {link.comingSoon ? (
+            <span className={styles.soon}>👷 Coming soon</span>
+          ) : null}
+        </span>
+        {link.desc ? (
+          <span className={styles.linkDesc}>{link.desc}</span>
+        ) : null}
+      </span>
+    </>
+  );
+}
+
 interface Props {
   menuKey: MegaMenuKey;
   label: string;
@@ -46,10 +65,21 @@ function MobileMenu({menuKey, label}: Props): ReactNode {
           <ul className="menu__list">
             {col.links.map((l) => (
               <li key={l.label} className="menu__list-item">
-                <Link className="menu__link" href={l.href}>
-                  <Icon icon={l.icon} className={styles.mobileIcon} />
-                  {l.label}
-                </Link>
+                {l.comingSoon ? (
+                  <span
+                    className={`menu__link ${styles.mobileDisabled}`}
+                    aria-disabled="true"
+                  >
+                    <Icon icon={l.icon} className={styles.mobileIcon} />
+                    {l.label}
+                    <span className={styles.soon}>👷 Coming soon</span>
+                  </span>
+                ) : (
+                  <Link className="menu__link" href={l.href}>
+                    <Icon icon={l.icon} className={styles.mobileIcon} />
+                    {l.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -89,15 +119,22 @@ export default function MegaMenu(props: Props): ReactNode {
               <ul className={styles.linkList}>
                 {col.links.map((l) => (
                   <li key={l.label}>
-                    <Link className={styles.link} href={l.href} role="menuitem">
-                      <Icon icon={l.icon} className={styles.icon} />
-                      <span className={styles.linkText}>
-                        <span className={styles.linkLabel}>{l.label}</span>
-                        {l.desc ? (
-                          <span className={styles.linkDesc}>{l.desc}</span>
-                        ) : null}
-                      </span>
-                    </Link>
+                    {l.comingSoon ? (
+                      <div
+                        className={`${styles.link} ${styles.linkDisabled}`}
+                        aria-disabled="true"
+                      >
+                        <RowInner link={l} />
+                      </div>
+                    ) : (
+                      <Link
+                        className={styles.link}
+                        href={l.href}
+                        role="menuitem"
+                      >
+                        <RowInner link={l} />
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
