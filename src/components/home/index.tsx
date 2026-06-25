@@ -24,9 +24,13 @@ export function Hero(): ReactNode {
             <Link className={styles.btnPrimary} to={GETTING_STARTED}>
               Start self-hosting →
             </Link>
-            <Link className={styles.btnGhost} to={CONSOLE}>
-              Try Cloud →
-            </Link>
+            <span
+              className={`${styles.btnGhost} ${styles.btnDisabled}`}
+              aria-disabled="true"
+            >
+              Try Cloud
+              <span className={styles.soon}>👷 Coming soon</span>
+            </span>
           </div>
         </div>
         <div className={styles.terminal} aria-hidden="true">
@@ -167,7 +171,16 @@ export function HowItWorks(): ReactNode {
   );
 }
 
-const PATHS = [
+interface PathCard {
+  icon: string;
+  title: string;
+  text: string;
+  link: string;
+  label: string;
+  comingSoon?: boolean;
+}
+
+const PATHS: PathCard[] = [
   {
     icon: '⚙️',
     title: 'Open-source Core',
@@ -181,6 +194,7 @@ const PATHS = [
     text: 'A managed cloud console for orgs, teams, policy, approvals, and audit.',
     link: CONSOLE,
     label: 'Open Cloud Console',
+    comingSoon: true,
   },
   {
     icon: '📚',
@@ -203,9 +217,15 @@ export function ChooseYourPath(): ReactNode {
               <div className={styles.cardIcon}>{p.icon}</div>
               <h3 className={styles.cardTitle}>{p.title}</h3>
               <p className={styles.cardText}>{p.text}</p>
-              <Link className={styles.cardLink} to={p.link}>
-                {p.label} →
-              </Link>
+              {p.comingSoon ? (
+                <div className={styles.soonRow}>
+                  <span className={styles.soon}>👷 Coming soon</span>
+                </div>
+              ) : (
+                <Link className={styles.cardLink} to={p.link}>
+                  {p.label} →
+                </Link>
+              )}
             </div>
           ))}
         </div>
@@ -229,9 +249,13 @@ export function FinalCTA(): ReactNode {
           <Link className={styles.btnPrimary} to={GETTING_STARTED}>
             Start self-hosting →
           </Link>
-          <Link className={styles.btnGhost} to={CONSOLE}>
-            Try Cloud →
-          </Link>
+          <span
+            className={`${styles.btnGhost} ${styles.btnDisabled}`}
+            aria-disabled="true"
+          >
+            Try Cloud
+            <span className={styles.soon}>👷 Coming soon</span>
+          </span>
         </div>
       </div>
     </section>

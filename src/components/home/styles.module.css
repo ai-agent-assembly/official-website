@@ -96,6 +96,31 @@
   color: var(--aa-text);
   text-decoration: none;
 }
+.btnDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btnDisabled:hover {
+  border-color: var(--aa-border);
+  color: var(--aa-text);
+}
+
+/* "Coming soon" badge for not-ready (SaaS Cloud) surfaces */
+.soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--aa-hover);
+  color: var(--aa-text-dim);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.soonRow {
+  margin-top: 0.9rem;
+}
 
 /* Terminal mock */
 .terminal {
