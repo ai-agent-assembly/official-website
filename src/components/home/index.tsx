@@ -3,7 +3,7 @@ import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
 
 const DOCS = 'https://docs.agent-assembly.com';
-const GETTING_STARTED = `${DOCS}/getting-started`;
+const GETTING_STARTED = DOCS;
 const GITHUB = 'https://github.com/ai-agent-assembly';
 const CONSOLE = 'https://app.agent-assembly.com';
 
@@ -22,10 +22,10 @@ export function Hero(): ReactNode {
           </p>
           <div className={styles.ctaRow}>
             <Link className={styles.btnPrimary} to={GETTING_STARTED}>
-              Get started →
+              Start self-hosting →
             </Link>
-            <Link className={styles.btnGhost} to={GITHUB}>
-              View on GitHub
+            <Link className={styles.btnGhost} to={CONSOLE}>
+              Try Cloud →
             </Link>
           </div>
         </div>
@@ -227,10 +227,10 @@ export function FinalCTA(): ReactNode {
           style={{justifyContent: 'center', marginTop: '1.5rem'}}
         >
           <Link className={styles.btnPrimary} to={GETTING_STARTED}>
-            Get started →
+            Start self-hosting →
           </Link>
-          <Link className={styles.btnGhost} to="/product">
-            Explore the product
+          <Link className={styles.btnGhost} to={CONSOLE}>
+            Try Cloud →
           </Link>
         </div>
       </div>

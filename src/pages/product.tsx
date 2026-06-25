@@ -105,7 +105,7 @@ export default function Product(): ReactNode {
         </section>
 
         <div className={styles.ctaRow}>
-          <Link className={styles.btnPrimary} to={`${DOCS}/getting-started`}>
+          <Link className={styles.btnPrimary} to={DOCS}>
             Get started →
           </Link>
           <Link className={styles.btnGhost} to={GITHUB}>

@@ -72,7 +72,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          to: 'https://docs.agent-assembly.com/getting-started',
+          to: 'https://docs.agent-assembly.com/',
           html: '<span class="navbar-cta">Get started</span>',
           position: 'right',
         },
@@ -87,7 +87,7 @@ const config: Config = {
             {label: 'Overview', to: '/product'},
             {
               label: 'Get started',
-              href: 'https://docs.agent-assembly.com/getting-started',
+              href: 'https://docs.agent-assembly.com/',
             },
             {label: 'Cloud Console', href: 'https://app.agent-assembly.com'},
           ],
