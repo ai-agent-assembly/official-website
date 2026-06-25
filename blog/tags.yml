@@ -1,0 +1,24 @@
+build-notes:
+  label: Build Notes
+  permalink: /build-notes
+  description: How we are building Agent Assembly.
+engineering:
+  label: Engineering
+  permalink: /engineering
+  description: Engineering write-ups and design decisions.
+security:
+  label: Security
+  permalink: /security
+  description: Security model, threat boundaries, and secret handling.
+agent-ecosystem:
+  label: Agent Ecosystem
+  permalink: /agent-ecosystem
+  description: Notes on the broader autonomous-agent ecosystem.
+release-notes:
+  label: Release Notes
+  permalink: /release-notes
+  description: What shipped, version by version.
+founders-notes:
+  label: Founder's Notes
+  permalink: /founders-notes
+  description: Why this product exists.

@@ -1,0 +1,60 @@
+/**
+ * Agent Assembly — official website global styles + design tokens.
+ * Dark-first, security/runtime-infrastructure aesthetic.
+ */
+
+:root {
+  --ifm-color-primary: #0d9488;
+  --ifm-color-primary-dark: #0c8479;
+  --ifm-color-primary-darker: #0b7d72;
+  --ifm-color-primary-darkest: #09675e;
+  --ifm-color-primary-light: #0ea394;
+  --ifm-color-primary-lighter: #0faa9b;
+  --ifm-color-primary-lightest: #14c2b1;
+  --ifm-code-font-size: 95%;
+  --ifm-font-family-base: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Brand tokens */
+  --aa-bg: #0a0f14;
+  --aa-bg-soft: #0f1620;
+  --aa-panel: #121a24;
+  --aa-border: #1e2a36;
+  --aa-text: #e6edf3;
+  --aa-text-dim: #9fb0bf;
+  --aa-accent: #2dd4bf;
+  --aa-accent-2: #818cf8;
+  --aa-max: 1120px;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #2dd4bf;
+  --ifm-color-primary-dark: #21c3ae;
+  --ifm-color-primary-darker: #1fb8a4;
+  --ifm-color-primary-darkest: #199787;
+  --ifm-color-primary-light: #45dac8;
+  --ifm-color-primary-lighter: #52ddcc;
+  --ifm-color-primary-lightest: #79e6d9;
+  --ifm-background-color: var(--aa-bg);
+  --ifm-background-surface-color: var(--aa-bg-soft);
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Navbar "Get started" pill */
+.navbar-cta {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: var(--ifm-color-primary);
+  color: #06231f;
+  font-weight: 700;
+}
+.navbar-cta:hover {
+  filter: brightness(1.08);
+}
+
+html[data-theme='dark'] .navbar {
+  background: rgba(10, 15, 20, 0.8);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--aa-border);
+}
