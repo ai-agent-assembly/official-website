@@ -13,8 +13,8 @@ const config: Config = {
 
   future: {v4: true},
 
-  url: 'https://ai-agent-assembly.github.io',
-  baseUrl: '/official-website/',
+  url: 'https://agent-assembly.com',
+  baseUrl: '/',
 
   organizationName: 'ai-agent-assembly',
   projectName: 'official-website',
