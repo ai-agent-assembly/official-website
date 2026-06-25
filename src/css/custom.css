@@ -1,6 +1,6 @@
 /**
  * Agent Assembly — official website global styles + design tokens.
- * Dark-first, security/runtime-infrastructure aesthetic.
+ * Theme-aware (light + dark), security/runtime-infrastructure aesthetic.
  */
 
 :root {
@@ -16,15 +16,18 @@
     system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 
-  /* Brand tokens */
-  --aa-bg: #0a0f14;
-  --aa-bg-soft: #0f1620;
-  --aa-panel: #121a24;
-  --aa-border: #1e2a36;
-  --aa-text: #e6edf3;
-  --aa-text-dim: #9fb0bf;
-  --aa-accent: #2dd4bf;
-  --aa-accent-2: #818cf8;
+  /* Brand tokens — light mode */
+  --aa-bg: #ffffff;
+  --aa-bg-soft: #f4f7fa;
+  --aa-panel: #ffffff;
+  --aa-border: #d4dde5;
+  --aa-text: #1b2733;
+  --aa-text-dim: #51606e;
+  --aa-accent: #0d9488;
+  --aa-accent-2: #5b63d6;
+  --aa-hover: rgba(15, 23, 32, 0.05);
+
+  /* Layout (theme-independent) */
   --aa-max: 1120px;
 }
 
@@ -39,6 +42,17 @@
   --ifm-background-color: var(--aa-bg);
   --ifm-background-surface-color: var(--aa-bg-soft);
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+
+  /* Brand tokens — dark mode */
+  --aa-bg: #0a0f14;
+  --aa-bg-soft: #0f1620;
+  --aa-panel: #121a24;
+  --aa-border: #1e2a36;
+  --aa-text: #e6edf3;
+  --aa-text-dim: #9fb0bf;
+  --aa-accent: #2dd4bf;
+  --aa-accent-2: #818cf8;
+  --aa-hover: rgba(255, 255, 255, 0.06);
 }
 
 /* Navbar "Get started" pill */
