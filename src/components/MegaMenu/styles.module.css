@@ -141,6 +141,35 @@
   font-weight: 600;
 }
 
+/* "Coming soon" (not-ready SaaS Cloud) rows */
+.linkDisabled {
+  cursor: not-allowed;
+}
+.linkDisabled:hover {
+  background: transparent;
+}
+.soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: var(--aa-hover, rgba(255, 255, 255, 0.08));
+  color: var(--aa-text-dim, #9fb0bf);
+  font-size: 0.66rem;
+  font-weight: 600;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.mobileDisabled {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
 .linkDesc {
   display: block;
   font-size: 0.78rem;

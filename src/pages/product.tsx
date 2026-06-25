@@ -5,7 +5,6 @@ import styles from './product.module.css';
 
 const DOCS = 'https://docs.agent-assembly.com';
 const GITHUB = 'https://github.com/ai-agent-assembly';
-const CONSOLE = 'https://app.agent-assembly.com';
 
 export default function Product(): ReactNode {
   return (
@@ -111,9 +110,13 @@ export default function Product(): ReactNode {
           <Link className={styles.btnGhost} to={GITHUB}>
             GitHub
           </Link>
-          <Link className={styles.btnGhost} to={CONSOLE}>
+          <span
+            className={`${styles.btnGhost} ${styles.btnDisabled}`}
+            aria-disabled="true"
+          >
             Cloud Console
-          </Link>
+            <span className={styles.soon}>👷 Coming soon</span>
+          </span>
         </div>
       </div>
     </Layout>

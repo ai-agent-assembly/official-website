@@ -88,7 +88,9 @@ const config: Config = {
               label: 'Get started',
               href: 'https://docs.agent-assembly.com/',
             },
-            {label: 'Cloud Console', href: 'https://app.agent-assembly.com'},
+            {
+              html: '<span style="opacity:0.65">Cloud Console · 👷 coming soon</span>',
+            },
           ],
         },
         {

@@ -6,6 +6,8 @@ export interface MegaMenuLink {
   desc?: string;
   /** Path to an icon under static/img/lang/ (e.g. 'python.svg'). */
   icon?: string;
+  /** Render as a non-clickable "Coming soon" item (feature not live yet). */
+  comingSoon?: boolean;
 }
 
 export interface MegaMenuColumn {
@@ -105,11 +107,13 @@ export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
             label: 'Cloud quickstart',
             href: `${DOCS}/quickstart-saas.html`,
             desc: 'Get going on the hosted control plane',
+            comingSoon: true,
           },
           {
             label: 'Cloud Console',
             href: 'https://app.agent-assembly.com',
-            desc: 'Sign in / join the waitlist',
+            desc: 'Sign in to the managed control plane',
+            comingSoon: true,
           },
         ],
       },
