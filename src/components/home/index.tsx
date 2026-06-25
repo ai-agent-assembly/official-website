@@ -3,7 +3,7 @@ import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
 
 const DOCS = 'https://docs.agent-assembly.com';
-const GETTING_STARTED = `${DOCS}/getting-started`;
+const GETTING_STARTED = DOCS;
 const GITHUB = 'https://github.com/ai-agent-assembly';
 const CONSOLE = 'https://app.agent-assembly.com';
 
