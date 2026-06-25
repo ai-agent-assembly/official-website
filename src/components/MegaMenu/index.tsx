@@ -1,7 +1,31 @@
 import React, {type ReactNode} from 'react';
 import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import {MENUS, type MegaMenuKey} from './menus';
 import styles from './styles.module.css';
+
+function Icon({
+  icon,
+  className,
+}: {
+  icon?: string;
+  className: string;
+}): ReactNode {
+  const src = useBaseUrl(`/img/lang/${icon ?? ''}`);
+  if (!icon) {
+    return null;
+  }
+  return (
+    <img
+      className={className}
+      src={src}
+      alt=""
+      aria-hidden="true"
+      width={20}
+      height={20}
+    />
+  );
+}
 
 interface Props {
   menuKey: MegaMenuKey;
@@ -23,6 +47,7 @@ function MobileMenu({menuKey, label}: Props): ReactNode {
             {col.links.map((l) => (
               <li key={l.label} className="menu__list-item">
                 <Link className="menu__link" href={l.href}>
+                  <Icon icon={l.icon} className={styles.mobileIcon} />
                   {l.label}
                 </Link>
               </li>
@@ -65,10 +90,13 @@ export default function MegaMenu(props: Props): ReactNode {
                 {col.links.map((l) => (
                   <li key={l.label}>
                     <Link className={styles.link} href={l.href} role="menuitem">
-                      <span className={styles.linkLabel}>{l.label}</span>
-                      {l.desc ? (
-                        <span className={styles.linkDesc}>{l.desc}</span>
-                      ) : null}
+                      <Icon icon={l.icon} className={styles.icon} />
+                      <span className={styles.linkText}>
+                        <span className={styles.linkLabel}>{l.label}</span>
+                        {l.desc ? (
+                          <span className={styles.linkDesc}>{l.desc}</span>
+                        ) : null}
+                      </span>
                     </Link>
                   </li>
                 ))}

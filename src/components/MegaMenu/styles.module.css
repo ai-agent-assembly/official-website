@@ -103,7 +103,9 @@
 }
 
 .link {
-  display: block;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
   padding: 0.45rem 0.55rem;
   border-radius: 8px;
   color: var(--aa-text, #e6edf3);
@@ -113,6 +115,25 @@
 .link:hover {
   background: rgba(255, 255, 255, 0.05);
   text-decoration: none;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  margin-top: 0.1rem;
+}
+
+.linkText {
+  display: block;
+  min-width: 0;
+}
+
+.mobileIcon {
+  width: 18px;
+  height: 18px;
+  vertical-align: -3px;
+  margin-right: 0.5rem;
 }
 
 .linkLabel {
