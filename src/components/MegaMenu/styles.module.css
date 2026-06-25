@@ -1,0 +1,149 @@
+.megaMenu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.trigger {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  color: var(--ifm-navbar-link-color);
+  padding: 0.25rem 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.trigger:hover {
+  color: var(--ifm-navbar-link-hover-color);
+}
+
+.caret {
+  font-size: 0.7em;
+  transition: transform 0.15s ease;
+}
+
+.megaMenu:hover .caret,
+.megaMenu:focus-within .caret {
+  transform: rotate(180deg);
+}
+
+.ctaTrigger {
+  border-radius: 999px;
+  background: var(--ifm-color-primary);
+  color: #06231f;
+  font-weight: 700;
+  padding: 0.35rem 0.9rem;
+}
+
+.ctaTrigger:hover {
+  color: #06231f;
+  filter: brightness(1.08);
+}
+
+.panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.6rem;
+  background: var(--aa-panel, #121a24);
+  border: 1px solid var(--aa-border, #1e2a36);
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  padding: 1.25rem 1.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    visibility 0.15s;
+  z-index: var(--ifm-z-index-dropdown, 200);
+}
+
+.panelRight {
+  left: auto;
+  right: 0;
+}
+
+.megaMenu:hover .panel,
+.megaMenu:focus-within .panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.columns {
+  display: flex;
+  gap: 2.25rem;
+}
+
+.column {
+  min-width: 190px;
+}
+
+.columnTitle {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--aa-text-dim, #9fb0bf);
+  margin-bottom: 0.6rem;
+}
+
+.linkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.linkList li {
+  margin: 0;
+}
+
+.link {
+  display: block;
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  color: var(--aa-text, #e6edf3);
+  text-decoration: none;
+}
+
+.link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+}
+
+.linkLabel {
+  display: block;
+  font-weight: 600;
+}
+
+.linkDesc {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--aa-text-dim, #9fb0bf);
+  margin-top: 0.1rem;
+}
+
+/* Mobile (rendered inside the Docusaurus mobile sidebar) */
+.mobileLabel {
+  display: block;
+  font-weight: 700;
+  padding: 0.5rem 0.75rem 0.25rem;
+  color: var(--aa-text, #e6edf3);
+}
+
+.mobileGroup {
+  margin-bottom: 0.25rem;
+}
+
+.mobileGroupTitle {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--aa-text-dim, #9fb0bf);
+  padding: 0.4rem 0.75rem 0.1rem;
+}

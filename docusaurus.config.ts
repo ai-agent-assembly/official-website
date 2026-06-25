@@ -56,7 +56,8 @@ const config: Config = {
       items: [
         {to: '/product', label: 'Product', position: 'left'},
         {
-          href: 'https://docs.agent-assembly.com',
+          type: 'custom-megaMenu',
+          menuKey: 'docs',
           label: 'Docs',
           position: 'left',
         },
@@ -67,13 +68,11 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://app.agent-assembly.com',
-          label: 'Cloud Console',
-          position: 'right',
-        },
-        {
-          to: 'https://docs.agent-assembly.com/',
-          html: '<span class="navbar-cta">Get started</span>',
+          type: 'custom-megaMenu',
+          menuKey: 'getStarted',
+          label: 'Get started',
+          cta: true,
+          align: 'right',
           position: 'right',
         },
       ],
