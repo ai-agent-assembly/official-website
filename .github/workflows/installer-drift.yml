@@ -1,0 +1,43 @@
+name: Installer drift check
+
+# static/install.sh is a reviewed, immutable copy of the canonical installer in
+# ai-agent-assembly/agent-assembly (scripts/install-cli.sh). This gate fails if the
+# served copy's executable body drifts from the source — on PRs/pushes that touch
+# the copy, and weekly to catch drift introduced by upstream installer changes.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 6 * * 1' # Mondays — catch upstream install-cli.sh changes
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare served installer body against canonical source
+        run: |
+          set -euo pipefail
+          SRC_URL="https://raw.githubusercontent.com/ai-agent-assembly/agent-assembly/master/scripts/install-cli.sh"
+          curl -sSfL "$SRC_URL" -o /tmp/source-install.sh
+          # The served copy = the canonical installer + a short provenance-note header.
+          # Compare only the executable body (from `set -eu` onward), which must stay
+          # byte-identical to the source; the leading comment header may legitimately differ.
+          sed -n '/^set -eu/,$p' static/install.sh      > /tmp/served-body.sh
+          sed -n '/^set -eu/,$p' /tmp/source-install.sh > /tmp/source-body.sh
+          if [ ! -s /tmp/served-body.sh ] || [ ! -s /tmp/source-body.sh ]; then
+            echo "::error::could not locate the 'set -eu' body anchor in one of the files."
+            exit 1
+          fi
+          if ! diff -u /tmp/source-body.sh /tmp/served-body.sh; then
+            echo "::error::static/install.sh body has drifted from agent-assembly scripts/install-cli.sh — re-sync the served copy."
+            exit 1
+          fi
+          echo "OK: served installer body is byte-identical to the canonical source."
