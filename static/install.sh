@@ -30,8 +30,7 @@ warn() { printf '\033[33mwarning:\033[0m %s\n' "$*" >&2; }
 err()  { printf '\033[31merror:\033[0m %s\n' "$*" >&2; exit 1; }
 
 need() {
-  local cmd="$1"
-  command -v "$cmd" >/dev/null 2>&1 || err "required tool not found: $cmd — install it and retry"
+  command -v "$1" >/dev/null 2>&1 || err "required tool not found: $1 — install it and retry"
 }
 
 pick_install_dir() {
@@ -71,11 +70,10 @@ detect_arch() {
 sha256_compute() {
   # Print the lowercase hex SHA-256 of a file path.
   # Uses sha256sum (Linux) or shasum -a 256 (macOS).
-  local file="$1"
   if command -v sha256sum >/dev/null 2>&1; then
-    sha256sum "$file" | awk '{print $1}'
+    sha256sum "$1" | awk '{print $1}'
   elif command -v shasum >/dev/null 2>&1; then
-    shasum -a 256 "$file" | awk '{print $1}'
+    shasum -a 256 "$1" | awk '{print $1}'
   else
     err "no sha256 tool available (need sha256sum or shasum)"
   fi
