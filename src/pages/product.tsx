@@ -114,7 +114,7 @@ export default function Product(): ReactNode {
             className={`${styles.btnGhost} ${styles.btnDisabled}`}
             aria-disabled="true"
           >
-            Cloud Console
+            {'Cloud Console '}
             <span className={styles.soon}>👷 Coming soon</span>
           </span>
         </div>

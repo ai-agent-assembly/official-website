@@ -28,7 +28,7 @@ export function Hero(): ReactNode {
               className={`${styles.btnGhost} ${styles.btnDisabled}`}
               aria-disabled="true"
             >
-              Try Cloud
+              {'Try Cloud '}
               <span className={styles.soon}>👷 Coming soon</span>
             </span>
           </div>
@@ -253,7 +253,7 @@ export function FinalCTA(): ReactNode {
             className={`${styles.btnGhost} ${styles.btnDisabled}`}
             aria-disabled="true"
           >
-            Try Cloud
+            {'Try Cloud '}
             <span className={styles.soon}>👷 Coming soon</span>
           </span>
         </div>
