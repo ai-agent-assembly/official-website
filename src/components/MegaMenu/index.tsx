@@ -8,8 +8,8 @@ function Icon({
   icon,
   className,
 }: {
-  icon?: string;
-  className: string;
+  readonly icon?: string;
+  readonly className: string;
 }): ReactNode {
   const src = useBaseUrl(`/img/lang/${icon ?? ''}`);
   if (!icon) {
@@ -27,7 +27,7 @@ function Icon({
   );
 }
 
-function RowInner({link}: {link: MegaMenuLink}): ReactNode {
+function RowInner({link}: {readonly link: MegaMenuLink}): ReactNode {
   return (
     <>
       <Icon icon={link.icon} className={styles.icon} />
@@ -47,14 +47,17 @@ function RowInner({link}: {link: MegaMenuLink}): ReactNode {
 }
 
 interface Props {
-  menuKey: MegaMenuKey;
-  label: string;
-  mobile?: boolean;
-  cta?: boolean;
-  align?: 'left' | 'right';
+  readonly menuKey: MegaMenuKey;
+  readonly label: string;
+  readonly mobile?: boolean;
+  readonly cta?: boolean;
+  readonly align?: 'left' | 'right';
 }
 
-function MobileMenu({menuKey, label}: Props): ReactNode {
+function MobileMenu({
+  menuKey,
+  label,
+}: Pick<Props, 'menuKey' | 'label'>): ReactNode {
   const {columns} = MENUS[menuKey];
   return (
     <li className="menu__list-item">
