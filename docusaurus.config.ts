@@ -43,6 +43,7 @@ const config: Config = {
           onUntruncatedBlogPosts: 'warn',
         },
         theme: {customCss: './src/css/custom.css'},
+        gtag: {trackingID: 'G-EG3PY1X0CC', anonymizeIP: true},
       } satisfies Preset.Options,
     ],
   ],
