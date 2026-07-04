@@ -23,14 +23,14 @@ announcements — link out to the docs hub rather than duplicating reference con
 
 ## Site layout
 
-| Path | Role |
-|---|---|
-| `docusaurus.config.ts` | Docusaurus config: `title`, `url`, `baseUrl`, navbar/footer, presets |
-| `src/` | Authored React/TypeScript source (pages, components, CSS) — the analysed source root |
-| `blog/` | Blog posts (Markdown/MDX) |
-| `static/` | Static assets served as-is (images, favicon) |
-| `build/` | Build output — **gitignored**, never commit it |
-| `.docusaurus/` | Docusaurus cache — **gitignored** |
+| Path                   | Role                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| `docusaurus.config.ts` | Docusaurus config: `title`, `url`, `baseUrl`, navbar/footer, presets                 |
+| `src/`                 | Authored React/TypeScript source (pages, components, CSS) — the analysed source root |
+| `blog/`                | Blog posts (Markdown/MDX)                                                            |
+| `static/`              | Static assets served as-is (images, favicon)                                         |
+| `build/`               | Build output — **gitignored**, never commit it                                       |
+| `.docusaurus/`         | Docusaurus cache — **gitignored**                                                    |
 
 ## Build, test, serve
 
@@ -96,7 +96,7 @@ pnpm format:check       # prettier --check . (CI gate)
 - **JIRA:** project AAASM at <https://lightning-dust-mite.atlassian.net> (board 7). Set
   **Component** (`customfield_10041`) to the repo (`AI-agent-assembly/official-website`);
   Team (`customfield_10001`) = Pioneer. Epic → Story → Subtask (one Subtask ≈ one commit)
-  + a `Verify …` subtask per Story.
+  - a `Verify …` subtask per Story.
 - **Marketing content only.** Developer/reference docs live in `agent-assembly-docs` and
   each component's own docs site — link out, don't duplicate.
 - **Self-hosted deployment is out of scope** product-wide (SaaS-only). Don't add
