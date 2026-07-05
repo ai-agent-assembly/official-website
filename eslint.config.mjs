@@ -6,7 +6,15 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import prettier from 'eslint-config-prettier';
 
 export default tseslint.config(
-  {ignores: ['build/', '.docusaurus/', 'node_modules/', '*.config.mjs']},
+  {
+    ignores: [
+      'build/',
+      '.docusaurus/',
+      'node_modules/',
+      'design/',
+      '*.config.mjs',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
