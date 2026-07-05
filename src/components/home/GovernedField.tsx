@@ -2,40 +2,63 @@ import React, {type ReactNode, useEffect, useRef} from 'react';
 import styles from './styles.module.css';
 
 /**
- * GovernedField — the merged 2a "Governed Field" + 2c "Depth Atlas" hero
- * background (AAASM-4143). It is a purely decorative layer behind the hero
- * copy: three cursor-parallax orbit-ring layers (2c) with a calming center
- * vignette, overlaid by a canvas particle field (2a) whose particles are
- * governed agent requests classified ALLOWED / REVIEWED / DENIED at an
- * invisible policy boundary — a literal depiction of the policy engine and
- * the three-layer interception model.
+ * GovernedField — the hero background for AAASM-4143. A purely decorative layer
+ * behind the hero copy that renders the product's real three-layer interception
+ * model as a **concentric governance membrane**:
  *
- * Rendered aria-hidden with pointer-events disabled. Honors
- * prefers-reduced-motion by drawing a single static frame and disabling
- * parallax + ring spin.
+ *   AGENT (center) → SDK ring → PROXY ring → eBPF ring → external zone
+ *
+ * Requests are emitted from the central agent core and travel radially outward.
+ * At each ring boundary the request's fate is decided: ALLOWED requests pass
+ * through all three rings into the external zone; DENIED requests are absorbed
+ * with a flash at the ring they violate and never reach outside; requests that
+ * carry a secret have that secret stripped (redacted) at the PROXY ring — the
+ * amber secret dot detaches and dissolves while the sanitized request continues
+ * outward. The point: only allowed, sanitized requests ever cross the outer
+ * ring — secrets never leak outward.
+ *
+ * Rendered aria-hidden with pointer-events disabled (via styles.field). Honors
+ * prefers-reduced-motion by drawing a single static frame — the core, three
+ * labeled rings, a few particles mid-flight, and the external nodes — with no
+ * animation loop and no cursor parallax. Theme palette (light/dark) is tracked
+ * live via a MutationObserver on the document theme attribute.
  */
 
 type Verdict = 'allow' | 'review' | 'deny';
-type Phase = 'travel' | 'held' | 'escort' | 'deflect';
 
-interface Agent {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  verdict: Verdict;
-  phase: Phase;
-  hold: number; // frames remaining while held at the checkpoint
-  blink: number;
-  r: number;
+interface Particle {
+  angle: number; // radial direction of travel
+  radius: number; // distance from the agent core
+  speed: number;
+  verdict: Verdict; // allow (teal) | review (secret carrier) | deny (red)
+  denyR: number; // ring radius at which a denied request is absorbed
+  secret: boolean; // review request still carrying its secret dot
+  blocked: boolean; // absorbed at a ring — dissolving in place
+  life: number; // dissolve countdown once blocked
   alpha: number;
+  size: number;
+}
+
+interface Flash {
+  radius: number; // ring the flash sits on
+  angle: number;
+  life: number;
+  maxLife: number;
+  color: string;
+}
+
+interface Secret {
+  radius: number; // where the secret detached (the PROXY ring)
+  angle: number;
+  life: number;
+  maxLife: number;
 }
 
 interface Palette {
   allow: string;
   review: string;
   deny: string;
-  line: string;
+  line: string; // "rgba(r, g, b, " — caller appends alpha + ")"
 }
 
 function readPalette(): Palette {
@@ -59,16 +82,13 @@ function readPalette(): Palette {
 
 function pickVerdict(): Verdict {
   const r = Math.random();
-  if (r < 0.56) return 'allow';
-  if (r < 0.8) return 'review';
+  if (r < 0.54) return 'allow';
+  if (r < 0.76) return 'review';
   return 'deny';
 }
 
 export function GovernedField(): ReactNode {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const farRef = useRef<HTMLDivElement>(null);
-  const midRef = useRef<HTMLDivElement>(null);
-  const nearRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -91,17 +111,43 @@ export function GovernedField(): ReactNode {
       attributeFilter: ['data-theme'],
     });
 
+    const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
+    // Ray (upper-right) along which the three ring labels are stacked, so the
+    // "cross-section" reads AGENT → SDK → PROXY → eBPF away from the hero text.
+    const LABEL_ANGLE = -Math.PI * 0.3;
+
     let width = 0;
     let height = 0;
     let dpr = 1;
-    // Boundary ellipse (the reading zone) + aperture point (toward the CTA).
     let cx = 0;
     let cy = 0;
-    let bx = 0;
-    let by = 0;
+    const r0 = 15; // agent core radius (emission origin)
+    let r1 = 0; // SDK ring
+    let r2 = 0; // PROXY ring
+    let r3 = 0; // eBPF ring
+    let diag = 0;
 
-    const COUNT = 90;
-    const agents: Agent[] = [];
+    const COUNT = 34;
+    const particles: Particle[] = [];
+    const flashes: Flash[] = [];
+    const secrets: Secret[] = [];
+
+    // Animation-only state.
+    let rot = 0;
+    let t = 0;
+    let parX = 0;
+    let parY = 0;
+    let tParX = 0;
+    let tParY = 0;
+
+    function lineColor(a: number): string {
+      return palette.line + a + ')';
+    }
+
+    function verdictColor(v: Verdict): string {
+      if (v === 'deny') return palette.deny;
+      return palette.allow; // allowed + sanitized review carriers travel teal
+    }
 
     function resize() {
       const rect = root!.getBoundingClientRect();
@@ -113,203 +159,383 @@ export function GovernedField(): ReactNode {
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
       cx = width * 0.5;
       cy = height * 0.46;
-      bx = Math.min(width * 0.32, 470);
-      by = Math.min(height * 0.32, 260);
+      const maxR = Math.min(width * 0.46, height * 0.66, 540);
+      r3 = maxR;
+      r2 = maxR * 0.68;
+      r1 = maxR * 0.4;
+      diag = Math.hypot(width, height);
     }
 
-    function spawn(a: Agent) {
-      // Enter from a random edge, aimed loosely inward toward the boundary.
-      const edge = Math.floor(Math.random() * 4);
-      if (edge === 0) {
-        a.x = Math.random() * width;
-        a.y = -20;
-      } else if (edge === 1) {
-        a.x = width + 20;
-        a.y = Math.random() * height;
-      } else if (edge === 2) {
-        a.x = Math.random() * width;
-        a.y = height + 20;
-      } else {
-        a.x = -20;
-        a.y = Math.random() * height;
-      }
-      const ang = Math.atan2(cy - a.y, cx - a.x) + (Math.random() - 0.5) * 0.7;
-      const speed = 0.55 + Math.random() * 0.6;
-      a.vx = Math.cos(ang) * speed;
-      a.vy = Math.sin(ang) * speed;
-      a.verdict = pickVerdict();
-      a.phase = 'travel';
-      a.hold = 0;
-      a.blink = 0;
-      a.r = 1.4 + Math.random() * 1.8;
-      a.alpha = 0;
+    function respawn(p: Particle) {
+      p.angle = Math.random() * Math.PI * 2;
+      p.radius = r0 + Math.random() * 6;
+      p.speed = 0.55 + Math.random() * 0.7;
+      p.verdict = pickVerdict();
+      // Denied requests are caught at one of the three rings.
+      p.denyR = [r1, r2, r3][Math.floor(Math.random() * 3)];
+      p.secret = p.verdict === 'review';
+      p.blocked = false;
+      p.life = 0;
+      p.alpha = 0;
+      p.size = 1.5 + Math.random() * 1.4;
     }
 
-    for (let i = 0; i < COUNT; i++) {
-      const a: Agent = {
-        x: 0,
-        y: 0,
-        vx: 0,
-        vy: 0,
-        verdict: 'allow',
-        phase: 'travel',
-        hold: 0,
-        blink: 0,
-        r: 2,
-        alpha: 0,
-      };
-      spawn(a);
-      // Pre-scatter so the field is populated on the first frame.
-      const t = Math.random();
-      a.x = a.x + (cx - a.x) * t * 0.8;
-      a.y = a.y + (cy - a.y) * t * 0.8;
-      a.alpha = 0.9;
-      agents.push(a);
-    }
+    function step(p: Particle) {
+      if (p.alpha < 1) p.alpha = Math.min(1, p.alpha + 0.04);
 
-    function ellipseDist(x: number, y: number): number {
-      const nx = (x - cx) / bx;
-      const ny = (y - cy) / by;
-      return nx * nx + ny * ny;
-    }
-
-    function step(a: Agent) {
-      if (a.alpha < 0.9) a.alpha = Math.min(0.9, a.alpha + 0.03);
-
-      if (a.phase === 'travel') {
-        a.x += a.vx;
-        a.y += a.vy;
-        if (ellipseDist(a.x, a.y) < 1) {
-          if (a.verdict === 'deny') {
-            // Deflect off the boundary normal.
-            const nx = (2 * (a.x - cx)) / (bx * bx);
-            const ny = (2 * (a.y - cy)) / (by * by);
-            const len = Math.hypot(nx, ny) || 1;
-            const ux = nx / len;
-            const uy = ny / len;
-            const dot = a.vx * ux + a.vy * uy;
-            a.vx = (a.vx - 2 * dot * ux) * 1.05;
-            a.vy = (a.vy - 2 * dot * uy) * 1.05;
-            a.phase = 'deflect';
-          } else if (a.verdict === 'review') {
-            // Held at the checkpoint, then released.
-            a.phase = 'held';
-            a.hold = 70 + Math.floor(Math.random() * 50);
-            a.vx = 0;
-            a.vy = 0;
-          } else {
-            a.phase = 'escort';
-          }
-        }
-      } else if (a.phase === 'held') {
-        a.hold -= 1;
-        a.blink += 0.22;
-        if (a.hold <= 0) a.phase = 'escort';
-      } else if (a.phase === 'escort') {
-        // Steer toward the aperture (bottom of the boundary, aimed at the CTA).
-        const ax = cx;
-        const ay = cy + by * 1.25;
-        const dx = ax - a.x;
-        const dy = ay - a.y;
-        const d = Math.hypot(dx, dy) || 1;
-        const speed = 1.7;
-        a.vx += (dx / d) * speed * 0.06;
-        a.vy += (dy / d) * speed * 0.06;
-        a.vx *= 0.97;
-        a.vy *= 0.97;
-        a.x += a.vx;
-        a.y += a.vy;
-        if (a.y > cy + by + 40) {
-          a.alpha -= 0.05;
-          if (a.alpha <= 0) spawn(a);
-        }
-      } else {
-        // deflect — coast until off-screen.
-        a.x += a.vx;
-        a.y += a.vy;
+      if (p.blocked) {
+        p.life -= 1;
+        p.alpha -= 0.05;
+        p.size *= 0.98;
+        if (p.life <= 0 || p.alpha <= 0) respawn(p);
+        return;
       }
 
-      if (a.x < -60 || a.x > width + 60 || a.y < -60 || a.y > height + 60) {
-        spawn(a);
+      p.radius += p.speed;
+
+      // Secret stripped at the PROXY ring — detaches and dissolves.
+      if (p.verdict === 'review' && p.secret && p.radius >= r2) {
+        p.secret = false;
+        secrets.push({radius: r2, angle: p.angle, life: 34, maxLife: 34});
+        flashes.push({
+          radius: r2,
+          angle: p.angle,
+          life: 20,
+          maxLife: 20,
+          color: palette.review,
+        });
       }
+
+      // Denied request absorbed at the ring it violates — never passes.
+      if (p.verdict === 'deny' && p.radius >= p.denyR) {
+        p.radius = p.denyR;
+        p.blocked = true;
+        p.life = 24;
+        flashes.push({
+          radius: p.denyR,
+          angle: p.angle,
+          life: 22,
+          maxLife: 22,
+          color: palette.deny,
+        });
+        return;
+      }
+
+      // Allowed / sanitized request has crossed into the external zone.
+      if (p.radius > diag) respawn(p);
     }
 
-    function color(a: Agent): string {
-      if (a.verdict === 'deny') return palette.deny;
-      if (a.verdict === 'review') return palette.review;
-      return palette.allow;
+    function buildStatic() {
+      // A curated, motionless cross-section for prefers-reduced-motion: an
+      // allowed request outside, one mid-flight, a request denied at each of two
+      // rings, and a review carrier past PROXY with its secret dissolving.
+      particles.length = 0;
+      flashes.length = 0;
+      secrets.length = 0;
+      const mk = (
+        angle: number,
+        radius: number,
+        verdict: Verdict,
+        secret: boolean,
+        blocked: boolean,
+        denyR: number,
+      ): Particle => ({
+        angle,
+        radius,
+        speed: 0,
+        verdict,
+        denyR,
+        secret,
+        blocked,
+        life: blocked ? 12 : 0,
+        alpha: 1,
+        size: 2.4,
+      });
+      particles.push(mk(-0.5, r3 * 1.14, 'allow', false, false, r3)); // outside
+      particles.push(mk(1.1, r1 * 1.2, 'allow', false, false, r3)); // mid-flight
+      particles.push(mk(2.4, r1, 'deny', false, true, r1)); // denied at SDK
+      particles.push(mk(3.7, r3, 'deny', false, true, r3)); // denied at eBPF
+      particles.push(mk(5.2, r2 * 1.28, 'review', false, false, r3)); // sanitized
+      particles.push(mk(0.4, r1 * 1.15, 'review', true, false, r3)); // carries secret
+      flashes.push({
+        radius: r1,
+        angle: 2.4,
+        life: 16,
+        maxLife: 22,
+        color: palette.deny,
+      });
+      flashes.push({
+        radius: r3,
+        angle: 3.7,
+        life: 16,
+        maxLife: 22,
+        color: palette.deny,
+      });
+      flashes.push({
+        radius: r2,
+        angle: 5.2,
+        life: 14,
+        maxLife: 20,
+        color: palette.review,
+      });
+      secrets.push({radius: r2, angle: 5.2, life: 20, maxLife: 34});
+    }
+
+    function drawRing(r: number, rotation: number, dash: number[]): void {
+      ctx!.save();
+      ctx!.translate(cx + parX, cy + parY);
+      ctx!.rotate(rotation);
+      ctx!.beginPath();
+      ctx!.setLineDash(dash);
+      ctx!.arc(0, 0, r, 0, Math.PI * 2);
+      ctx!.strokeStyle = lineColor(0.16);
+      ctx!.lineWidth = 1;
+      ctx!.stroke();
+      ctx!.setLineDash([]);
+      ctx!.restore();
+    }
+
+    function ringLabel(r: number, name: string): void {
+      const ecx = cx + parX;
+      const ecy = cy + parY;
+      const lx = ecx + Math.cos(LABEL_ANGLE) * r;
+      const ly = ecy + Math.sin(LABEL_ANGLE) * r;
+      ctx!.beginPath();
+      ctx!.arc(lx, ly, 2.4, 0, Math.PI * 2);
+      ctx!.fillStyle = lineColor(0.6);
+      ctx!.fill();
+      ctx!.font = `10px ${MONO}`;
+      ctx!.textAlign = 'left';
+      ctx!.textBaseline = 'middle';
+      ctx!.fillStyle = lineColor(0.72);
+      ctx!.fillText(name, lx + 8, ly);
+    }
+
+    function externalNode(name: string, angle: number): void {
+      const ecx = cx + parX;
+      const ecy = cy + parY;
+      const rr = r3 + 52;
+      let x = ecx + Math.cos(angle) * rr;
+      let y = ecy + Math.sin(angle) * rr;
+      const m = 92;
+      x = Math.max(m, Math.min(width - m, x));
+      y = Math.max(m, Math.min(height - m, y));
+      ctx!.beginPath();
+      ctx!.arc(x, y, 3, 0, Math.PI * 2);
+      ctx!.fillStyle = lineColor(0.42);
+      ctx!.fill();
+      ctx!.font = `9px ${MONO}`;
+      ctx!.textAlign = 'center';
+      ctx!.textBaseline = 'middle';
+      ctx!.fillStyle = lineColor(0.5);
+      ctx!.fillText(name, x, y + 12);
+    }
+
+    function drawCore(): void {
+      const ecx = cx + parX;
+      const ecy = cy + parY;
+      const pulse = 2 + 2 * Math.abs(Math.sin(t));
+      // Soft emission halo.
+      ctx!.beginPath();
+      ctx!.arc(ecx, ecy, r0 + pulse, 0, Math.PI * 2);
+      ctx!.strokeStyle = palette.allow;
+      ctx!.globalAlpha = 0.35;
+      ctx!.lineWidth = 1;
+      ctx!.stroke();
+      // Core disc.
+      ctx!.beginPath();
+      ctx!.arc(ecx, ecy, r0, 0, Math.PI * 2);
+      ctx!.fillStyle = lineColor(0.06);
+      ctx!.globalAlpha = 1;
+      ctx!.fill();
+      ctx!.strokeStyle = palette.allow;
+      ctx!.globalAlpha = 0.85;
+      ctx!.lineWidth = 1.4;
+      ctx!.stroke();
+      // Inner glyph.
+      ctx!.beginPath();
+      ctx!.arc(ecx, ecy, 3, 0, Math.PI * 2);
+      ctx!.fillStyle = palette.allow;
+      ctx!.globalAlpha = 1;
+      ctx!.fill();
+      // Label.
+      ctx!.font = `9px ${MONO}`;
+      ctx!.textAlign = 'center';
+      ctx!.textBaseline = 'middle';
+      ctx!.fillStyle = palette.allow;
+      ctx!.globalAlpha = 0.8;
+      ctx!.fillText('AGENT', ecx, ecy + r0 + 12);
+      ctx!.globalAlpha = 1;
     }
 
     function draw() {
       ctx!.clearRect(0, 0, width, height);
+      const ecx = cx + parX;
+      const ecy = cy + parY;
 
-      // Aperture marker at the bottom of the boundary (toward the CTA).
+      // Faint radial cross-section guide tying the ring labels together.
       ctx!.beginPath();
-      ctx!.arc(cx, cy + by * 1.25, 3, 0, Math.PI * 2);
-      ctx!.fillStyle = palette.allow;
-      ctx!.globalAlpha = 0.5;
-      ctx!.fill();
-      ctx!.globalAlpha = 1;
+      ctx!.setLineDash([2, 6]);
+      ctx!.moveTo(
+        ecx + Math.cos(LABEL_ANGLE) * (r0 + 6),
+        ecy + Math.sin(LABEL_ANGLE) * (r0 + 6),
+      );
+      ctx!.lineTo(
+        ecx + Math.cos(LABEL_ANGLE) * (r3 + 20),
+        ecy + Math.sin(LABEL_ANGLE) * (r3 + 20),
+      );
+      ctx!.strokeStyle = lineColor(0.1);
+      ctx!.lineWidth = 1;
+      ctx!.stroke();
+      ctx!.setLineDash([]);
 
-      for (const a of agents) {
-        let alpha = a.alpha;
-        if (a.phase === 'held') {
-          alpha *= 0.45 + 0.55 * Math.abs(Math.sin(a.blink));
-        }
-        // Escort trail toward the aperture.
-        if (a.phase === 'escort') {
+      // Three interception rings (slow counter-rotating dashed membranes).
+      drawRing(r1, rot * 1.0, [3, 7]);
+      drawRing(r2, -rot * 0.8, [10, 9]);
+      drawRing(r3, rot * 0.55, [2, 9]);
+
+      ringLabel(r1, 'SDK');
+      ringLabel(r2, 'PROXY');
+      ringLabel(r3, 'eBPF');
+
+      // External zone nodes (faint, outside the outer ring).
+      externalNode('LLM', -1.15);
+      externalNode('EXTERNAL API', 0.32);
+      externalNode('SERVICES', 2.3);
+
+      // Request particles.
+      for (const p of particles) {
+        const px = ecx + Math.cos(p.angle) * p.radius;
+        const py = ecy + Math.sin(p.angle) * p.radius;
+        const col = verdictColor(p.verdict);
+
+        if (!p.blocked) {
+          // Short radial motion trail.
           ctx!.beginPath();
-          ctx!.moveTo(a.x, a.y);
-          ctx!.lineTo(a.x - a.vx * 4, a.y - a.vy * 4);
-          ctx!.strokeStyle = color(a);
-          ctx!.globalAlpha = alpha * 0.35;
+          ctx!.moveTo(px, py);
+          ctx!.lineTo(px - Math.cos(p.angle) * 6, py - Math.sin(p.angle) * 6);
+          ctx!.strokeStyle = col;
+          ctx!.globalAlpha = p.alpha * 0.28;
           ctx!.lineWidth = 1;
           ctx!.stroke();
         }
+
         ctx!.beginPath();
-        ctx!.arc(a.x, a.y, a.r, 0, Math.PI * 2);
-        ctx!.fillStyle = color(a);
-        ctx!.globalAlpha = alpha;
+        ctx!.arc(px, py, p.size, 0, Math.PI * 2);
+        ctx!.fillStyle = col;
+        ctx!.globalAlpha = p.alpha * (p.blocked ? 0.9 : 1);
+        ctx!.fill();
+
+        // Attached secret dot on a review carrier that still holds it.
+        if (p.secret) {
+          const ox = Math.cos(p.angle + Math.PI / 2) * 4;
+          const oy = Math.sin(p.angle + Math.PI / 2) * 4;
+          ctx!.beginPath();
+          ctx!.arc(px + ox, py + oy, 2.2, 0, Math.PI * 2);
+          ctx!.fillStyle = palette.review;
+          ctx!.globalAlpha = p.alpha;
+          ctx!.fill();
+        }
+      }
+      ctx!.globalAlpha = 1;
+
+      // Detached secrets dissolving at the PROXY ring.
+      for (const s of secrets) {
+        const sx = ecx + Math.cos(s.angle) * s.radius;
+        const sy = ecy + Math.sin(s.angle) * s.radius;
+        const k = s.life / s.maxLife;
+        ctx!.beginPath();
+        ctx!.arc(sx, sy, 2.2 + (1 - k) * 3, 0, Math.PI * 2);
+        ctx!.fillStyle = palette.review;
+        ctx!.globalAlpha = Math.max(0, k) * 0.9;
         ctx!.fill();
       }
       ctx!.globalAlpha = 1;
+
+      // Ring flashes where requests are absorbed or secrets stripped.
+      for (const f of flashes) {
+        const k = f.life / f.maxLife;
+        ctx!.beginPath();
+        ctx!.arc(ecx, ecy, f.radius, f.angle - 0.28, f.angle + 0.28);
+        ctx!.strokeStyle = f.color;
+        ctx!.globalAlpha = Math.max(0, k) * 0.85;
+        ctx!.lineWidth = 2.5;
+        ctx!.stroke();
+      }
+      ctx!.globalAlpha = 1;
+
+      drawCore();
+    }
+
+    function update() {
+      for (const p of particles) step(p);
+      for (let i = flashes.length - 1; i >= 0; i--) {
+        flashes[i].life -= 1;
+        if (flashes[i].life <= 0) flashes.splice(i, 1);
+      }
+      for (let i = secrets.length - 1; i >= 0; i--) {
+        secrets[i].life -= 1;
+        if (secrets[i].life <= 0) secrets.splice(i, 1);
+      }
+      rot += 0.0016;
+      t += 0.03;
+      parX += (tParX - parX) * 0.06;
+      parY += (tParY - parY) * 0.06;
     }
 
     let raf = 0;
     function frame() {
-      for (const a of agents) step(a);
+      update();
       draw();
       raf = requestAnimationFrame(frame);
     }
 
     resize();
-    // Resizing the canvas clears it; under reduced-motion there is no animation
-    // loop to repaint, so redraw the single static frame after each resize.
-    const onResize = () => {
-      resize();
-      if (reduced) draw();
-    };
-    window.addEventListener('resize', onResize);
 
     if (reduced) {
+      buildStatic();
       draw();
     } else {
+      for (let i = 0; i < COUNT; i++) {
+        const p: Particle = {
+          angle: 0,
+          radius: 0,
+          speed: 0,
+          verdict: 'allow',
+          denyR: 0,
+          secret: false,
+          blocked: false,
+          life: 0,
+          alpha: 0,
+          size: 2,
+        };
+        respawn(p);
+        // Pre-scatter across the membrane so the field is populated at once.
+        p.radius = r0 + Math.random() * (diag * 0.55);
+        p.alpha = 0.9;
+        particles.push(p);
+      }
       raf = requestAnimationFrame(frame);
     }
 
-    // Cursor parallax across the three depth layers.
+    // Resizing clears the canvas; under reduced-motion there is no loop to
+    // repaint, so rebuild and redraw the single static frame after each resize.
+    const onResize = () => {
+      resize();
+      if (reduced) {
+        buildStatic();
+        draw();
+      }
+    };
+    window.addEventListener('resize', onResize);
+
+    // Cursor parallax gives the membrane a subtle sense of depth.
     let onMove: ((e: MouseEvent) => void) | null = null;
     if (!reduced) {
       onMove = (e: MouseEvent) => {
         const rect = root!.getBoundingClientRect();
-        const px = (e.clientX - rect.left) / rect.width - 0.5;
-        const py = (e.clientY - rect.top) / rect.height - 0.5;
-        if (farRef.current)
-          farRef.current.style.transform = `translate(${px * 14}px, ${py * 14}px)`;
-        if (midRef.current)
-          midRef.current.style.transform = `translate(${px * 30}px, ${py * 30}px)`;
-        if (nearRef.current)
-          nearRef.current.style.transform = `translate(${px * 52}px, ${py * 52}px)`;
+        tParX = ((e.clientX - rect.left) / rect.width - 0.5) * 26;
+        tParY = ((e.clientY - rect.top) / rect.height - 0.5) * 26;
       };
       window.addEventListener('mousemove', onMove);
     }
@@ -324,86 +550,10 @@ export function GovernedField(): ReactNode {
 
   return (
     <div ref={rootRef} className={styles.field} aria-hidden="true">
-      <div ref={farRef} className={styles.plxLayer}>
-        <svg
-          className={styles.ringFar}
-          viewBox="0 0 1600 1600"
-          width="1600"
-          height="1600"
-        >
-          <circle
-            cx="800"
-            cy="800"
-            r="720"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-            strokeDasharray="2800 340 900 483"
-          />
-        </svg>
-        <svg
-          className={styles.ringFarRev}
-          viewBox="0 0 1600 1600"
-          width="1600"
-          height="1600"
-        >
-          <circle
-            cx="800"
-            cy="800"
-            r="560"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-            strokeDasharray="4 10"
-          />
-        </svg>
-      </div>
-
-      <div ref={midRef} className={styles.plxLayer}>
-        <svg
-          className={styles.ringMid}
-          viewBox="0 0 1100 1100"
-          width="1100"
-          height="1100"
-        >
-          <circle
-            cx="550"
-            cy="550"
-            r="470"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeDasharray="900 120 500 120 900 313"
-          />
-        </svg>
-        <span className={`${styles.node} ${styles.nodeTrack1}`}>
-          <i className={styles.nodeRing} />
-          <em className={styles.nodeLabel}>RESEARCH TRACK 01</em>
-        </span>
-        <span className={`${styles.node} ${styles.nodeTrack2}`}>
-          <i className={styles.nodeRing} />
-          <em className={styles.nodeLabel}>RESEARCH TRACK 02</em>
-        </span>
-      </div>
-
-      <div ref={nearRef} className={styles.plxLayer}>
-        <span className={`${styles.node} ${styles.nodeActive}`}>
-          <i className={styles.nodeDotPulse} />
-          <em className={styles.nodeLabelActive}>
-            AI AGENT ASSEMBLY
-            <b>IN DEVELOPMENT</b>
-          </em>
-        </span>
-        <span className={`${styles.node} ${styles.nodeFuture}`}>
-          <i className={styles.nodeDotBlink} />
-          <em className={styles.nodeLabelFuture}>FUTURE SYSTEMS</em>
-        </span>
-      </div>
-
       <canvas ref={canvasRef} className={styles.canvas} />
       <div className={styles.vignette} />
       <div className={styles.logStrip}>
-        FIELD: 90 AGENTS · BOUNDARY: ACTIVE · APERTURE: CTA
+        LAYERS: SDK · PROXY · eBPF · SECRETS: CONTAINED
       </div>
     </div>
   );
