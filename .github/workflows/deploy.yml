@@ -36,7 +36,7 @@ jobs:
       # auto-create it in CI. Idempotent: a no-op once the project exists.
       - name: Ensure Cloudflare Pages project exists
         run: |
-          npx --yes wrangler@3.114.17 pages project create official-website \
+          npx --yes wrangler@3.114.17 pages project create agent-assembly-site \
             --production-branch=main \
             || echo "Project already exists; continuing to deploy."
       - name: Deploy to Cloudflare Pages
