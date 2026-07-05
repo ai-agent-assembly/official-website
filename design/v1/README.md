@@ -84,6 +84,48 @@ stack to avoid a webfont dependency.
   keep their existing positioning (monitor/manage + policy control plane;
   attaches to agents where they run; does not host/deploy agents).
 
+## Revision — concept change: concentric 3-layer governance membrane
+
+The background concept above (2a "Governed Field" particles deflecting off a flat,
+invisible boundary, merged with 2c parallax rings) was **redesigned** into a
+**concentric 3-layer governance membrane** that depicts the product's real
+three-layer interception model directly, in one continuous outward geometry.
+
+The file, component name (`GovernedField`), props, `styles.field` root,
+`aria-hidden`, `prefers-reduced-motion` handling, DPR-aware resize, theme-palette
+reactivity, and cleanup are all **preserved** — only the visual concept changed.
+
+**What it now renders:**
+
+- **Center — the agent.** A small labeled `AGENT` core node. Requests originate
+  here and travel radially **outward**.
+- **Three concentric rings** (slow counter-rotating dashed membranes), inner→outer,
+  each labeled along an upper-right cross-section ray:
+  - **SDK** (inner) — in-process identity + pre-exec allow/deny.
+  - **PROXY** (mid) — egress policy + secret redaction.
+  - **eBPF** (outer) — kernel enforcement / bypass catch.
+- **External zone** — faint labeled nodes outside the outer ring: `LLM`,
+  `EXTERNAL API`, `SERVICES`.
+- **Request particles** emitted from the core, each with a fate decided at the rings:
+  - **ALLOWED** (teal) — passes through all three rings into the external zone.
+  - **DENIED** (red) — absorbed with a brief ring flash at the layer it violates;
+    never reaches outside.
+  - **REDACTED** (teal carrier + amber secret dot) — passes, but the secret is
+    **stripped at the PROXY ring**: the amber dot detaches and dissolves while the
+    sanitized request continues outward without it.
+
+**Why:** the earlier flat-boundary metaphor read as a single generic checkpoint.
+The membrane makes the actual architecture literal — `AGENT → SDK → PROXY → eBPF →
+external` — and makes the security guarantee visible: **outside only ever receives
+allowed, sanitized requests, and secrets never cross the outer ring.** Denied
+requests and stripped secrets visibly stop/dissolve at the rings.
+
+The `allow=teal / review(secret)=amber / deny=red` palette tokens and the
+light/dark `readPalette()` reactivity are unchanged. The rings are now drawn on
+the single canvas (rotating dashed arcs + on-canvas labels) rather than as SVG
+parallax layers; cursor parallax is retained as a subtle whole-scene offset. The
+telemetry strip now reads `LAYERS: SDK · PROXY · eBPF · SECRETS: CONTAINED`.
+
 ## Scope
 
 This is the versioned design record for **AAASM-4143** only. Validation assets
