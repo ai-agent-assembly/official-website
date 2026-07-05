@@ -1,6 +1,7 @@
 import React, {type ReactNode} from 'react';
 import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
+import {GovernedField} from './GovernedField';
 
 const DOCS = 'https://docs.agent-assembly.com';
 const GETTING_STARTED = DOCS;
@@ -10,30 +11,37 @@ const CONSOLE = 'https://app.agent-assembly.com';
 export function Hero(): ReactNode {
   return (
     <header className={styles.hero}>
-      <div className={styles.heroGrid}>
-        <div>
-          <h1 className={styles.heroTitle}>
-            Define the boundaries of autonomous agents.
-          </h1>
-          <p className={styles.heroSub}>
-            Agent Assembly gives every AI agent an identity, limits what it can
-            do, and keeps secrets outside the model&rsquo;s reach — across
-            in-process SDKs, a sidecar proxy, and eBPF kernel hooks.
-          </p>
-          <div className={styles.ctaRow}>
-            <Link className={styles.btnPrimary} to={GETTING_STARTED}>
-              Start self-hosting →
-            </Link>
-            <span
-              className={`${styles.btnGhost} ${styles.btnDisabled}`}
-              aria-disabled="true"
-            >
-              {'Try Cloud '}
-              <span className={styles.soon}>👷 Coming soon</span>
-            </span>
-          </div>
+      <GovernedField />
+      <div className={styles.heroInner}>
+        <div className={styles.heroEyebrow}>
+          <span className={styles.eyebrowLine} />
+          Governed agent infrastructure
+          <span className={styles.eyebrowLine} />
         </div>
-        <div className={styles.terminal} aria-hidden="true">
+        <h1 className={styles.heroTitle}>
+          Define the boundaries of autonomous agents.
+        </h1>
+        <p className={styles.heroSub}>
+          Agent Assembly gives every AI agent an identity, limits what it can
+          do, and keeps secrets outside the model&rsquo;s reach — across
+          in-process SDKs, a sidecar proxy, and eBPF kernel hooks.
+        </p>
+        <div className={`${styles.ctaRow} ${styles.ctaRowCenter}`}>
+          <Link className={styles.btnPrimary} to={GETTING_STARTED}>
+            Start self-hosting →
+          </Link>
+          <span
+            className={`${styles.btnGhost} ${styles.btnDisabled}`}
+            aria-disabled="true"
+          >
+            {'Try Cloud '}
+            <span className={styles.soon}>👷 Coming soon</span>
+          </span>
+        </div>
+        <div
+          className={`${styles.terminal} ${styles.heroTerminal}`}
+          aria-hidden="true"
+        >
           <div className={styles.terminalBar}>
             <span className={styles.dot} />
             <span className={styles.dot} />
