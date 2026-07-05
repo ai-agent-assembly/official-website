@@ -6,22 +6,25 @@ import styles from './styles.module.css';
  * behind the hero copy that renders the product's real three-layer interception
  * model as a **concentric governance membrane**:
  *
- *   AGENT (center) → SDK ring → PROXY ring → eBPF ring → external zone
+ *   AGENT (center) → SDK ring → PROXY ring → eBPF ring → OUTSIDE (LLM / APIs)
  *
  * Requests are emitted from the central agent core and travel radially outward.
  * At each ring boundary the request's fate is decided: ALLOWED requests pass
  * through all three rings into the external zone; DENIED requests are absorbed
- * with a flash at the ring they violate and never reach outside; requests that
- * carry a secret have that secret stripped (redacted) at the PROXY ring — the
- * amber secret dot detaches and dissolves while the sanitized request continues
- * outward. The point: only allowed, sanitized requests ever cross the outer
- * ring — secrets never leak outward.
+ * with a flash + a short reason label at the ring they violate and never reach
+ * outside; requests that carry a secret have that secret stripped (redacted) at
+ * the PROXY ring — the amber secret dot detaches and dissolves while the
+ * sanitized request continues outward. Small ephemeral mono labels announce
+ * what each layer did (PERMISSION DENIED / EGRESS BLOCKED / SYSCALL BLOCKED /
+ * SECRET REDACTED / ALLOWED). The point: only allowed, sanitized requests ever
+ * cross the outer ring — secrets never leak outward.
  *
  * Rendered aria-hidden with pointer-events disabled (via styles.field). Honors
  * prefers-reduced-motion by drawing a single static frame — the core, three
- * labeled rings, a few particles mid-flight, and the external nodes — with no
- * animation loop and no cursor parallax. Theme palette (light/dark) is tracked
- * live via a MutationObserver on the document theme attribute.
+ * labeled rings, a few particles mid-flight, the external nodes, and a couple
+ * example event labels — with no animation loop and no cursor parallax. Theme
+ * palette (light/dark) is tracked live via a MutationObserver, and ring/label
+ * opacity is raised in the light theme so the structure reads on white.
  */
 
 type Verdict = 'allow' | 'review' | 'deny';
@@ -54,11 +57,22 @@ interface Secret {
   maxLife: number;
 }
 
+interface EventLabel {
+  angle: number;
+  radius: number;
+  text: string;
+  color: string;
+  life: number;
+  maxLife: number;
+}
+
 interface Palette {
   allow: string;
   review: string;
   deny: string;
   line: string; // "rgba(r, g, b, " — caller appends alpha + ")"
+  halo: string; // background-colored "rgba(r, g, b, " for text halos
+  dark: boolean;
 }
 
 function readPalette(): Palette {
@@ -71,12 +85,16 @@ function readPalette(): Palette {
         review: '#f5a623',
         deny: '#f87171',
         line: 'rgba(230, 237, 243, ',
+        halo: 'rgba(13, 17, 23, ',
+        dark: true,
       }
     : {
         allow: '#0d9488',
-        review: '#d18616',
-        deny: '#e5484d',
-        line: 'rgba(27, 39, 51, ',
+        review: '#c2410c',
+        deny: '#dc2626',
+        line: 'rgba(24, 34, 45, ',
+        halo: 'rgba(255, 255, 255, ',
+        dark: false,
       };
 }
 
@@ -112,16 +130,18 @@ export function GovernedField(): ReactNode {
     });
 
     const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
-    // Ray (upper-right) along which the three ring labels are stacked, so the
-    // "cross-section" reads AGENT → SDK → PROXY → eBPF away from the hero text.
+    // Ray (upper-right) along which the ring labels + OUTSIDE cue are stacked,
+    // so the "cross-section" reads AGENT → SDK → PROXY → eBPF → OUTSIDE away
+    // from the centered hero text.
     const LABEL_ANGLE = -Math.PI * 0.3;
+    const MAX_LABELS = 6;
 
     let width = 0;
     let height = 0;
     let dpr = 1;
     let cx = 0;
     let cy = 0;
-    const r0 = 15; // agent core radius (emission origin)
+    const r0 = 18; // agent core radius (emission origin)
     let r1 = 0; // SDK ring
     let r2 = 0; // PROXY ring
     let r3 = 0; // eBPF ring
@@ -131,6 +151,7 @@ export function GovernedField(): ReactNode {
     const particles: Particle[] = [];
     const flashes: Flash[] = [];
     const secrets: Secret[] = [];
+    const labels: EventLabel[] = [];
 
     // Animation-only state.
     let rot = 0;
@@ -147,6 +168,47 @@ export function GovernedField(): ReactNode {
     function verdictColor(v: Verdict): string {
       if (v === 'deny') return palette.deny;
       return palette.allow; // allowed + sanitized review carriers travel teal
+    }
+
+    function denyReason(denyR: number): string {
+      if (denyR === r1) return 'PERMISSION DENIED';
+      if (denyR === r2) return 'EGRESS BLOCKED';
+      return 'SYSCALL BLOCKED';
+    }
+
+    function pushLabel(
+      text: string,
+      angle: number,
+      radius: number,
+      color: string,
+      life: number,
+    ) {
+      if (labels.length >= MAX_LABELS) labels.shift();
+      labels.push({angle, radius, text, color, life, maxLife: life});
+    }
+
+    // Text with a background-colored halo so it stays legible in both themes.
+    function label(
+      text: string,
+      x: number,
+      y: number,
+      color: string,
+      alpha: number,
+      size: number,
+      align: CanvasTextAlign,
+      bold = false,
+    ) {
+      ctx!.font = `${bold ? 'bold ' : ''}${size}px ${MONO}`;
+      ctx!.textAlign = align;
+      ctx!.textBaseline = 'middle';
+      ctx!.globalAlpha = alpha;
+      ctx!.lineJoin = 'round';
+      ctx!.lineWidth = 3;
+      ctx!.strokeStyle = palette.halo + '0.82)';
+      ctx!.strokeText(text, x, y);
+      ctx!.fillStyle = color;
+      ctx!.fillText(text, x, y);
+      ctx!.globalAlpha = 1;
     }
 
     function resize() {
@@ -177,7 +239,7 @@ export function GovernedField(): ReactNode {
       p.blocked = false;
       p.life = 0;
       p.alpha = 0;
-      p.size = 1.5 + Math.random() * 1.4;
+      p.size = 1.6 + Math.random() * 1.5;
     }
 
     function step(p: Particle) {
@@ -191,9 +253,10 @@ export function GovernedField(): ReactNode {
         return;
       }
 
+      const prevR = p.radius;
       p.radius += p.speed;
 
-      // Secret stripped at the PROXY ring — detaches and dissolves.
+      // Secret scanned + stripped at the PROXY ring — detaches and dissolves.
       if (p.verdict === 'review' && p.secret && p.radius >= r2) {
         p.secret = false;
         secrets.push({radius: r2, angle: p.angle, life: 34, maxLife: 34});
@@ -204,6 +267,8 @@ export function GovernedField(): ReactNode {
           maxLife: 20,
           color: palette.review,
         });
+        pushLabel('SECRET REDACTED', p.angle, r2, palette.review, 52);
+        return;
       }
 
       // Denied request absorbed at the ring it violates — never passes.
@@ -218,20 +283,28 @@ export function GovernedField(): ReactNode {
           maxLife: 22,
           color: palette.deny,
         });
+        pushLabel(denyReason(p.denyR), p.angle, p.denyR, palette.deny, 50);
         return;
       }
 
-      // Allowed / sanitized request has crossed into the external zone.
+      // An allowed / sanitized request crossing the outer ring into the world.
+      if (prevR < r3 && p.radius >= r3 && Math.random() < 0.14) {
+        pushLabel('ALLOWED', p.angle, r3, palette.allow, 46);
+      }
+
+      // Fully out into the external zone — recycle.
       if (p.radius > diag) respawn(p);
     }
 
     function buildStatic() {
       // A curated, motionless cross-section for prefers-reduced-motion: an
-      // allowed request outside, one mid-flight, a request denied at each of two
-      // rings, and a review carrier past PROXY with its secret dissolving.
+      // allowed request outside, one mid-flight, a request denied at two rings,
+      // a review carrier past PROXY with its secret dissolving, plus a couple of
+      // example event labels.
       particles.length = 0;
       flashes.length = 0;
       secrets.length = 0;
+      labels.length = 0;
       const mk = (
         angle: number,
         radius: number,
@@ -249,14 +322,14 @@ export function GovernedField(): ReactNode {
         blocked,
         life: blocked ? 12 : 0,
         alpha: 1,
-        size: 2.4,
+        size: 2.6,
       });
       particles.push(mk(-0.5, r3 * 1.14, 'allow', false, false, r3)); // outside
       particles.push(mk(1.1, r1 * 1.2, 'allow', false, false, r3)); // mid-flight
       particles.push(mk(2.4, r1, 'deny', false, true, r1)); // denied at SDK
       particles.push(mk(3.7, r3, 'deny', false, true, r3)); // denied at eBPF
       particles.push(mk(5.2, r2 * 1.28, 'review', false, false, r3)); // sanitized
-      particles.push(mk(0.4, r1 * 1.15, 'review', true, false, r3)); // carries secret
+      particles.push(mk(0.4, r1 * 1.15, 'review', true, false, r3)); // has secret
       flashes.push({
         radius: r1,
         angle: 2.4,
@@ -279,17 +352,36 @@ export function GovernedField(): ReactNode {
         color: palette.review,
       });
       secrets.push({radius: r2, angle: 5.2, life: 20, maxLife: 34});
+      pushLabel('PERMISSION DENIED', 2.4, r1, palette.deny, 50);
+      pushLabel('SECRET REDACTED', 5.2, r2, palette.review, 50);
+      pushLabel('ALLOWED', -0.5, r3, palette.allow, 46);
     }
 
-    function drawRing(r: number, rotation: number, dash: number[]): void {
+    function drawRing(
+      r: number,
+      rotation: number,
+      dash: number[],
+      lw: number,
+      alpha: number,
+    ): void {
+      const ecx = cx + parX;
+      const ecy = cy + parY;
+      // Continuous faint membrane so each layer reads even between dashes.
+      ctx!.beginPath();
+      ctx!.setLineDash([]);
+      ctx!.arc(ecx, ecy, r, 0, Math.PI * 2);
+      ctx!.strokeStyle = lineColor(alpha * 0.5);
+      ctx!.lineWidth = Math.max(1, lw * 0.7);
+      ctx!.stroke();
+      // Slow rotating dashed emphasis on top.
       ctx!.save();
-      ctx!.translate(cx + parX, cy + parY);
+      ctx!.translate(ecx, ecy);
       ctx!.rotate(rotation);
       ctx!.beginPath();
       ctx!.setLineDash(dash);
       ctx!.arc(0, 0, r, 0, Math.PI * 2);
-      ctx!.strokeStyle = lineColor(0.16);
-      ctx!.lineWidth = 1;
+      ctx!.strokeStyle = lineColor(alpha);
+      ctx!.lineWidth = lw;
       ctx!.stroke();
       ctx!.setLineDash([]);
       ctx!.restore();
@@ -301,71 +393,68 @@ export function GovernedField(): ReactNode {
       const lx = ecx + Math.cos(LABEL_ANGLE) * r;
       const ly = ecy + Math.sin(LABEL_ANGLE) * r;
       ctx!.beginPath();
-      ctx!.arc(lx, ly, 2.4, 0, Math.PI * 2);
-      ctx!.fillStyle = lineColor(0.6);
+      ctx!.arc(lx, ly, 2.8, 0, Math.PI * 2);
+      ctx!.fillStyle = lineColor(0.95);
+      ctx!.globalAlpha = 1;
       ctx!.fill();
-      ctx!.font = `10px ${MONO}`;
-      ctx!.textAlign = 'left';
-      ctx!.textBaseline = 'middle';
-      ctx!.fillStyle = lineColor(0.72);
-      ctx!.fillText(name, lx + 8, ly);
+      label(name, lx + 9, ly, lineColor(1), 1, 11, 'left', true);
     }
 
     function externalNode(name: string, angle: number): void {
       const ecx = cx + parX;
       const ecy = cy + parY;
-      const rr = r3 + 52;
+      const rr = r3 + 54;
       let x = ecx + Math.cos(angle) * rr;
       let y = ecy + Math.sin(angle) * rr;
-      const m = 92;
+      const m = 96;
       x = Math.max(m, Math.min(width - m, x));
       y = Math.max(m, Math.min(height - m, y));
       ctx!.beginPath();
       ctx!.arc(x, y, 3, 0, Math.PI * 2);
-      ctx!.fillStyle = lineColor(0.42);
+      ctx!.fillStyle = lineColor(0.6);
+      ctx!.globalAlpha = 1;
       ctx!.fill();
-      ctx!.font = `9px ${MONO}`;
-      ctx!.textAlign = 'center';
-      ctx!.textBaseline = 'middle';
-      ctx!.fillStyle = lineColor(0.5);
-      ctx!.fillText(name, x, y + 12);
+      label(name, x, y + 12, lineColor(0.7), 1, 9, 'center');
     }
 
     function drawCore(): void {
       const ecx = cx + parX;
       const ecy = cy + parY;
-      const pulse = 2 + 2 * Math.abs(Math.sin(t));
-      // Soft emission halo.
+      const pulse = 2 + 2.5 * Math.abs(Math.sin(t));
+      // Layered glow so the agent reads as the origin even through the vignette.
+      ctx!.fillStyle = palette.allow;
+      ctx!.beginPath();
+      ctx!.arc(ecx, ecy, r0 * 2.6, 0, Math.PI * 2);
+      ctx!.globalAlpha = 0.1;
+      ctx!.fill();
+      ctx!.beginPath();
+      ctx!.arc(ecx, ecy, r0 * 1.7, 0, Math.PI * 2);
+      ctx!.globalAlpha = 0.16;
+      ctx!.fill();
+      // Pulse ring.
       ctx!.beginPath();
       ctx!.arc(ecx, ecy, r0 + pulse, 0, Math.PI * 2);
       ctx!.strokeStyle = palette.allow;
-      ctx!.globalAlpha = 0.35;
+      ctx!.globalAlpha = 0.5;
       ctx!.lineWidth = 1;
       ctx!.stroke();
-      // Core disc.
+      // Core disc — halo-colored fill for contrast, accent outline.
       ctx!.beginPath();
       ctx!.arc(ecx, ecy, r0, 0, Math.PI * 2);
-      ctx!.fillStyle = lineColor(0.06);
+      ctx!.fillStyle = palette.halo + '0.88)';
       ctx!.globalAlpha = 1;
       ctx!.fill();
       ctx!.strokeStyle = palette.allow;
-      ctx!.globalAlpha = 0.85;
-      ctx!.lineWidth = 1.4;
+      ctx!.lineWidth = 2.4;
       ctx!.stroke();
       // Inner glyph.
       ctx!.beginPath();
-      ctx!.arc(ecx, ecy, 3, 0, Math.PI * 2);
+      ctx!.arc(ecx, ecy, 4.2, 0, Math.PI * 2);
       ctx!.fillStyle = palette.allow;
-      ctx!.globalAlpha = 1;
       ctx!.fill();
-      // Label.
-      ctx!.font = `9px ${MONO}`;
-      ctx!.textAlign = 'center';
-      ctx!.textBaseline = 'middle';
-      ctx!.fillStyle = palette.allow;
-      ctx!.globalAlpha = 0.8;
-      ctx!.fillText('AGENT', ecx, ecy + r0 + 12);
       ctx!.globalAlpha = 1;
+      // Label.
+      label('AGENT', ecx, ecy + r0 + 13, palette.allow, 1, 10, 'center', true);
     }
 
     function draw() {
@@ -381,33 +470,42 @@ export function GovernedField(): ReactNode {
         ecy + Math.sin(LABEL_ANGLE) * (r0 + 6),
       );
       ctx!.lineTo(
-        ecx + Math.cos(LABEL_ANGLE) * (r3 + 20),
-        ecy + Math.sin(LABEL_ANGLE) * (r3 + 20),
+        ecx + Math.cos(LABEL_ANGLE) * (r3 + 66),
+        ecy + Math.sin(LABEL_ANGLE) * (r3 + 66),
       );
-      ctx!.strokeStyle = lineColor(0.1);
+      ctx!.strokeStyle = lineColor(0.14);
       ctx!.lineWidth = 1;
       ctx!.stroke();
       ctx!.setLineDash([]);
 
-      // Three interception rings (slow counter-rotating dashed membranes).
-      drawRing(r1, rot * 1.0, [3, 7]);
-      drawRing(r2, -rot * 0.8, [10, 9]);
-      drawRing(r3, rot * 0.55, [2, 9]);
+      // Three interception rings, inner→outer, progressively bolder. The outer
+      // eBPF ring is the strongest — it is the last boundary before OUTSIDE.
+      const base = palette.dark ? 0.34 : 0.52;
+      drawRing(r1, rot * 1.0, [4, 6], 1.4, base);
+      drawRing(r2, -rot * 0.8, [12, 8], 1.7, base + 0.05);
+      drawRing(r3, rot * 0.55, [3, 8], 2.1, base + 0.12);
 
       ringLabel(r1, 'SDK');
       ringLabel(r2, 'PROXY');
       ringLabel(r3, 'eBPF');
 
-      // External zone nodes (faint, outside the outer ring).
+      // Inside↔outside cue: OUTSIDE sits just beyond the outer ring on the ray.
+      const ox = ecx + Math.cos(LABEL_ANGLE) * (r3 + 44);
+      const oy = ecy + Math.sin(LABEL_ANGLE) * (r3 + 44);
+      label('OUTSIDE', ox + 9, oy, lineColor(0.6), 1, 9.5, 'left');
+
+      // External zone nodes (outside the outer ring).
       externalNode('LLM', -1.15);
       externalNode('EXTERNAL API', 0.32);
       externalNode('SERVICES', 2.3);
 
-      // Request particles.
+      // Request particles (faded near the core so the headline stays calm).
       for (const p of particles) {
         const px = ecx + Math.cos(p.angle) * p.radius;
         const py = ecy + Math.sin(p.angle) * p.radius;
         const col = verdictColor(p.verdict);
+        const near = Math.max(0, Math.min(1, (p.radius - r0) / (r1 - r0)));
+        const a = p.alpha * (0.18 + 0.82 * near);
 
         if (!p.blocked) {
           // Short radial motion trail.
@@ -415,7 +513,7 @@ export function GovernedField(): ReactNode {
           ctx!.moveTo(px, py);
           ctx!.lineTo(px - Math.cos(p.angle) * 6, py - Math.sin(p.angle) * 6);
           ctx!.strokeStyle = col;
-          ctx!.globalAlpha = p.alpha * 0.28;
+          ctx!.globalAlpha = a * 0.3;
           ctx!.lineWidth = 1;
           ctx!.stroke();
         }
@@ -423,17 +521,17 @@ export function GovernedField(): ReactNode {
         ctx!.beginPath();
         ctx!.arc(px, py, p.size, 0, Math.PI * 2);
         ctx!.fillStyle = col;
-        ctx!.globalAlpha = p.alpha * (p.blocked ? 0.9 : 1);
+        ctx!.globalAlpha = a * (p.blocked ? 0.9 : 1);
         ctx!.fill();
 
         // Attached secret dot on a review carrier that still holds it.
         if (p.secret) {
-          const ox = Math.cos(p.angle + Math.PI / 2) * 4;
-          const oy = Math.sin(p.angle + Math.PI / 2) * 4;
+          const ox2 = Math.cos(p.angle + Math.PI / 2) * 4;
+          const oy2 = Math.sin(p.angle + Math.PI / 2) * 4;
           ctx!.beginPath();
-          ctx!.arc(px + ox, py + oy, 2.2, 0, Math.PI * 2);
+          ctx!.arc(px + ox2, py + oy2, 2.3, 0, Math.PI * 2);
           ctx!.fillStyle = palette.review;
-          ctx!.globalAlpha = p.alpha;
+          ctx!.globalAlpha = a;
           ctx!.fill();
         }
       }
@@ -445,7 +543,7 @@ export function GovernedField(): ReactNode {
         const sy = ecy + Math.sin(s.angle) * s.radius;
         const k = s.life / s.maxLife;
         ctx!.beginPath();
-        ctx!.arc(sx, sy, 2.2 + (1 - k) * 3, 0, Math.PI * 2);
+        ctx!.arc(sx, sy, 2.3 + (1 - k) * 3, 0, Math.PI * 2);
         ctx!.fillStyle = palette.review;
         ctx!.globalAlpha = Math.max(0, k) * 0.9;
         ctx!.fill();
@@ -456,13 +554,22 @@ export function GovernedField(): ReactNode {
       for (const f of flashes) {
         const k = f.life / f.maxLife;
         ctx!.beginPath();
-        ctx!.arc(ecx, ecy, f.radius, f.angle - 0.28, f.angle + 0.28);
+        ctx!.arc(ecx, ecy, f.radius, f.angle - 0.3, f.angle + 0.3);
         ctx!.strokeStyle = f.color;
-        ctx!.globalAlpha = Math.max(0, k) * 0.85;
-        ctx!.lineWidth = 2.5;
+        ctx!.globalAlpha = Math.max(0, k) * 0.9;
+        ctx!.lineWidth = 3;
         ctx!.stroke();
       }
       ctx!.globalAlpha = 1;
+
+      // Ephemeral event text near each flash/strip point.
+      for (const ev of labels) {
+        const k = ev.life / ev.maxLife;
+        const lx = ecx + Math.cos(ev.angle) * (ev.radius + 15);
+        const ly = ecy + Math.sin(ev.angle) * (ev.radius + 15);
+        const fade = Math.min(1, k * 3); // quick out-fade near end of life
+        label(ev.text, lx, ly, ev.color, fade, 9, 'center', true);
+      }
 
       drawCore();
     }
@@ -476,6 +583,11 @@ export function GovernedField(): ReactNode {
       for (let i = secrets.length - 1; i >= 0; i--) {
         secrets[i].life -= 1;
         if (secrets[i].life <= 0) secrets.splice(i, 1);
+      }
+      for (let i = labels.length - 1; i >= 0; i--) {
+        labels[i].life -= 1;
+        labels[i].radius += 0.35; // drift gently outward while fading
+        if (labels[i].life <= 0) labels.splice(i, 1);
       }
       rot += 0.0016;
       t += 0.03;
@@ -551,7 +663,18 @@ export function GovernedField(): ReactNode {
   return (
     <div ref={rootRef} className={styles.field} aria-hidden="true">
       <canvas ref={canvasRef} className={styles.canvas} />
-      <div className={styles.vignette} />
+      {/* Softer than the CSS default so the agent core + inner rings read while
+          the headline stays legible (particles are also faded near center). */}
+      <div
+        className={styles.vignette}
+        style={{
+          background:
+            'radial-gradient(ellipse 600px 340px at 50% 46%, ' +
+            'color-mix(in srgb, var(--aa-bg) 76%, transparent) 0%, ' +
+            'color-mix(in srgb, var(--aa-bg) 40%, transparent) 58%, ' +
+            'transparent 100%)',
+        }}
+      />
       <div className={styles.logStrip}>
         LAYERS: SDK · PROXY · eBPF · SECRETS: CONTAINED
       </div>
