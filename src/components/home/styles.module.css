@@ -278,6 +278,9 @@
   inset: 0;
   z-index: 0;
   overflow: hidden;
+  /* Purely decorative background — never intercept pointer/selection events
+     from the hero content stacked above it. */
+  pointer-events: none;
 }
 .canvas {
   position: absolute;

@@ -283,7 +283,12 @@ export function GovernedField(): ReactNode {
     }
 
     resize();
-    const onResize = () => resize();
+    // Resizing the canvas clears it; under reduced-motion there is no animation
+    // loop to repaint, so redraw the single static frame after each resize.
+    const onResize = () => {
+      resize();
+      if (reduced) draw();
+    };
     window.addEventListener('resize', onResize);
 
     if (reduced) {
