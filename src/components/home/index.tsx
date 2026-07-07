@@ -14,8 +14,7 @@ export function Hero(): ReactNode {
       <GovernedField />
       <div className={styles.heroInner}>
         <div className={styles.heroEyebrow}>
-          <span className={styles.eyebrowLine} />
-          Governed agent infrastructure
+          <span className={styles.eyebrowLine} /> Governed agent infrastructure{' '}
           <span className={styles.eyebrowLine} />
         </div>
         <h1 className={styles.heroTitle}>
