@@ -291,8 +291,8 @@ export function GovernedField(): ReactNode {
       }
 
       // An allowed / sanitized request crossing the outer ring into the world.
-      // NOSONAR - safe: visual particle animation only, not security-sensitive
       if (prevR < r3 && p.radius >= r3 && Math.random() < 0.14) {
+        // NOSONAR - safe: visual particle animation only
         // NOSONAR - safe: visual particle animation only, not security-sensitive
         pushLabel('ALLOWED', p.angle, r3, palette.allow, 46);
       }
@@ -329,33 +329,19 @@ export function GovernedField(): ReactNode {
         alpha: 1,
         size: 2.6,
       });
-      particles.push(mk(-0.5, r3 * 1.14, 'allow', false, false, r3)); // outside
-      particles.push(mk(1.1, r1 * 1.2, 'allow', false, false, r3)); // mid-flight
-      particles.push(mk(2.4, r1, 'deny', false, true, r1)); // denied at SDK
-      particles.push(mk(3.7, r3, 'deny', false, true, r3)); // denied at eBPF
-      particles.push(mk(5.2, r2 * 1.28, 'review', false, false, r3)); // sanitized
-      particles.push(mk(0.4, r1 * 1.15, 'review', true, false, r3)); // has secret
-      flashes.push({
-        radius: r1,
-        angle: 2.4,
-        life: 16,
-        maxLife: 22,
-        color: palette.deny,
-      });
-      flashes.push({
-        radius: r3,
-        angle: 3.7,
-        life: 16,
-        maxLife: 22,
-        color: palette.deny,
-      });
-      flashes.push({
-        radius: r2,
-        angle: 5.2,
-        life: 14,
-        maxLife: 20,
-        color: palette.review,
-      });
+      particles.push(
+        mk(-0.5, r3 * 1.14, 'allow', false, false, r3), // outside
+        mk(1.1, r1 * 1.2, 'allow', false, false, r3), // mid-flight
+        mk(2.4, r1, 'deny', false, true, r1), // denied at SDK
+        mk(3.7, r3, 'deny', false, true, r3), // denied at eBPF
+        mk(5.2, r2 * 1.28, 'review', false, false, r3), // sanitized
+        mk(0.4, r1 * 1.15, 'review', true, false, r3), // has secret
+      );
+      flashes.push(
+        {radius: r1, angle: 2.4, life: 16, maxLife: 22, color: palette.deny},
+        {radius: r3, angle: 3.7, life: 16, maxLife: 22, color: palette.deny},
+        {radius: r2, angle: 5.2, life: 14, maxLife: 20, color: palette.review},
+      );
       secrets.push({radius: r2, angle: 5.2, life: 20, maxLife: 34});
       pushLabel('PERMISSION DENIED', 2.4, r1, palette.deny, 50);
       pushLabel('SECRET REDACTED', 5.2, r2, palette.review, 50);
