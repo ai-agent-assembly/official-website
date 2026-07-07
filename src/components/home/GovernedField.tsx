@@ -291,6 +291,7 @@ export function GovernedField(): ReactNode {
       }
 
       // An allowed / sanitized request crossing the outer ring into the world.
+      // NOSONAR - safe: visual particle animation only, not security-sensitive
       if (prevR < r3 && p.radius >= r3 && Math.random() < 0.14) {
         // NOSONAR - safe: visual particle animation only, not security-sensitive
         pushLabel('ALLOWED', p.angle, r3, palette.allow, 46);
