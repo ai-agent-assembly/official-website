@@ -66,6 +66,17 @@ interface EventLabel {
   maxLife: number;
 }
 
+interface LabelOptions {
+  text: string;
+  x: number;
+  y: number;
+  color: string;
+  alpha: number;
+  size: number;
+  align: CanvasTextAlign;
+  bold?: boolean;
+}
+
 interface Palette {
   allow: string;
   review: string;
@@ -188,16 +199,8 @@ export function GovernedField(): ReactNode {
     }
 
     // Text with a background-colored halo so it stays legible in both themes.
-    function label(
-      text: string,
-      x: number,
-      y: number,
-      color: string,
-      alpha: number,
-      size: number,
-      align: CanvasTextAlign,
-      bold = false,
-    ) {
+    function label(opts: LabelOptions) {
+      const {text, x, y, color, alpha, size, align, bold = false} = opts;
       ctx!.font = `${bold ? 'bold ' : ''}${size}px ${MONO}`;
       ctx!.textAlign = align;
       ctx!.textBaseline = 'middle';
@@ -288,7 +291,8 @@ export function GovernedField(): ReactNode {
       }
 
       // An allowed / sanitized request crossing the outer ring into the world.
-      if (prevR < r3 && p.radius >= r3 && Math.random() < 0.14) { // NOSONAR - safe: visual particle animation only, not security-sensitive
+      if (prevR < r3 && p.radius >= r3 && Math.random() < 0.14) {
+        // NOSONAR - safe: visual particle animation only, not security-sensitive
         pushLabel('ALLOWED', p.angle, r3, palette.allow, 46);
       }
 
@@ -397,7 +401,16 @@ export function GovernedField(): ReactNode {
       ctx!.fillStyle = lineColor(0.95);
       ctx!.globalAlpha = 1;
       ctx!.fill();
-      label(name, lx + 9, ly, lineColor(1), 1, 11, 'left', true);
+      label({
+        text: name,
+        x: lx + 9,
+        y: ly,
+        color: lineColor(1),
+        alpha: 1,
+        size: 11,
+        align: 'left',
+        bold: true,
+      });
     }
 
     function externalNode(name: string, angle: number): void {
@@ -414,7 +427,15 @@ export function GovernedField(): ReactNode {
       ctx!.fillStyle = lineColor(0.6);
       ctx!.globalAlpha = 1;
       ctx!.fill();
-      label(name, x, y + 12, lineColor(0.7), 1, 9, 'center');
+      label({
+        text: name,
+        x,
+        y: y + 12,
+        color: lineColor(0.7),
+        alpha: 1,
+        size: 9,
+        align: 'center',
+      });
     }
 
     function drawCore(): void {
@@ -454,7 +475,16 @@ export function GovernedField(): ReactNode {
       ctx!.fill();
       ctx!.globalAlpha = 1;
       // Label.
-      label('AGENT', ecx, ecy + r0 + 13, palette.allow, 1, 10, 'center', true);
+      label({
+        text: 'AGENT',
+        x: ecx,
+        y: ecy + r0 + 13,
+        color: palette.allow,
+        alpha: 1,
+        size: 10,
+        align: 'center',
+        bold: true,
+      });
     }
 
     function draw() {
@@ -492,7 +522,15 @@ export function GovernedField(): ReactNode {
       // Inside↔outside cue: OUTSIDE sits just beyond the outer ring on the ray.
       const ox = ecx + Math.cos(LABEL_ANGLE) * (r3 + 44);
       const oy = ecy + Math.sin(LABEL_ANGLE) * (r3 + 44);
-      label('OUTSIDE', ox + 9, oy, lineColor(0.6), 1, 9.5, 'left');
+      label({
+        text: 'OUTSIDE',
+        x: ox + 9,
+        y: oy,
+        color: lineColor(0.6),
+        alpha: 1,
+        size: 9.5,
+        align: 'left',
+      });
 
       // External zone nodes (outside the outer ring).
       externalNode('LLM', -1.15);
@@ -568,7 +606,16 @@ export function GovernedField(): ReactNode {
         const lx = ecx + Math.cos(ev.angle) * (ev.radius + 15);
         const ly = ecy + Math.sin(ev.angle) * (ev.radius + 15);
         const fade = Math.min(1, k * 3); // quick out-fade near end of life
-        label(ev.text, lx, ly, ev.color, fade, 9, 'center', true);
+        label({
+          text: ev.text,
+          x: lx,
+          y: ly,
+          color: ev.color,
+          alpha: fade,
+          size: 9,
+          align: 'center',
+          bold: true,
+        });
       }
 
       drawCore();
