@@ -99,7 +99,7 @@ function readPalette(): Palette {
 }
 
 function pickVerdict(): Verdict {
-  const r = Math.random();
+  const r = Math.random(); // NOSONAR - safe: visual particle animation only, not security-sensitive
   if (r < 0.54) return 'allow';
   if (r < 0.76) return 'review';
   return 'deny';
@@ -229,17 +229,17 @@ export function GovernedField(): ReactNode {
     }
 
     function respawn(p: Particle) {
-      p.angle = Math.random() * Math.PI * 2;
-      p.radius = r0 + Math.random() * 6;
-      p.speed = 0.55 + Math.random() * 0.7;
+      p.angle = Math.random() * Math.PI * 2; // NOSONAR - safe: visual particle animation only, not security-sensitive
+      p.radius = r0 + Math.random() * 6; // NOSONAR - safe: visual particle animation only, not security-sensitive
+      p.speed = 0.55 + Math.random() * 0.7; // NOSONAR - safe: visual particle animation only, not security-sensitive
       p.verdict = pickVerdict();
       // Denied requests are caught at one of the three rings.
-      p.denyR = [r1, r2, r3][Math.floor(Math.random() * 3)];
+      p.denyR = [r1, r2, r3][Math.floor(Math.random() * 3)]; // NOSONAR - safe: visual particle animation only, not security-sensitive
       p.secret = p.verdict === 'review';
       p.blocked = false;
       p.life = 0;
       p.alpha = 0;
-      p.size = 1.6 + Math.random() * 1.5;
+      p.size = 1.6 + Math.random() * 1.5; // NOSONAR - safe: visual particle animation only, not security-sensitive
     }
 
     function step(p: Particle) {
@@ -288,7 +288,7 @@ export function GovernedField(): ReactNode {
       }
 
       // An allowed / sanitized request crossing the outer ring into the world.
-      if (prevR < r3 && p.radius >= r3 && Math.random() < 0.14) {
+      if (prevR < r3 && p.radius >= r3 && Math.random() < 0.14) { // NOSONAR - safe: visual particle animation only, not security-sensitive
         pushLabel('ALLOWED', p.angle, r3, palette.allow, 46);
       }
 
@@ -623,7 +623,7 @@ export function GovernedField(): ReactNode {
         };
         respawn(p);
         // Pre-scatter across the membrane so the field is populated at once.
-        p.radius = r0 + Math.random() * (diag * 0.55);
+        p.radius = r0 + Math.random() * (diag * 0.55); // NOSONAR - safe: visual particle animation only, not security-sensitive
         p.alpha = 0.9;
         particles.push(p);
       }
