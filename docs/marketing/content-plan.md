@@ -104,7 +104,34 @@ Editors reject drafts that miss any one of them.
 
 ## 4. Article backlog
 
-*(To be authored in the next commit.)*
+Ten seed articles. Priority order is the intended publish order once the
+early-access page ([HORO-43](https://lightning-dust-mite.atlassian.net/browse/HORO-43))
+is live. Audience abbreviations: **DEV** = application developer building
+agents, **PLAT** = platform / infra engineer, **SEC** = security / compliance
+engineer, **DEC** = decision maker (eng manager, director, VP, CTO).
+
+| # | Working title | Audience | Search intent | Primary CTA target |
+|---|---|---|---|---|
+| 1 | SDKs are not security boundaries for AI agents | DEV, SEC | Informational — "how do I stop my agent from doing X" | `/product` |
+| 2 | How to govern tool calls in production AI agents | PLAT, SEC | Solution-aware — "agent tool call policy", "tool call authorization" | `/product` |
+| 3 | Why AI agents need identity, authority, and audit trails | SEC, DEC | Category-defining — "AI agent governance" | Early-access (HORO-43) |
+| 4 | MCP is not enough without runtime policy | DEV, PLAT | Solution-aware — readers already know MCP | `/product` |
+| 5 | How to audit AI agent actions in production | SEC, PLAT | Compliance-driven — "agent audit log", "AI agent observability" | `https://docs.agent-assembly.com` (audit section) |
+| 6 | Secret isolation for autonomous agents | DEV, SEC | Problem-aware — "agent leaked API key", "agent credential handling" | `https://docs.agent-assembly.com` (secrets) |
+| 7 | The agent security model: prompt layer, tool layer, network layer | SEC, PLAT | Category-defining — mental-model piece | `/product` |
+| 8 | From agent framework to governed agent runtime | DEV, PLAT | Solution-aware — "add governance to LangChain / CrewAI / Assistants" | Quickstart (`https://docs.agent-assembly.com/quickstart`) |
+| 9 | What to log when an AI agent calls a tool | PLAT, SEC | How-to — "agent telemetry schema", "agent tool call log" | `https://docs.agent-assembly.com` (events / audit) |
+| 10 | Buying vs building your agent guardrails | DEC | Buyer-journey — "build vs buy AI guardrails" | Early-access (HORO-43) |
+
+**Notes on prioritisation.** Articles 1–3 are the seed launch set expanded
+in Section 5. Article 4 is close behind — MCP is currently the highest-
+signal search cluster we can address without a competitor callout. Articles
+5–7 close the "what does governance actually mean" loop for security
+readers. Articles 8–9 are conversion-oriented developer content and require
+the docs sections from [HORO-48](https://lightning-dust-mite.atlassian.net/browse/HORO-48)
+to exist first. Article 10 is a decision-maker piece; it should land only
+after early-access has been open for at least two weeks so we have
+qualitative evidence to reference.
 
 ## 5. Priority article outlines
 
