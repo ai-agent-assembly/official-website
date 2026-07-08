@@ -463,7 +463,65 @@ in the same PR chain) so the new event surfaces in the funnel views.
 
 ## 8. Cross-surface segmentation guide
 
-_TBD — see following commits._
+The three surfaces are on three different hostnames but they need to
+be reportable both individually and as a single funnel. The event
+schema in Sections 2 and 3 makes this possible if implementers follow
+the rules below.
+
+### 8.1 Reporting individual surfaces
+
+- Filter GA4 explorations on `hostname = <hostname>`. This is the
+  primary way HORO-46 will split reports.
+- Cross-check with `surface`. If `hostname=agent-assembly.com` but
+  `surface=docs`, something is misconfigured — surface should have
+  been set to `product_site`.
+
+### 8.2 Reporting the full funnel
+
+- Use `surface` as the primary breakdown when a report needs to show
+  "docs vs product vs Horonomy" without the noise of subdomains.
+- Use `page_path` for within-surface funnels (e.g. product-site
+  landing → early-access page → thank-you).
+
+### 8.3 Landing-page attribution
+
+- The first event of a session is always a `page_view` on some
+  hostname. Use `landing_page` (a GA4 automatic dimension) plus
+  `hostname` to distinguish "arrived on Horonomy" from "arrived on
+  Agent Assembly".
+- Do NOT overwrite session source with UTM on same-hostname internal
+  navigation (see HORO-47 Section 5.2).
+
+### 8.4 Cross-hostname UTM
+
+UTM is a URL-level concern. Section 3 does not include UTM parameters
+as event parameters because GA4 already exposes `session_source`,
+`session_medium`, `session_campaign`, and `session_content` as
+session-scoped dimensions.
+
+Implementers should NOT re-emit UTM values as event parameters —
+that duplicates data and creates two rows that must be kept in sync.
+The correct pattern is:
+
+- URL carries UTM (per HORO-47).
+- GA4 automatically captures UTM at session start.
+- Events carry only the parameters in Section 3.
+
+### 8.5 Common cross-surface reporting questions
+
+- "Of visitors who landed on Horonomy, what % clicked through to the
+  product site?"
+  Filter: `landing_page` contains `horonomy.dev`; conversion:
+  `horonomy_product_agent_assembly_click`.
+- "Of visitors on docs, what % copied an install command?"
+  Filter: `hostname = docs.agent-assembly.com`; conversion:
+  `docs_copy_install_command`.
+- "Of visitors who submitted the early-access form, what surface did
+  they land on?"
+  Filter: converters = users with `cloud_early_access_submit`;
+  breakdown: `landing_page` and `hostname`.
+
+HORO-46 turns these questions into concrete explorations.
 
 ## 9. Security and privacy check
 
