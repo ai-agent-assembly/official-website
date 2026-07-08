@@ -273,3 +273,58 @@ Recipient-level attribution belongs in the email tool, not the URL.
 
 `utm_content` encodes the newsletter name and issue date, in snake_case,
 so multiple placements in the same newsletter over time stay distinct.
+
+## 5. Anti-patterns
+
+Reject these during PR review or pre-publish QA. Each has produced
+attribution damage or PII exposure in prior projects.
+
+### 5.1 Untagged launch links
+
+Publishing `https://agent-assembly.com/` (no query string) inside a
+launch tweet, HN post, or newsletter. GA4 attributes the click as
+Direct; the effort produced no measurable signal.
+
+### 5.2 UTM on same-hostname internal links
+
+Adding UTM to `<a href="/security">` inside the product site. This
+overwrites the visitor's original session source. Same-hostname links
+must be plain paths.
+
+### 5.3 PII inside `utm_content`
+
+`utm_content=founder_jane_doe`, `utm_content=user_12345`,
+`utm_content=jane@example.com`. Anyone who inspects the URL — or copies
+it into a Slack channel — leaks the identifier. Values must be identical
+for every recipient of the same creative.
+
+### 5.4 Mixed casing or punctuation
+
+`utm_source=LinkedIn` and `utm_source=linkedin` and `utm_source=linked-in`
+resolve to three different rows in GA4. Choose one — `linkedin` — and
+document that it is the only valid value in Section 2.2.
+
+### 5.5 Recycling retired campaign names
+
+Reusing `utm_campaign=agent_assembly_launch` for a launch three months
+later merges two initiatives into one row. Retire the value and start a
+new one (`agent_assembly_relaunch_q4`, etc.).
+
+### 5.6 UTM on outbound links to third-party sites
+
+`https://github.com/some-competitor?utm_source=...`. UTM is for measuring
+traffic *arriving at our properties*. Adding UTM to a link leaving our
+sites achieves nothing (we cannot read their analytics) and can look like
+an attempt to influence their metrics.
+
+### 5.7 Redirect chains that drop the query string
+
+Short-links or 302s that strip `?utm_*=...` before landing on the final
+URL. Test the full chain. Prefer a direct final URL.
+
+### 5.8 Sharing tracked links inside product UI
+
+Never embed a UTM-tagged link inside an in-product tooltip, banner, or
+email that a *signed-in user* will click. It overwrites their session.
+The `cta_location` event parameter is the correct in-product signal;
+see HORO-45.
