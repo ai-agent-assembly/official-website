@@ -221,7 +221,39 @@ where they end up in browser history and third-party analytics tags.
 
 ## 4. GA4 Key Events (conversions)
 
-_TBD — see following commits._
+Configure the following as GA4 Key Events (Admin → Events → Mark as key
+event). These are the events the reporting dashboard (HORO-46) and
+launch review framework (HORO-50) will treat as conversion signals.
+
+- `copy_install_command` — proxy for OSS install intent.
+- `cloud_early_access_submit` — direct SaaS-lead signal.
+- `github_core_repo_click` — engineering-audience validation signal.
+- `examples_repo_click` — hands-on learn-by-example intent.
+- `contact_click` — high-intent inbound.
+
+**Why exactly this set.** These five cover the three explicit paths
+the Epic defines (developer, platform/security, buyer) plus a general
+contact signal. Marking anything else as a Key Event dilutes the
+conversion dashboard; if additional signals prove important, propose
+adding them in a follow-up PR that also updates the reports.
+
+**What is NOT a Key Event even though it might look like one.**
+
+- `docs_click` — too broad; users click into docs for many reasons,
+  not all conversion-worthy. Report on it as an event, not a conversion.
+- `security_model_view` — depth-of-engagement signal, not conversion.
+  Reported separately in the funnel.
+- `cta_start_self_hosting_click` — intermediate step; the actual
+  conversion is `copy_install_command`.
+
+**GA4 configuration notes.**
+
+- Key Events must be registered from real event data — GA4 requires at
+  least one instance of the event before it can be marked. The launch
+  order is: implement → validate in DebugView → mark as Key Event.
+- Do NOT enable "Modeled conversions" for these events before the
+  first 100 real conversions land — the model has nothing to fit on
+  and produces misleading estimates during the launch window.
 
 ## 5. Implementation notes — GTM vs code-emitted dataLayer
 
