@@ -135,7 +135,52 @@ qualitative evidence to reference.
 
 ## 5. Priority article outlines
 
-*(To be authored in follow-up commits — one per article.)*
+### 5.1 Priority #1 — "SDKs are not security boundaries for AI agents"
+
+**Thesis.** Agent SDKs (LangChain, LlamaIndex, CrewAI, Vercel AI SDK, the
+OpenAI Assistants and Anthropic tools APIs) live inside the same process
+and trust zone as user-supplied prompt content, so they cannot enforce a
+security boundary against the agent they host. Treating an SDK guardrail
+as if it were a boundary is the single most common architectural mistake
+we see in shipping agent products. This piece defines what a real
+boundary looks like and where it has to sit.
+
+**Outline (H2s).**
+
+1. The pattern: "we added a guardrail in the SDK"
+2. Why in-process guardrails fail — the model, the tools, and the
+   guardrail all read the same memory
+3. What a security boundary actually is (control plane vs. data plane
+   framing, with a diagram)
+4. Three concrete failure modes: prompt-injected tool calls, secret
+   read-back through tool output, unbounded network egress
+5. Where the boundary has to live: outside the SDK process, in front of
+   tool execution and network calls
+6. What this looks like with Agent Assembly (short, one diagram)
+7. Checklist: is your current guardrail a boundary or a suggestion?
+
+**Primary CTA.** `/product` — the piece is category-defining and the
+product page is the correct next step for a reader who now believes the
+argument.
+
+**Distribution channels.** GitHub README badge link, LinkedIn (founder
+post), Hacker News (Show HN candidate — the existing blog post
+`2026-06-25-sdks-are-not-security-boundaries` should be rolled forward
+or superseded, not duplicated), Reddit r/programming, Reddit r/LocalLLaMA.
+
+**Target SEO keywords.**
+
+- `AI agent security boundary`
+- `LLM agent guardrail`
+- `LangChain security`
+- `agent SDK security`
+- `prompt injection tool call`
+
+**UTM-tagged CTA URL example.**
+
+```
+https://agent-assembly.com/product?utm_source=blog&utm_medium=docs_link&utm_campaign=wave1_launch&utm_content=sdk_not_boundary_cta_bottom
+```
 
 ## 6. SEO keyword groups
 
