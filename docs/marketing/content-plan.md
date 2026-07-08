@@ -225,6 +225,54 @@ community Slack, r/platform_engineering Discord).
 https://agent-assembly.com/product?utm_source=blog&utm_medium=docs_link&utm_campaign=wave1_launch&utm_content=govern_tool_calls_cta_inline
 ```
 
+### 5.3 Priority #3 — "Why AI agents need identity, authority, and audit trails"
+
+**Thesis.** The security and compliance disciplines already know how to
+govern machine identities — service accounts, IAM roles, workload
+identity, audit logs — but the field has not yet applied those primitives
+to autonomous agents. This piece maps the classical identity / authority
+/ audit triangle onto agents specifically, and argues that any agent
+running against production data needs all three, not just a system prompt.
+
+**Outline (H2s).**
+
+1. What we already know about governing machines (IAM, service accounts,
+   audit logs)
+2. Why an agent is a new kind of machine identity (non-deterministic,
+   prompt-influenced, tool-wielding)
+3. Identity: what "who is this agent" has to mean in practice
+4. Authority: what an agent is allowed to do vs. what a human operator is
+   allowed to do
+5. Audit: making agent actions reviewable months later
+6. Mapping the triangle to a real deployment (diagram)
+7. What good looks like — a checklist for a security review of an agent
+   product
+
+**Primary CTA.** Early-access sign-up (HORO-43 landing) — this is a
+category-defining decision-maker/security piece, and the appropriate
+next step for a convinced reader is to be told when the governed
+runtime is ready to try.
+
+**Distribution channels.** LinkedIn (highest fit — security and
+decision-maker audience), CISO / security newsletters (SecurityWeek,
+tl;dr sec, Latio Tech state-of-security-tools) via founder outreach,
+Hacker News, Reddit r/netsec (posted respectfully — must be genuinely
+educational, not promotional).
+
+**Target SEO keywords.**
+
+- `AI agent governance`
+- `AI agent audit trail`
+- `agent identity management`
+- `LLM agent compliance`
+- `agent zero trust`
+
+**UTM-tagged CTA URL example.**
+
+```
+https://agent-assembly.com/early-access?utm_source=blog&utm_medium=docs_link&utm_campaign=wave1_launch&utm_content=identity_authority_audit_cta_bottom
+```
+
 ## 6. SEO keyword groups
 
 *(To be authored in the next commit.)*
