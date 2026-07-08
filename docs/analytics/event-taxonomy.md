@@ -66,7 +66,85 @@ GA4 Key Events so conversion reporting is possible.
 
 ## 2. Core events
 
-_TBD — see following commits._
+Names are drawn from the Epic (HORO-39). Where the Epic description
+uses accidental Markdown italics (e.g. `security*model*view`), the
+canonical form is `snake_case` with underscores: `security_model_view`.
+
+Each event has: a stable name, a plain-English meaning, and the trigger
+that must fire it. Parameters live in Section 3.
+
+### 2.1 Navigation and content events
+
+| Event                 | Meaning                                                     | Trigger                                                                              |
+|-----------------------|-------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| `docs_click`          | Visitor left a non-docs surface for the docs site           | Click on a link whose `link_domain` is `docs.agent-assembly.com`                    |
+| `quickstart_click`    | Visitor followed the quickstart CTA                         | Click on any CTA whose target is the quickstart page                                 |
+| `installation_view`   | Visitor viewed the installation page                        | Page view of the installation page (`page_path` starts with `/installation`)         |
+| `architecture_view`   | Visitor viewed the architecture section or page             | ≥50% viewport visibility of the architecture section, OR page view of that page     |
+| `security_model_view` | Visitor viewed the security model section or page           | ≥50% viewport visibility of the security-model section, OR page view of that page   |
+| `sdk_page_view`       | Visitor viewed an SDK page (parameter `sdk` names which)    | Page view of an SDK page                                                             |
+| `outbound_click`      | Fallback event for outbound clicks not covered elsewhere    | Any outbound click that does NOT have a more specific event above                    |
+
+### 2.2 High-intent product events
+
+| Event                          | Meaning                                                                    | Trigger                                                                                    |
+|--------------------------------|----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| `copy_install_command`         | Visitor copied an install command to clipboard                             | Copy button on an install-command block (code-emitted, not automatic GA4)                  |
+| `cta_start_self_hosting_click` | Visitor clicked the "Start self-hosting" CTA                               | Click on the primary hero CTA of that name                                                 |
+| `cta_cloud_early_access_click` | Visitor clicked "Request Cloud Early Access"                               | Click on the cloud-early-access CTA anywhere on the product site or docs footer            |
+| `cta_view_github_click`        | Visitor clicked "View on GitHub" from a CTA (not a nav link)               | Click on a hero / body / final "View on GitHub" button                                     |
+| `cta_view_docs_click`          | Visitor clicked "View docs" from a CTA (not the nav)                       | Click on a hero / body "View docs" button                                                  |
+| `github_org_click`             | Visitor left for the GitHub org page                                       | Any click to `github.com/ai-agent-assembly` (the org root)                                 |
+| `github_core_repo_click`       | Visitor deep-linked to the core repo                                       | Any click to `github.com/ai-agent-assembly/agent-assembly`                                 |
+| `examples_repo_click`          | Visitor deep-linked to the examples repo                                   | Any click to `github.com/ai-agent-assembly/agent-assembly-examples`                        |
+
+### 2.3 Cloud Early Access events
+
+| Event                                | Meaning                                        | Trigger                                                    |
+|--------------------------------------|------------------------------------------------|------------------------------------------------------------|
+| `cloud_early_access_page_view`       | Visitor loaded the early-access form page      | Page view of the early-access route                        |
+| `cloud_early_access_submit`          | Visitor submitted the early-access form        | Form submit success (code-emitted dataLayer event)         |
+| `cloud_early_access_oss_docs_click`  | On thank-you, visitor took the OSS next step   | Click on "See OSS docs" link on the thank-you page         |
+| `cloud_early_access_github_click`    | On thank-you, visitor took the GitHub next step | Click on "View on GitHub" link on the thank-you page      |
+
+### 2.4 Horonomy-specific events
+
+| Event                                    | Meaning                                              | Trigger                                                             |
+|------------------------------------------|------------------------------------------------------|---------------------------------------------------------------------|
+| `horonomy_product_agent_assembly_click`  | Visitor left Horonomy for the Agent Assembly site    | Cross-hostname click from `horonomy.dev` to `agent-assembly.com`    |
+| `horonomy_github_click`                  | Visitor left Horonomy for the GitHub org page        | Any click on Horonomy pointing at `github.com/ai-agent-assembly`    |
+| `horonomy_manifesto_click`               | Visitor clicked the manifesto / about CTA            | Nav or hero-secondary click on Horonomy                             |
+| `horonomy_contact_click`                 | Visitor clicked a contact link                       | Click on any contact link on Horonomy                               |
+| `horonomy_blog_click`                    | Visitor clicked a Horonomy blog post title           | Click on a blog post title, either in nav or on the blog list       |
+
+### 2.5 Docs-specific events
+
+Docs mirror several product events but with a `docs_` prefix so that a
+report can attribute intent to the docs site vs the product site
+without a hostname filter.
+
+| Event                        | Meaning                                                | Trigger                                                             |
+|------------------------------|--------------------------------------------------------|---------------------------------------------------------------------|
+| `docs_quickstart_click`      | High-intent action inside quickstart                   | Any next-step CTA on the quickstart page                            |
+| `docs_installation_view`     | Docs installation page view                            | Same as `installation_view`, but the parameter `surface=docs`       |
+| `docs_copy_install_command`  | Copy on a docs install-command block                   | Copy-to-clipboard on an install command inside docs                 |
+| `docs_sdk_python_view`       | Python SDK docs page view                              | Page view of the Python SDK page                                    |
+| `docs_sdk_node_view`         | Node SDK docs page view                                | Page view of the Node SDK page                                      |
+| `docs_sdk_go_view`           | Go SDK docs page view                                  | Page view of the Go SDK page                                        |
+| `docs_examples_click`        | Click from docs to the examples repo                   | Any click from docs to `agent-assembly-examples`                    |
+| `docs_security_model_view`   | Docs security model page view                          | Page view of the security model page                               |
+| `docs_github_issue_click`    | Docs → GitHub Issues click                             | Click on "Open a GitHub issue" or equivalent in docs troubleshooting |
+
+Wherever a docs event has an unprefixed twin (e.g. `docs_installation_view`
+vs `installation_view`), fire the unprefixed event on the product site
+and the docs-prefixed event on the docs site — they are the same
+concept scoped to different surfaces via the `surface` parameter.
+
+### 2.6 Contact event
+
+| Event           | Meaning                                | Trigger                                                                       |
+|-----------------|----------------------------------------|-------------------------------------------------------------------------------|
+| `contact_click` | Visitor initiated contact              | Any contact form submit, `mailto:` link click, or dedicated contact CTA click |
 
 ## 3. Event parameter dictionary
 
