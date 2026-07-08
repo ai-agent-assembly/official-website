@@ -257,7 +257,80 @@ adding them in a follow-up PR that also updates the reports.
 
 ## 5. Implementation notes — GTM vs code-emitted dataLayer
 
-_TBD — see following commits._
+The site loads GTM; GTM loads GA4. Events reach GA4 in two ways:
+
+1. **GTM-authored triggers**, listening for DOM clicks matched by a
+   CSS selector or a link URL pattern.
+2. **Code-emitted `dataLayer.push(...)` events**, then a GTM trigger of
+   type "Custom Event" that forwards them to GA4.
+
+Pick one per event based on the following rule.
+
+### 5.1 Use GTM triggers when
+
+The event is inferable from DOM inspection alone — CSS class, link
+target, or page-path pattern is enough. These events benefit from GTM
+because analytics can iterate without a site rebuild.
+
+- All navigation clicks (`docs_click`, `horonomy_github_click`, nav CTAs).
+- Outbound-link clicks by destination domain (`github_core_repo_click`,
+  `examples_repo_click`).
+- Page-view classification events (`installation_view`,
+  `sdk_page_view` variants) — GTM's built-in Page View trigger with a
+  Page Path filter.
+
+### 5.2 Use code-emitted dataLayer events when
+
+The event is a signal the DOM cannot know about — application state,
+async behavior, or a JS action that has no reliable click target.
+
+- `copy_install_command` — fires from the copy-to-clipboard handler
+  inside the install-block component. GTM cannot detect the copy action.
+- `cloud_early_access_submit` — fires from the form's `onSubmit`
+  success branch, not on the submit button click (a click does not
+  guarantee submission succeeded).
+- `section_security_model_view` / `section_architecture_view` — fires
+  from an IntersectionObserver watching the section, thresholded at
+  ≥50% viewport visibility for ≥1 second. GTM's built-in scroll trigger
+  is too coarse.
+
+### 5.3 dataLayer event shape
+
+Every code-emitted event follows this shape:
+
+```js
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+  event: "<event_name>",
+  // event-specific parameters from Section 3
+});
+```
+
+GTM must have a corresponding "Custom Event" trigger per event name,
+paired with a GA4 Event tag that maps dataLayer parameters onto GA4
+parameter names. Do not send a dataLayer event without a matching GTM
+trigger — it will accumulate silently in the dataLayer with no effect.
+
+### 5.4 What NOT to do
+
+- Do NOT rely on GA4's automatic `outbound_click` for
+  `github_core_repo_click` — automatic outbound-click classification
+  is too coarse to distinguish org page vs core repo vs examples.
+- Do NOT emit a dataLayer event AND a GTM DOM trigger for the same
+  interaction — double-counted events are painful to detect in reports.
+- Do NOT emit events from React `useEffect` cleanups; the event will
+  fire on unmount and inflate counts.
+- Do NOT include the click target's `innerText` as a parameter — it
+  varies with locale and screen reader tools and is not stable.
+
+### 5.5 Environment: staging vs production
+
+- Non-production builds must set GTM's environment to "staging" and
+  point at a **separate GA4 property**. If a separate property is not
+  available yet, prefix every event name with `dev_` in the local dev
+  build so it never contaminates prod reports.
+- CI preview deployments count as non-production and must use the
+  staging environment.
 
 ## 6. DebugView and Realtime validation checklist
 
