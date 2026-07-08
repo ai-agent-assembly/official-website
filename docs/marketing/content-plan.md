@@ -182,6 +182,49 @@ or superseded, not duplicated), Reddit r/programming, Reddit r/LocalLLaMA.
 https://agent-assembly.com/product?utm_source=blog&utm_medium=docs_link&utm_campaign=wave1_launch&utm_content=sdk_not_boundary_cta_bottom
 ```
 
+### 5.2 Priority #2 — "How to govern tool calls in production AI agents"
+
+**Thesis.** Once an agent leaves a demo and reaches production, tool calls
+become the highest-risk surface: they cost money, write to systems of
+record, and can leak data through their responses. This piece walks a
+platform engineer through the four decisions every production tool-call
+policy has to answer — who, what, how much, and with what audit — and
+shows how to express each one at the runtime boundary rather than in
+prompts.
+
+**Outline (H2s).**
+
+1. Why tool calls, not prompts, are the production risk surface
+2. Four questions any production policy has to answer:
+   who (identity), what (allow/deny), how much (budget/quota), audit (record)
+3. Anti-pattern: policy expressed in a system prompt
+4. Anti-pattern: policy expressed in the SDK wrapper
+5. Policy at the runtime boundary — worked example (sequence diagram)
+6. Handling the "the agent asked, but we said no" case gracefully
+7. Rolling out policy without breaking existing agents (shadow mode → enforce)
+
+**Primary CTA.** `/product` — the piece maps directly to the product's
+Authority pillar.
+
+**Distribution channels.** LinkedIn (platform-eng audience is strong on
+LinkedIn), Hacker News, Reddit r/programming, Reddit r/devops,
+platform-eng-focused Slack/Discord communities (Platform Engineering
+community Slack, r/platform_engineering Discord).
+
+**Target SEO keywords.**
+
+- `AI agent tool call policy`
+- `agent tool authorization`
+- `LLM tool call governance`
+- `agent guardrails production`
+- `agent egress control`
+
+**UTM-tagged CTA URL example.**
+
+```
+https://agent-assembly.com/product?utm_source=blog&utm_medium=docs_link&utm_campaign=wave1_launch&utm_content=govern_tool_calls_cta_inline
+```
+
 ## 6. SEO keyword groups
 
 *(To be authored in the next commit.)*
