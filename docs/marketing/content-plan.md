@@ -349,7 +349,58 @@ Overlaps with prompt-injection defence and secrets handling.
 
 ## 7. Distribution candidates
 
-*(To be authored in the next commit.)*
+Channels are grouped by discoverability posture. Every outbound link
+from any channel below uses the HORO-47 UTM vocabulary. The
+`utm_source` / `utm_medium` pair for each channel is fixed here so
+different pieces produce consistent GA4 rows.
+
+### 7.1 Owned surfaces (always safe)
+
+| Channel | utm_source | utm_medium |
+|---|---|---|
+| Agent Assembly GitHub org README | `github` | `readme` |
+| `ai-agent-assembly/agent-assembly` repo README | `github` | `readme` |
+| Agent Assembly blog outbound to product/docs | `blog` | `docs_link` |
+| Docs site outbound to product/early-access | `docs` | `docs_link` |
+| Founder-list email newsletter (once running) | `email` | `newsletter` |
+
+### 7.2 Community surfaces (context-sensitive — follow each community's rules)
+
+| Channel | utm_source | utm_medium | Notes |
+|---|---|---|---|
+| Hacker News (Show HN, Ask HN, story submissions) | `hackernews` | `community` | One post per week max; content must stand alone without a pitch |
+| Reddit r/programming | `reddit` | `community` | Only when the piece is genuinely non-promotional |
+| Reddit r/MachineLearning | `reddit` | `community` | Higher bar — must include a novel technical claim, not marketing |
+| Reddit r/LocalLLaMA | `reddit` | `community` | Better fit for practical agent-runtime content than r/MachineLearning |
+| Reddit r/devops, r/platform_engineering | `reddit` | `community` | Best fit for priority article #2 |
+| Reddit r/netsec | `reddit` | `community` | Best fit for priority article #3; strictly educational |
+| Discord: Platform Engineering, LangChain, LlamaIndex community servers | `discord` | `community` | Only in channels where sharing is explicitly welcome |
+| Slack: Platform Engineering community, MLOps community | `slack` | `community` | Same rule as Discord |
+
+### 7.3 Social surfaces
+
+| Channel | utm_source | utm_medium | Notes |
+|---|---|---|---|
+| LinkedIn — founder posts | `linkedin` | `social` | Highest fit for priority #2 (platform-eng) and #3 (security/decision-maker) |
+| LinkedIn — company page | `linkedin` | `social` | Reshare of founder posts once cadence exists |
+| X (Twitter) — founder | `x` | `social` | Lower priority given current developer audience shift; still worth cross-posting |
+| Bluesky — founder | `x` | `social` | Reuse `x` source until Bluesky-specific volume warrants its own value (per HORO-47 §2.2) |
+
+### 7.4 Direct outreach
+
+| Channel | utm_source | utm_medium | Notes |
+|---|---|---|---|
+| Founder 1:1 email to specific engineers / security leads | `email` | `direct_outreach` | Highest-signal channel for priority #3 |
+| LinkedIn DMs | `linkedin` | `direct_outreach` | Same-piece deduplication: never send the same DM to more than 20 recipients |
+
+### 7.5 Explicitly deferred
+
+- Paid search / paid social. `cpc`, `ppc`, `paid_*` are reserved in
+  [HORO-47](https://lightning-dust-mite.atlassian.net/browse/HORO-47) and
+  out of scope until the OSS funnel is instrumented.
+- Third-party newsletter placements (This Week in AI, TLDR, etc.). Worth
+  pursuing once we have two priority pieces published; use
+  `utm_source=newsletter`, `utm_medium=newsletter`.
 
 ## 8. Handoff notes
 
