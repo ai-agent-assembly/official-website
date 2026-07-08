@@ -65,7 +65,42 @@ enforces what those agents are actually *allowed* to do at runtime:
 
 ## 3. Content principles
 
-*(To be authored in the next commit.)*
+Every long-form piece under this plan must satisfy all six of the following.
+Editors reject drafts that miss any one of them.
+
+1. **Problem-first, not product-first.** Open the piece with a concrete
+   failure mode a reader has actually seen (a leaked API key, a runaway
+   agent loop, an audit finding, an MCP tool called without policy). The
+   Agent Assembly reference appears only after the problem is fully framed
+   — typically past the first two H2 sections.
+
+2. **No generic AI hype.** Ban phrases: "the future of AI", "revolutionize",
+   "transform your business", "unlock the power of". Ban stock statistics
+   without a source. The reader is a working engineer or platform lead who
+   is already tired of these.
+
+3. **Concrete diagrams over stock imagery.** Every priority piece needs
+   at least one architecture diagram or sequence diagram (Mermaid is
+   fine — Docusaurus renders it) that shows the trust boundary being
+   discussed. No photographs of "AI"; no gradient hero imagery.
+
+4. **Code or config examples must run.** If a piece includes a policy
+   snippet, a tool-call log line, or an audit event, it must match the
+   real shapes in the open-source runtime. Editors verify by grepping the
+   `agent-assembly` repo before merge.
+
+5. **Internal links are UTM-tagged.** Every internal link that crosses a
+   hostname (blog → docs, blog → product page, README → early-access)
+   carries `utm_source`, `utm_medium`, `utm_campaign`, and `utm_content`
+   per the [HORO-47](https://lightning-dust-mite.atlassian.net/browse/HORO-47)
+   vocabulary. Same-host navigation links stay untagged so GA4 does not
+   overwrite session source.
+
+6. **One CTA per piece.** Each article has exactly one primary CTA target
+   (a product page, the early-access form, the quickstart, or the GitHub
+   repo). Secondary links are informational, not CTAs. This keeps event
+   attribution ([HORO-45](https://lightning-dust-mite.atlassian.net/browse/HORO-45))
+   readable.
 
 ## 4. Article backlog
 
