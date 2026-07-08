@@ -25,8 +25,8 @@ This document defines:
   GitHub README badges (link URL only, not badge image), founder-led social
   posts, community threads, newsletters, early-access emails.
 - Internal cross-links between our own properties when they cross a
-  hostname boundary (for example, `horonomy.com` → `agentassembly.dev` or
-  `agentassembly.dev` → `docs.agentassembly.dev`).
+  hostname boundary (for example, `horonomy.dev` → `agent-assembly.com` or
+  `agent-assembly.com` → `docs.agent-assembly.com`).
 
 **Out of scope**
 
@@ -44,7 +44,7 @@ This document defines:
 - `utm_content` values are distinct from the `cta_location` event parameter
   defined in the event taxonomy work ([HORO-45](https://lightning-dust-mite.atlassian.net/browse/HORO-45)).
   UTM describes *where the click came from off-site*; `cta_location`
-  describes *where the click happened on-page*. See Section 5.
+  describes *where the click happened on-page*. See Section 4.
 - Downstream consumers of this convention: [HORO-41](https://lightning-dust-mite.atlassian.net/browse/HORO-41),
   [HORO-42](https://lightning-dust-mite.atlassian.net/browse/HORO-42),
   [HORO-48](https://lightning-dust-mite.atlassian.net/browse/HORO-48)
