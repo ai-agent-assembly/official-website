@@ -525,4 +525,62 @@ HORO-46 turns these questions into concrete explorations.
 
 ## 9. Security and privacy check
 
-_TBD — see following commits._
+The taxonomy was reviewed against the following criteria. Every future
+change to this doc must pass the same review before merging.
+
+### 9.1 No PII in any parameter
+
+Section 3 has been audited. No parameter listed contains an email
+address, user identifier, session token, IP address, order number,
+name, or handle. The `cloud_early_access_submit` event's `role`,
+`team_size`, and `deployment` are closed vocabularies with 3–5 values
+each and cannot identify an individual.
+
+### 9.2 No PII in event names
+
+Every event name in Section 2 is a description of an action, not of a
+person. There is no `contact_user_<id>_click` or similar pattern.
+
+### 9.3 Consent posture
+
+- Events must only fire after GA4's consent mode is initialised with
+  the visitor's choice. If the visitor has denied analytics consent,
+  no event beyond GA4's automatic anonymised traffic ping should reach
+  the property.
+- The consent-mode integration itself is out of scope for this Epic
+  (tracked separately), but the taxonomy must not assume events fire
+  regardless of consent state.
+
+### 9.4 Third-party sharing
+
+- GTM tags for the events in Section 2 send data ONLY to GA4. Any
+  proposal to add a third-party marketing tag (Meta Pixel, LinkedIn
+  Insight Tag, etc.) is a separate change with its own privacy review.
+- GA4 is configured with IP anonymisation enabled by default; this
+  configuration is out of scope for this taxonomy but the taxonomy
+  assumes it.
+
+### 9.5 Attack surface of parameter values
+
+- Because event parameters are user-visible in DebugView and can leak
+  through screenshot sharing, no parameter carries anything that would
+  be sensitive if disclosed (no session tokens, no early-access
+  submission IDs, no CSRF tokens).
+- Event names themselves are semi-public — they appear in the built
+  JS bundle. No secret information should be inferable from an event
+  name (no `vip_customer_click`, etc.).
+
+### 9.6 What implementers must NOT add
+
+- Do not add `email` as a parameter to any event, even if the form has
+  the email in scope at the time of firing.
+- Do not add a "user id" or any hash of user identity as a parameter.
+- Do not add free-text search terms without sanitising for PII.
+- Do not send the value of any form field as an event parameter — the
+  closed vocabularies in Section 3.5 are the only exception.
+
+### 9.7 Sign-off gate
+
+This section is reviewed at Wave 3 pre-launch QA (HORO-50). Any event
+added between now and launch must also pass Section 9.1–9.6 before it
+is enabled in production.
