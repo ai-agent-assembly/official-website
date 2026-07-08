@@ -334,7 +334,72 @@ trigger — it will accumulate silently in the dataLayer with no effect.
 
 ## 6. DebugView and Realtime validation checklist
 
-_TBD — see following commits._
+Every event listed in Section 2 must be validated in GA4 DebugView
+before it is treated as production-ready. Run this checklist once per
+event during initial implementation and once again after any change
+to that event's trigger or parameters.
+
+### 6.1 Pre-flight
+
+- [ ] The site is loaded from a browser that has the GA4 Debug
+      extension enabled OR the URL has `?debug_mode=true` set, OR the
+      site is running from staging with the debug flag on.
+- [ ] GA4 DebugView is open in a second tab and connected to the
+      correct property (staging or production).
+
+### 6.2 For each event
+
+- [ ] Perform the trigger action once.
+- [ ] Confirm the event appears in DebugView within 5 seconds.
+- [ ] Confirm every parameter listed in Section 3 for that event is
+      present and has an expected value.
+- [ ] Confirm `hostname` matches the surface you tested from.
+- [ ] Confirm `surface` matches the surface (do not send
+      `surface=product_site` from a docs page).
+- [ ] Confirm no unexpected parameter is attached (especially no
+      parameter with a value that varies per visitor).
+- [ ] Repeat the trigger action; confirm two events appear, not one
+      (guards against dedupe bugs).
+
+### 6.3 Full-funnel walk-through
+
+Run once end-to-end before pre-launch QA (HORO-50) inherits the checklist.
+
+- [ ] Land on `agent-assembly.com/` → confirm `page_view` fires with
+      `surface=product_site`.
+- [ ] Click "Start self-hosting" hero CTA → confirm
+      `cta_start_self_hosting_click` fires with `cta_location=hero`.
+- [ ] Copy the install command → confirm `copy_install_command`
+      fires with the correct `command_type`.
+- [ ] Click "View on GitHub" → confirm `cta_view_github_click` AND
+      `github_core_repo_click` both fire, and that they are distinct
+      events (not one masquerading as the other).
+- [ ] Click "Request Cloud Early Access" → confirm
+      `cta_cloud_early_access_click` fires.
+- [ ] On the early-access page, confirm `cloud_early_access_page_view`.
+- [ ] Submit the form → confirm `cloud_early_access_submit` with the
+      three parameters (`role`, `team_size`, `deployment`) and NO
+      email / name / company fields.
+- [ ] On thank-you, click "See OSS docs" → confirm
+      `cloud_early_access_oss_docs_click`.
+- [ ] Cross-hostname to docs; page-view should fire with
+      `surface=docs`.
+- [ ] Copy an install command in docs → confirm
+      `docs_copy_install_command` (docs) fires, and that the
+      `command_type` parameter is correctly detected.
+- [ ] Click through to `agent-assembly-examples` → confirm
+      `examples_repo_click`.
+- [ ] Cross-hostname to `horonomy.dev`; page-view should fire with
+      `surface=horonomy_site`.
+- [ ] Click "Explore Agent Assembly" → confirm
+      `horonomy_product_agent_assembly_click`.
+
+### 6.4 Realtime cross-check
+
+DebugView shows only events flagged as debug. To confirm production
+tag firing, use GA4 Realtime with a non-debug browser: perform the
+same walk-through, confirm events appear in the Realtime → Events
+card within 30 seconds.
 
 ## 7. Instrumenting a new CTA — worked example
 
