@@ -275,7 +275,77 @@ https://agent-assembly.com/early-access?utm_source=blog&utm_medium=docs_link&utm
 
 ## 6. SEO keyword groups
 
-*(To be authored in the next commit.)*
+Keywords are grouped by search intent, not by article. A single article
+usually targets one primary cluster and touches one adjacent cluster.
+No fabricated volume estimates — volumes are omitted deliberately, since
+we do not yet have keyword-tool access and estimates from public tools
+are notoriously wrong for emerging categories.
+
+### 6.1 Governance intent
+
+Readers looking for the *concept* of governing AI agents. Category-defining;
+lowest current volume but highest strategic value.
+
+- `AI agent governance`
+- `LLM agent governance`
+- `autonomous agent governance`
+- `agent policy framework`
+- `agentic AI governance`
+
+### 6.2 Audit intent
+
+Readers who need to *record and review* what an agent did. Highest overlap
+with compliance and security-eng audiences.
+
+- `AI agent audit trail`
+- `agent action log`
+- `LLM tool call log`
+- `agent observability`
+- `AI compliance logging`
+
+### 6.3 Policy intent
+
+Readers who want to *enforce* rules on agent behaviour, usually at the
+tool-call or network layer. Overlaps with platform-eng.
+
+- `AI agent tool call policy`
+- `agent authorization`
+- `LLM guardrails production`
+- `agent allowlist`
+- `agent egress control`
+
+### 6.4 MCP intent
+
+Readers who already know MCP and want to understand its runtime
+implications. Currently the highest-signal cluster we can address without
+naming a vendor.
+
+- `MCP security`
+- `MCP runtime policy`
+- `Model Context Protocol governance`
+- `MCP server allowlist`
+- `MCP tool authorization`
+
+### 6.5 Security-model intent
+
+Readers building a mental model of how to secure an agent end-to-end.
+Overlaps with prompt-injection defence and secrets handling.
+
+- `AI agent security model`
+- `prompt injection defence`
+- `LLM secret leakage`
+- `agent zero trust`
+- `AI agent threat model`
+
+**Cluster-to-article mapping.**
+
+| Cluster | Article(s) that target it |
+|---|---|
+| 6.1 Governance | #3 Identity/authority/audit, #7 Security model |
+| 6.2 Audit | #5 How to audit agent actions, #9 What to log |
+| 6.3 Policy | #2 Govern tool calls, #6 Secret isolation |
+| 6.4 MCP | #4 MCP is not enough without runtime policy |
+| 6.5 Security model | #1 SDKs are not security boundaries, #7 Security model |
 
 ## 7. Distribution candidates
 
