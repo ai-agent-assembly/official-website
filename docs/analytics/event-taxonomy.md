@@ -148,7 +148,76 @@ concept scoped to different surfaces via the `surface` parameter.
 
 ## 3. Event parameter dictionary
 
-_TBD — see following commits._
+Every event carries a stable set of parameters. Where a parameter is
+listed as a closed vocabulary, values outside that vocabulary must be
+rejected at review — GA4 will not tell you a typo happened; it will
+silently create a new row.
+
+### 3.1 Required on every event
+
+| Parameter    | Type    | Meaning                                                          | Allowed values / rules                                                            |
+|--------------|---------|------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| `hostname`   | string  | The site the event fired on                                      | `horonomy.dev`, `agent-assembly.com`, `docs.agent-assembly.com`                    |
+| `page_path`  | string  | The path portion of the URL, no query or fragment                | Starts with `/`; lowercase; no email addresses, IDs, or tokens                     |
+| `page_title` | string  | The page's `<title>`                                             | Free text, but no PII (must be identical for every visitor of that page)           |
+| `surface`    | string  | Coarse surface classification for reporting                      | `horonomy_site`, `product_site`, `docs`, `github_readme` (for outbound-from-README) |
+
+### 3.2 CTA-bound events
+
+Any event that fires from a click, form submit, or view of a specific
+CTA carries these in addition to Section 3.1.
+
+| Parameter      | Type    | Meaning                                              | Allowed values                                                                                    |
+|----------------|---------|------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| `cta_location` | string  | Where on the page the CTA sits                       | `hero`, `nav`, `body`, `install_block`, `footer`, `thank_you`, `side_rail`                        |
+| `link_url`     | string  | Full URL of the target                               | Absolute URL, no session identifiers, no user IDs                                                 |
+| `link_domain`  | string  | Hostname of the target                               | Derived from `link_url`                                                                            |
+| `target_product` | string | Which product surface the click points at            | `agent_assembly`, `horonomy`, `docs`, `github`, `early_access`                                    |
+
+### 3.3 Install-command events
+
+Fires alongside `copy_install_command` and its docs twin.
+
+| Parameter       | Type    | Meaning                                    | Allowed values                                    |
+|-----------------|---------|--------------------------------------------|----------------------------------------------------|
+| `command_type`  | string  | Which install method the command represents | `curl`, `brew`, `docker`, `source`, `other`      |
+
+Do NOT include the command string itself as a parameter — the vocabulary
+is enough for segmentation, and encoding the command bloats the payload.
+
+### 3.4 SDK page events
+
+Fires alongside `sdk_page_view` and its docs twins.
+
+| Parameter | Type   | Meaning                | Allowed values                     |
+|-----------|--------|------------------------|-------------------------------------|
+| `sdk`     | string | Which SDK is being viewed | `python`, `node`, `go`, `other`  |
+
+### 3.5 Cloud early-access form event
+
+Fires alongside `cloud_early_access_submit` only.
+
+| Parameter       | Type    | Meaning                                     | Allowed values                                                     |
+|-----------------|---------|---------------------------------------------|--------------------------------------------------------------------|
+| `role`          | string  | Self-selected role from the form            | `developer`, `platform_engineer`, `security_engineer`, `founder`, `other` |
+| `team_size`     | string  | Self-selected team/company size             | `solo`, `startup`, `team`, `enterprise`, `other`                   |
+| `deployment`    | string  | Preferred deployment                        | `oss`, `self_hosted`, `saas`, `not_sure`                           |
+
+The form MUST NOT emit `email`, `company_name`, `full_name`, or
+`github_url` as event parameters. Those fields belong in the form-backend
+storage (a private database or spreadsheet), never in the GA4 payload
+where they end up in browser history and third-party analytics tags.
+
+### 3.6 Parameter shape rules
+
+- All parameter names: lowercase snake_case.
+- All string values: lowercase, no whitespace, no punctuation beyond
+  `_`, `-`, `/`, `.`, `:` for URLs.
+- Boolean-ish values are represented as strings (`"true"` / `"false"`)
+  because GA4's custom parameters are string-typed by default; do not
+  send raw booleans and expect them to survive.
+- No parameter may vary per visitor for the same on-page event —
+  otherwise it is PII by construction.
 
 ## 4. GA4 Key Events (conversions)
 
