@@ -403,7 +403,63 @@ card within 30 seconds.
 
 ## 7. Instrumenting a new CTA — worked example
 
-_TBD — see following commits._
+Scenario: HORO-42 adds a new "Compare with LangChain" CTA in the body
+of the Agent Assembly landing page. The button links out to a docs
+comparison page.
+
+**Step 1 — Decide the event name.**
+
+The action is a click on a CTA that leaves for docs. There is no
+existing event for a "compare-with-competitor" action.
+
+- If this CTA will exist on more than one page, name it after the
+  action (`cta_compare_langchain_click`).
+- If this CTA is a one-off body element, and the audience segmentation
+  it enables is small, do NOT invent a new event — fall back to
+  `outbound_click` with a `link_url` parameter.
+
+For this example, assume it will appear in more than one place. New
+event: `cta_compare_langchain_click`. Add it to Section 2.2 and get
+review sign-off before writing tag config.
+
+**Step 2 — Decide GTM vs code.**
+
+The trigger is a click on a specific DOM element with a stable class
+name (`.cta-compare-langchain`). No JS state is required. → Use a
+GTM trigger, not a dataLayer event (Section 5.1).
+
+**Step 3 — Draft the parameters.**
+
+- Section 3.1 required: `hostname`, `page_path`, `page_title`, `surface`.
+- Section 3.2 CTA-bound: `cta_location=body`, `link_url=<the link>`,
+  `link_domain=docs.agent-assembly.com`, `target_product=docs`.
+- No install-specific or SDK-specific parameters.
+
+**Step 4 — Add to the plan.**
+
+- Update this doc's Section 2.2 with the new event and its trigger.
+- Update HORO-40 (IA/messaging plan) Section 5.2 with the page-to-event
+  binding — the CTA is on the product-site landing page.
+- If the click is a Key Event candidate, propose it in Section 4 with
+  an explicit rationale; otherwise leave it as a regular event.
+
+**Step 5 — Configure GTM.**
+
+- Trigger: Click — Just Links, condition `Click Classes matches CSS selector .cta-compare-langchain`.
+- Tag: GA4 Event, event name `cta_compare_langchain_click`, parameters
+  mapped from GTM built-in variables (`{{Page Hostname}}`,
+  `{{Page Path}}`, `{{Page Title}}`, and constants for `surface` and
+  `target_product`).
+
+**Step 6 — Validate.**
+
+Run the Section 6.2 checklist for this event. Do NOT mark it as a Key
+Event before the walk-through succeeds twice on different days.
+
+**Step 7 — Update reports.**
+
+HORO-46 owns the reports. Notify that owner (or update the dashboard
+in the same PR chain) so the new event surfaces in the funnel views.
 
 ## 8. Cross-surface segmentation guide
 
