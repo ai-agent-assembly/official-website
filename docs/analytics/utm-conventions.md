@@ -90,3 +90,42 @@ Answers: *where was the user immediately before this click?*
 non-trivial (expected >20 clicks in the first month), (b) confirms no
 existing value covers it, and (c) updates Section 2.2, Section 6 examples,
 and the quick-reference table in Section 8.
+
+### 2.3 `utm_medium` — how the visitor got there
+
+Describes the *type* of surface the click sat on. Answers: *what kind of
+touchpoint is this?* A single source usually has more than one medium
+(a LinkedIn post is `social`; a LinkedIn DM is `direct_outreach`).
+
+| Value | Use for |
+|---|---|
+| `readme` | README badges and body links in any repository we control |
+| `social` | Public timeline posts on LinkedIn, X, Bluesky, Threads |
+| `community` | Public community threads (Reddit, Hacker News, Discord public channels, Slack public channels) |
+| `referral` | Third-party blog posts, podcast show notes, conference slide decks |
+| `newsletter` | Newsletter body copy, either ours (once we run one) or external |
+| `direct_outreach` | 1:1 DMs, cold email, warm intro email |
+| `docs_link` | Cross-hostname docs links (docs.agentassembly.dev → agentassembly.dev/early-access) |
+
+**Source × medium relationship**
+
+`utm_source` and `utm_medium` are not redundant. GA4 groups them into a
+"Source / medium" dimension (`linkedin / social`, `linkedin / direct_outreach`)
+and reports on both. Choose the pair that will still make sense in six
+months when someone asks "did DMs convert better than the founder feed?"
+
+**Reserved GA4 medium mappings**
+
+GA4 auto-classifies certain `utm_medium` values into channels. Keep the
+convention aligned so Default Channel Group works without extra rules:
+
+- `social` → GA4 "Organic Social" channel.
+- `email` (as medium) → GA4 "Email" channel. We do NOT use `email` as
+  a medium; we use `direct_outreach` or `newsletter` and set
+  `utm_source=email` when it truly is a direct email send. This is a
+  deliberate deviation, documented so anyone doing a channel-group review
+  knows to add a custom rule mapping `direct_outreach` and `newsletter` to
+  the appropriate GA4 channel.
+- `referral` → GA4 "Referral" channel.
+- `cpc`, `ppc`, `paid*` are RESERVED — do not use until paid ads are in
+  scope (out of scope for HORO-47).
