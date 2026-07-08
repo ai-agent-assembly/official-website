@@ -378,3 +378,52 @@ every URL in the draft. It takes under a minute per link.
       months when someone asks a channel-comparison question.
 
 If any box is unchecked, do not publish. Fix the URL, then re-run.
+
+## 8. Campaign quick-reference table
+
+Track every active campaign here so anyone can find the correct
+`utm_campaign` value without guessing. When a campaign retires, keep
+the row and move it to the "Retired" section instead of deleting it.
+
+### Active
+
+| `utm_campaign` | Initiative | Owner | Start | Planned end |
+|---|---|---|---|---|
+| `agent_assembly_launch` | Public launch wave — GitHub trending, first Show HN, initial founder feed | Founders | 2026-07 | 2026-10 |
+| `agent_security_content` | Ongoing content series on agent governance, sandboxing, policy, audit | Founders | 2026-07 | Rolling |
+| `early_access` | Cloud Early Access / design-partner form promotion | Founders | 2026-07 | Until Cloud GA |
+| `oss_install` | OSS self-hosting path — install command, quickstart, example run | Founders | 2026-07 | Rolling |
+
+### Retired
+
+_(none yet — first launch wave)_
+
+**How to add a new campaign**
+
+1. Confirm the initiative has a real owner and a written objective.
+2. Choose a value that follows Section 2.4 rules (lowercase snake_case,
+   distinct from every Active or Retired row).
+3. Open a PR to this file adding an Active row.
+4. After the PR merges, communicate the value to anyone who might tag
+   links for the initiative.
+
+## 9. Handoff notes
+
+- **HORO-41** (Horonomy site brand and routing): embed UTM-tagged links
+  on every cross-hostname CTA leaving `horonomy.dev`. Use `utm_source=blog`
+  for blog-body links, `utm_source=docs` if the docs cross-link is added,
+  and `utm_medium=docs_link` for any cross-hostname internal link.
+- **HORO-42** (Agent Assembly landing conversion paths): the landing
+  page's own CTAs are same-hostname and MUST NOT carry UTM (Section 5.2).
+  Only cross-hostname buttons (docs, GitHub, Horonomy) receive UTM.
+- **HORO-48** (docs adoption funnel): every "Try in cloud" / "Request
+  early access" / "See on product site" link is cross-hostname; tag with
+  `utm_source=docs`, `utm_medium=docs_link`, `utm_campaign` matching the
+  initiative, and `utm_content=<docs_page_slug>`.
+- **HORO-50** (pre-launch QA): use Section 7 as the URL portion of the
+  QA checklist. Report any untagged or malformed link as a blocker.
+- **Coordination with HORO-45**: `utm_content` and `cta_location` are
+  different concepts. UTM lives on the *URL* and captures off-site
+  origin. `cta_location` is a GA4 event parameter emitted from *inside*
+  the page and captures on-page position (`hero`, `footer`, etc.).
+  Do not conflate them or use one to substitute for the other.
