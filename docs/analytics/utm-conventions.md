@@ -43,8 +43,8 @@ This document defines:
   description. New values require justification in a PR to this document.
 - `utm_content` values are distinct from the `cta_location` event parameter
   defined in the event taxonomy work ([HORO-45](https://lightning-dust-mite.atlassian.net/browse/HORO-45)).
-  UTM describes *where the click came from off-site*; `cta_location`
-  describes *where the click happened on-page*. See Section 4.
+  UTM describes _where the click came from off-site_; `cta_location`
+  describes _where the click happened on-page_. See Section 4.
 - Downstream consumers of this convention: [HORO-41](https://lightning-dust-mite.atlassian.net/browse/HORO-41),
   [HORO-42](https://lightning-dust-mite.atlassian.net/browse/HORO-42),
   [HORO-48](https://lightning-dust-mite.atlassian.net/browse/HORO-48)
@@ -70,20 +70,20 @@ This document defines:
 ### 2.2 `utm_source` — who sent the visitor
 
 Identifies the platform, site, or property the click originated on.
-Answers: *where was the user immediately before this click?*
+Answers: _where was the user immediately before this click?_
 
-| Value | Use for |
-|---|---|
-| `github` | Links from any repository README, GitHub org page, GitHub Issues, GitHub Discussions, GitHub release notes |
-| `linkedin` | Founder posts, company page posts, LinkedIn newsletter, LinkedIn DMs |
-| `x` | Posts on X (formerly Twitter), including quote posts and replies |
-| `reddit` | Subreddit threads, comments, DMs |
-| `hackernews` | Show HN, Ask HN, comments, submissions |
-| `discord` | Discord community messages, announcements, DMs |
-| `slack` | Public Slack community messages, DMs |
-| `email` | Any 1:1 or bulk email, including founder outreach |
-| `blog` | Horonomy blog and Agent Assembly blog outbound links that cross a hostname boundary |
-| `docs` | Documentation site outbound links that cross a hostname boundary |
+| Value        | Use for                                                                                                    |
+| ------------ | ---------------------------------------------------------------------------------------------------------- |
+| `github`     | Links from any repository README, GitHub org page, GitHub Issues, GitHub Discussions, GitHub release notes |
+| `linkedin`   | Founder posts, company page posts, LinkedIn newsletter, LinkedIn DMs                                       |
+| `x`          | Posts on X (formerly Twitter), including quote posts and replies                                           |
+| `reddit`     | Subreddit threads, comments, DMs                                                                           |
+| `hackernews` | Show HN, Ask HN, comments, submissions                                                                     |
+| `discord`    | Discord community messages, announcements, DMs                                                             |
+| `slack`      | Public Slack community messages, DMs                                                                       |
+| `email`      | Any 1:1 or bulk email, including founder outreach                                                          |
+| `blog`       | Horonomy blog and Agent Assembly blog outbound links that cross a hostname boundary                        |
+| `docs`       | Documentation site outbound links that cross a hostname boundary                                           |
 | `newsletter` | Third-party newsletter placements (This Week in AI, etc.) — reserve for external editors, not our own list |
 
 **Adding a new source**: open a PR that (a) shows the channel is
@@ -93,19 +93,19 @@ and the quick-reference table in Section 8.
 
 ### 2.3 `utm_medium` — how the visitor got there
 
-Describes the *type* of surface the click sat on. Answers: *what kind of
-touchpoint is this?* A single source usually has more than one medium
+Describes the _type_ of surface the click sat on. Answers: _what kind of
+touchpoint is this?_ A single source usually has more than one medium
 (a LinkedIn post is `social`; a LinkedIn DM is `direct_outreach`).
 
-| Value | Use for |
-|---|---|
-| `readme` | README badges and body links in any repository we control |
-| `social` | Public timeline posts on LinkedIn, X, Bluesky, Threads |
-| `community` | Public community threads (Reddit, Hacker News, Discord public channels, Slack public channels) |
-| `referral` | Third-party blog posts, podcast show notes, conference slide decks |
-| `newsletter` | Newsletter body copy, either ours (once we run one) or external |
-| `direct_outreach` | 1:1 DMs, cold email, warm intro email |
-| `docs_link` | Cross-hostname docs links (docs.agentassembly.dev → agentassembly.dev/early-access) |
+| Value             | Use for                                                                                        |
+| ----------------- | ---------------------------------------------------------------------------------------------- |
+| `readme`          | README badges and body links in any repository we control                                      |
+| `social`          | Public timeline posts on LinkedIn, X, Bluesky, Threads                                         |
+| `community`       | Public community threads (Reddit, Hacker News, Discord public channels, Slack public channels) |
+| `referral`        | Third-party blog posts, podcast show notes, conference slide decks                             |
+| `newsletter`      | Newsletter body copy, either ours (once we run one) or external                                |
+| `direct_outreach` | 1:1 DMs, cold email, warm intro email                                                          |
+| `docs_link`       | Cross-hostname docs links (docs.agentassembly.dev → agentassembly.dev/early-access)            |
 
 **Source × medium relationship**
 
@@ -133,14 +133,14 @@ convention aligned so Default Channel Group works without extra rules:
 ### 2.4 `utm_campaign` — what business initiative
 
 Groups clicks by the intent of the effort, not the individual post.
-Answers: *which initiative is this click evidence for?*
+Answers: _which initiative is this click evidence for?_
 
-| Value | Use for |
-|---|---|
-| `agent_assembly_launch` | The public launch wave — GitHub trending push, first HN Show HN, initial founder feed |
-| `agent_security_content` | Ongoing content series on AI agent governance, sandboxing, policy, audit |
-| `early_access` | Any promotion of the Cloud Early Access / design-partner form |
-| `oss_install` | Promotion of the OSS self-hosting path (install command, quickstart, example run) |
+| Value                    | Use for                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------- |
+| `agent_assembly_launch`  | The public launch wave — GitHub trending push, first HN Show HN, initial founder feed |
+| `agent_security_content` | Ongoing content series on AI agent governance, sandboxing, policy, audit              |
+| `early_access`           | Any promotion of the Cloud Early Access / design-partner form                         |
+| `oss_install`            | Promotion of the OSS self-hosting path (install command, quickstart, example run)     |
 
 **Choosing a campaign**
 
@@ -165,17 +165,17 @@ that a teammate can point to.
 ### 2.5 `utm_content` — which variant of a post
 
 Distinguishes multiple links that share the same source/medium/campaign.
-Answers: *within one initiative, which specific creative or placement
-produced this click?*
+Answers: _within one initiative, which specific creative or placement
+produced this click?_
 
 Common patterns:
 
-| Value shape | Use for |
-|---|---|
-| `hero_cta` | The primary hero CTA on a landing page (when the link crosses hostnames) |
-| `footer_link` | Footer link on the Horonomy site pointing at the product site |
-| `readme_badge` | The clickable badge in a GitHub README |
-| `blog_<slug>` | Body link inside a blog post; slug matches the article filename (no personal names) |
+| Value shape             | Use for                                                                                   |
+| ----------------------- | ----------------------------------------------------------------------------------------- |
+| `hero_cta`              | The primary hero CTA on a landing page (when the link crosses hostnames)                  |
+| `footer_link`           | Footer link on the Horonomy site pointing at the product site                             |
+| `readme_badge`          | The clickable badge in a GitHub README                                                    |
+| `blog_<slug>`           | Body link inside a blog post; slug matches the article filename (no personal names)       |
 | `post_variant_<letter>` | A/B split for two founder posts running the same day (`post_variant_a`, `post_variant_b`) |
 
 **Rules for `utm_content`**
@@ -193,19 +193,19 @@ Common patterns:
 Valid parameter combinations. A cell marked ✓ means the value is required
 for that channel; ○ means optional but recommended; blank means omit.
 
-| Channel example                | source     | medium         | campaign            | content     |
-|--------------------------------|------------|----------------|---------------------|-------------|
-| GitHub README badge link       | `github` ✓ | `readme` ✓     | `agent_assembly_launch` ✓ | `readme_badge` ○ |
-| GitHub Issues body link        | `github` ✓ | `readme` ✓     | matches initiative ✓ | ○           |
-| LinkedIn founder feed post     | `linkedin` ✓ | `social` ✓   | matches initiative ✓ | `post_variant_a` ○ |
-| LinkedIn DM                    | `linkedin` ✓ | `direct_outreach` ✓ | matches initiative ✓ | ○      |
-| X public post                  | `x` ✓      | `social` ✓     | matches initiative ✓ | ○           |
-| Reddit subreddit thread        | `reddit` ✓ | `community` ✓  | matches initiative ✓ | ○           |
-| Hacker News Show HN            | `hackernews` ✓ | `community` ✓ | `agent_assembly_launch` ✓ | ○     |
-| Early-access confirmation email | `email` ✓ | `direct_outreach` ✓ | `early_access` ✓ | ○         |
-| Third-party newsletter placement | `newsletter` ✓ | `newsletter` ✓ | matches initiative ✓ | slug ○   |
-| Docs → product cross-hostname link | `docs` ✓ | `docs_link` ✓  | matches initiative ✓ | page slug ○ |
-| Blog → early-access cross-hostname link | `blog` ✓ | `docs_link` ✓ | `early_access` ✓ | blog slug ○ |
+| Channel example                         | source         | medium              | campaign                  | content            |
+| --------------------------------------- | -------------- | ------------------- | ------------------------- | ------------------ |
+| GitHub README badge link                | `github` ✓     | `readme` ✓          | `agent_assembly_launch` ✓ | `readme_badge` ○   |
+| GitHub Issues body link                 | `github` ✓     | `readme` ✓          | matches initiative ✓      | ○                  |
+| LinkedIn founder feed post              | `linkedin` ✓   | `social` ✓          | matches initiative ✓      | `post_variant_a` ○ |
+| LinkedIn DM                             | `linkedin` ✓   | `direct_outreach` ✓ | matches initiative ✓      | ○                  |
+| X public post                           | `x` ✓          | `social` ✓          | matches initiative ✓      | ○                  |
+| Reddit subreddit thread                 | `reddit` ✓     | `community` ✓       | matches initiative ✓      | ○                  |
+| Hacker News Show HN                     | `hackernews` ✓ | `community` ✓       | `agent_assembly_launch` ✓ | ○                  |
+| Early-access confirmation email         | `email` ✓      | `direct_outreach` ✓ | `early_access` ✓          | ○                  |
+| Third-party newsletter placement        | `newsletter` ✓ | `newsletter` ✓      | matches initiative ✓      | slug ○             |
+| Docs → product cross-hostname link      | `docs` ✓       | `docs_link` ✓       | matches initiative ✓      | page slug ○        |
+| Blog → early-access cross-hostname link | `blog` ✓       | `docs_link` ✓       | `early_access` ✓          | blog slug ○        |
 
 **Composition constraints**
 
@@ -228,7 +228,7 @@ values.
 
 `https://agent-assembly.com/?utm_source=github&utm_medium=readme&utm_campaign=agent_assembly_launch&utm_content=readme_badge`
 
-Attach only to the *link URL* under the badge, never to the badge image
+Attach only to the _link URL_ under the badge, never to the badge image
 source (shields.io strips or refuses URL params on the image endpoint).
 
 ### 4.2 LinkedIn founder feed post
@@ -242,7 +242,7 @@ Do NOT put the poster's name in `utm_content`.
 
 `https://github.com/ai-agent-assembly/agent-assembly?utm_source=reddit&utm_medium=community&utm_campaign=oss_install&utm_content=ai_agents_thread`
 
-The `utm_content` uses the thread's *topic slug*, not the thread title
+The `utm_content` uses the thread's _topic slug_, not the thread title
 verbatim. Keep it short, lowercase, snake_case.
 
 ### 4.4 Hacker News Show HN
@@ -313,7 +313,7 @@ new one (`agent_assembly_relaunch_q4`, etc.).
 ### 5.6 UTM on outbound links to third-party sites
 
 `https://github.com/some-competitor?utm_source=...`. UTM is for measuring
-traffic *arriving at our properties*. Adding UTM to a link leaving our
+traffic _arriving at our properties_. Adding UTM to a link leaving our
 sites achieves nothing (we cannot read their analytics) and can look like
 an attempt to influence their metrics.
 
@@ -325,7 +325,7 @@ URL. Test the full chain. Prefer a direct final URL.
 ### 5.8 Sharing tracked links inside product UI
 
 Never embed a UTM-tagged link inside an in-product tooltip, banner, or
-email that a *signed-in user* will click. It overwrites their session.
+email that a _signed-in user_ will click. It overwrites their session.
 The `cta_location` event parameter is the correct in-product signal;
 see HORO-45.
 
@@ -355,7 +355,7 @@ loads on our pages.
 **How to spot a violation**
 
 If two recipients of the same email, or two viewers of the same LinkedIn
-post, would see *different* URLs, you are encoding identity into the URL.
+post, would see _different_ URLs, you are encoding identity into the URL.
 Stop; regenerate every recipient's URL from the same tagged template.
 
 ## 7. Pre-launch tagging checklist
@@ -387,12 +387,12 @@ the row and move it to the "Retired" section instead of deleting it.
 
 ### Active
 
-| `utm_campaign` | Initiative | Owner | Start | Planned end |
-|---|---|---|---|---|
-| `agent_assembly_launch` | Public launch wave — GitHub trending, first Show HN, initial founder feed | Founders | 2026-07 | 2026-10 |
-| `agent_security_content` | Ongoing content series on agent governance, sandboxing, policy, audit | Founders | 2026-07 | Rolling |
-| `early_access` | Cloud Early Access / design-partner form promotion | Founders | 2026-07 | Until Cloud GA |
-| `oss_install` | OSS self-hosting path — install command, quickstart, example run | Founders | 2026-07 | Rolling |
+| `utm_campaign`           | Initiative                                                                | Owner    | Start   | Planned end    |
+| ------------------------ | ------------------------------------------------------------------------- | -------- | ------- | -------------- |
+| `agent_assembly_launch`  | Public launch wave — GitHub trending, first Show HN, initial founder feed | Founders | 2026-07 | 2026-10        |
+| `agent_security_content` | Ongoing content series on agent governance, sandboxing, policy, audit     | Founders | 2026-07 | Rolling        |
+| `early_access`           | Cloud Early Access / design-partner form promotion                        | Founders | 2026-07 | Until Cloud GA |
+| `oss_install`            | OSS self-hosting path — install command, quickstart, example run          | Founders | 2026-07 | Rolling        |
 
 ### Retired
 
@@ -423,7 +423,7 @@ _(none yet — first launch wave)_
 - **HORO-50** (pre-launch QA): use Section 7 as the URL portion of the
   QA checklist. Report any untagged or malformed link as a blocker.
 - **Coordination with HORO-45**: `utm_content` and `cta_location` are
-  different concepts. UTM lives on the *URL* and captures off-site
-  origin. `cta_location` is a GA4 event parameter emitted from *inside*
+  different concepts. UTM lives on the _URL_ and captures off-site
+  origin. `cta_location` is a GA4 event parameter emitted from _inside_
   the page and captures on-page position (`hero`, `footer`, etc.).
   Do not conflate them or use one to substitute for the other.
