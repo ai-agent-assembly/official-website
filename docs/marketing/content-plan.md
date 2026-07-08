@@ -404,4 +404,103 @@ different pieces produce consistent GA4 rows.
 
 ## 8. Handoff notes
 
-*(To be authored in the next commit.)*
+This plan takes hard dependencies on three sibling Wave 1 tickets. The
+notes below capture what each article in Section 5 expects each sibling
+ticket to deliver, so the owners of those tickets can see the demand
+without reading the full plan.
+
+### 8.1 HORO-42 — Landing page CTAs
+
+Priority articles need three specific CTAs on the landing page to be
+present and stable before publication:
+
+- **Primary hero CTA** → `/product` with `cta_location=hero_primary` event
+  attribution ([HORO-45](https://lightning-dust-mite.atlassian.net/browse/HORO-45)).
+  Priority articles #1 and #2 link to this page.
+- **Early-access CTA** → the HORO-43 sign-up route (see §8.2) with a
+  clearly-labeled button in the hero and one repeat in the footer.
+  Priority article #3 links here.
+- **Docs CTA** → `https://docs.agent-assembly.com` for developer-audience
+  articles (backlog #8, #9). Should be visually distinct from the
+  early-access CTA so `cta_location` events stay unambiguous.
+
+The landing page must render fine when arrived at with a full UTM query
+string — no client-side redirect that strips query parameters.
+
+### 8.2 HORO-43 — Early-access page
+
+Priority article #3 and backlog article #10 are gated on this page.
+Minimum surface needed for content to link to it:
+
+- A stable public URL (`/early-access` on `agent-assembly.com` is the
+  working assumption; content-plan CTA URLs use this path).
+- A form that accepts an email address and role, and records `utm_*`
+  query parameters as hidden fields so the source of each signup is
+  attributable per [HORO-47](https://lightning-dust-mite.atlassian.net/browse/HORO-47).
+- A "thank you" state (either a distinct route or an on-page state) so
+  GA4 can fire a `sign_up` event ([HORO-45](https://lightning-dust-mite.atlassian.net/browse/HORO-45)).
+- No claim, anywhere on the page, that a hosted / SaaS product is
+  generally available. The correct framing is "early access to the
+  governed runtime and its coming hosted control plane".
+
+If HORO-43 is not ready when priority article #3 is drafted, the CTA
+falls back to the GitHub repo (`https://github.com/ai-agent-assembly`)
+with `utm_content=identity_authority_audit_cta_fallback_github` — but
+this is a downgrade and should be avoided.
+
+### 8.3 HORO-48 — Docs sections each article links to
+
+Each article in Section 5 expects a specific docs section to exist. If
+the section is not ready at publish time, the article ships without
+that link rather than pointing at a placeholder.
+
+| Article | Docs section it links to |
+|---|---|
+| #1 SDKs are not security boundaries | Security model → trust boundaries |
+| #2 Govern tool calls | Policy → tool-call allow/deny; Policy → budgets |
+| #3 Identity, authority, audit | Concepts → identity; Concepts → authority; Concepts → audit |
+| #4 (backlog) MCP is not enough | Integrations → MCP; Policy → tool-call allow/deny |
+| #5 (backlog) How to audit agent actions | Audit → event schema; Audit → retention |
+| #6 (backlog) Secret isolation | Concepts → secret isolation; How-to → rotating secrets |
+| #7 (backlog) Security model | Security model → prompt / tool / network layers |
+| #8 (backlog) Framework → runtime | Quickstart; Integrations → LangChain / CrewAI |
+| #9 (backlog) What to log | Audit → event schema (shared with HORO-45) |
+
+### 8.4 UTM template each article uses
+
+Every internal cross-hostname link in every article follows this template,
+consistent with [HORO-47](https://lightning-dust-mite.atlassian.net/browse/HORO-47):
+
+```
+?utm_source=<blog|docs>
+&utm_medium=docs_link
+&utm_campaign=wave1_launch
+&utm_content=<article_slug>_<cta_location>
+```
+
+- `utm_source=blog` for links originating from the Agent Assembly blog;
+  `utm_source=docs` for links originating from `docs.agent-assembly.com`.
+- `utm_medium=docs_link` for all cross-hostname links between our own
+  properties (per HORO-47 §2.3).
+- `utm_campaign=wave1_launch` for every piece in this plan. When Wave 2
+  opens, the campaign value increments; the individual `utm_content`
+  slugs stay stable so historical GA4 rows remain readable.
+- `utm_content` combines the article slug and where the CTA sat
+  (`hero`, `inline`, `bottom`, `sidebar`). Values are lowercase snake_case
+  per HORO-47 §2.1.
+
+### 8.5 Open questions / blockers to flag
+
+- **Blog vs. docs hostname.** HORO-47 §1 references
+  `agentassembly.dev` / `docs.agentassembly.dev` while the current
+  Docusaurus config uses `agent-assembly.com` / `docs.agent-assembly.com`.
+  Whichever pair wins, the UTM `utm_source=blog|docs` values are stable —
+  but the CTA URL examples in this plan will need one find/replace pass
+  before any piece publishes. Not a blocker for planning; is a blocker
+  for authoring.
+- **Existing 2026-06-25 blog posts.** The repo already contains
+  `blog/2026-06-25-sdks-are-not-security-boundaries` and
+  `blog/2026-06-25-why-agent-assembly-exists`. Decision needed before
+  authoring priority #1: refresh in place, or supersede with a new
+  slug and add a canonical redirect. Recommend refresh in place to
+  preserve any existing links.
