@@ -173,6 +173,11 @@
   font-family: var(--ifm-font-family-monospace);
   font-size: 0.86rem;
   line-height: 1.7;
+  /* Long CLI lines must wrap on narrow viewports; otherwise the <pre>
+     with the default `white-space: pre` widens the hero past 375px
+     (AAASM-4316). */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .muted {
   color: var(--aa-text-dim);
