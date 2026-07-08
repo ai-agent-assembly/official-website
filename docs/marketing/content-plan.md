@@ -38,9 +38,9 @@ workstreams.
 AI agents. It is not another agent framework.**
 
 Agent frameworks (LangChain, LlamaIndex, CrewAI, OpenAI Assistants, Vercel
-AI SDK, etc.) make agents *capable* — they plan, call tools, and act.
-Agent Assembly sits *underneath* whatever framework a team already uses and
-enforces what those agents are actually *allowed* to do at runtime:
+AI SDK, etc.) make agents _capable_ — they plan, call tools, and act.
+Agent Assembly sits _underneath_ whatever framework a team already uses and
+enforces what those agents are actually _allowed_ to do at runtime:
 
 - **Identity** — every agent has a per-agent, team-scoped identity distinct
   from the human developer's credentials.
@@ -110,18 +110,18 @@ is live. Audience abbreviations: **DEV** = application developer building
 agents, **PLAT** = platform / infra engineer, **SEC** = security / compliance
 engineer, **DEC** = decision maker (eng manager, director, VP, CTO).
 
-| # | Working title | Audience | Search intent | Primary CTA target |
-|---|---|---|---|---|
-| 1 | SDKs are not security boundaries for AI agents | DEV, SEC | Informational — "how do I stop my agent from doing X" | `/product` |
-| 2 | How to govern tool calls in production AI agents | PLAT, SEC | Solution-aware — "agent tool call policy", "tool call authorization" | `/product` |
-| 3 | Why AI agents need identity, authority, and audit trails | SEC, DEC | Category-defining — "AI agent governance" | Early-access (HORO-43) |
-| 4 | MCP is not enough without runtime policy | DEV, PLAT | Solution-aware — readers already know MCP | `/product` |
-| 5 | How to audit AI agent actions in production | SEC, PLAT | Compliance-driven — "agent audit log", "AI agent observability" | `https://docs.agent-assembly.com` (audit section) |
-| 6 | Secret isolation for autonomous agents | DEV, SEC | Problem-aware — "agent leaked API key", "agent credential handling" | `https://docs.agent-assembly.com` (secrets) |
-| 7 | The agent security model: prompt layer, tool layer, network layer | SEC, PLAT | Category-defining — mental-model piece | `/product` |
-| 8 | From agent framework to governed agent runtime | DEV, PLAT | Solution-aware — "add governance to LangChain / CrewAI / Assistants" | Quickstart (`https://docs.agent-assembly.com/quickstart`) |
-| 9 | What to log when an AI agent calls a tool | PLAT, SEC | How-to — "agent telemetry schema", "agent tool call log" | `https://docs.agent-assembly.com` (events / audit) |
-| 10 | Buying vs building your agent guardrails | DEC | Buyer-journey — "build vs buy AI guardrails" | Early-access (HORO-43) |
+| #   | Working title                                                     | Audience  | Search intent                                                        | Primary CTA target                                        |
+| --- | ----------------------------------------------------------------- | --------- | -------------------------------------------------------------------- | --------------------------------------------------------- |
+| 1   | SDKs are not security boundaries for AI agents                    | DEV, SEC  | Informational — "how do I stop my agent from doing X"                | `/product`                                                |
+| 2   | How to govern tool calls in production AI agents                  | PLAT, SEC | Solution-aware — "agent tool call policy", "tool call authorization" | `/product`                                                |
+| 3   | Why AI agents need identity, authority, and audit trails          | SEC, DEC  | Category-defining — "AI agent governance"                            | Early-access (HORO-43)                                    |
+| 4   | MCP is not enough without runtime policy                          | DEV, PLAT | Solution-aware — readers already know MCP                            | `/product`                                                |
+| 5   | How to audit AI agent actions in production                       | SEC, PLAT | Compliance-driven — "agent audit log", "AI agent observability"      | `https://docs.agent-assembly.com` (audit section)         |
+| 6   | Secret isolation for autonomous agents                            | DEV, SEC  | Problem-aware — "agent leaked API key", "agent credential handling"  | `https://docs.agent-assembly.com` (secrets)               |
+| 7   | The agent security model: prompt layer, tool layer, network layer | SEC, PLAT | Category-defining — mental-model piece                               | `/product`                                                |
+| 8   | From agent framework to governed agent runtime                    | DEV, PLAT | Solution-aware — "add governance to LangChain / CrewAI / Assistants" | Quickstart (`https://docs.agent-assembly.com/quickstart`) |
+| 9   | What to log when an AI agent calls a tool                         | PLAT, SEC | How-to — "agent telemetry schema", "agent tool call log"             | `https://docs.agent-assembly.com` (events / audit)        |
+| 10  | Buying vs building your agent guardrails                          | DEC       | Buyer-journey — "build vs buy AI guardrails"                         | Early-access (HORO-43)                                    |
 
 **Notes on prioritisation.** Articles 1–3 are the seed launch set expanded
 in Section 5. Article 4 is close behind — MCP is currently the highest-
@@ -283,7 +283,7 @@ are notoriously wrong for emerging categories.
 
 ### 6.1 Governance intent
 
-Readers looking for the *concept* of governing AI agents. Category-defining;
+Readers looking for the _concept_ of governing AI agents. Category-defining;
 lowest current volume but highest strategic value.
 
 - `AI agent governance`
@@ -294,7 +294,7 @@ lowest current volume but highest strategic value.
 
 ### 6.2 Audit intent
 
-Readers who need to *record and review* what an agent did. Highest overlap
+Readers who need to _record and review_ what an agent did. Highest overlap
 with compliance and security-eng audiences.
 
 - `AI agent audit trail`
@@ -305,7 +305,7 @@ with compliance and security-eng audiences.
 
 ### 6.3 Policy intent
 
-Readers who want to *enforce* rules on agent behaviour, usually at the
+Readers who want to _enforce_ rules on agent behaviour, usually at the
 tool-call or network layer. Overlaps with platform-eng.
 
 - `AI agent tool call policy`
@@ -339,12 +339,12 @@ Overlaps with prompt-injection defence and secrets handling.
 
 **Cluster-to-article mapping.**
 
-| Cluster | Article(s) that target it |
-|---|---|
-| 6.1 Governance | #3 Identity/authority/audit, #7 Security model |
-| 6.2 Audit | #5 How to audit agent actions, #9 What to log |
-| 6.3 Policy | #2 Govern tool calls, #6 Secret isolation |
-| 6.4 MCP | #4 MCP is not enough without runtime policy |
+| Cluster            | Article(s) that target it                              |
+| ------------------ | ------------------------------------------------------ |
+| 6.1 Governance     | #3 Identity/authority/audit, #7 Security model         |
+| 6.2 Audit          | #5 How to audit agent actions, #9 What to log          |
+| 6.3 Policy         | #2 Govern tool calls, #6 Secret isolation              |
+| 6.4 MCP            | #4 MCP is not enough without runtime policy            |
 | 6.5 Security model | #1 SDKs are not security boundaries, #7 Security model |
 
 ## 7. Distribution candidates
@@ -356,42 +356,42 @@ different pieces produce consistent GA4 rows.
 
 ### 7.1 Owned surfaces (always safe)
 
-| Channel | utm_source | utm_medium |
-|---|---|---|
-| Agent Assembly GitHub org README | `github` | `readme` |
-| `ai-agent-assembly/agent-assembly` repo README | `github` | `readme` |
-| Agent Assembly blog outbound to product/docs | `blog` | `docs_link` |
-| Docs site outbound to product/early-access | `docs` | `docs_link` |
-| Founder-list email newsletter (once running) | `email` | `newsletter` |
+| Channel                                        | utm_source | utm_medium   |
+| ---------------------------------------------- | ---------- | ------------ |
+| Agent Assembly GitHub org README               | `github`   | `readme`     |
+| `ai-agent-assembly/agent-assembly` repo README | `github`   | `readme`     |
+| Agent Assembly blog outbound to product/docs   | `blog`     | `docs_link`  |
+| Docs site outbound to product/early-access     | `docs`     | `docs_link`  |
+| Founder-list email newsletter (once running)   | `email`    | `newsletter` |
 
 ### 7.2 Community surfaces (context-sensitive — follow each community's rules)
 
-| Channel | utm_source | utm_medium | Notes |
-|---|---|---|---|
-| Hacker News (Show HN, Ask HN, story submissions) | `hackernews` | `community` | One post per week max; content must stand alone without a pitch |
-| Reddit r/programming | `reddit` | `community` | Only when the piece is genuinely non-promotional |
-| Reddit r/MachineLearning | `reddit` | `community` | Higher bar — must include a novel technical claim, not marketing |
-| Reddit r/LocalLLaMA | `reddit` | `community` | Better fit for practical agent-runtime content than r/MachineLearning |
-| Reddit r/devops, r/platform_engineering | `reddit` | `community` | Best fit for priority article #2 |
-| Reddit r/netsec | `reddit` | `community` | Best fit for priority article #3; strictly educational |
-| Discord: Platform Engineering, LangChain, LlamaIndex community servers | `discord` | `community` | Only in channels where sharing is explicitly welcome |
-| Slack: Platform Engineering community, MLOps community | `slack` | `community` | Same rule as Discord |
+| Channel                                                                | utm_source   | utm_medium  | Notes                                                                 |
+| ---------------------------------------------------------------------- | ------------ | ----------- | --------------------------------------------------------------------- |
+| Hacker News (Show HN, Ask HN, story submissions)                       | `hackernews` | `community` | One post per week max; content must stand alone without a pitch       |
+| Reddit r/programming                                                   | `reddit`     | `community` | Only when the piece is genuinely non-promotional                      |
+| Reddit r/MachineLearning                                               | `reddit`     | `community` | Higher bar — must include a novel technical claim, not marketing      |
+| Reddit r/LocalLLaMA                                                    | `reddit`     | `community` | Better fit for practical agent-runtime content than r/MachineLearning |
+| Reddit r/devops, r/platform_engineering                                | `reddit`     | `community` | Best fit for priority article #2                                      |
+| Reddit r/netsec                                                        | `reddit`     | `community` | Best fit for priority article #3; strictly educational                |
+| Discord: Platform Engineering, LangChain, LlamaIndex community servers | `discord`    | `community` | Only in channels where sharing is explicitly welcome                  |
+| Slack: Platform Engineering community, MLOps community                 | `slack`      | `community` | Same rule as Discord                                                  |
 
 ### 7.3 Social surfaces
 
-| Channel | utm_source | utm_medium | Notes |
-|---|---|---|---|
-| LinkedIn — founder posts | `linkedin` | `social` | Highest fit for priority #2 (platform-eng) and #3 (security/decision-maker) |
-| LinkedIn — company page | `linkedin` | `social` | Reshare of founder posts once cadence exists |
-| X (Twitter) — founder | `x` | `social` | Lower priority given current developer audience shift; still worth cross-posting |
-| Bluesky — founder | `x` | `social` | Reuse `x` source until Bluesky-specific volume warrants its own value (per HORO-47 §2.2) |
+| Channel                  | utm_source | utm_medium | Notes                                                                                    |
+| ------------------------ | ---------- | ---------- | ---------------------------------------------------------------------------------------- |
+| LinkedIn — founder posts | `linkedin` | `social`   | Highest fit for priority #2 (platform-eng) and #3 (security/decision-maker)              |
+| LinkedIn — company page  | `linkedin` | `social`   | Reshare of founder posts once cadence exists                                             |
+| X (Twitter) — founder    | `x`        | `social`   | Lower priority given current developer audience shift; still worth cross-posting         |
+| Bluesky — founder        | `x`        | `social`   | Reuse `x` source until Bluesky-specific volume warrants its own value (per HORO-47 §2.2) |
 
 ### 7.4 Direct outreach
 
-| Channel | utm_source | utm_medium | Notes |
-|---|---|---|---|
-| Founder 1:1 email to specific engineers / security leads | `email` | `direct_outreach` | Highest-signal channel for priority #3 |
-| LinkedIn DMs | `linkedin` | `direct_outreach` | Same-piece deduplication: never send the same DM to more than 20 recipients |
+| Channel                                                  | utm_source | utm_medium        | Notes                                                                       |
+| -------------------------------------------------------- | ---------- | ----------------- | --------------------------------------------------------------------------- |
+| Founder 1:1 email to specific engineers / security leads | `email`    | `direct_outreach` | Highest-signal channel for priority #3                                      |
+| LinkedIn DMs                                             | `linkedin` | `direct_outreach` | Same-piece deduplication: never send the same DM to more than 20 recipients |
 
 ### 7.5 Explicitly deferred
 
@@ -454,17 +454,17 @@ Each article in Section 5 expects a specific docs section to exist. If
 the section is not ready at publish time, the article ships without
 that link rather than pointing at a placeholder.
 
-| Article | Docs section it links to |
-|---|---|
-| #1 SDKs are not security boundaries | Security model → trust boundaries |
-| #2 Govern tool calls | Policy → tool-call allow/deny; Policy → budgets |
-| #3 Identity, authority, audit | Concepts → identity; Concepts → authority; Concepts → audit |
-| #4 (backlog) MCP is not enough | Integrations → MCP; Policy → tool-call allow/deny |
-| #5 (backlog) How to audit agent actions | Audit → event schema; Audit → retention |
-| #6 (backlog) Secret isolation | Concepts → secret isolation; How-to → rotating secrets |
-| #7 (backlog) Security model | Security model → prompt / tool / network layers |
-| #8 (backlog) Framework → runtime | Quickstart; Integrations → LangChain / CrewAI |
-| #9 (backlog) What to log | Audit → event schema (shared with HORO-45) |
+| Article                                 | Docs section it links to                                    |
+| --------------------------------------- | ----------------------------------------------------------- |
+| #1 SDKs are not security boundaries     | Security model → trust boundaries                           |
+| #2 Govern tool calls                    | Policy → tool-call allow/deny; Policy → budgets             |
+| #3 Identity, authority, audit           | Concepts → identity; Concepts → authority; Concepts → audit |
+| #4 (backlog) MCP is not enough          | Integrations → MCP; Policy → tool-call allow/deny           |
+| #5 (backlog) How to audit agent actions | Audit → event schema; Audit → retention                     |
+| #6 (backlog) Secret isolation           | Concepts → secret isolation; How-to → rotating secrets      |
+| #7 (backlog) Security model             | Security model → prompt / tool / network layers             |
+| #8 (backlog) Framework → runtime        | Quickstart; Integrations → LangChain / CrewAI               |
+| #9 (backlog) What to log                | Audit → event schema (shared with HORO-45)                  |
 
 ### 8.4 UTM template each article uses
 
