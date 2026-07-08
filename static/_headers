@@ -1,3 +1,8 @@
+# Cloudflare Pages custom-headers file. Docusaurus copies static/** verbatim
+# into the deploy artifact, so this ships at the site root as /_headers.
+# Post-deploy check: `curl -sI https://agent-assembly.com/ | grep -iE 'content-security-policy|x-frame-options'`
+# must return the corresponding header lines. If they are absent, the deploy
+# workflow (deploy.yml -> Cloudflare Pages) did not pick up static/_headers.
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
