@@ -357,3 +357,24 @@ loads on our pages.
 If two recipients of the same email, or two viewers of the same LinkedIn
 post, would see *different* URLs, you are encoding identity into the URL.
 Stop; regenerate every recipient's URL from the same tagged template.
+
+## 7. Pre-launch tagging checklist
+
+Before pressing "publish" on any external post, run this checklist for
+every URL in the draft. It takes under a minute per link.
+
+- [ ] URL is a canonical hostname we control (`agent-assembly.com`,
+      `horonomy.dev`, `docs.agent-assembly.com`, `github.com/ai-agent-assembly/*`).
+- [ ] `utm_source` is present and matches a value in Section 2.2.
+- [ ] `utm_medium` is present and matches a value in Section 2.3.
+- [ ] `utm_campaign` matches an active initiative in Section 8.
+- [ ] `utm_content`, if present, is a Section 2.5 pattern with no PII.
+- [ ] Every value is lowercase snake_case and under 40 characters.
+- [ ] The link is NOT a same-hostname internal link (see Section 5.2).
+- [ ] The final URL, after any redirect, still carries all parameters
+      (`curl -sIL <url>` and confirm the location chain).
+- [ ] Two recipients of the same creative would see identical URLs.
+- [ ] The pair (`utm_source`, `utm_medium`) will still make sense in six
+      months when someone asks a channel-comparison question.
+
+If any box is unchecked, do not publish. Fix the URL, then re-run.
