@@ -50,3 +50,43 @@ This document defines:
   [HORO-48](https://lightning-dust-mite.atlassian.net/browse/HORO-48)
   embed UTM-tagged internal links; [HORO-50](https://lightning-dust-mite.atlassian.net/browse/HORO-50)
   runs the QA pass.
+
+## 2. Naming convention
+
+### 2.1 Global rules
+
+- **Casing**: lowercase `snake_case` for every value, every parameter.
+  `LinkedIn`, `Linkedin`, `linked-in`, and `linked_in` all resolve to
+  different rows in GA4. Only `linkedin` is valid here.
+- **Character set**: `[a-z0-9_]` only. No spaces, no punctuation, no
+  emoji, no unicode. If a value needs a delimiter, use `_`.
+- **Length**: keep each value under 40 characters. GA4 truncates long
+  parameter values in some reports.
+- **Stability**: a value in production must not be renamed. Retire it and
+  introduce a replacement instead — historical GA4 rows do not backfill.
+- **No PII, ever**: `utm_content` must never carry an email address,
+  user id, order id, session id, or personal name. See Section 6.
+
+### 2.2 `utm_source` — who sent the visitor
+
+Identifies the platform, site, or property the click originated on.
+Answers: *where was the user immediately before this click?*
+
+| Value | Use for |
+|---|---|
+| `github` | Links from any repository README, GitHub org page, GitHub Issues, GitHub Discussions, GitHub release notes |
+| `linkedin` | Founder posts, company page posts, LinkedIn newsletter, LinkedIn DMs |
+| `x` | Posts on X (formerly Twitter), including quote posts and replies |
+| `reddit` | Subreddit threads, comments, DMs |
+| `hackernews` | Show HN, Ask HN, comments, submissions |
+| `discord` | Discord community messages, announcements, DMs |
+| `slack` | Public Slack community messages, DMs |
+| `email` | Any 1:1 or bulk email, including founder outreach |
+| `blog` | Horonomy blog and Agent Assembly blog outbound links that cross a hostname boundary |
+| `docs` | Documentation site outbound links that cross a hostname boundary |
+| `newsletter` | Third-party newsletter placements (This Week in AI, etc.) — reserve for external editors, not our own list |
+
+**Adding a new source**: open a PR that (a) shows the channel is
+non-trivial (expected >20 clicks in the first month), (b) confirms no
+existing value covers it, and (c) updates Section 2.2, Section 6 examples,
+and the quick-reference table in Section 8.
