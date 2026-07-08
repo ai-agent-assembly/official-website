@@ -328,3 +328,32 @@ Never embed a UTM-tagged link inside an in-product tooltip, banner, or
 email that a *signed-in user* will click. It overwrites their session.
 The `cta_location` event parameter is the correct in-product signal;
 see HORO-45.
+
+## 6. PII and privacy check
+
+`utm_content` is user-visible and cache-preserved. Treat it as a value
+that will end up in server access logs, browser history, screenshot
+uploads to Slack, and any third-party analytics the visitor's browser
+loads on our pages.
+
+**Forbidden inside any UTM parameter:**
+
+- Email addresses.
+- User IDs, account IDs, session IDs, order IDs.
+- Full names or usernames of individuals.
+- IP addresses.
+- Payment identifiers.
+- Any value that varies per recipient of the same creative.
+
+**Permitted:**
+
+- Vocabulary tokens defined in Section 2.
+- Public content slugs (blog post slug, docs page slug, newsletter issue).
+- A/B split letters (`_a`, `_b`, `_variant_c`).
+- Public campaign names.
+
+**How to spot a violation**
+
+If two recipients of the same email, or two viewers of the same LinkedIn
+post, would see *different* URLs, you are encoding identity into the URL.
+Stop; regenerate every recipient's URL from the same tagged template.
