@@ -129,3 +129,35 @@ convention aligned so Default Channel Group works without extra rules:
 - `referral` → GA4 "Referral" channel.
 - `cpc`, `ppc`, `paid*` are RESERVED — do not use until paid ads are in
   scope (out of scope for HORO-47).
+
+### 2.4 `utm_campaign` — what business initiative
+
+Groups clicks by the intent of the effort, not the individual post.
+Answers: *which initiative is this click evidence for?*
+
+| Value | Use for |
+|---|---|
+| `agent_assembly_launch` | The public launch wave — GitHub trending push, first HN Show HN, initial founder feed |
+| `agent_security_content` | Ongoing content series on AI agent governance, sandboxing, policy, audit |
+| `early_access` | Any promotion of the Cloud Early Access / design-partner form |
+| `oss_install` | Promotion of the OSS self-hosting path (install command, quickstart, example run) |
+
+**Choosing a campaign**
+
+- One campaign per business objective. If two posts serve the same
+  objective (e.g. two founder posts about early access), they share
+  `utm_campaign=early_access` and differ only in `utm_content`.
+- A campaign lifespan is typically 4–12 weeks. When an initiative ends,
+  the value is retired — do not reuse an old name for a new push.
+- `utm_id` is OPTIONAL and, when used, must equal `utm_campaign`. GA4
+  respects `utm_id` for Campaign ID reporting; keeping it identical to
+  `utm_campaign` avoids a second vocabulary to maintain. Only add
+  `utm_id` when a campaign will be joined against external ad-platform
+  data (not applicable for HORO-47's OSS/organic scope).
+
+**Adding a new campaign**
+
+Add a row to the quick-reference table in Section 8 and note the start
+date, expected end date, and owner in that row. Anyone can add a campaign
+value; the constraint is that it must map to a real, named initiative
+that a teammate can point to.
