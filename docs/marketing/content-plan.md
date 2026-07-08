@@ -489,18 +489,15 @@ consistent with [HORO-47](https://lightning-dust-mite.atlassian.net/browse/HORO-
   (`hero`, `inline`, `bottom`, `sidebar`). Values are lowercase snake_case
   per HORO-47 §2.1.
 
-### 8.5 Open questions / blockers to flag
+### 8.5 Open questions to resolve before authoring
 
-- **Blog vs. docs hostname.** HORO-47 §1 references
-  `agentassembly.dev` / `docs.agentassembly.dev` while the current
-  Docusaurus config uses `agent-assembly.com` / `docs.agent-assembly.com`.
-  Whichever pair wins, the UTM `utm_source=blog|docs` values are stable —
-  but the CTA URL examples in this plan will need one find/replace pass
-  before any piece publishes. Not a blocker for planning; is a blocker
-  for authoring.
 - **Existing 2026-06-25 blog posts.** The repo already contains
   `blog/2026-06-25-sdks-are-not-security-boundaries` and
   `blog/2026-06-25-why-agent-assembly-exists`. Decision needed before
   authoring priority #1: refresh in place, or supersede with a new
   slug and add a canonical redirect. Recommend refresh in place to
   preserve any existing links.
+
+_(Hostname reference note removed — HORO-47 has been corrected to use
+`agent-assembly.com` / `docs.agent-assembly.com`, matching this plan
+and the Docusaurus config.)_
