@@ -216,3 +216,60 @@ for that channel; ○ means optional but recommended; blank means omit.
   overwrites the visitor's original session source.
 - Do not carry UTM through a redirect chain unless every hop preserves
   the query string. Prefer a direct final URL.
+
+## 4. Worked examples
+
+Each example is a real link shape the team will produce in the first
+launch wave. Copy the pattern; substitute the moving parts. Every
+example is safe to publish — no PII, no personal handles, no ad-hoc
+values.
+
+### 4.1 GitHub README badge — link URL
+
+`https://agent-assembly.com/?utm_source=github&utm_medium=readme&utm_campaign=agent_assembly_launch&utm_content=readme_badge`
+
+Attach only to the *link URL* under the badge, never to the badge image
+source (shields.io strips or refuses URL params on the image endpoint).
+
+### 4.2 LinkedIn founder feed post
+
+`https://agent-assembly.com/?utm_source=linkedin&utm_medium=social&utm_campaign=agent_security_content&utm_content=post_variant_a`
+
+Bump the `utm_content` letter for each variant of a repost or A/B test.
+Do NOT put the poster's name in `utm_content`.
+
+### 4.3 Reddit r/MachineLearning thread
+
+`https://github.com/ai-agent-assembly/agent-assembly?utm_source=reddit&utm_medium=community&utm_campaign=oss_install&utm_content=ai_agents_thread`
+
+The `utm_content` uses the thread's *topic slug*, not the thread title
+verbatim. Keep it short, lowercase, snake_case.
+
+### 4.4 Hacker News Show HN
+
+`https://github.com/ai-agent-assembly/agent-assembly?utm_source=hackernews&utm_medium=community&utm_campaign=agent_assembly_launch`
+
+`utm_content` is omitted — the campaign already identifies the initiative,
+and HN traffic will surface as a single tagged row.
+
+### 4.5 Cross-hostname internal link (docs → early access)
+
+`https://agent-assembly.com/early-access?utm_source=docs&utm_medium=docs_link&utm_campaign=early_access&utm_content=security_model_page`
+
+Fires because the click crosses `docs.agent-assembly.com` →
+`agent-assembly.com`. `utm_content` is the docs page slug where the CTA sits.
+
+### 4.6 Early-access confirmation email
+
+`https://agent-assembly.com/quickstart?utm_source=email&utm_medium=direct_outreach&utm_campaign=early_access`
+
+Sent from the confirmation-email template. Do NOT append a recipient
+identifier — every recipient of that template hits the same tagged URL.
+Recipient-level attribution belongs in the email tool, not the URL.
+
+### 4.7 Third-party newsletter placement
+
+`https://agent-assembly.com/?utm_source=newsletter&utm_medium=newsletter&utm_campaign=agent_security_content&utm_content=this_week_in_ai_2026_07`
+
+`utm_content` encodes the newsletter name and issue date, in snake_case,
+so multiple placements in the same newsletter over time stay distinct.
