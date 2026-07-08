@@ -178,6 +178,20 @@
   margin-top: 0.1rem;
 }
 
+/* Below the Docusaurus mobile-navbar breakpoint (996px), the desktop
+   MegaMenu markup is still emitted in the DOM by the navbar renderer.
+   Its .panel/.columns descendants are position:absolute with an intrinsic
+   content width of ~692px, which pushed body.scrollWidth to 861px at a
+   375px viewport (AAASM-4316). Navigation on mobile is delivered by the
+   Docusaurus sidebar via <MobileMenu>, so hiding the desktop panels here
+   is safe. */
+@media (max-width: 996px) {
+  .panel,
+  .columns {
+    display: none;
+  }
+}
+
 /* Mobile (rendered inside the Docusaurus mobile sidebar) */
 .mobileLabel {
   display: block;
