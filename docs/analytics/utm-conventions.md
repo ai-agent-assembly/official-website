@@ -161,3 +161,58 @@ Add a row to the quick-reference table in Section 8 and note the start
 date, expected end date, and owner in that row. Anyone can add a campaign
 value; the constraint is that it must map to a real, named initiative
 that a teammate can point to.
+
+### 2.5 `utm_content` — which variant of a post
+
+Distinguishes multiple links that share the same source/medium/campaign.
+Answers: *within one initiative, which specific creative or placement
+produced this click?*
+
+Common patterns:
+
+| Value shape | Use for |
+|---|---|
+| `hero_cta` | The primary hero CTA on a landing page (when the link crosses hostnames) |
+| `footer_link` | Footer link on the Horonomy site pointing at the product site |
+| `readme_badge` | The clickable badge in a GitHub README |
+| `blog_<slug>` | Body link inside a blog post; slug matches the article filename (no personal names) |
+| `post_variant_<letter>` | A/B split for two founder posts running the same day (`post_variant_a`, `post_variant_b`) |
+
+**Rules for `utm_content`**
+
+- No PII. Never encode an email, order id, session id, name, or handle.
+  Values must be identical across every recipient of the same link.
+- Use `<pattern>_<qualifier>` shape. If you need free text (e.g. a blog
+  slug), reuse the slug the content already publishes under.
+- If the variant does not carry campaign-comparison value (e.g. one link
+  in an entire early-access email), omit `utm_content` rather than
+  inventing a filler value.
+
+## 3. Composition rules
+
+Valid parameter combinations. A cell marked ✓ means the value is required
+for that channel; ○ means optional but recommended; blank means omit.
+
+| Channel example                | source     | medium         | campaign            | content     |
+|--------------------------------|------------|----------------|---------------------|-------------|
+| GitHub README badge link       | `github` ✓ | `readme` ✓     | `agent_assembly_launch` ✓ | `readme_badge` ○ |
+| GitHub Issues body link        | `github` ✓ | `readme` ✓     | matches initiative ✓ | ○           |
+| LinkedIn founder feed post     | `linkedin` ✓ | `social` ✓   | matches initiative ✓ | `post_variant_a` ○ |
+| LinkedIn DM                    | `linkedin` ✓ | `direct_outreach` ✓ | matches initiative ✓ | ○      |
+| X public post                  | `x` ✓      | `social` ✓     | matches initiative ✓ | ○           |
+| Reddit subreddit thread        | `reddit` ✓ | `community` ✓  | matches initiative ✓ | ○           |
+| Hacker News Show HN            | `hackernews` ✓ | `community` ✓ | `agent_assembly_launch` ✓ | ○     |
+| Early-access confirmation email | `email` ✓ | `direct_outreach` ✓ | `early_access` ✓ | ○         |
+| Third-party newsletter placement | `newsletter` ✓ | `newsletter` ✓ | matches initiative ✓ | slug ○   |
+| Docs → product cross-hostname link | `docs` ✓ | `docs_link` ✓  | matches initiative ✓ | page slug ○ |
+| Blog → early-access cross-hostname link | `blog` ✓ | `docs_link` ✓ | `early_access` ✓ | blog slug ○ |
+
+**Composition constraints**
+
+- `source` and `medium` are ALWAYS required. A URL with `utm_campaign`
+  but no `utm_source` is invalid — GA4 will silently attribute the visit
+  as Direct.
+- Same-hostname internal links MUST NOT carry any UTM parameters. UTM
+  overwrites the visitor's original session source.
+- Do not carry UTM through a redirect chain unless every hop preserves
+  the query string. Prefer a direct final URL.
