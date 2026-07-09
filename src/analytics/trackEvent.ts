@@ -40,11 +40,7 @@ export type CtaLocation =
  * Coarse target-product parameter from the event taxonomy §3.2.
  */
 export type TargetProduct =
-  | 'agent_assembly'
-  | 'horonomy'
-  | 'docs'
-  | 'github'
-  | 'early_access';
+  'agent_assembly' | 'horonomy' | 'docs' | 'github' | 'early_access';
 
 /**
  * The shape every code-emitted dataLayer event carries. Auto-populated

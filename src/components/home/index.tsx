@@ -78,7 +78,8 @@ export function Hero(): ReactNode {
             linkProps={{
               rel: 'noopener noreferrer',
               target: '_blank',
-              'aria-label': 'View Agent Assembly on GitHub (opens in a new tab)',
+              'aria-label':
+                'View Agent Assembly on GitHub (opens in a new tab)',
             }}
           >
             View on GitHub
@@ -298,11 +299,7 @@ interface PathCard {
   readonly label: string;
   readonly eventName: string;
   readonly alsoFire?: readonly string[];
-  readonly targetProduct:
-    | 'agent_assembly'
-    | 'early_access'
-    | 'docs'
-    | 'github';
+  readonly targetProduct: 'agent_assembly' | 'early_access' | 'docs' | 'github';
   /** External links open in new tab with `noopener`. */
   readonly external?: boolean;
 }

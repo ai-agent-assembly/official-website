@@ -37,14 +37,14 @@ export default function EarlyAccess(): ReactNode {
             <p className={styles.lead}>
               The managed control plane is in early access with a small number
               of design partners. If you want to run governance across many
-              teams and consolidate audit and policy in one place, tell us
-              what you&rsquo;re trying to govern. In the meantime, the OSS
-              runtime is available today.
+              teams and consolidate audit and policy in one place, tell us what
+              you&rsquo;re trying to govern. In the meantime, the OSS runtime is
+              available today.
             </p>
             <p className={styles.lead}>
               <em>
-                Form coming in HORO-43. This page exists so the hero CTA has
-                a real destination today.
+                Form coming in HORO-43. This page exists so the hero CTA has a
+                real destination today.
               </em>
             </p>
             <div

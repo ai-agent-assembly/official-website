@@ -110,12 +110,7 @@ export function TrackedLink({
   };
 
   return (
-    <Link
-      {...linkProps}
-      to={to}
-      className={className}
-      onClick={handleClick}
-    >
+    <Link {...linkProps} to={to} className={className} onClick={handleClick}>
       {children}
     </Link>
   );
