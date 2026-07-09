@@ -4,25 +4,44 @@ import Link from '@docusaurus/Link';
 import {
   Hero,
   Problem,
+  TrustStrip,
   ThreePillars,
   HowItWorks,
   ChooseYourPath,
+  InstallBlock,
   FinalCTA,
 } from '@site/src/components/home';
 import styles from '@site/src/components/home/styles.module.css';
 
+/**
+ * Agent Assembly landing page — HORO-42.
+ *
+ * Section order encodes IA plan §2.2's three-path funnel:
+ *
+ *   1. Hero              — 10-second contract (§4.1): H1, sub, 3 CTAs.
+ *   2. Problem           — one idea per section (§4.7).
+ *   3. TrustStrip        — OSS credibility signals before any deeper ask (§4.5).
+ *   4. ThreePillars      — security model, IntersectionObserver-tracked (§5.2).
+ *   5. HowItWorks        — architecture, IntersectionObserver-tracked (§5.2).
+ *   6. ChooseYourPath    — the three paths, one card each.
+ *   7. InstallBlock      — HORO-42 scaffold; HORO-44 will replace body.
+ *   8. From the blog     — same-hostname, no UTM.
+ *   9. FinalCTA          — dominant CTA repeats at page bottom.
+ */
 export default function Home(): ReactNode {
   return (
     <Layout
-      title="Agent Assembly — the runtime boundary for AI agents"
-      description="Agent Assembly gives every AI agent an identity, limits what it can do, and keeps secrets outside the model's reach."
+      title="Agent Assembly — governance runtime for AI agents"
+      description="Identity, authority, and secret isolation for every AI agent — enforced at the SDK, the proxy, and the kernel. Open source today; managed cloud in early access."
     >
       <Hero />
       <main>
         <Problem />
+        <TrustStrip />
         <ThreePillars />
         <HowItWorks />
         <ChooseYourPath />
+        <InstallBlock />
         <section className={`${styles.section} ${styles.center}`}>
           <div className={styles.inner}>
             <div className={styles.eyebrow}>From the blog</div>
