@@ -1,3 +1,5 @@
+import {APP_URL, DOCS_URL} from '@site/src/generated/site-urls';
+
 export type MegaMenuKey = 'docs' | 'getStarted';
 
 export interface MegaMenuLink {
@@ -19,7 +21,7 @@ export interface MegaMenuData {
   columns: MegaMenuColumn[];
 }
 
-const DOCS = 'https://docs.agent-assembly.com';
+const DOCS = DOCS_URL;
 const GH_PAGES = 'https://ai-agent-assembly.github.io';
 
 export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
@@ -111,7 +113,7 @@ export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
           },
           {
             label: 'Cloud Console',
-            href: 'https://app.agent-assembly.com',
+            href: APP_URL,
             desc: 'Sign in to the managed control plane',
             comingSoon: true,
           },
