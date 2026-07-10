@@ -1,12 +1,22 @@
 import React, {type ReactNode} from 'react';
-import Link from '@docusaurus/Link';
+import {TrackedLink} from '@site/src/components/Tracked';
+import {SectionInView} from './SectionInView';
 import styles from './styles.module.css';
 import {GovernedField} from './GovernedField';
 
-const DOCS = 'https://docs.agent-assembly.com';
-const GETTING_STARTED = DOCS;
-const GITHUB = 'https://github.com/ai-agent-assembly';
-const CONSOLE = 'https://app.agent-assembly.com';
+// Cross-hostname destinations carry UTM per HORO-47 §5.2. Same-hostname
+// destinations (#install, /early-access) MUST NOT carry UTM — that
+// would overwrite the visitor's session source in GA4.
+const DOCS =
+  'https://docs.agent-assembly.com/?utm_source=product_site&utm_medium=docs_link&utm_campaign=agent_assembly_launch';
+const GITHUB_CORE =
+  'https://github.com/ai-agent-assembly/agent-assembly?utm_source=product_site&utm_medium=referral&utm_campaign=agent_assembly_launch';
+const GITHUB_EXAMPLES =
+  'https://github.com/ai-agent-assembly/agent-assembly-examples?utm_source=product_site&utm_medium=referral&utm_campaign=oss_install';
+
+// Same-hostname anchors — no UTM.
+const SELF_HOSTING_ANCHOR = '#install';
+const EARLY_ACCESS_ROUTE = '/early-access';
 
 export function Hero(): ReactNode {
   return (
@@ -14,28 +24,66 @@ export function Hero(): ReactNode {
       <GovernedField />
       <div className={styles.heroInner}>
         <div className={styles.heroEyebrow}>
-          <span className={styles.eyebrowLine} /> Governed agent infrastructure{' '}
-          <span className={styles.eyebrowLine} />
+          <span className={styles.eyebrowLine} /> Governance runtime for AI
+          agents <span className={styles.eyebrowLine} />
         </div>
+        {/*
+         * 10-second rule (IA plan §4.1): the H1 answers "what is it",
+         * the sub answers "what problem does it solve" and "who is it
+         * for", and the three CTAs answer "how do I try it" and "where
+         * does Cloud fit". Keep this stack tight — anything that
+         * pushes the CTAs below the fold breaks the contract.
+         */}
         <h1 className={styles.heroTitle}>
-          Define the boundaries of autonomous agents.
+          A runtime boundary for autonomous AI agents.
         </h1>
         <p className={styles.heroSub}>
-          Agent Assembly gives every AI agent an identity, limits what it can
-          do, and keeps secrets outside the model&rsquo;s reach — across
-          in-process SDKs, a sidecar proxy, and eBPF kernel hooks.
+          Identity, authority, and secret isolation for every agent — enforced
+          at the SDK, the network proxy, and the kernel. Open source today;
+          managed cloud in early access.
         </p>
+        {/*
+         * Three explicit conversion paths (IA plan §2.2 + §4.3 one
+         * dominant CTA per page). Primary: developer self-hosting.
+         * Secondary: buyer / design-partner. Tertiary: engineer
+         * validation via GitHub. Wording avoids "Learn more" and
+         * "Coming soon" fake-doors (§4.6).
+         */}
         <div className={`${styles.ctaRow} ${styles.ctaRowCenter}`}>
-          <Link className={styles.btnPrimary} to={GETTING_STARTED}>
-            Start self-hosting →
-          </Link>
-          <span
-            className={`${styles.btnGhost} ${styles.btnDisabled}`}
-            aria-disabled="true"
+          <TrackedLink
+            className={styles.btnPrimary}
+            eventName="cta_start_self_hosting_click"
+            ctaLocation="hero"
+            targetProduct="agent_assembly"
+            to={SELF_HOSTING_ANCHOR}
           >
-            {'Try Cloud '}
-            <span className={styles.soon}>👷 Coming soon</span>
-          </span>
+            Start self-hosting →
+          </TrackedLink>
+          <TrackedLink
+            className={styles.btnGhost}
+            eventName="cta_cloud_early_access_click"
+            ctaLocation="hero"
+            targetProduct="early_access"
+            to={EARLY_ACCESS_ROUTE}
+          >
+            Request Cloud Early Access
+          </TrackedLink>
+          <TrackedLink
+            className={styles.btnGhost}
+            eventName="cta_view_github_click"
+            ctaLocation="hero"
+            targetProduct="github"
+            to={GITHUB_CORE}
+            alsoFire={['github_core_repo_click']}
+            linkProps={{
+              rel: 'noopener noreferrer',
+              target: '_blank',
+              'aria-label':
+                'View Agent Assembly on GitHub (opens in a new tab)',
+            }}
+          >
+            View on GitHub
+          </TrackedLink>
         </div>
         <div
           className={`${styles.terminal} ${styles.heroTerminal}`}
@@ -96,6 +144,52 @@ export function Problem(): ReactNode {
   );
 }
 
+/**
+ * Trust-before-ask (IA plan §4.5): before the primary CTA appears
+ * again in the install block, surface the OSS credibility signals
+ * (GitHub, license, docs). Cross-hostname links carry UTM per §5.2.
+ */
+export function TrustStrip(): ReactNode {
+  return (
+    <section className={`${styles.section} ${styles.trustStrip}`}>
+      <div className={`${styles.inner} ${styles.trustInner}`}>
+        <span className={styles.trustLabel}>Open source. Verifiable.</span>
+        <TrackedLink
+          className={styles.trustLink}
+          eventName="github_core_repo_click"
+          ctaLocation="body"
+          targetProduct="github"
+          to={GITHUB_CORE}
+          linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
+        >
+          Core repo on GitHub →
+        </TrackedLink>
+        <TrackedLink
+          className={styles.trustLink}
+          eventName="examples_repo_click"
+          ctaLocation="body"
+          targetProduct="github"
+          to={GITHUB_EXAMPLES}
+          linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
+        >
+          Example runs →
+        </TrackedLink>
+        <TrackedLink
+          className={styles.trustLink}
+          eventName="cta_view_docs_click"
+          ctaLocation="body"
+          targetProduct="docs"
+          to={DOCS}
+          alsoFire={['docs_click']}
+          linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
+        >
+          Read the docs →
+        </TrackedLink>
+      </div>
+    </section>
+  );
+}
+
 const PILLARS = [
   {
     icon: '🪪',
@@ -116,9 +210,14 @@ const PILLARS = [
 
 export function ThreePillars(): ReactNode {
   return (
-    <section className={styles.section}>
+    <SectionInView
+      as="section"
+      eventName="security_model_view"
+      className={styles.section}
+      id="security"
+    >
       <div className={styles.inner}>
-        <div className={styles.eyebrow}>What Agent Assembly enforces</div>
+        <div className={styles.eyebrow}>Security model</div>
         <h2 className={styles.h2}>Three boundaries for every agent</h2>
         <div className={styles.grid3}>
           {PILLARS.map((p) => (
@@ -130,7 +229,7 @@ export function ThreePillars(): ReactNode {
           ))}
         </div>
       </div>
-    </section>
+    </SectionInView>
   );
 }
 
@@ -155,9 +254,14 @@ const LAYERS = [
 
 export function HowItWorks(): ReactNode {
   return (
-    <section className={`${styles.section} ${styles.soft}`}>
+    <SectionInView
+      as="section"
+      eventName="architecture_view"
+      className={`${styles.section} ${styles.soft}`}
+      id="architecture"
+    >
       <div className={styles.inner}>
-        <div className={styles.eyebrow}>How it works</div>
+        <div className={styles.eyebrow}>Architecture</div>
         <h2 className={styles.h2}>
           Three independently-deployable interception layers
         </h2>
@@ -174,41 +278,60 @@ export function HowItWorks(): ReactNode {
           ))}
         </div>
       </div>
-    </section>
+    </SectionInView>
   );
 }
 
+/**
+ * Three explicit conversion paths from IA plan §2.2 (developer,
+ * platform/security, buyer). This block mirrors the hero CTAs one
+ * card at a time so scrollers who missed the hero can still self-serve.
+ *
+ * The Cloud card must never read as a fake door (§4.6). Copy is
+ * unambiguously "Early access / design partner", not "Coming soon"
+ * and not "Log in".
+ */
 interface PathCard {
-  icon: string;
-  title: string;
-  text: string;
-  link: string;
-  label: string;
-  comingSoon?: boolean;
+  readonly icon: string;
+  readonly title: string;
+  readonly text: string;
+  readonly link: string;
+  readonly label: string;
+  readonly eventName: string;
+  readonly alsoFire?: readonly string[];
+  readonly targetProduct: 'agent_assembly' | 'early_access' | 'docs' | 'github';
+  /** External links open in new tab with `noopener`. */
+  readonly external?: boolean;
 }
 
-const PATHS: PathCard[] = [
+const PATHS: readonly PathCard[] = [
   {
     icon: '⚙️',
-    title: 'Open-source Core',
-    text: 'Run the gateway, CLI, SDKs, proxy, and eBPF yourself. Free and self-hosted.',
-    link: GITHUB,
-    label: 'Browse the source',
+    title: 'Developer — self-host the OSS runtime',
+    text: 'Install the gateway, CLI, SDKs, proxy, and eBPF hooks on your own infrastructure. Free and Apache-2.0 today.',
+    link: SELF_HOSTING_ANCHOR,
+    label: 'Jump to install',
+    eventName: 'cta_start_self_hosting_click',
+    targetProduct: 'agent_assembly',
+  },
+  {
+    icon: '🛡️',
+    title: 'Platform / Security — review the model',
+    text: 'Read the identity, authority, and secret-isolation contract before you decide what to trust in production.',
+    link: '#security',
+    label: 'Read the security model',
+    eventName: 'cta_view_docs_click',
+    alsoFire: ['docs_click'],
+    targetProduct: 'docs',
   },
   {
     icon: '☁️',
-    title: 'Hosted Control Plane',
-    text: 'A managed cloud console for orgs, teams, policy, approvals, and audit.',
-    link: CONSOLE,
-    label: 'Open Cloud Console',
-    comingSoon: true,
-  },
-  {
-    icon: '📚',
-    title: 'Technical Docs',
-    text: 'Architecture, install paths, policy reference, and SDK guides.',
-    link: DOCS,
-    label: 'Read the docs',
+    title: 'Cloud — request early access',
+    text: 'Managed control plane in early access. Design-partner program only — Cloud is not generally available.',
+    link: EARLY_ACCESS_ROUTE,
+    label: 'Request Cloud Early Access',
+    eventName: 'cta_cloud_early_access_click',
+    targetProduct: 'early_access',
   },
 ];
 
@@ -217,22 +340,28 @@ export function ChooseYourPath(): ReactNode {
     <section className={styles.section}>
       <div className={styles.inner}>
         <div className={styles.eyebrow}>Choose your path</div>
-        <h2 className={styles.h2}>Start open-source, or let us host it</h2>
+        <h2 className={styles.h2}>Three ways to start</h2>
         <div className={styles.grid3}>
           {PATHS.map((p) => (
             <div key={p.title} className={styles.card}>
               <div className={styles.cardIcon}>{p.icon}</div>
               <h3 className={styles.cardTitle}>{p.title}</h3>
               <p className={styles.cardText}>{p.text}</p>
-              {p.comingSoon ? (
-                <div className={styles.soonRow}>
-                  <span className={styles.soon}>👷 Coming soon</span>
-                </div>
-              ) : (
-                <Link className={styles.cardLink} to={p.link}>
-                  {p.label} →
-                </Link>
-              )}
+              <TrackedLink
+                className={styles.cardLink}
+                eventName={p.eventName}
+                ctaLocation="body"
+                targetProduct={p.targetProduct}
+                to={p.link}
+                alsoFire={p.alsoFire}
+                linkProps={
+                  p.external
+                    ? {rel: 'noopener noreferrer', target: '_blank'}
+                    : undefined
+                }
+              >
+                {p.label} →
+              </TrackedLink>
             </div>
           ))}
         </div>
@@ -253,18 +382,32 @@ export function FinalCTA(): ReactNode {
           className={styles.ctaRow}
           style={{justifyContent: 'center', marginTop: '1.5rem'}}
         >
-          <Link className={styles.btnPrimary} to={GETTING_STARTED}>
-            Start self-hosting →
-          </Link>
-          <span
-            className={`${styles.btnGhost} ${styles.btnDisabled}`}
-            aria-disabled="true"
+          <TrackedLink
+            className={styles.btnPrimary}
+            eventName="cta_start_self_hosting_click"
+            ctaLocation="footer"
+            targetProduct="agent_assembly"
+            to={SELF_HOSTING_ANCHOR}
           >
-            {'Try Cloud '}
-            <span className={styles.soon}>👷 Coming soon</span>
-          </span>
+            Start self-hosting →
+          </TrackedLink>
+          <TrackedLink
+            className={styles.btnGhost}
+            eventName="cta_cloud_early_access_click"
+            ctaLocation="footer"
+            targetProduct="early_access"
+            to={EARLY_ACCESS_ROUTE}
+          >
+            Request Cloud Early Access
+          </TrackedLink>
         </div>
       </div>
     </section>
   );
 }
+
+/**
+ * Re-exports so the landing page can import the install-block and
+ * the section-in-view helper from the barrel.
+ */
+export {InstallBlock} from './InstallBlock';

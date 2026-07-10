@@ -490,3 +490,71 @@
     opacity: 0.1;
   }
 }
+
+/* ============================================================
+   HORO-42 additions — trust strip, install block, copy button.
+   ============================================================ */
+
+/* Trust-strip: dense row of OSS credibility links between hero
+   and the deeper sections (IA plan §4.5 — trust before ask). */
+.trustStrip {
+  padding: 1.5rem 1rem;
+  border-top: 1px solid var(--aa-border);
+  border-bottom: 1px solid var(--aa-border);
+  background: var(--aa-bg-soft);
+}
+.trustInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem 1.75rem;
+  text-align: center;
+}
+.trustLabel {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--aa-text-dim);
+}
+.trustLink {
+  font-weight: 700;
+  color: var(--aa-text);
+}
+.trustLink:hover {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+/* Install block — a light-touch scaffold; HORO-44 will extend. */
+.installSection {
+  scroll-margin-top: 4rem;
+}
+.installTerminal {
+  margin: 1.5rem 0 1rem;
+  max-width: 44rem;
+}
+.installCtaRow {
+  margin-top: 1rem;
+}
+.copyBtn {
+  margin-left: auto;
+  padding: 0.15rem 0.7rem;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid var(--aa-border);
+  color: var(--aa-text-dim);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.copyBtn:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--aa-text);
+}
+.copyBtn:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
