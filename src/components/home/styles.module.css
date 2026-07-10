@@ -558,3 +558,122 @@
   outline: 2px solid var(--ifm-color-primary);
   outline-offset: 2px;
 }
+
+/* HORO-44 install-tab picker */
+.installTabs {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.25rem 0 0.75rem;
+  flex-wrap: wrap;
+}
+
+.installTab {
+  appearance: none;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background: transparent;
+  color: var(--ifm-color-emphasis-800);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.installTab:hover,
+.installTab:focus-visible {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+}
+
+.installTabActive {
+  background: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary-contrast-background);
+}
+
+.installTabActive:hover,
+.installTabActive:focus-visible {
+  color: var(--ifm-color-primary-contrast-background);
+}
+
+.installHint {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.95rem;
+  margin: 0 0 0.5rem;
+}
+
+/* HORO-44 next-step section (docs / quickstart / examples / core repo / SDKs) */
+.nextSteps {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.nextStepCard {
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  background: var(--ifm-background-surface-color);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.nextStepCard:hover {
+  border-color: var(--ifm-color-primary);
+  transform: translateY(-2px);
+}
+
+.nextStepEyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.nextStepTitle {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.nextStepDesc {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem;
+}
+
+.sdkChips {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sdkChipsLabel {
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-700);
+  margin-right: 0.5rem;
+}
+
+.sdkChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-800);
+  text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.sdkChip:hover,
+.sdkChip:focus-visible {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
