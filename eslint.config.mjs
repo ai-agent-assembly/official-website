@@ -18,6 +18,19 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    // Node-runtime scripts under `scripts/` are executed via `node <file>` and
+    // legitimately use `console` and `process`. Declare these as globals for
+    // that file scope so `no-undef` stays accurate for browser-scoped source
+    // while still linting the script's code paths.
+    files: ['scripts/**/*.{js,mjs,cjs}'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
+  },
+  {
     files: ['**/*.{ts,tsx}'],
     plugins: {react, 'react-hooks': reactHooks},
     languageOptions: {

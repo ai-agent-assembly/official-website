@@ -1,0 +1,20 @@
+# Agent Assembly — official-website shared metadata (AAASM-4355 / Epic AAASM-4352).
+#
+# Source of truth for the canonical URLs the marketing site ships to production
+# and for the served install-script URL. The generator at
+# `scripts/generate-site-metadata.mjs` reads this file and rewrites:
+#   - `src/generated/site-urls.ts`  (TS constants imported by docusaurus.config.ts,
+#                                    src/pages/product.tsx, and src/components/MegaMenu/menus.ts)
+#   - the bounded sentinel block in `static/install.sh`
+#
+# Values must match what the site currently serves — changes to hosts belong
+# in a dedicated PR (content-neutral drift-catch is the whole point).
+
+urls:
+  marketing: 'https://agent-assembly.com'
+  docs: 'https://docs.agent-assembly.com'
+  app: 'https://app.agent-assembly.com'
+  api: 'https://api.agent-assembly.com'
+
+install:
+  script_url: 'https://agent-assembly.com/install.sh'

@@ -1,6 +1,7 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import {DOCS_URL, MARKETING_URL} from './src/generated/site-urls';
 
 // Agent Assembly — official product website (agent-assembly.com).
 // Single-product marketing site: custom homepage + product page + blog.
@@ -13,7 +14,7 @@ const config: Config = {
 
   future: {v4: true},
 
-  url: 'https://agent-assembly.com',
+  url: MARKETING_URL,
   baseUrl: '/',
 
   organizationName: 'ai-agent-assembly',
@@ -87,7 +88,7 @@ const config: Config = {
             {label: 'Overview', to: '/product'},
             {
               label: 'Get started',
-              href: 'https://docs.agent-assembly.com/',
+              href: `${DOCS_URL}/`,
             },
             {
               html: '<span style="opacity:0.65">Cloud Console · 👷 coming soon</span>',
@@ -97,7 +98,7 @@ const config: Config = {
         {
           title: 'Resources',
           items: [
-            {label: 'Documentation', href: 'https://docs.agent-assembly.com'},
+            {label: 'Documentation', href: DOCS_URL},
             {label: 'Blog', to: '/blog'},
           ],
         },

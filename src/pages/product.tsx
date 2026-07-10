@@ -1,9 +1,10 @@
 import React, {type ReactNode} from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
+import {DOCS_URL} from '@site/src/generated/site-urls';
 import styles from './product.module.css';
 
-const DOCS = 'https://docs.agent-assembly.com';
+const DOCS = DOCS_URL;
 const GITHUB = 'https://github.com/ai-agent-assembly';
 
 export default function Product(): ReactNode {
