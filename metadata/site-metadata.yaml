@@ -11,10 +11,10 @@
 # in a dedicated PR (content-neutral drift-catch is the whole point).
 
 urls:
-  marketing: "https://agent-assembly.com"
-  docs: "https://docs.agent-assembly.com"
-  app: "https://app.agent-assembly.com"
-  api: "https://api.agent-assembly.com"
+  marketing: 'https://agent-assembly.com'
+  docs: 'https://docs.agent-assembly.com'
+  app: 'https://app.agent-assembly.com'
+  api: 'https://api.agent-assembly.com'
 
 install:
-  script_url: "https://agent-assembly.com/install.sh"
+  script_url: 'https://agent-assembly.com/install.sh'
