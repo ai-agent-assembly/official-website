@@ -56,6 +56,7 @@ const config: Config = {
       logo: {alt: 'Agent Assembly', src: 'img/icon.png'},
       items: [
         {to: '/product', label: 'Product', position: 'left'},
+        {to: '/arena', label: 'Arena', position: 'left'},
         {
           type: 'custom-megaMenu',
           menuKey: 'docs',
