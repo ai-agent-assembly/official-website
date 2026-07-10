@@ -1,0 +1,120 @@
+.wrap {
+  max-width: var(--aa-max);
+  margin: 0 auto;
+  padding: 4rem 1rem 5rem;
+}
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--aa-accent);
+}
+.title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  margin: 0.6rem 0 1rem;
+}
+.intro {
+  font-size: 1.15rem;
+  color: var(--aa-text-dim);
+  max-width: 48rem;
+}
+.block {
+  margin-top: 3rem;
+}
+.blockTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0 0 0.75rem;
+}
+.p {
+  color: var(--aa-text-dim);
+  max-width: 48rem;
+  line-height: 1.7;
+}
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+.panel {
+  background: var(--aa-panel);
+  border: 1px solid var(--aa-border);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+.panelTitle {
+  font-weight: 750;
+  margin: 0 0 0.5rem;
+}
+.list {
+  color: var(--aa-text-dim);
+  padding-left: 1.1rem;
+  margin: 0;
+  line-height: 1.8;
+}
+.reportCard {
+  background: var(--aa-panel);
+  border: 1px solid var(--aa-border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-top: 1.25rem;
+  max-width: 32rem;
+}
+.reportLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--aa-accent);
+}
+.reportBody {
+  color: var(--aa-text-dim);
+  line-height: 1.7;
+  margin: 0.6rem 0 0.9rem;
+}
+.reportLink {
+  font-weight: 700;
+  color: var(--aa-text);
+}
+.reportLink:hover {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.5rem;
+}
+.btnPrimary {
+  padding: 0.7rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 700;
+  background: var(--ifm-color-primary);
+  color: #06231f;
+}
+.btnPrimary:hover {
+  filter: brightness(1.08);
+  color: #06231f;
+  text-decoration: none;
+}
+.btnGhost {
+  padding: 0.7rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 1px solid var(--aa-border);
+  color: var(--aa-text);
+}
+.btnGhost:hover {
+  border-color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+@media (max-width: 800px) {
+  .cols {
+    grid-template-columns: 1fr;
+  }
+}
