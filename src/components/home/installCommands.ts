@@ -132,4 +132,5 @@ export const INSTALL_COMMANDS: readonly InstallCommandOption[] = [
 ];
 
 /** Sanity: the default selection must be the first entry (`curl`). */
-export const DEFAULT_INSTALL_COMMAND: InstallCommandType = INSTALL_COMMANDS[0].id;
+export const DEFAULT_INSTALL_COMMAND: InstallCommandType =
+  INSTALL_COMMANDS[0].id;

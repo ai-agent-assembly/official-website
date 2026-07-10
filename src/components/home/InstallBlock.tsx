@@ -68,7 +68,9 @@ export function InstallBlock(): ReactNode {
     >
       <div className={styles.inner}>
         <div className={styles.eyebrow}>Install the OSS runtime</div>
-        <h2 className={styles.h2}>Start self-hosting the way you already work</h2>
+        <h2 className={styles.h2}>
+          Start self-hosting the way you already work
+        </h2>
         <p className={styles.lead}>
           Pick your install path. Each command is a real command — no
           placeholder URLs, and pre-launch tabs are labeled honestly.

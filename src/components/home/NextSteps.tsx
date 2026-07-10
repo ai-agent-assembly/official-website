@@ -44,8 +44,7 @@ const CARDS: readonly NextStepCardConfig[] = [
   {
     eyebrow: 'Quickstart',
     title: 'Run your first governed agent →',
-    description:
-      'Wire an agent through the gateway in under five minutes.',
+    description: 'Wire an agent through the gateway in under five minutes.',
     href:
       'https://docs.agent-assembly.com/quickstart?' +
       'utm_source=product_site&utm_medium=referral' +
@@ -57,8 +56,7 @@ const CARDS: readonly NextStepCardConfig[] = [
   {
     eyebrow: 'Examples',
     title: 'Framework integration examples →',
-    description:
-      'LangChain, LlamaIndex, and CrewAI wired through the runtime.',
+    description: 'LangChain, LlamaIndex, and CrewAI wired through the runtime.',
     href:
       'https://github.com/ai-agent-assembly/agent-assembly-examples?' +
       'utm_source=product_site&utm_medium=referral' +
@@ -127,9 +125,9 @@ export function NextSteps(): ReactNode {
         <div className={styles.eyebrow}>Next steps</div>
         <h2 className={styles.h2}>Once the CLI is on your path</h2>
         <p className={styles.lead}>
-          Four common next moves after install — pick whichever matches
-          how you learn. Each link fires a named event so we can tell
-          which surface converts, without tracking identity.
+          Four common next moves after install — pick whichever matches how you
+          learn. Each link fires a named event so we can tell which surface
+          converts, without tracking identity.
         </p>
 
         <div className={styles.nextSteps}>
@@ -152,13 +150,15 @@ export function NextSteps(): ReactNode {
         </div>
 
         <div className={styles.sdkChips}>
-          <span className={styles.sdkChipsLabel}>Or jump straight to an SDK:</span>
+          <span className={styles.sdkChipsLabel}>
+            Or jump straight to an SDK:
+          </span>
           {SDK_CHIPS.map((chip) => (
             <TrackedLink
               key={chip.sdk}
               className={styles.sdkChip}
               eventName="sdk_page_view"
-              eventParams={{sdk: chip.sdk}}
+              eventExtra={{sdk: chip.sdk}}
               ctaLocation="install_block"
               targetProduct="docs"
               alsoFire={[chip.clickEvent]}
