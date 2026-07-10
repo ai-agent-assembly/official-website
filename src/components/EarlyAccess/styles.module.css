@@ -1,0 +1,137 @@
+/* Cloud Early Access form + thank-you view styles.
+ * Uses the site tokens from src/css/custom.css so the form matches the
+ * landing-page design system. Local rules only where the shared
+ * home/styles.module.css has no equivalent (form controls, spacing).
+ */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 42rem;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.fieldRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--aa-text);
+  font-size: 0.95rem;
+}
+
+.required {
+  color: var(--aa-accent);
+}
+
+.control {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  background: var(--aa-panel);
+  border: 1px solid var(--aa-border);
+  border-radius: 8px;
+  color: var(--aa-text);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.4;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.control:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.18);
+}
+
+textarea.control {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+.hint {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
+  color: var(--aa-text-dim);
+  line-height: 1.5;
+}
+
+.submitRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  background: var(--ifm-color-primary);
+  color: #06231f;
+  border: 0;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    filter 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.submit:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Thank-you view — same-page swap after successful submit. */
+.thankYou {
+  max-width: 42rem;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.thankYouTitle {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 800;
+  margin: 0 0 1rem;
+  line-height: 1.15;
+}
+
+.thankYouLead {
+  color: var(--aa-text-dim);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+}
+
+.nextSteps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 640px) {
+  .form,
+  .thankYou {
+    padding: 0 0.25rem;
+  }
+
+  .submit {
+    width: 100%;
+    justify-content: center;
+  }
+}
