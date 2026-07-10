@@ -411,3 +411,4 @@ export function FinalCTA(): ReactNode {
  * the section-in-view helper from the barrel.
  */
 export {InstallBlock} from './InstallBlock';
+export {NextSteps} from './NextSteps';

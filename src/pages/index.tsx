@@ -9,6 +9,7 @@ import {
   HowItWorks,
   ChooseYourPath,
   InstallBlock,
+  NextSteps,
   FinalCTA,
 } from '@site/src/components/home';
 import styles from '@site/src/components/home/styles.module.css';
@@ -24,9 +25,10 @@ import styles from '@site/src/components/home/styles.module.css';
  *   4. ThreePillars      — security model, IntersectionObserver-tracked (§5.2).
  *   5. HowItWorks        — architecture, IntersectionObserver-tracked (§5.2).
  *   6. ChooseYourPath    — the three paths, one card each.
- *   7. InstallBlock      — HORO-42 scaffold; HORO-44 will replace body.
- *   8. From the blog     — same-hostname, no UTM.
- *   9. FinalCTA          — dominant CTA repeats at page bottom.
+ *   7. InstallBlock      — HORO-44 tabbed picker over command_type vocabulary.
+ *   8. NextSteps         — HORO-44 docs/examples/repo/SDK outbound row.
+ *   9. From the blog     — same-hostname, no UTM.
+ *  10. FinalCTA          — dominant CTA repeats at page bottom.
  */
 export default function Home(): ReactNode {
   return (
@@ -42,6 +44,7 @@ export default function Home(): ReactNode {
         <HowItWorks />
         <ChooseYourPath />
         <InstallBlock />
+        <NextSteps />
         <section className={`${styles.section} ${styles.center}`}>
           <div className={styles.inner}>
             <div className={styles.eyebrow}>From the blog</div>
