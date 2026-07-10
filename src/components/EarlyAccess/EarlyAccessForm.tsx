@@ -57,7 +57,9 @@ interface EarlyAccessFormProps {
   readonly onSubmitted: () => void;
 }
 
-export function EarlyAccessForm({onSubmitted}: EarlyAccessFormProps): ReactNode {
+export function EarlyAccessForm({
+  onSubmitted,
+}: EarlyAccessFormProps): ReactNode {
   const [values, setValues] = useState<EarlyAccessFormValues>(EMPTY_FORM);
   const [submitting, setSubmitting] = useState(false);
 
@@ -298,8 +300,8 @@ export function EarlyAccessForm({onSubmitted}: EarlyAccessFormProps): ReactNode 
           Request early access
         </button>
         <p className={styles.hint}>
-          We&rsquo;ll reply from a person, not a marketing queue. No SaaS
-          signup — this is a design-partner conversation.
+          We&rsquo;ll reply from a person, not a marketing queue. No SaaS signup
+          — this is a design-partner conversation.
         </p>
       </div>
     </form>

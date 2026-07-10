@@ -39,11 +39,11 @@ export default function EarlyAccess(): ReactNode {
               Cloud is a design-partner program, not generally available.
             </h1>
             <p className={styles.lead}>
-              The managed control plane is in early access with a small
-              number of design partners. If you want to run governance
-              across many teams and consolidate audit and policy in one
-              place, tell us what you&rsquo;re trying to govern. In the
-              meantime, the OSS runtime is available today.
+              The managed control plane is in early access with a small number
+              of design partners. If you want to run governance across many
+              teams and consolidate audit and policy in one place, tell us what
+              you&rsquo;re trying to govern. In the meantime, the OSS runtime is
+              available today.
             </p>
 
             {submitted ? (

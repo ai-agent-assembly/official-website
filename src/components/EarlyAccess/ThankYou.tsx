@@ -38,15 +38,17 @@ const GITHUB_URL =
 export function ThankYou(): ReactNode {
   return (
     <div className={styles.thankYou}>
-      <h2 className={styles.thankYouTitle}>Thanks — we&rsquo;ll be in touch.</h2>
+      <h2 className={styles.thankYouTitle}>
+        Thanks — we&rsquo;ll be in touch.
+      </h2>
       <p className={styles.thankYouLead}>
-        A founder will read your request personally and reply from a real
-        inbox. Because Cloud is a design-partner program (not generally
-        available), we onboard partners one at a time based on fit.
+        A founder will read your request personally and reply from a real inbox.
+        Because Cloud is a design-partner program (not generally available), we
+        onboard partners one at a time based on fit.
       </p>
       <p className={styles.thankYouLead}>
-        While you&rsquo;re here, the OSS runtime is available today — you
-        can run the governance boundary without waiting on us.
+        While you&rsquo;re here, the OSS runtime is available today — you can
+        run the governance boundary without waiting on us.
       </p>
       <div className={styles.nextSteps}>
         <TrackedLink

@@ -15,11 +15,7 @@
 
 /** Self-selected role — event taxonomy §3.5 closed vocabulary. */
 export type Role =
-  | 'developer'
-  | 'platform_engineer'
-  | 'security_engineer'
-  | 'founder'
-  | 'other';
+  'developer' | 'platform_engineer' | 'security_engineer' | 'founder' | 'other';
 
 /** Self-selected team/company size — event taxonomy §3.5. */
 export type TeamSize = 'solo' | 'startup' | 'team' | 'enterprise' | 'other';
