@@ -83,6 +83,8 @@ interface SdkChipConfig {
   readonly label: string;
   readonly href: string;
   readonly clickEvent: string;
+  /** Filename under static/img/lang/ (served at /img/lang/). */
+  readonly icon: string;
 }
 
 const SDK_CHIPS: readonly SdkChipConfig[] = [
@@ -97,6 +99,7 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_python',
     clickEvent: 'sdk_python_click',
+    icon: 'python.svg',
   },
   {
     sdk: 'node',
@@ -106,6 +109,7 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_node',
     clickEvent: 'sdk_node_click',
+    icon: 'nodejs.svg',
   },
   {
     sdk: 'go',
@@ -115,6 +119,7 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_go',
     clickEvent: 'sdk_go_click',
+    icon: 'go.svg',
   },
 ];
 
