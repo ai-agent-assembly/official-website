@@ -93,7 +93,7 @@ const BREW: InstallCommandOption = {
 const DOCKER: InstallCommandOption = {
   id: 'docker',
   label: 'docker',
-  hint: 'Run the CLI in a container. Image is being published as part of the launch wave.',
+  hint: 'Run the runtime gateway in a container. Image served from GitHub Container Registry.',
   command:
     'docker run --rm ghcr.io/ai-agent-assembly/aa-runtime:latest --help',
 };
