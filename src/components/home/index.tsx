@@ -79,7 +79,7 @@ export function Hero(): ReactNode {
               rel: 'noopener noreferrer',
               target: '_blank',
               'aria-label':
-                'View Agent Assembly on GitHub (opens in a new tab)',
+                'Star the Agent Assembly core repository on GitHub (opens in a new tab)',
             }}
           >
             Star the core repo
