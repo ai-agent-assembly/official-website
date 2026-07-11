@@ -46,7 +46,7 @@ const CARDS: readonly NextStepCardConfig[] = [
     title: 'Run your first governed agent →',
     description: 'Wire an agent through the gateway in under five minutes.',
     href:
-      'https://docs.agent-assembly.com/quickstart?' +
+      'https://docs.agent-assembly.com/quickstart-saas.html?' +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=quickstart',
     eventName: 'quickstart_click',
