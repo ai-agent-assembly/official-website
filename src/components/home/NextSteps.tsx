@@ -34,7 +34,7 @@ const CARDS: readonly NextStepCardConfig[] = [
     description:
       'Full install matrix, requirements, and running your first governed agent.',
     href:
-      'https://docs.agent-assembly.com/installation?' +
+      'https://docs.agent-assembly.com/core/?' +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=install_docs',
     eventName: 'install_docs_click',
