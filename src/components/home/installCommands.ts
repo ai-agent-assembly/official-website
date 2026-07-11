@@ -80,22 +80,17 @@ const BREW: InstallCommandOption = {
 };
 
 /**
- * `docker` — container image for CI / sandboxed evaluation. The image is
- * not published to a public registry yet; the command below uses the
- * canonical image name we intend to publish (`ai-agent-assembly/aasm`).
- * Until the image is published, the fallback path is the core-repo
- * README, which is linked from the `source` tab.
- *
- * TODO(HORO-44): confirm the container image is pushed (either GHCR at
- * `ghcr.io/ai-agent-assembly/aasm` or Docker Hub) before launch. If GHCR
- * ends up being the canonical registry, prefix the tag accordingly.
+ * `docker` — container image for CI / sandboxed evaluation. The runtime
+ * governance gateway is published to GitHub Container Registry as
+ * `ghcr.io/ai-agent-assembly/aa-runtime` (see the org packages page:
+ * https://github.com/orgs/ai-agent-assembly/packages). The `latest` tag
+ * tracks the most recent runtime release.
  */
 const DOCKER: InstallCommandOption = {
   id: 'docker',
   label: 'docker',
   hint: 'Run the runtime gateway in a container. Image served from GitHub Container Registry.',
-  command:
-    'docker run --rm ghcr.io/ai-agent-assembly/aa-runtime:latest --help',
+  command: 'docker run --rm ghcr.io/ai-agent-assembly/aa-runtime:latest --help',
 };
 
 /**
