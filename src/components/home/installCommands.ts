@@ -16,6 +16,8 @@
  * pre-launch. No fake download URLs, no placeholder registry paths.
  */
 
+import {INSTALL_SCRIPT_URL} from '@site/src/generated/site-urls';
+
 /**
  * Closed vocabulary for the `command_type` GA4 event parameter
  * (event taxonomy §3.3). `other` is reserved for future variants; we
@@ -58,7 +60,7 @@ const CURL: InstallCommandOption = {
   id: 'curl',
   label: 'curl',
   hint: 'macOS and Linux. The script is served from agent-assembly.com/install.sh — review it before piping to sh if you prefer.',
-  command: 'curl -fsSL https://agent-assembly.com/install.sh | sh',
+  command: `curl -fsSL ${INSTALL_SCRIPT_URL} | sh`,
 };
 
 /**
