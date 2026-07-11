@@ -3,12 +3,12 @@ import {TrackedLink} from '@site/src/components/Tracked';
 import {SectionInView} from './SectionInView';
 import styles from './styles.module.css';
 import {GovernedField} from './GovernedField';
+import {DOCS_URL} from '@site/src/generated/site-urls';
 
 // Cross-hostname destinations carry UTM per HORO-47 §5.2. Same-hostname
 // destinations (#install, /early-access) MUST NOT carry UTM — that
 // would overwrite the visitor's session source in GA4.
-const DOCS =
-  'https://docs.agent-assembly.com/?utm_source=product_site&utm_medium=docs_link&utm_campaign=agent_assembly_launch';
+const DOCS = `${DOCS_URL}/?utm_source=product_site&utm_medium=docs_link&utm_campaign=agent_assembly_launch`;
 const GITHUB_CORE =
   'https://github.com/ai-agent-assembly/agent-assembly?utm_source=product_site&utm_medium=referral&utm_campaign=agent_assembly_launch';
 const GITHUB_EXAMPLES =

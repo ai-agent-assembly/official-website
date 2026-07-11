@@ -24,9 +24,9 @@ import {
   DEFAULT_INSTALL_COMMAND,
   type InstallCommandType,
 } from './installCommands';
+import {DOCS_URL} from '@site/src/generated/site-urls';
 
-const DOCS_QUICKSTART =
-  'https://docs.agent-assembly.com/?utm_source=product_site&utm_medium=docs_link&utm_campaign=oss_install';
+const DOCS_QUICKSTART = `${DOCS_URL}/?utm_source=product_site&utm_medium=docs_link&utm_campaign=oss_install`;
 
 async function copyToClipboard(text: string): Promise<boolean> {
   if (

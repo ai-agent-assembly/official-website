@@ -16,6 +16,7 @@
 import React, {type ReactNode} from 'react';
 import {TrackedLink} from '@site/src/components/Tracked';
 import styles from './styles.module.css';
+import {DOCS_URL} from '@site/src/generated/site-urls';
 
 interface NextStepCardConfig {
   readonly eyebrow: string;
@@ -34,7 +35,7 @@ const CARDS: readonly NextStepCardConfig[] = [
     description:
       'Full install matrix, requirements, and running your first governed agent.',
     href:
-      'https://docs.agent-assembly.com/core/?' +
+      `${DOCS_URL}/core/?` +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=install_docs',
     eventName: 'install_docs_click',
@@ -46,7 +47,7 @@ const CARDS: readonly NextStepCardConfig[] = [
     title: 'Run your first governed agent →',
     description: 'Wire an agent through the gateway in under five minutes.',
     href:
-      'https://docs.agent-assembly.com/quickstart-saas.html?' +
+      `${DOCS_URL}/quickstart-saas.html?` +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=quickstart',
     eventName: 'quickstart_click',
@@ -58,7 +59,7 @@ const CARDS: readonly NextStepCardConfig[] = [
     title: 'Framework integration examples →',
     description: 'LangChain, LlamaIndex, and CrewAI wired through the runtime.',
     href:
-      'https://docs.agent-assembly.com/core/v0.0.1-rc.3/usage-guide/examples.html?' +
+      `${DOCS_URL}/core/v0.0.1-rc.3/usage-guide/examples.html?` +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=examples_repo',
     eventName: 'examples_repo_click',
