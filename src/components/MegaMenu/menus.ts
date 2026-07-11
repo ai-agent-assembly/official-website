@@ -22,7 +22,6 @@ export interface MegaMenuData {
 }
 
 const DOCS = DOCS_URL;
-const GH_PAGES = 'https://ai-agent-assembly.github.io';
 
 export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
   docs: {
@@ -32,7 +31,7 @@ export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
         links: [
           {
             label: 'Core & Gateway',
-            href: `${GH_PAGES}/agent-assembly/`,
+            href: `${DOCS}/core/`,
             desc: 'Gateway, policy engine, proxy, eBPF, CLI',
           },
           {
@@ -52,15 +51,15 @@ export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
         links: [
           {
             label: 'Python SDK',
-            href: `${GH_PAGES}/python-sdk/`,
+            href: `${DOCS}/python-sdk/`,
             icon: 'python.svg',
           },
           {
             label: 'Node.js SDK',
-            href: `${GH_PAGES}/node-sdk/`,
+            href: `${DOCS}/node-sdk/`,
             icon: 'nodejs.svg',
           },
-          {label: 'Go SDK', href: `${GH_PAGES}/go-sdk/`, icon: 'go.svg'},
+          {label: 'Go SDK', href: `${DOCS}/go-sdk/`, icon: 'go.svg'},
         ],
       },
       {
