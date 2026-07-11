@@ -684,3 +684,11 @@
   color: var(--ifm-color-primary);
   text-decoration: none;
 }
+
+.sdkChipIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.4rem;
+  vertical-align: text-bottom;
+  flex-shrink: 0;
+}
