@@ -58,11 +58,11 @@ const CARDS: readonly NextStepCardConfig[] = [
     title: 'Framework integration examples →',
     description: 'LangChain, LlamaIndex, and CrewAI wired through the runtime.',
     href:
-      'https://github.com/ai-agent-assembly/agent-assembly-examples?' +
+      'https://docs.agent-assembly.com/core/v0.0.1-rc.3/usage-guide/examples.html?' +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=examples_repo',
     eventName: 'examples_repo_click',
-    targetProduct: 'github',
+    targetProduct: 'docs',
   },
   {
     eyebrow: 'Source',
