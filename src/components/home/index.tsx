@@ -82,7 +82,7 @@ export function Hero(): ReactNode {
                 'View Agent Assembly on GitHub (opens in a new tab)',
             }}
           >
-            View on GitHub
+            Star the core repo
           </TrackedLink>
         </div>
         <div
