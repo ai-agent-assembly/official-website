@@ -91,11 +91,11 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
   {
     sdk: 'python',
     label: 'Python SDK',
-    // The canonical Python SDK docs live on the org's GitHub Pages,
+    // The canonical Python SDK docs live on the docs hub,
     // matching the MegaMenu SDK links (see src/components/MegaMenu/menus.ts).
     // Cross-hostname → UTM per HORO-47 §2.
     href:
-      'https://ai-agent-assembly.github.io/python-sdk/?' +
+      'https://docs.agent-assembly.com/python-sdk/?' +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_python',
     clickEvent: 'sdk_python_click',
@@ -105,7 +105,7 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
     sdk: 'node',
     label: 'Node SDK',
     href:
-      'https://ai-agent-assembly.github.io/node-sdk/?' +
+      'https://docs.agent-assembly.com/node-sdk/?' +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_node',
     clickEvent: 'sdk_node_click',
@@ -115,7 +115,7 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
     sdk: 'go',
     label: 'Go SDK',
     href:
-      'https://ai-agent-assembly.github.io/go-sdk/?' +
+      'https://docs.agent-assembly.com/go-sdk/?' +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_go',
     clickEvent: 'sdk_go_click',
