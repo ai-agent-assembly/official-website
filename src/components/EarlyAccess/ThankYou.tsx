@@ -26,9 +26,10 @@ import React, {type ReactNode} from 'react';
 import {TrackedLink} from '@site/src/components/Tracked';
 import styles from './styles.module.css';
 import homeStyles from '@site/src/components/home/styles.module.css';
+import {DOCS_URL} from '@site/src/generated/site-urls';
 
 const OSS_DOCS_URL =
-  'https://docs.agent-assembly.com/quickstart' +
+  `${DOCS_URL}/quickstart` +
   '?utm_source=email&utm_medium=direct_outreach&utm_campaign=early_access';
 
 const GITHUB_URL =
