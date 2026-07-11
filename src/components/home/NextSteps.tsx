@@ -173,6 +173,13 @@ export function NextSteps(): ReactNode {
               to={chip.href}
               linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
             >
+              <img
+                className={styles.sdkChipIcon}
+                src={`/img/lang/${chip.icon}`}
+                alt=""
+                width={16}
+                height={16}
+              />
               {chip.label}
             </TrackedLink>
           ))}
