@@ -34,7 +34,7 @@ const CARDS: readonly NextStepCardConfig[] = [
     description:
       'Full install matrix, requirements, and running your first governed agent.',
     href:
-      'https://docs.agent-assembly.com/installation?' +
+      'https://docs.agent-assembly.com/core/?' +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=install_docs',
     eventName: 'install_docs_click',
@@ -46,7 +46,7 @@ const CARDS: readonly NextStepCardConfig[] = [
     title: 'Run your first governed agent →',
     description: 'Wire an agent through the gateway in under five minutes.',
     href:
-      'https://docs.agent-assembly.com/quickstart?' +
+      'https://docs.agent-assembly.com/quickstart-saas.html?' +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=quickstart',
     eventName: 'quickstart_click',
@@ -58,11 +58,11 @@ const CARDS: readonly NextStepCardConfig[] = [
     title: 'Framework integration examples →',
     description: 'LangChain, LlamaIndex, and CrewAI wired through the runtime.',
     href:
-      'https://github.com/ai-agent-assembly/agent-assembly-examples?' +
+      'https://docs.agent-assembly.com/core/v0.0.1-rc.3/usage-guide/examples.html?' +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=examples_repo',
     eventName: 'examples_repo_click',
-    targetProduct: 'github',
+    targetProduct: 'docs',
   },
   {
     eyebrow: 'Source',
@@ -83,6 +83,8 @@ interface SdkChipConfig {
   readonly label: string;
   readonly href: string;
   readonly clickEvent: string;
+  /** Filename under static/img/lang/ (served at /img/lang/). */
+  readonly icon: string;
 }
 
 const SDK_CHIPS: readonly SdkChipConfig[] = [
@@ -97,6 +99,7 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_python',
     clickEvent: 'sdk_python_click',
+    icon: 'python.svg',
   },
   {
     sdk: 'node',
@@ -106,6 +109,7 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_node',
     clickEvent: 'sdk_node_click',
+    icon: 'nodejs.svg',
   },
   {
     sdk: 'go',
@@ -115,6 +119,7 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_go',
     clickEvent: 'sdk_go_click',
+    icon: 'go.svg',
   },
 ];
 
@@ -168,6 +173,13 @@ export function NextSteps(): ReactNode {
               to={chip.href}
               linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
             >
+              <img
+                className={styles.sdkChipIcon}
+                src={`/img/lang/${chip.icon}`}
+                alt=""
+                width={16}
+                height={16}
+              />
               {chip.label}
             </TrackedLink>
           ))}
