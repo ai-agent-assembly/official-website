@@ -94,7 +94,8 @@ const DOCKER: InstallCommandOption = {
   id: 'docker',
   label: 'docker',
   hint: 'Run the CLI in a container. Image is being published as part of the launch wave.',
-  command: 'docker run --rm ai-agent-assembly/aasm:latest --help',
+  command:
+    'docker run --rm ghcr.io/ai-agent-assembly/aa-runtime:latest --help',
 };
 
 /**
