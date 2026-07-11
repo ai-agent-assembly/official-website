@@ -2,8 +2,9 @@ import React, {type ReactNode} from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import styles from './arena.module.css';
+import {DOCS_URL} from '@site/src/generated/site-urls';
 
-const ARENA_DOCS = 'https://docs.agent-assembly.com/arena';
+const ARENA_DOCS = `${DOCS_URL}/arena`;
 const ARENA_GITHUB = 'https://github.com/ai-agent-assembly/arena';
 
 export default function Arena(): ReactNode {
