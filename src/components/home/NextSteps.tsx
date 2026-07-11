@@ -96,7 +96,7 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
     // matching the MegaMenu SDK links (see src/components/MegaMenu/menus.ts).
     // Cross-hostname → UTM per HORO-47 §2.
     href:
-      'https://docs.agent-assembly.com/python-sdk/?' +
+      `${DOCS_URL}/python-sdk/?` +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_python',
     clickEvent: 'sdk_python_click',
@@ -106,7 +106,7 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
     sdk: 'node',
     label: 'Node SDK',
     href:
-      'https://docs.agent-assembly.com/node-sdk/?' +
+      `${DOCS_URL}/node-sdk/?` +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_node',
     clickEvent: 'sdk_node_click',
@@ -116,7 +116,7 @@ const SDK_CHIPS: readonly SdkChipConfig[] = [
     sdk: 'go',
     label: 'Go SDK',
     href:
-      'https://docs.agent-assembly.com/go-sdk/?' +
+      `${DOCS_URL}/go-sdk/?` +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=sdk_go',
     clickEvent: 'sdk_go_click',
