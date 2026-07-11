@@ -40,6 +40,11 @@ export const MENUS: Record<MegaMenuKey, MegaMenuData> = {
             href: `${DOCS}/`,
             desc: 'All docs in one place',
           },
+          {
+            label: 'Arena',
+            href: '/arena',
+            desc: 'Public trial ground — adversarial governance trials',
+          },
         ],
       },
       {
