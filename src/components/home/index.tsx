@@ -34,13 +34,13 @@ export function Hero(): ReactNode {
          * does Cloud fit". Keep this stack tight — anything that
          * pushes the CTAs below the fold breaks the contract.
          */}
-        <h1 className={styles.heroTitle}>
-          A runtime boundary for autonomous AI agents.
-        </h1>
+        <h1 className={styles.heroTitle}>A governance layer for AI agents.</h1>
         <p className={styles.heroSub}>
-          Identity, authority, and secret isolation for every agent — enforced
-          at the SDK, the network proxy, and the kernel. Open source today;
-          managed cloud in early access.
+          Agent Assembly sits between your agents and the outside world and
+          enforces policy, tracks cost, and intercepts unsafe actions — at the
+          SDK, the network proxy, and the kernel. Self-host a limited-function
+          stack for evaluation and development; full functionality runs in the
+          managed cloud (early access).
         </p>
         {/*
          * Three explicit conversion paths (IA plan §2.2 + §4.3 one
@@ -308,7 +308,7 @@ const PATHS: readonly PathCard[] = [
   {
     icon: '⚙️',
     title: 'Developer — self-host the OSS runtime',
-    text: 'Install the gateway, CLI, SDKs, proxy, and eBPF hooks on your own infrastructure. Free and Apache-2.0 today.',
+    text: 'Run a limited-function stack — gateway, CLI, SDKs, proxy, and eBPF hooks — on your own infrastructure for evaluation and development. Free and Apache-2.0.',
     link: SELF_HOSTING_ANCHOR,
     label: 'Jump to install',
     eventName: 'cta_start_self_hosting_click',
@@ -327,7 +327,7 @@ const PATHS: readonly PathCard[] = [
   {
     icon: '☁️',
     title: 'Cloud — request early access',
-    text: 'Managed control plane in early access. Design-partner program only — Cloud is not generally available.',
+    text: 'The full-functionality managed control plane, in early access. Design-partner program only — Cloud is not generally available.',
     link: EARLY_ACCESS_ROUTE,
     label: 'Request Cloud Early Access',
     eventName: 'cta_cloud_early_access_click',

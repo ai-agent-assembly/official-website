@@ -72,7 +72,9 @@ export function InstallBlock(): ReactNode {
           Start self-hosting the way you already work
         </h2>
         <p className={styles.lead}>
-          Pick your install path. Each command is a real command — no
+          The open-source runtime self-hosts a limited-function stack for local
+          evaluation and development — full functionality runs in the managed
+          cloud. Pick your install path; each command is real, with no
           placeholder URLs, and pre-launch tabs are labeled honestly.
         </p>
 
