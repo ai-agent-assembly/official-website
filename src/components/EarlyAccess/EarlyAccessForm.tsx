@@ -10,8 +10,8 @@
  *
  *   2. Form-backend channel — a `mailto:` handoff scaffold delivers
  *      identity fields to the founders. This is the honest bootstrap
- *      until a real backend is picked (see TODO below). The identity
- *      values never touch `dataLayer`.
+ *      until a real backend is picked (see the HORO-43 note below).
+ *      The identity values never touch `dataLayer`.
  *
  * The form fires the GA4 event BEFORE opening the mail client so a
  * measurement lands even if the visitor bails at the confirmation
@@ -101,7 +101,7 @@ export function EarlyAccessForm({
     });
 
     // Form-backend channel — identity payload goes via mailto scaffold.
-    // See TODO(HORO-43) above.
+    // See the HORO-43 note above.
     const mailBody = [
       `Role: ${values.role}`,
       `Team size: ${values.teamSize}`,
@@ -139,9 +139,8 @@ export function EarlyAccessForm({
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
       <div className={styles.fieldRow}>
         <label htmlFor={roleId} className={styles.label}>
-          Your role
+          Your role{' '}
           <span aria-hidden="true" className={styles.required}>
-            {' '}
             *
           </span>
         </label>
@@ -165,9 +164,8 @@ export function EarlyAccessForm({
 
       <div className={styles.fieldRow}>
         <label htmlFor={teamSizeId} className={styles.label}>
-          Team size
+          Team size{' '}
           <span aria-hidden="true" className={styles.required}>
-            {' '}
             *
           </span>
         </label>
@@ -191,9 +189,8 @@ export function EarlyAccessForm({
 
       <div className={styles.fieldRow}>
         <label htmlFor={deploymentId} className={styles.label}>
-          Preferred deployment
+          Preferred deployment{' '}
           <span aria-hidden="true" className={styles.required}>
-            {' '}
             *
           </span>
         </label>
@@ -221,9 +218,8 @@ export function EarlyAccessForm({
 
       <div className={styles.fieldRow}>
         <label htmlFor={nameId} className={styles.label}>
-          Name or project
+          Name or project{' '}
           <span aria-hidden="true" className={styles.required}>
-            {' '}
             *
           </span>
         </label>
@@ -240,9 +236,8 @@ export function EarlyAccessForm({
 
       <div className={styles.fieldRow}>
         <label htmlFor={emailId} className={styles.label}>
-          Email
+          Email{' '}
           <span aria-hidden="true" className={styles.required}>
-            {' '}
             *
           </span>
         </label>
@@ -259,9 +254,8 @@ export function EarlyAccessForm({
 
       <div className={styles.fieldRow}>
         <label htmlFor={whatId} className={styles.label}>
-          What are you trying to govern?
+          What are you trying to govern?{' '}
           <span aria-hidden="true" className={styles.required}>
-            {' '}
             *
           </span>
         </label>
