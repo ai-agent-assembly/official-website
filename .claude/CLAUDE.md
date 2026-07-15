@@ -101,7 +101,7 @@ pnpm format:check       # prettier --check . (CI gate)
   each component's own docs site — link out, don't duplicate.
 - **Self-host is limited-function only** (revised policy). Sample infra configs and
   **Docker Compose** examples — plus their reflecting docs — may be provided so users
-  can self-host a *limited-function* stack locally for eval/dev. **Complete/full
+  can self-host a _limited-function_ stack locally for eval/dev. **Complete/full
   functionality remains SaaS-only.** Production orchestration
   (**Helm/Terraform/Kubernetes**) is a research-spike/ADR question only, not
   ready-to-build work; don't add air-gapped/migration content.
