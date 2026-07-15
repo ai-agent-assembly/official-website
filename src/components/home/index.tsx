@@ -1,4 +1,5 @@
 import React, {type ReactNode} from 'react';
+import Translate, {translate} from '@docusaurus/Translate';
 import {TrackedLink} from '@site/src/components/Tracked';
 import {SectionInView} from './SectionInView';
 import styles from './styles.module.css';
@@ -24,8 +25,11 @@ export function Hero(): ReactNode {
       <GovernedField />
       <div className={styles.heroInner}>
         <div className={styles.heroEyebrow}>
-          <span className={styles.eyebrowLine} /> Governance runtime for AI
-          agents <span className={styles.eyebrowLine} />
+          <span className={styles.eyebrowLine} />{' '}
+          <Translate id="home.hero.eyebrow">
+            Governance runtime for AI agents
+          </Translate>{' '}
+          <span className={styles.eyebrowLine} />
         </div>
         {/*
          * 10-second rule (IA plan §4.1): the H1 answers "what is it",
@@ -34,13 +38,19 @@ export function Hero(): ReactNode {
          * does Cloud fit". Keep this stack tight — anything that
          * pushes the CTAs below the fold breaks the contract.
          */}
-        <h1 className={styles.heroTitle}>A governance layer for AI agents.</h1>
+        <h1 className={styles.heroTitle}>
+          <Translate id="home.hero.title">
+            A governance layer for AI agents.
+          </Translate>
+        </h1>
         <p className={styles.heroSub}>
-          Agent Assembly sits between your agents and the outside world and
-          enforces policy, tracks cost, and intercepts unsafe actions — at the
-          SDK, the network proxy, and the kernel. Self-host a limited-function
-          stack for evaluation and development; full functionality runs in the
-          managed cloud (early access).
+          <Translate id="home.hero.sub">
+            Agent Assembly sits between your agents and the outside world and
+            enforces policy, tracks cost, and intercepts unsafe actions — at the
+            SDK, the network proxy, and the kernel. Self-host a limited-function
+            stack for evaluation and development; full functionality runs in the
+            managed cloud (early access).
+          </Translate>
         </p>
         {/*
          * Three explicit conversion paths (IA plan §2.2 + §4.3 one
@@ -57,7 +67,7 @@ export function Hero(): ReactNode {
             targetProduct="agent_assembly"
             to={SELF_HOSTING_ANCHOR}
           >
-            Start self-hosting →
+            <Translate id="home.cta.selfHost">Start self-hosting →</Translate>
           </TrackedLink>
           <TrackedLink
             className={styles.btnGhost}
@@ -66,7 +76,9 @@ export function Hero(): ReactNode {
             targetProduct="early_access"
             to={EARLY_ACCESS_ROUTE}
           >
-            Request Cloud Early Access
+            <Translate id="home.cta.earlyAccess">
+              Request Cloud Early Access
+            </Translate>
           </TrackedLink>
           <TrackedLink
             className={styles.btnGhost}
@@ -78,11 +90,14 @@ export function Hero(): ReactNode {
             linkProps={{
               rel: 'noopener noreferrer',
               target: '_blank',
-              'aria-label':
-                'Star the Agent Assembly core repository on GitHub (opens in a new tab)',
+              'aria-label': translate({
+                id: 'home.cta.starRepo.ariaLabel',
+                message:
+                  'Star the Agent Assembly core repository on GitHub (opens in a new tab)',
+              }),
             }}
           >
-            Star the core repo
+            <Translate id="home.cta.starRepo">Star the core repo</Translate>
           </TrackedLink>
         </div>
         <div
@@ -129,15 +144,21 @@ export function Problem(): ReactNode {
   return (
     <section className={`${styles.section} ${styles.soft}`}>
       <div className={styles.inner}>
-        <div className={styles.eyebrow}>The problem</div>
+        <div className={styles.eyebrow}>
+          <Translate id="home.problem.eyebrow">The problem</Translate>
+        </div>
         <h2 className={styles.h2}>
-          Agent frameworks help agents act. Nothing governs what they do.
+          <Translate id="home.problem.title">
+            Agent frameworks help agents act. Nothing governs what they do.
+          </Translate>
         </h2>
         <p className={styles.lead}>
-          Autonomous agents call tools, move money, and touch production systems
-          — with the same credentials as the human who deployed them, and
-          secrets sitting inside the model&rsquo;s context window. Agent
-          Assembly is the runtime boundary that was missing.
+          <Translate id="home.problem.lead">
+            Autonomous agents call tools, move money, and touch production
+            systems — with the same credentials as the human who deployed them,
+            and secrets sitting inside the model’s context window. Agent
+            Assembly is the runtime boundary that was missing.
+          </Translate>
         </p>
       </div>
     </section>
@@ -153,7 +174,9 @@ export function TrustStrip(): ReactNode {
   return (
     <section className={`${styles.section} ${styles.trustStrip}`}>
       <div className={`${styles.inner} ${styles.trustInner}`}>
-        <span className={styles.trustLabel}>Open source. Verifiable.</span>
+        <span className={styles.trustLabel}>
+          <Translate id="home.trust.label">Open source. Verifiable.</Translate>
+        </span>
         <TrackedLink
           className={styles.trustLink}
           eventName="github_core_repo_click"
@@ -162,7 +185,7 @@ export function TrustStrip(): ReactNode {
           to={GITHUB_CORE}
           linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
         >
-          Core repo on GitHub →
+          <Translate id="home.trust.coreRepo">Core repo on GitHub →</Translate>
         </TrackedLink>
         <TrackedLink
           className={styles.trustLink}
@@ -172,7 +195,7 @@ export function TrustStrip(): ReactNode {
           to={GITHUB_EXAMPLES}
           linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
         >
-          Example runs →
+          <Translate id="home.trust.examples">Example runs →</Translate>
         </TrackedLink>
         <TrackedLink
           className={styles.trustLink}
@@ -183,32 +206,58 @@ export function TrustStrip(): ReactNode {
           alsoFire={['docs_click']}
           linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
         >
-          Read the docs →
+          <Translate id="home.trust.docs">Read the docs →</Translate>
         </TrackedLink>
       </div>
     </section>
   );
 }
 
-const PILLARS = [
-  {
-    icon: '🪪',
-    title: 'Identity',
-    text: 'Every agent gets a verifiable identity scoped to a team, so policy and audit can answer "who did this".',
-  },
-  {
-    icon: '🛡️',
-    title: 'Authority',
-    text: 'Allow/deny policy, egress control, budgets, and human-in-the-loop gates limit what each agent is permitted to do.',
-  },
-  {
-    icon: '🔑',
-    title: 'Secret Isolation',
-    text: 'Real credentials are injected at execution time and never enter the model context the agent can see.',
-  },
-];
+interface Pillar {
+  readonly icon: string;
+  readonly title: string;
+  readonly text: string;
+}
 
 export function ThreePillars(): ReactNode {
+  const pillars: readonly Pillar[] = [
+    {
+      icon: '🪪',
+      title: translate({
+        id: 'home.pillars.identity.title',
+        message: 'Identity',
+      }),
+      text: translate({
+        id: 'home.pillars.identity.text',
+        message:
+          'Every agent gets a verifiable identity scoped to a team, so policy and audit can answer "who did this".',
+      }),
+    },
+    {
+      icon: '🛡️',
+      title: translate({
+        id: 'home.pillars.authority.title',
+        message: 'Authority',
+      }),
+      text: translate({
+        id: 'home.pillars.authority.text',
+        message:
+          'Allow/deny policy, egress control, budgets, and human-in-the-loop gates limit what each agent is permitted to do.',
+      }),
+    },
+    {
+      icon: '🔑',
+      title: translate({
+        id: 'home.pillars.secret.title',
+        message: 'Secret Isolation',
+      }),
+      text: translate({
+        id: 'home.pillars.secret.text',
+        message:
+          'Real credentials are injected at execution time and never enter the model context the agent can see.',
+      }),
+    },
+  ];
   return (
     <SectionInView
       as="section"
@@ -217,10 +266,16 @@ export function ThreePillars(): ReactNode {
       id="security"
     >
       <div className={styles.inner}>
-        <div className={styles.eyebrow}>Security model</div>
-        <h2 className={styles.h2}>Three boundaries for every agent</h2>
+        <div className={styles.eyebrow}>
+          <Translate id="home.pillars.eyebrow">Security model</Translate>
+        </div>
+        <h2 className={styles.h2}>
+          <Translate id="home.pillars.title">
+            Three boundaries for every agent
+          </Translate>
+        </h2>
         <div className={styles.grid3}>
-          {PILLARS.map((p) => (
+          {pillars.map((p) => (
             <div key={p.title} className={styles.card}>
               <div className={styles.cardIcon}>{p.icon}</div>
               <h3 className={styles.cardTitle}>{p.title}</h3>
@@ -233,26 +288,46 @@ export function ThreePillars(): ReactNode {
   );
 }
 
-const LAYERS = [
-  {
-    tag: 'SDK',
-    text: 'In-process hooks (Python, Node.js, Go) emit events and apply pre-execution allow/deny. The fastest path.',
-  },
-  {
-    tag: 'Proxy',
-    text: 'A sidecar MitM proxy enforces network-egress policy with no code changes — catches what the SDK misses.',
-  },
-  {
-    tag: 'eBPF',
-    text: 'Kernel uprobes on SSL libraries plus exec/file syscall hooks catch everything, including bypass attempts (Linux).',
-  },
-  {
-    tag: 'Gateway',
-    text: 'The brain: agent registry, policy engine, per-team budgets, and the audit trail — over gRPC and HTTP.',
-  },
-];
+interface Layer {
+  readonly tag: string;
+  readonly text: string;
+}
 
 export function HowItWorks(): ReactNode {
+  const layers: readonly Layer[] = [
+    {
+      tag: 'SDK',
+      text: translate({
+        id: 'home.layers.sdk.text',
+        message:
+          'In-process hooks (Python, Node.js, Go) emit events and apply pre-execution allow/deny. The fastest path.',
+      }),
+    },
+    {
+      tag: 'Proxy',
+      text: translate({
+        id: 'home.layers.proxy.text',
+        message:
+          'A sidecar MitM proxy enforces network-egress policy with no code changes — catches what the SDK misses.',
+      }),
+    },
+    {
+      tag: 'eBPF',
+      text: translate({
+        id: 'home.layers.ebpf.text',
+        message:
+          'Kernel uprobes on SSL libraries plus exec/file syscall hooks catch everything, including bypass attempts (Linux).',
+      }),
+    },
+    {
+      tag: 'Gateway',
+      text: translate({
+        id: 'home.layers.gateway.text',
+        message:
+          'The brain: agent registry, policy engine, per-team budgets, and the audit trail — over gRPC and HTTP.',
+      }),
+    },
+  ];
   return (
     <SectionInView
       as="section"
@@ -261,16 +336,22 @@ export function HowItWorks(): ReactNode {
       id="architecture"
     >
       <div className={styles.inner}>
-        <div className={styles.eyebrow}>Architecture</div>
+        <div className={styles.eyebrow}>
+          <Translate id="home.how.eyebrow">Architecture</Translate>
+        </div>
         <h2 className={styles.h2}>
-          Three independently-deployable interception layers
+          <Translate id="home.how.title">
+            Three independently-deployable interception layers
+          </Translate>
         </h2>
         <p className={styles.lead}>
-          Adopt the depth you need — from a one-line SDK import to kernel-level
-          enforcement.
+          <Translate id="home.how.lead">
+            Adopt the depth you need — from a one-line SDK import to
+            kernel-level enforcement.
+          </Translate>
         </p>
         <div className={styles.layers}>
-          {LAYERS.map((l) => (
+          {layers.map((l) => (
             <div key={l.tag} className={styles.layer}>
               <span className={styles.layerTag}>{l.tag}</span>
               <span className={styles.cardText}>{l.text}</span>
@@ -304,45 +385,78 @@ interface PathCard {
   readonly external?: boolean;
 }
 
-const PATHS: readonly PathCard[] = [
-  {
-    icon: '⚙️',
-    title: 'Developer — self-host the OSS runtime',
-    text: 'Run a limited-function stack — gateway, CLI, SDKs, proxy, and eBPF hooks — on your own infrastructure for evaluation and development. Free and Apache-2.0.',
-    link: SELF_HOSTING_ANCHOR,
-    label: 'Jump to install',
-    eventName: 'cta_start_self_hosting_click',
-    targetProduct: 'agent_assembly',
-  },
-  {
-    icon: '🛡️',
-    title: 'Platform / Security — review the model',
-    text: 'Read the identity, authority, and secret-isolation contract before you decide what to trust in production.',
-    link: '#security',
-    label: 'Read the security model',
-    eventName: 'cta_view_docs_click',
-    alsoFire: ['docs_click'],
-    targetProduct: 'docs',
-  },
-  {
-    icon: '☁️',
-    title: 'Cloud — request early access',
-    text: 'The full-functionality managed control plane, in early access. Design-partner program only — Cloud is not generally available.',
-    link: EARLY_ACCESS_ROUTE,
-    label: 'Request Cloud Early Access',
-    eventName: 'cta_cloud_early_access_click',
-    targetProduct: 'early_access',
-  },
-];
-
 export function ChooseYourPath(): ReactNode {
+  const paths: readonly PathCard[] = [
+    {
+      icon: '⚙️',
+      title: translate({
+        id: 'home.paths.developer.title',
+        message: 'Developer — self-host the OSS runtime',
+      }),
+      text: translate({
+        id: 'home.paths.developer.text',
+        message:
+          'Run a limited-function stack — gateway, CLI, SDKs, proxy, and eBPF hooks — on your own infrastructure for evaluation and development. Free and Apache-2.0.',
+      }),
+      link: SELF_HOSTING_ANCHOR,
+      label: translate({
+        id: 'home.paths.developer.label',
+        message: 'Jump to install',
+      }),
+      eventName: 'cta_start_self_hosting_click',
+      targetProduct: 'agent_assembly',
+    },
+    {
+      icon: '🛡️',
+      title: translate({
+        id: 'home.paths.security.title',
+        message: 'Platform / Security — review the model',
+      }),
+      text: translate({
+        id: 'home.paths.security.text',
+        message:
+          'Read the identity, authority, and secret-isolation contract before you decide what to trust in production.',
+      }),
+      link: '#security',
+      label: translate({
+        id: 'home.paths.security.label',
+        message: 'Read the security model',
+      }),
+      eventName: 'cta_view_docs_click',
+      alsoFire: ['docs_click'],
+      targetProduct: 'docs',
+    },
+    {
+      icon: '☁️',
+      title: translate({
+        id: 'home.paths.cloud.title',
+        message: 'Cloud — request early access',
+      }),
+      text: translate({
+        id: 'home.paths.cloud.text',
+        message:
+          'The full-functionality managed control plane, in early access. Design-partner program only — Cloud is not generally available.',
+      }),
+      link: EARLY_ACCESS_ROUTE,
+      label: translate({
+        id: 'home.paths.cloud.label',
+        message: 'Request Cloud Early Access',
+      }),
+      eventName: 'cta_cloud_early_access_click',
+      targetProduct: 'early_access',
+    },
+  ];
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
-        <div className={styles.eyebrow}>Choose your path</div>
-        <h2 className={styles.h2}>Three ways to start</h2>
+        <div className={styles.eyebrow}>
+          <Translate id="home.paths.eyebrow">Choose your path</Translate>
+        </div>
+        <h2 className={styles.h2}>
+          <Translate id="home.paths.title">Three ways to start</Translate>
+        </h2>
         <div className={styles.grid3}>
-          {PATHS.map((p) => (
+          {paths.map((p) => (
             <div key={p.title} className={styles.card}>
               <div className={styles.cardIcon}>{p.icon}</div>
               <h3 className={styles.cardTitle}>{p.title}</h3>
@@ -374,9 +488,15 @@ export function FinalCTA(): ReactNode {
   return (
     <section className={`${styles.section} ${styles.soft} ${styles.center}`}>
       <div className={styles.inner}>
-        <h2 className={styles.h2}>Give your agents a boundary.</h2>
+        <h2 className={styles.h2}>
+          <Translate id="home.final.title">
+            Give your agents a boundary.
+          </Translate>
+        </h2>
         <p className={styles.lead}>
-          Identity, authority, and secret isolation — in one runtime layer.
+          <Translate id="home.final.lead">
+            Identity, authority, and secret isolation — in one runtime layer.
+          </Translate>
         </p>
         <div
           className={styles.ctaRow}
@@ -389,7 +509,7 @@ export function FinalCTA(): ReactNode {
             targetProduct="agent_assembly"
             to={SELF_HOSTING_ANCHOR}
           >
-            Start self-hosting →
+            <Translate id="home.cta.selfHost">Start self-hosting →</Translate>
           </TrackedLink>
           <TrackedLink
             className={styles.btnGhost}
@@ -398,7 +518,9 @@ export function FinalCTA(): ReactNode {
             targetProduct="early_access"
             to={EARLY_ACCESS_ROUTE}
           >
-            Request Cloud Early Access
+            <Translate id="home.cta.earlyAccess">
+              Request Cloud Early Access
+            </Translate>
           </TrackedLink>
         </div>
       </div>

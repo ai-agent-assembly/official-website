@@ -1,0 +1,30 @@
+{
+  "title": {
+    "message": "Agent Assembly",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "Agent Assembly",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.Product": {
+    "message": "產品",
+    "description": "Navbar item with label Product"
+  },
+  "item.label.Docs": {
+    "message": "文件",
+    "description": "Navbar item with label Docs"
+  },
+  "item.label.Blog": {
+    "message": "部落格",
+    "description": "Navbar item with label Blog"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  },
+  "item.label.Get started": {
+    "message": "開始使用",
+    "description": "Navbar item with label Get started"
+  }
+}

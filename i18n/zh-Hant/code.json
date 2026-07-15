@@ -1,0 +1,566 @@
+{
+  "home.meta.title": {
+    "message": "Agent Assembly — AI 代理的治理執行環境"
+  },
+  "home.meta.description": {
+    "message": "為每一個 AI 代理提供身分、權限與機密隔離 — 在 SDK、代理伺服器與核心層強制執行。開放原始碼今日可用；託管雲端已進入早期存取。"
+  },
+  "home.blog.eyebrow": {
+    "message": "部落格文章"
+  },
+  "home.blog.title": {
+    "message": "建置筆記、工程與安全技術文章"
+  },
+  "home.blog.lead": {
+    "message": "為什麼執行期邊界很重要，以及我們如何打造它。"
+  },
+  "home.blog.cta": {
+    "message": "閱讀部落格 →"
+  },
+  "product.meta.title": {
+    "message": "產品 — Agent Assembly"
+  },
+  "product.meta.description": {
+    "message": "Agent Assembly 是什麼：一個為 AI 代理而生的治理層 — 強制執行政策、追蹤成本並攔截不安全的行為。"
+  },
+  "product.kicker": {
+    "message": "產品"
+  },
+  "product.title": {
+    "message": "為 AI 代理而生的治理層"
+  },
+  "product.intro": {
+    "message": "Agent Assembly 並不是另一個代理框架。它是位於你的代理與外部世界之間的治理層 — 在執行期強制執行政策、追蹤成本並攔截不安全的行為。"
+  },
+  "product.why.title": {
+    "message": "為什麼代理框架還不夠"
+  },
+  "product.why.body": {
+    "message": "框架讓代理具備能力 — 它們能規劃、呼叫工具並採取行動。但它們不會賦予代理身分、約束其權限，也不會讓憑證遠離模型的可及範圍。Agent Assembly 補上這道邊界，而你無需重寫你的代理。"
+  },
+  "product.iai.title": {
+    "message": "身分、權限與機密隔離"
+  },
+  "product.iai.identityAuthority": {
+    "message": "身分與權限"
+  },
+  "product.iai.item.identity": {
+    "message": "以團隊為範圍的每一代理身分"
+  },
+  "product.iai.item.policy": {
+    "message": "允許／拒絕政策 + 網路對外連線控制"
+  },
+  "product.iai.item.budgets": {
+    "message": "各團隊預算與配額"
+  },
+  "product.iai.item.approval": {
+    "message": "人在迴路中的核准關卡"
+  },
+  "product.iai.item.audit": {
+    "message": "防竄改的稽核軌跡"
+  },
+  "product.iai.secretIsolation": {
+    "message": "機密隔離"
+  },
+  "product.iai.item.inject": {
+    "message": "在執行時注入憑證"
+  },
+  "product.iai.item.noContext": {
+    "message": "機密永不進入模型情境"
+  },
+  "product.iai.item.resolution": {
+    "message": "各團隊機密解析"
+  },
+  "product.iai.item.redaction": {
+    "message": "稽核路徑上的遮蔽處理"
+  },
+  "product.layers.title": {
+    "message": "執行期邊界與強制執行層"
+  },
+  "product.layers.body": {
+    "message": "三個可獨立部署的層級 — 行程內的 {sdks}、旁路 {proxy} 以及 {ebpf} 核心掛鉤 — 匯入一個中央 {gateway}，由它保存註冊表、評估政策、追蹤預算並記錄稽核日誌。依你所需採用相應的深度。"
+  },
+  "product.oss.title": {
+    "message": "開放原始碼核心 vs 託管 Cloud Console"
+  },
+  "product.oss.core.title": {
+    "message": "開放原始碼核心"
+  },
+  "product.oss.core.body": {
+    "message": "以 Apache-2.0 crate 自行架設一套受限功能的堆疊 — gateway、CLI、SDK、proxy 與 eBPF — 用於本機評估與開發。免費。"
+  },
+  "product.oss.cloud.title": {
+    "message": "託管 Cloud Console"
+  },
+  "product.oss.cloud.body": {
+    "message": "為組織、團隊、政策版本控管、核准與稽核而設的託管控制平面 — 無需你自行執行後端。"
+  },
+  "product.oss.summary": {
+    "message": "開放原始碼核心自行架設一套用於評估與開發的受限功能堆疊；託管主控台則以受管服務提供完整功能。"
+  },
+  "product.cta.getStarted": {
+    "message": "開始使用 →"
+  },
+  "product.cta.github": {
+    "message": "GitHub"
+  },
+  "product.cta.cloudConsole": {
+    "message": "Cloud Console"
+  },
+  "product.cta.comingSoon": {
+    "message": "👷 即將推出"
+  },
+  "home.hero.eyebrow": {
+    "message": "AI 代理的治理執行環境"
+  },
+  "home.hero.title": {
+    "message": "為 AI 代理而生的治理層。"
+  },
+  "home.hero.sub": {
+    "message": "Agent Assembly 位於你的代理與外部世界之間，強制執行政策、追蹤成本並攔截不安全的行為 — 在 SDK、網路代理伺服器與核心層。自行架設一套受限功能的堆疊用於評估與開發；完整功能則在託管雲端執行（早期存取）。"
+  },
+  "home.cta.selfHost": {
+    "message": "開始自行架設 →"
+  },
+  "home.cta.earlyAccess": {
+    "message": "申請 Cloud 早期存取"
+  },
+  "home.cta.starRepo.ariaLabel": {
+    "message": "在 GitHub 上為 Agent Assembly 核心儲存庫加星（在新分頁開啟）"
+  },
+  "home.cta.starRepo": {
+    "message": "為核心儲存庫加星"
+  },
+  "home.problem.eyebrow": {
+    "message": "問題所在"
+  },
+  "home.problem.title": {
+    "message": "代理框架幫助代理行動，卻沒有任何東西治理它們的行為。"
+  },
+  "home.problem.lead": {
+    "message": "自主代理呼叫工具、動用金錢並觸及正式環境系統 — 使用與部署它們的人相同的憑證，機密還擺在模型的情境視窗之中。Agent Assembly 正是過去所缺少的那道執行期邊界。"
+  },
+  "home.trust.label": {
+    "message": "開放原始碼。可驗證。"
+  },
+  "home.trust.coreRepo": {
+    "message": "GitHub 上的核心儲存庫 →"
+  },
+  "home.trust.examples": {
+    "message": "範例執行 →"
+  },
+  "home.trust.docs": {
+    "message": "閱讀文件 →"
+  },
+  "home.pillars.identity.title": {
+    "message": "身分"
+  },
+  "home.pillars.identity.text": {
+    "message": "每個代理都會取得一個以團隊為範圍的可驗證身分，讓政策與稽核能回答「這是誰做的」。"
+  },
+  "home.pillars.authority.title": {
+    "message": "權限"
+  },
+  "home.pillars.authority.text": {
+    "message": "允許／拒絕政策、對外連線控制、預算，以及人在迴路中的關卡，限制每個代理被允許執行的範圍。"
+  },
+  "home.pillars.secret.title": {
+    "message": "機密隔離"
+  },
+  "home.pillars.secret.text": {
+    "message": "真實憑證在執行時才注入，永不進入代理所能看見的模型情境。"
+  },
+  "home.pillars.eyebrow": {
+    "message": "安全模型"
+  },
+  "home.pillars.title": {
+    "message": "為每個代理設下三道邊界"
+  },
+  "home.layers.sdk.text": {
+    "message": "行程內掛鉤（Python、Node.js、Go）發出事件並在執行前套用允許／拒絕。最快的路徑。"
+  },
+  "home.layers.proxy.text": {
+    "message": "旁路 MitM 代理伺服器在不改動程式碼的情況下強制執行網路對外連線政策 — 攔下 SDK 遺漏的部分。"
+  },
+  "home.layers.ebpf.text": {
+    "message": "核心對 SSL 函式庫的 uprobe，加上 exec／檔案系統呼叫掛鉤，攔下一切，包括繞過的嘗試（Linux）。"
+  },
+  "home.layers.gateway.text": {
+    "message": "大腦：代理註冊表、政策引擎、各團隊預算與稽核軌跡 — 透過 gRPC 與 HTTP。"
+  },
+  "home.how.eyebrow": {
+    "message": "架構"
+  },
+  "home.how.title": {
+    "message": "三個可獨立部署的攔截層"
+  },
+  "home.how.lead": {
+    "message": "依你所需採用相應的深度 — 從一行 SDK 匯入到核心層級的強制執行。"
+  },
+  "home.paths.developer.title": {
+    "message": "開發者 — 自行架設 OSS 執行環境"
+  },
+  "home.paths.developer.text": {
+    "message": "在你自己的基礎架構上執行一套受限功能的堆疊 — gateway、CLI、SDK、proxy 與 eBPF 掛鉤 — 用於評估與開發。免費且採 Apache-2.0 授權。"
+  },
+  "home.paths.developer.label": {
+    "message": "跳至安裝"
+  },
+  "home.paths.security.title": {
+    "message": "平台／安全 — 檢視模型"
+  },
+  "home.paths.security.text": {
+    "message": "在你決定正式環境中要信任什麼之前，先閱讀身分、權限與機密隔離的契約。"
+  },
+  "home.paths.security.label": {
+    "message": "閱讀安全模型"
+  },
+  "home.paths.cloud.title": {
+    "message": "Cloud — 申請早期存取"
+  },
+  "home.paths.cloud.text": {
+    "message": "完整功能的託管控制平面，正處於早期存取。僅限設計夥伴計畫 — Cloud 尚未一般提供。"
+  },
+  "home.paths.cloud.label": {
+    "message": "申請 Cloud 早期存取"
+  },
+  "home.paths.eyebrow": {
+    "message": "選擇你的路徑"
+  },
+  "home.paths.title": {
+    "message": "三種開始方式"
+  },
+  "home.final.title": {
+    "message": "為你的代理設下邊界。"
+  },
+  "home.final.lead": {
+    "message": "身分、權限與機密隔離 — 匯聚於單一執行期層。"
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "此頁已當機。",
+    "description": "The title of the fallback page when the page crashed"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "回到頂部",
+    "description": "The ARIA label for the back to top button"
+  },
+  "theme.blog.archive.title": {
+    "message": "歷史文章",
+    "description": "The page & hero title of the blog archive page"
+  },
+  "theme.blog.archive.description": {
+    "message": "歷史文章",
+    "description": "The page & hero description of the blog archive page"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "部落格文章分頁導覽",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "較新一篇",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "較舊一篇",
+    "description": "The blog post button label to navigate to the older/next post"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "部落格文章列表分頁導覽",
+    "description": "The ARIA label for the blog pagination"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "較新的文章",
+    "description": "The label used to navigate to the newer blog posts page (previous page)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "較舊的文章",
+    "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "檢視所有標籤",
+    "description": "The label of the link targeting the tag list page"
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "system mode",
+    "description": "The name for the system color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "淺色模式",
+    "description": "The name for the light color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "深色模式",
+    "description": "The name for the dark color mode"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "切換淺色/深色模式（當前為{mode}）",
+    "description": "The ARIA label for the color mode toggle"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "頁面路徑",
+    "description": "The ARIA label for the breadcrumbs"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "文件選項卡",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "上一頁",
+    "description": "The label used to navigate to the previous doc"
+  },
+  "theme.docs.paginator.next": {
+    "message": "下一頁",
+    "description": "The label used to navigate to the next doc"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "{count} 篇文件帶有標籤",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "{nDocsTagged}「{tagName}」",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "版本：{versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "此為 {siteTitle} {versionLabel} 版尚未發行的文件。",
+    "description": "The label used to tell the user that he's browsing an unreleased doc version"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "此為 {siteTitle} {versionLabel} 版的文件，現已不再積極維護。",
+    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "最新的文件請參閱 {latestVersionLink} ({versionLabel})。",
+    "description": "The label used to tell the user to check the latest version"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "最新版本",
+    "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.common.editThisPage": {
+    "message": "編輯此頁",
+    "description": "The link label to edit the current page"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": "於 {date} ",
+    "description": "The words used to describe on which date a page has been last updated"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": "由 {user} ",
+    "description": "The words used to describe by who the page has been last updated"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "最後{byUser}{atDate}更新",
+    "description": "The sentence used to display when a page has been last updated, and by who"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "{heading}的直接連結",
+    "description": "Title for link to heading"
+  },
+  "theme.NotFound.title": {
+    "message": "找不到頁面",
+    "description": "The title of the 404 page"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "選擇版本",
+    "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "標籤：",
+    "description": "The label alongside a tag list"
+  },
+  "theme.admonition.caution": {
+    "message": "警告",
+    "description": "The default label used for the Caution admonition (:::caution)"
+  },
+  "theme.admonition.danger": {
+    "message": "危險",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "資訊",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.note": {
+    "message": "備註",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "提示",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.warning": {
+    "message": "注意",
+    "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "關閉",
+    "description": "The ARIA label for close button of announcement bar"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "最近部落格文章導覽",
+    "description": "The ARIA label for recent posts in the blog sidebar"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "展開側邊欄分類 '{label}'",
+    "description": "The ARIA label to expand the sidebar category"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "收起側邊欄分類 '{label}'",
+    "description": "The ARIA label to collapse the sidebar category"
+  },
+  "theme.IconExternalLink.ariaLabel": {
+    "message": "(opens in new tab)",
+    "description": "The ARIA label for the external link icon"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "主導航",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.NotFound.p1": {
+    "message": "我們沒有您要找的頁面。",
+    "description": "The first paragraph of the 404 page"
+  },
+  "theme.NotFound.p2": {
+    "message": "請聯絡原始連結來源網站的所有者，並通知他們連結已毀損。",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "本頁導覽",
+    "description": "The label used by the button on the collapsible TOC component"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "選擇語言",
+    "description": "The label for the mobile language switcher dropdown"
+  },
+  "theme.blog.post.readMore": {
+    "message": "閱讀更多",
+    "description": "The label used in blog post item excerpts to link to full blog posts"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "閱讀 {title} 全文",
+    "description": "The ARIA label for the link to full blog posts from excerpts"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "閱讀時間約 {readingTime} 分鐘",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "複製",
+    "description": "The copy button label on code blocks"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "複製成功",
+    "description": "The copied button label on code blocks"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "複製程式碼至剪貼簿",
+    "description": "The ARIA label for copy code blocks button"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "切換自動換行",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "主頁面",
+    "description": "The ARIA label for the home page in the breadcrumbs"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "收起側邊欄",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "收起側邊欄",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "文件側邊欄",
+    "description": "The ARIA label for the sidebar navigation"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "關閉導覽列",
+    "description": "The ARIA label for close button of mobile sidebar"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← 回到主選單",
+    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "切換導覽列",
+    "description": "The ARIA label for hamburger menu button of mobile navigation"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "展開側邊欄",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "展開側邊欄",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.expandAriaLabel": {
+    "message": "Expand the dropdown",
+    "description": "The ARIA label of the button to expand the mobile dropdown navbar item"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.collapseAriaLabel": {
+    "message": "Collapse the dropdown",
+    "description": "The ARIA label of the button to collapse the mobile dropdown navbar item"
+  },
+  "theme.blog.post.plurals": {
+    "message": "{count} 篇文章",
+    "description": "Pluralized label for \"{count} posts\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.blog.tagTitle": {
+    "message": "{nPosts} 含有標籤「{tagName}」",
+    "description": "The title of the page for a blog tag"
+  },
+  "theme.blog.author.pageTitle": {
+    "message": "{authorName} - {nPosts}",
+    "description": "The title of the page for a blog author"
+  },
+  "theme.blog.authorsList.pageTitle": {
+    "message": "作者列表",
+    "description": "The title of the authors page"
+  },
+  "theme.blog.authorsList.viewAll": {
+    "message": "檢視所有作者",
+    "description": "The label of the link targeting the blog authors page"
+  },
+  "theme.blog.author.noPosts": {
+    "message": "此作者尚未撰寫任何文章。",
+    "description": "The text for authors with 0 blog post"
+  },
+  "theme.contentVisibility.unlistedBanner.title": {
+    "message": "未列出頁",
+    "description": "The unlisted content banner title"
+  },
+  "theme.contentVisibility.unlistedBanner.message": {
+    "message": "此頁面未列出。搜索引擎不會對其索引，只有擁有直接連結的用戶才能訪問。",
+    "description": "The unlisted content banner message"
+  },
+  "theme.contentVisibility.draftBanner.title": {
+    "message": "草稿頁",
+    "description": "The draft content banner title"
+  },
+  "theme.contentVisibility.draftBanner.message": {
+    "message": "此頁面為草稿，僅在開發環境中可見，不會包含於正式版本中。",
+    "description": "The draft content banner message"
+  },
+  "theme.docs.DocCard.categoryDescription.plurals": {
+    "message": "{count} 個項目",
+    "description": "The default description for a category card in the generated index about how many items this category includes"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "重試",
+    "description": "The label of the button to try again rendering when the React error boundary captures an error"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "跳至主要内容",
+    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "標籤",
+    "description": "The title of the tag list page"
+  }
+}
