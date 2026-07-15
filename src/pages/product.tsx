@@ -11,17 +11,16 @@ export default function Product(): ReactNode {
   return (
     <Layout
       title="Product — Agent Assembly"
-      description="What Agent Assembly is: a runtime boundary and governance layer for autonomous AI agents."
+      description="What Agent Assembly is: a governance layer for AI agents — it enforces policy, tracks cost, and intercepts unsafe actions."
     >
       <div className={styles.wrap}>
         <div className={styles.kicker}>Product</div>
-        <h1 className={styles.title}>
-          A runtime boundary for autonomous agents
-        </h1>
+        <h1 className={styles.title}>A governance layer for AI agents</h1>
         <p className={styles.intro}>
           Agent Assembly is not another agent framework. It is the governance
-          layer that sits underneath your agents and enforces what they are
-          allowed to do at runtime.
+          layer that sits between your agents and the outside world — it
+          enforces policy, tracks cost, and intercepts unsafe actions at
+          runtime.
         </p>
 
         <section className={styles.block}>
@@ -86,8 +85,9 @@ export default function Product(): ReactNode {
             <div className={styles.panel}>
               <p className={styles.panelTitle}>Open-source core</p>
               <p className={styles.p}>
-                Self-host the gateway, CLI, SDKs, proxy, and eBPF. Full control,
-                no cost.
+                Self-host a limited-function stack — gateway, CLI, SDKs, proxy,
+                and eBPF — from the Apache-2.0 crates, for local evaluation and
+                development. No cost.
               </p>
             </div>
             <div className={styles.panel}>
@@ -99,8 +99,9 @@ export default function Product(): ReactNode {
             </div>
           </div>
           <p className={styles.p} style={{marginTop: '1rem'}}>
-            The hosted console is one way to operate Agent Assembly — the
-            open-source core works on its own.
+            The open-source core self-hosts a limited-function stack for
+            evaluation and development; the hosted console delivers the full
+            feature set as a managed service.
           </p>
         </section>
 
