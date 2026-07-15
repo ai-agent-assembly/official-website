@@ -23,7 +23,14 @@ const config: Config = {
   onBrokenLinks: 'warn',
   markdown: {hooks: {onBrokenMarkdownLinks: 'warn'}},
 
-  i18n: {defaultLocale: 'en', locales: ['en']},
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'zh-Hant'],
+    localeConfigs: {
+      en: {label: 'English'},
+      'zh-Hant': {label: '繁體中文'},
+    },
+  },
 
   presets: [
     [
@@ -69,6 +76,7 @@ const config: Config = {
           label: 'GitHub',
           position: 'right',
         },
+        {type: 'localeDropdown', position: 'right'},
         {
           type: 'custom-megaMenu',
           menuKey: 'getStarted',
