@@ -1,6 +1,7 @@
 import React, {type ReactNode} from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
+import Translate, {translate} from '@docusaurus/Translate';
 import {DOCS_URL} from '@site/src/generated/site-urls';
 import styles from './product.module.css';
 
@@ -10,55 +11,120 @@ const GITHUB = 'https://github.com/ai-agent-assembly';
 export default function Product(): ReactNode {
   return (
     <Layout
-      title="Product — Agent Assembly"
-      description="What Agent Assembly is: a governance layer for AI agents — it enforces policy, tracks cost, and intercepts unsafe actions."
+      title={translate({
+        id: 'product.meta.title',
+        message: 'Product — Agent Assembly',
+      })}
+      description={translate({
+        id: 'product.meta.description',
+        message:
+          'What Agent Assembly is: a governance layer for AI agents — it enforces policy, tracks cost, and intercepts unsafe actions.',
+      })}
     >
       <div className={styles.wrap}>
-        <div className={styles.kicker}>Product</div>
-        <h1 className={styles.title}>A governance layer for AI agents</h1>
+        <div className={styles.kicker}>
+          <Translate id="product.kicker">Product</Translate>
+        </div>
+        <h1 className={styles.title}>
+          <Translate id="product.title">
+            A governance layer for AI agents
+          </Translate>
+        </h1>
         <p className={styles.intro}>
-          Agent Assembly is not another agent framework. It is the governance
-          layer that sits between your agents and the outside world — it
-          enforces policy, tracks cost, and intercepts unsafe actions at
-          runtime.
+          <Translate id="product.intro">
+            Agent Assembly is not another agent framework. It is the governance
+            layer that sits between your agents and the outside world — it
+            enforces policy, tracks cost, and intercepts unsafe actions at
+            runtime.
+          </Translate>
         </p>
 
         <section className={styles.block}>
           <h2 className={styles.blockTitle}>
-            Why agent frameworks are not enough
+            <Translate id="product.why.title">
+              Why agent frameworks are not enough
+            </Translate>
           </h2>
           <p className={styles.p}>
-            Frameworks make agents capable — they plan, call tools, and act. But
-            they don&rsquo;t give an agent an identity, constrain its authority,
-            or keep credentials out of the model&rsquo;s reach. Agent Assembly
-            adds that boundary without you rewriting your agents.
+            <Translate id="product.why.body">
+              Frameworks make agents capable — they plan, call tools, and act.
+              But they don’t give an agent an identity, constrain its authority,
+              or keep credentials out of the model’s reach. Agent Assembly adds
+              that boundary without you rewriting your agents.
+            </Translate>
           </p>
         </section>
 
         <section className={styles.block}>
           <h2 className={styles.blockTitle}>
-            Identity, Authority, and Secret Isolation
+            <Translate id="product.iai.title">
+              Identity, Authority, and Secret Isolation
+            </Translate>
           </h2>
           <div className={styles.cols}>
             <div className={styles.panel}>
               <p className={styles.panelTitle}>
-                🪪 Identity &amp; 🛡️ Authority
+                🪪{' '}
+                <Translate id="product.iai.identityAuthority">
+                  Identity &amp; Authority
+                </Translate>
               </p>
               <ul className={styles.list}>
-                <li>Per-agent, team-scoped identity</li>
-                <li>Allow/deny policy + network egress control</li>
-                <li>Per-team budgets and quotas</li>
-                <li>Human-in-the-loop approval gates</li>
-                <li>Tamper-evident audit trail</li>
+                <li>
+                  <Translate id="product.iai.item.identity">
+                    Per-agent, team-scoped identity
+                  </Translate>
+                </li>
+                <li>
+                  <Translate id="product.iai.item.policy">
+                    Allow/deny policy + network egress control
+                  </Translate>
+                </li>
+                <li>
+                  <Translate id="product.iai.item.budgets">
+                    Per-team budgets and quotas
+                  </Translate>
+                </li>
+                <li>
+                  <Translate id="product.iai.item.approval">
+                    Human-in-the-loop approval gates
+                  </Translate>
+                </li>
+                <li>
+                  <Translate id="product.iai.item.audit">
+                    Tamper-evident audit trail
+                  </Translate>
+                </li>
               </ul>
             </div>
             <div className={styles.panel}>
-              <p className={styles.panelTitle}>🔑 Secret Isolation</p>
+              <p className={styles.panelTitle}>
+                🔑{' '}
+                <Translate id="product.iai.secretIsolation">
+                  Secret Isolation
+                </Translate>
+              </p>
               <ul className={styles.list}>
-                <li>Credentials injected at execution time</li>
-                <li>Secrets never enter the model context</li>
-                <li>Per-team secret resolution</li>
-                <li>Redaction on the audit path</li>
+                <li>
+                  <Translate id="product.iai.item.inject">
+                    Credentials injected at execution time
+                  </Translate>
+                </li>
+                <li>
+                  <Translate id="product.iai.item.noContext">
+                    Secrets never enter the model context
+                  </Translate>
+                </li>
+                <li>
+                  <Translate id="product.iai.item.resolution">
+                    Per-team secret resolution
+                  </Translate>
+                </li>
+                <li>
+                  <Translate id="product.iai.item.redaction">
+                    Redaction on the audit path
+                  </Translate>
+                </li>
               </ul>
             </div>
           </div>
@@ -66,58 +132,86 @@ export default function Product(): ReactNode {
 
         <section className={styles.block}>
           <h2 className={styles.blockTitle}>
-            Runtime boundary &amp; enforcement layers
+            <Translate id="product.layers.title">
+              Runtime boundary &amp; enforcement layers
+            </Translate>
           </h2>
           <p className={styles.p}>
-            Three independently-deployable layers — in-process{' '}
-            <strong>SDKs</strong>, a sidecar <strong>proxy</strong>, and{' '}
-            <strong>eBPF</strong> kernel hooks — feed a central{' '}
-            <strong>gateway</strong> that holds the registry, evaluates policy,
-            tracks budgets, and records the audit log. Adopt the depth you need.
+            <Translate
+              id="product.layers.body"
+              values={{
+                sdks: <strong>SDKs</strong>,
+                proxy: <strong>proxy</strong>,
+                ebpf: <strong>eBPF</strong>,
+                gateway: <strong>gateway</strong>,
+              }}
+            >
+              {
+                'Three independently-deployable layers — in-process {sdks}, a sidecar {proxy}, and {ebpf} kernel hooks — feed a central {gateway} that holds the registry, evaluates policy, tracks budgets, and records the audit log. Adopt the depth you need.'
+              }
+            </Translate>
           </p>
         </section>
 
         <section className={styles.block}>
           <h2 className={styles.blockTitle}>
-            Open-source core vs hosted Cloud Console
+            <Translate id="product.oss.title">
+              Open-source core vs hosted Cloud Console
+            </Translate>
           </h2>
           <div className={styles.cols}>
             <div className={styles.panel}>
-              <p className={styles.panelTitle}>Open-source core</p>
+              <p className={styles.panelTitle}>
+                <Translate id="product.oss.core.title">
+                  Open-source core
+                </Translate>
+              </p>
               <p className={styles.p}>
-                Self-host a limited-function stack — gateway, CLI, SDKs, proxy,
-                and eBPF — from the Apache-2.0 crates, for local evaluation and
-                development. No cost.
+                <Translate id="product.oss.core.body">
+                  Self-host a limited-function stack — gateway, CLI, SDKs,
+                  proxy, and eBPF — from the Apache-2.0 crates, for local
+                  evaluation and development. No cost.
+                </Translate>
               </p>
             </div>
             <div className={styles.panel}>
-              <p className={styles.panelTitle}>Hosted Cloud Console</p>
+              <p className={styles.panelTitle}>
+                <Translate id="product.oss.cloud.title">
+                  Hosted Cloud Console
+                </Translate>
+              </p>
               <p className={styles.p}>
-                A managed control plane for orgs, teams, policy versioning,
-                approvals, and audit — without running the backend yourself.
+                <Translate id="product.oss.cloud.body">
+                  A managed control plane for orgs, teams, policy versioning,
+                  approvals, and audit — without running the backend yourself.
+                </Translate>
               </p>
             </div>
           </div>
           <p className={styles.p} style={{marginTop: '1rem'}}>
-            The open-source core self-hosts a limited-function stack for
-            evaluation and development; the hosted console delivers the full
-            feature set as a managed service.
+            <Translate id="product.oss.summary">
+              The open-source core self-hosts a limited-function stack for
+              evaluation and development; the hosted console delivers the full
+              feature set as a managed service.
+            </Translate>
           </p>
         </section>
 
         <div className={styles.ctaRow}>
           <Link className={styles.btnPrimary} to={DOCS}>
-            Get started →
+            <Translate id="product.cta.getStarted">Get started →</Translate>
           </Link>
           <Link className={styles.btnGhost} to={GITHUB}>
-            GitHub
+            <Translate id="product.cta.github">GitHub</Translate>
           </Link>
           <span
             className={`${styles.btnGhost} ${styles.btnDisabled}`}
             aria-disabled="true"
           >
-            {'Cloud Console '}
-            <span className={styles.soon}>👷 Coming soon</span>
+            <Translate id="product.cta.cloudConsole">Cloud Console </Translate>
+            <span className={styles.soon}>
+              <Translate id="product.cta.comingSoon">👷 Coming soon</Translate>
+            </span>
           </span>
         </div>
       </div>

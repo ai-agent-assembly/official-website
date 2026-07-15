@@ -692,3 +692,20 @@
   vertical-align: text-bottom;
   flex-shrink: 0;
 }
+
+/*
+ * Machine-translated-draft notice (AAASM-4698). Only rendered on
+ * non-default locales, so it never affects the English site.
+ */
+.draftBanner {
+  max-width: var(--aa-max);
+  margin: 0 auto;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--aa-border);
+  border-left: 3px solid var(--aa-accent);
+  border-radius: 6px;
+  background: var(--aa-bg-soft);
+  color: var(--aa-text-dim);
+  font-size: 0.82rem;
+  text-align: center;
+}
