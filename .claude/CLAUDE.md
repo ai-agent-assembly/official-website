@@ -99,8 +99,12 @@ pnpm format:check       # prettier --check . (CI gate)
   - a `Verify …` subtask per Story.
 - **Marketing content only.** Developer/reference docs live in `agent-assembly-docs` and
   each component's own docs site — link out, don't duplicate.
-- **Self-hosted deployment is out of scope** product-wide (SaaS-only). Don't add
-  Helm/Terraform/air-gapped/migration content even if the spec mentions it.
+- **Self-host is limited-function only** (revised policy). Sample infra configs and
+  **Docker Compose** examples — plus their reflecting docs — may be provided so users
+  can self-host a *limited-function* stack locally for eval/dev. **Complete/full
+  functionality remains SaaS-only.** Production orchestration
+  (**Helm/Terraform/Kubernetes**) is a research-spike/ADR question only, not
+  ready-to-build work; don't add air-gapped/migration content.
 - **The Protocol Specification stays in the `agent-assembly` monorepo** — never author
   spec content here or in a separate `agent-assembly-spec` repo (archived by design).
 
