@@ -1,0 +1,14 @@
+{
+  "title": {
+    "message": "Agent Assembly 部落格",
+    "description": "The title for the blog used in SEO"
+  },
+  "description": {
+    "message": "來自打造 AI 代理執行期邊界團隊的建置筆記、工程技術文章、安全筆記與產品故事。",
+    "description": "The description for the blog used in SEO"
+  },
+  "sidebar.title": {
+    "message": "最新文章",
+    "description": "The label for the left sidebar"
+  }
+}
