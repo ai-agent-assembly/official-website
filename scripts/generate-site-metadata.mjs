@@ -48,7 +48,7 @@ export function parseSiteMetadata(text) {
   const lines = text.split(/\r?\n/);
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
-    const line = raw.replace(/\s+$/, '');
+    const line = raw.trimEnd();
     if (line === '' || line.trimStart().startsWith('#')) continue;
 
     // Top-level section header: `<key>:` with no indent, no value.
@@ -119,7 +119,9 @@ export const SITE_URLS_TS_PATH = 'src/generated/site-urls.ts';
 // commas everywhere. We emit output that already conforms so `pnpm format:check`
 // stays green without a post-process step.
 function tsString(value) {
-  return `'${String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+  return `'${String(value)
+    .replaceAll('\\', String.raw`\\`)
+    .replaceAll("'", "\\'")}'`;
 }
 
 export function renderSiteUrlsModule(meta) {
