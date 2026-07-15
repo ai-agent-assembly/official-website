@@ -59,7 +59,7 @@ const CARDS: readonly NextStepCardConfig[] = [
     title: 'Framework integration examples →',
     description: 'LangChain, LlamaIndex, and CrewAI wired through the runtime.',
     href:
-      `${DOCS_URL}/core/v0.0.1-rc.3/usage-guide/examples.html?` +
+      `${DOCS_URL}/core/latest/usage-guide/examples.html?` +
       'utm_source=product_site&utm_medium=referral' +
       '&utm_campaign=oss_install&utm_content=examples_repo',
     eventName: 'examples_repo_click',
