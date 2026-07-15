@@ -152,6 +152,6 @@ export function trackCtaClick(name: string, params: CtaClickParams): void {
     link_url: params.link_url,
     link_domain,
     target_product: params.target_product,
-    ...(params.extra ?? {}),
+    ...params.extra,
   });
 }
