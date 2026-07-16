@@ -12,7 +12,7 @@
  *
  * Content rule (from the HORO-40 IA plan §2.2 and the HORO-44 ticket):
  * every command shown here must be REAL — either genuinely runnable
- * today or clearly gated with an inline TODO explaining what is
+ * today or clearly gated with an inline note explaining what is
  * pre-launch. No fake download URLs, no placeholder registry paths.
  */
 

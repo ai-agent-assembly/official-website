@@ -12,7 +12,8 @@
  * the user actually clicked.
  *
  * Content rule (HORO-40 §2.2 / HORO-44 acceptance): every command shown
- * here must be REAL or explicitly TODO-gated. See `installCommands.ts`
+ * here must be REAL or explicitly gated with a launch note. See
+ * `installCommands.ts`
  * for the per-tab gating rationale.
  */
 
@@ -29,10 +30,7 @@ import {DOCS_URL} from '@site/src/generated/site-urls';
 const DOCS_QUICKSTART = `${DOCS_URL}/?utm_source=product_site&utm_medium=docs_link&utm_campaign=oss_install`;
 
 async function copyToClipboard(text: string): Promise<boolean> {
-  if (
-    typeof navigator === 'undefined' ||
-    typeof navigator.clipboard === 'undefined'
-  ) {
+  if (typeof navigator === 'undefined' || navigator.clipboard === undefined) {
     return false;
   }
   try {
