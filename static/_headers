@@ -8,11 +8,11 @@
 # auto-injects its beacon.min.js from that host on this Pages-proxied site, so
 # without it the beacon trips a policy violation. Its telemetry POST goes to the
 # same-origin /cdn-cgi/rum endpoint, already covered by connect-src 'self'. The
-# policy stays Report-Only until the report stream is confirmed clean, then a
-# follow-up flips it to enforcing Content-Security-Policy.
+# report stream was confirmed clean, so this is the cutover to an enforcing
+# Content-Security-Policy (AAASM-4884); it is no longer Report-Only.
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' www.googletagmanager.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; connect-src 'self' www.google-analytics.com www.googletagmanager.com; img-src 'self' data: https:; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' www.googletagmanager.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; connect-src 'self' www.google-analytics.com www.googletagmanager.com; img-src 'self' data: https:; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'
