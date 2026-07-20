@@ -10,6 +10,7 @@
 # same-origin /cdn-cgi/rum endpoint, already covered by connect-src 'self'. The
 # report stream was confirmed clean, so this is the cutover to an enforcing
 # Content-Security-Policy (AAASM-4884); it is no longer Report-Only.
+# TODO(AAASM-4901): confirm Web Analytics enabled or drop this origin
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
