@@ -13,7 +13,7 @@ const DOCS = `${DOCS_URL}/?utm_source=product_site&utm_medium=docs_link&utm_camp
 const GITHUB_CORE =
   'https://github.com/ai-agent-assembly/agent-assembly?utm_source=product_site&utm_medium=referral&utm_campaign=agent_assembly_launch';
 const GITHUB_EXAMPLES =
-  'https://github.com/ai-agent-assembly/agent-assembly-examples?utm_source=product_site&utm_medium=referral&utm_campaign=oss_install';
+  'https://github.com/ai-agent-assembly/examples?utm_source=product_site&utm_medium=referral&utm_campaign=oss_install';
 
 // Same-hostname anchors — no UTM.
 const SELF_HOSTING_ANCHOR = '#install';
