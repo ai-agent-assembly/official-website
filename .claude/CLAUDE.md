@@ -6,7 +6,7 @@ config. When a fact here duplicates `README.md`, `package.json`, `docusaurus.con
 or the `deploy.yml` workflow, treat those as the source of truth and update them, not
 just this file.
 
-Org-wide baseline: https://github.com/ai-agent-assembly/.github/blob/main/CLAUDE.md
+Org-wide baseline: https://github.com/ai-agent-assembly/.github/blob/master/CLAUDE.md
 (org-universal conventions this file doesn't repeat).
 
 ## What this repo is
@@ -17,7 +17,7 @@ governance on AI agents. It is a [Docusaurus](https://docusaurus.io/) 3 site
 `main`, and published at **<https://agent-assembly.com>**.
 
 This is the top-of-funnel product site (landing pages, blog). It is **not** the docs
-hub: developer documentation lives in the separate `agent-assembly-docs` repo and each
+hub: developer documentation lives in the separate `docs` repo and each
 component ships its own docs site. Keep this site to marketing, positioning, and
 announcements — link out to the docs hub rather than duplicating reference content.
 
@@ -94,10 +94,10 @@ pnpm format:check       # prettier --check . (CI gate)
 ## Project policy
 
 - **JIRA:** project AAASM at <https://lightning-dust-mite.atlassian.net> (board 7). Set
-  **Component** (`customfield_10041`) to the repo (`AI-agent-assembly/official-website`);
+  **Component** (native `components` field) to the repo (`AI-agent-assembly/official-website`);
   Team (`customfield_10001`) = Pioneer. Epic → Story → Subtask (one Subtask ≈ one commit)
   - a `Verify …` subtask per Story.
-- **Marketing content only.** Developer/reference docs live in `agent-assembly-docs` and
+- **Marketing content only.** Developer/reference docs live in `docs` and
   each component's own docs site — link out, don't duplicate.
 - **Self-host is limited-function only** (revised policy). Sample infra configs and
   **Docker Compose** examples — plus their reflecting docs — may be provided so users
