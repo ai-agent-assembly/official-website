@@ -27,7 +27,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - name: Install
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Lint
         run: pnpm lint
 
@@ -44,7 +44,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - name: Install
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Format check
         run: pnpm format:check
 
@@ -61,7 +61,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - name: Install
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Typecheck
         run: pnpm typecheck
 
@@ -78,7 +78,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - name: Install
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build
         run: pnpm build
 

@@ -33,7 +33,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - name: Install
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Regenerate site-metadata artifacts
         run: pnpm run generate:site-metadata
       - name: Verify no drift
