@@ -26,7 +26,7 @@ jobs:
         run: |
           set -euo pipefail
           SRC_URL="https://raw.githubusercontent.com/ai-agent-assembly/agent-assembly/master/scripts/install-cli.sh"
-          curl -sSfL "$SRC_URL" -o /tmp/source-install.sh
+          curl -sSfL --proto '=https' "$SRC_URL" -o /tmp/source-install.sh
           # The served copy = the canonical installer + a short provenance-note header.
           # Compare only the executable body (from `set -eu` onward), which must stay
           # byte-identical to the source; the leading comment header may legitimately differ.
