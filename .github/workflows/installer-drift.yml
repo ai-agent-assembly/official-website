@@ -21,12 +21,12 @@ jobs:
   drift:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Compare served installer body against canonical source
         run: |
           set -euo pipefail
           SRC_URL="https://raw.githubusercontent.com/ai-agent-assembly/agent-assembly/HEAD/scripts/install-cli.sh"
-          curl -sSfL "$SRC_URL" -o /tmp/source-install.sh
+          curl -sSfL --proto '=https' "$SRC_URL" -o /tmp/source-install.sh
           # The served copy = the canonical installer + a short provenance-note header.
           # Compare only the executable body (from `set -eu` onward), which must stay
           # byte-identical to the source; the leading comment header may legitimately differ.
