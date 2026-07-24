@@ -120,7 +120,7 @@ const config: Config = {
             },
             {
               label: 'Security',
-              href: 'https://github.com/ai-agent-assembly/.github/blob/master/SECURITY.md',
+              href: 'https://github.com/ai-agent-assembly/.github/blob/main/SECURITY.md',
             },
           ],
         },
