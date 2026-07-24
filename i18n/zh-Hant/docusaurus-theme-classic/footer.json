@@ -37,7 +37,7 @@
   },
   "link.item.label.Security": {
     "message": "安全",
-    "description": "The label of footer link with label=Security linking to https://github.com/ai-agent-assembly/.github/blob/master/SECURITY.md"
+    "description": "The label of footer link with label=Security linking to https://github.com/ai-agent-assembly/.github/blob/main/SECURITY.md"
   },
   "copyright": {
     "message": "Copyright © 2026 Agent Assembly.",
