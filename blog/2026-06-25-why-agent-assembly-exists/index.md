@@ -19,8 +19,10 @@ limits what it can do on the paths you route through it, and scans its outbound 
 so recognised credentials are redacted before the request is forwarded.
 
 Worth saying plainly, because the distinction matters more than the pitch: that boundary
-holds on the paths it is wired into. An agent launched outside the managed path, or
-talking over a transport the proxy does not parse, is outside it.
+holds on the paths it is wired into. An agent launched outside the managed path with no
+integration installed, or talking over a transport the proxy does not parse, is outside it —
+and we publish exactly where that line falls in
+[Limitations and known bypasses](https://docs.agent-assembly.com/core/latest/devtools/limitations.html).
 
 This blog is where we'll share the build — engineering notes, security decisions, and the
 story of making a governance layer for autonomous agents.
