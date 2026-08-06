@@ -13,9 +13,14 @@ secrets sitting inside the model's context window.
 {/* truncate */}
 
 Agent frameworks make agents _capable_. They don't give an agent an identity, constrain
-its authority, or keep secrets out of the model's reach. That gap is what Agent Assembly
-closes: a runtime boundary that gives every agent an identity, limits what it can do, and
-injects secrets at execution time so they never enter the context the model can see.
+its authority, or keep credentials from travelling with its requests. That gap is what
+Agent Assembly is closing: a runtime boundary that gives a registered agent an identity,
+limits what it can do on the paths you route through it, and scans its outbound traffic
+so recognised credentials are redacted before the request is forwarded.
+
+Worth saying plainly, because the distinction matters more than the pitch: that boundary
+holds on the paths it is wired into. An agent launched outside the managed path, or
+talking over a transport the proxy does not parse, is outside it.
 
 This blog is where we'll share the build — engineering notes, security decisions, and the
 story of making a governance layer for autonomous agents.
