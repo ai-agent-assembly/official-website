@@ -313,7 +313,7 @@ export function HowItWorks(): ReactNode {
       text: translate({
         id: 'home.layers.proxy.text',
         message:
-          'A sidecar MitM proxy enforces network-egress policy with no agent code changes — it needs the process to route through it and trust its CA (installed automatically on macOS, via `sudo aasm proxy install-ca` on Linux).',
+          'A sidecar MitM proxy enforces network-egress policy with no agent code changes — it needs the process to route through it and trust its CA. On macOS the proxy attempts that install at start and macOS prompts for admin authorization; refusing it fails proxy startup. On Linux you run sudo aasm proxy install-ca.',
       }),
     },
     {

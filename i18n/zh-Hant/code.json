@@ -180,7 +180,7 @@
     "message": "行程內掛鉤（Python、Node.js、Go）發出事件，並在被包裝的工具呼叫執行前於拒絕時擲出例外。本質上屬建議性：它取決於代理是否配合，因此是縱深防禦，而非把關者。"
   },
   "home.layers.proxy.text": {
-    "message": "旁路 MitM 代理伺服器在不改動代理程式碼的情況下強制執行網路對外連線政策 — 它需要行程導流經過它並信任其 CA（macOS 於啟動時自動安裝；Linux 執行 sudo aasm proxy install-ca）。"
+    "message": "旁路 MitM 代理伺服器在不改動代理程式碼的情況下強制執行網路對外連線政策 — 它需要行程導流經過它並信任其 CA。在 macOS 上，proxy 會在啟動時嘗試安裝，macOS 會提示要求管理者授權；若拒絕，proxy 將無法啟動。在 Linux 上則需執行 sudo aasm proxy install-ca。"
   },
   "home.layers.ebpf.text": {
     "message": "僅供觀測的核心探針 — OpenSSL uprobe 加上 exec／檔案系統呼叫掛鉤 — 讓上層未曾看見的行為浮現。僅限 Linux；它只回報，不會阻擋。"
