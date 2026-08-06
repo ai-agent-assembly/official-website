@@ -7,6 +7,8 @@ import styles from './product.module.css';
 
 const DOCS = DOCS_URL;
 const GITHUB = 'https://github.com/ai-agent-assembly';
+// AAASM-5528 — the coverage / known-limitations page the layer claims resolve to.
+const LIMITATIONS_DOC = `${DOCS_URL}/core/latest/devtools/limitations.html`;
 
 export default function Product(): ReactNode {
   return (
@@ -18,7 +20,7 @@ export default function Product(): ReactNode {
       description={translate({
         id: 'product.meta.description',
         message:
-          'What Agent Assembly is: a governance layer for AI agents — it enforces policy, tracks cost, and intercepts unsafe actions.',
+          'What Agent Assembly is: a governance layer for AI agents — it enforces policy, tracks cost, and blocks unsafe actions on the paths it mediates.',
       })}
     >
       <div className={styles.wrap}>
@@ -33,9 +35,9 @@ export default function Product(): ReactNode {
         <p className={styles.intro}>
           <Translate id="product.intro">
             Agent Assembly is not another agent framework. It is the governance
-            layer that sits between your agents and the outside world — it
-            enforces policy, tracks cost, and intercepts unsafe actions at
-            runtime.
+            layer that sits between your agents and the outside world — on the
+            paths you route through it, it enforces policy, tracks cost, and
+            blocks unsafe actions at runtime.
           </Translate>
         </p>
 
@@ -50,7 +52,9 @@ export default function Product(): ReactNode {
               Frameworks make agents capable — they plan, call tools, and act.
               But they don’t give an agent an identity, constrain its authority,
               or keep credentials out of the model’s reach. Agent Assembly adds
-              that boundary without you rewriting your agents.
+              that boundary without you rewriting your agents’ logic — though
+              the agent does have to be launched through a governed path for the
+              boundary to apply.
             </Translate>
           </p>
         </section>
@@ -92,7 +96,7 @@ export default function Product(): ReactNode {
                 </li>
                 <li>
                   <Translate id="product.iai.item.audit">
-                    Tamper-evident audit trail
+                    Hash-chained audit trail — tamper-evident, not immutable
                   </Translate>
                 </li>
               </ul>
@@ -107,12 +111,14 @@ export default function Product(): ReactNode {
               <ul className={styles.list}>
                 <li>
                   <Translate id="product.iai.item.inject">
-                    Credentials injected at execution time
+                    Outbound requests scanned for credentials before they are
+                    forwarded
                   </Translate>
                 </li>
                 <li>
                   <Translate id="product.iai.item.noContext">
-                    Secrets never enter the model context
+                    Recognised credentials redacted by default; blocked outright
+                    if you set policy to block
                   </Translate>
                 </li>
                 <li>
@@ -147,9 +153,21 @@ export default function Product(): ReactNode {
               }}
             >
               {
-                'Three independently-deployable layers — in-process {sdks}, a sidecar {proxy}, and {ebpf} kernel hooks — feed a central {gateway} that holds the registry, evaluates policy, tracks budgets, and records the audit log. Adopt the depth you need.'
+                'Three independently-deployable layers — in-process {sdks}, a sidecar {proxy}, and {ebpf} kernel hooks — feed a central {gateway} that holds the registry, evaluates policy, tracks budgets, and records the audit log. The proxy denies an action before it leaves the machine; the SDK evaluates in-process and is advisory, since it depends on the agent calling it; the kernel layer observes and reports. Adopt the depth you need.'
               }
             </Translate>
+          </p>
+          {/*
+           * AAASM-5528: the sentence above stops short of the full coverage
+           * matrix, so it must resolve to the source-backed limitations page
+           * rather than telling the reader to go find it. Do not drop this link.
+           */}
+          <p className={styles.p}>
+            <Link to={LIMITATIONS_DOC}>
+              <Translate id="product.layers.limitations">
+                What each layer does and does not cover →
+              </Translate>
+            </Link>
           </p>
         </section>
 

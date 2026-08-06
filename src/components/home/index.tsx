@@ -15,6 +15,10 @@ const GITHUB_CORE =
 const GITHUB_EXAMPLES =
   'https://github.com/ai-agent-assembly/examples?utm_source=product_site&utm_medium=referral&utm_campaign=oss_install';
 
+// AAASM-5528 — the coverage / known-limitations page the layer claims must
+// resolve to. Cross-hostname, so it carries UTM per HORO-47 §5.2.
+const LIMITATIONS_DOC = `${DOCS_URL}/core/latest/devtools/limitations.html?utm_source=product_site&utm_medium=docs_link&utm_campaign=agent_assembly_launch`;
+
 // Same-hostname anchors — no UTM.
 const SELF_HOSTING_ANCHOR = '#install';
 const EARLY_ACCESS_ROUTE = '/early-access';
@@ -45,11 +49,12 @@ export function Hero(): ReactNode {
         </h1>
         <p className={styles.heroSub}>
           <Translate id="home.hero.sub">
-            Agent Assembly sits between your agents and the outside world and
-            enforces policy, tracks cost, and intercepts unsafe actions — at the
-            SDK, the network proxy, and the kernel. Self-host a limited-function
-            stack for evaluation and development; full functionality runs in the
-            managed cloud (early access).
+            Agent Assembly sits between your agents and the outside world. On
+            the paths you route through it, it enforces policy and tracks cost —
+            blocking unsafe actions at the network proxy, advising the SDK
+            in-process, and observing at the kernel. Self-host a
+            limited-function stack for evaluation and development; full
+            functionality runs in the managed cloud (early access).
           </Translate>
         </p>
         {/*
@@ -128,10 +133,10 @@ export function Hero(): ReactNode {
               ✗ denied egress host not in allow-list
             </span>
             {'\n'}
-            <span className={styles.muted}> secret </span>
-            {'STRIPE_KEY'}
+            <span className={styles.muted}> scan </span>
+            {'AKIA…'}
             <span className={styles.muted}>
-              {' injected at runtime — never in context'}
+              {' matched by prefix — redacted before forward'}
             </span>
           </pre>
         </div>
@@ -230,7 +235,7 @@ export function ThreePillars(): ReactNode {
       text: translate({
         id: 'home.pillars.identity.text',
         message:
-          'Every agent gets a verifiable identity scoped to a team, so policy and audit can answer "who did this".',
+          'Each registered agent carries a team-scoped identity, so policy and audit can answer "who did this".',
       }),
     },
     {
@@ -254,7 +259,7 @@ export function ThreePillars(): ReactNode {
       text: translate({
         id: 'home.pillars.secret.text',
         message:
-          'Real credentials are injected at execution time and never enter the model context the agent can see.',
+          'Outbound traffic on the inspected paths is scanned, and credentials matching the built-in patterns are redacted before the request is forwarded — or blocked, if you set policy to block.',
       }),
     },
   ];
@@ -271,7 +276,7 @@ export function ThreePillars(): ReactNode {
         </div>
         <h2 className={styles.h2}>
           <Translate id="home.pillars.title">
-            Three boundaries for every agent
+            Three boundaries for a governed agent
           </Translate>
         </h2>
         <div className={styles.grid3}>
@@ -300,7 +305,7 @@ export function HowItWorks(): ReactNode {
       text: translate({
         id: 'home.layers.sdk.text',
         message:
-          'In-process hooks (Python, Node.js, Go) emit events and apply pre-execution allow/deny. The fastest path.',
+          'In-process hooks (Python, Node.js, Go) emit events and raise on a deny before the wrapped tool call runs. Advisory by design: it depends on the agent cooperating, so it is defense-in-depth, not the gate.',
       }),
     },
     {
@@ -308,7 +313,7 @@ export function HowItWorks(): ReactNode {
       text: translate({
         id: 'home.layers.proxy.text',
         message:
-          'A sidecar MitM proxy enforces network-egress policy with no code changes — catches what the SDK misses.',
+          'A sidecar MitM proxy enforces network-egress policy with no agent code changes — it needs the process to route through it and trust its CA. On macOS the proxy attempts that install at start and macOS prompts for admin authorization; refusing it fails proxy startup. On Linux you run sudo aasm proxy install-ca.',
       }),
     },
     {
@@ -316,7 +321,7 @@ export function HowItWorks(): ReactNode {
       text: translate({
         id: 'home.layers.ebpf.text',
         message:
-          'Kernel uprobes on SSL libraries plus exec/file syscall hooks catch everything, including bypass attempts (Linux).',
+          'Observe-only kernel probes — OpenSSL uprobes plus exec/file syscall hooks — surface activity the layers above never saw. Linux only; it reports, it does not block.',
       }),
     },
     {
@@ -347,7 +352,8 @@ export function HowItWorks(): ReactNode {
         <p className={styles.lead}>
           <Translate id="home.how.lead">
             Adopt the depth you need — from a one-line SDK import to
-            kernel-level enforcement.
+            kernel-level observation. Each layer has its own precondition, so
+            they narrow the gap rather than closing it.
           </Translate>
         </p>
         <div className={styles.layers}>
@@ -358,6 +364,27 @@ export function HowItWorks(): ReactNode {
             </div>
           ))}
         </div>
+        {/*
+         * AAASM-5528: the layer copy above states each layer's boundary, but a
+         * summary card cannot carry the full coverage matrix. This link is the
+         * required route from the high-level claim to the source-backed
+         * limitations page — do not remove it when editing the layer copy.
+         */}
+        <p className={styles.cardText} style={{marginTop: '1.25rem'}}>
+          <TrackedLink
+            className={styles.trustLink}
+            eventName="cta_view_docs_click"
+            ctaLocation="body"
+            targetProduct="docs"
+            to={LIMITATIONS_DOC}
+            alsoFire={['docs_click']}
+            linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
+          >
+            <Translate id="home.how.limitations">
+              What each layer does and does not cover →
+            </Translate>
+          </TrackedLink>
+        </p>
       </div>
     </SectionInView>
   );

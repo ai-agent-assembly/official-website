@@ -3,7 +3,7 @@
     "message": "Agent Assembly — AI 代理的治理執行環境"
   },
   "home.meta.description": {
-    "message": "為每一個 AI 代理提供身分、權限與機密隔離 — 在 SDK、代理伺服器與核心層強制執行。開放原始碼今日可用；託管雲端已進入早期存取。"
+    "message": "為受治理的 AI 代理提供身分、權限與憑證遮蔽 — 在網路代理伺服器層強制執行，由 SDK 在行程內提供建議，並在核心層觀測。開放原始碼今日可用；託管雲端已進入早期存取。"
   },
   "home.blog.eyebrow": {
     "message": "部落格文章"
@@ -21,7 +21,7 @@
     "message": "產品 — Agent Assembly"
   },
   "product.meta.description": {
-    "message": "Agent Assembly 是什麼：一個為 AI 代理而生的治理層 — 強制執行政策、追蹤成本並攔截不安全的行為。"
+    "message": "Agent Assembly 是什麼：一個為 AI 代理而生的治理層 — 在它所中介的路徑上強制執行政策、追蹤成本並阻擋不安全的行為。"
   },
   "product.kicker": {
     "message": "產品"
@@ -30,13 +30,13 @@
     "message": "為 AI 代理而生的治理層"
   },
   "product.intro": {
-    "message": "Agent Assembly 並不是另一個代理框架。它是位於你的代理與外部世界之間的治理層 — 在執行期強制執行政策、追蹤成本並攔截不安全的行為。"
+    "message": "Agent Assembly 並不是另一個代理框架。它是位於你的代理與外部世界之間的治理層 — 在你導流經過它的路徑上，於執行期強制執行政策、追蹤成本並阻擋不安全的行為。"
   },
   "product.why.title": {
     "message": "為什麼代理框架還不夠"
   },
   "product.why.body": {
-    "message": "框架讓代理具備能力 — 它們能規劃、呼叫工具並採取行動。但它們不會賦予代理身分、約束其權限，也不會讓憑證遠離模型的可及範圍。Agent Assembly 補上這道邊界，而你無需重寫你的代理。"
+    "message": "框架讓代理具備能力 — 它們能規劃、呼叫工具並採取行動。但它們不會賦予代理身分、約束其權限，也不會讓憑證遠離模型的可及範圍。Agent Assembly 補上這道邊界，而你無需重寫代理的邏輯 — 不過代理仍必須透過受治理的路徑啟動，這道邊界才會生效。"
   },
   "product.iai.title": {
     "message": "身分、權限與機密隔離"
@@ -57,16 +57,16 @@
     "message": "人在迴路中的核准關卡"
   },
   "product.iai.item.audit": {
-    "message": "防竄改的稽核軌跡"
+    "message": "雜湊鏈稽核軌跡 — 可偵測竄改，但並非不可變更"
   },
   "product.iai.secretIsolation": {
     "message": "機密隔離"
   },
   "product.iai.item.inject": {
-    "message": "在執行時注入憑證"
+    "message": "對外請求在轉送前會被掃描是否含有憑證"
   },
   "product.iai.item.noContext": {
-    "message": "機密永不進入模型情境"
+    "message": "辨識到的憑證預設會被遮蔽；若你將政策設為封鎖，則直接擋下"
   },
   "product.iai.item.resolution": {
     "message": "各團隊機密解析"
@@ -78,7 +78,7 @@
     "message": "執行期邊界與強制執行層"
   },
   "product.layers.body": {
-    "message": "三個可獨立部署的層級 — 行程內的 {sdks}、旁路 {proxy} 以及 {ebpf} 核心掛鉤 — 匯入一個中央 {gateway}，由它保存註冊表、評估政策、追蹤預算並記錄稽核日誌。依你所需採用相應的深度。"
+    "message": "三個可獨立部署的層級 — 行程內的 {sdks}、旁路 {proxy} 以及 {ebpf} 核心掛鉤 — 匯入一個中央 {gateway}，由它保存註冊表、評估政策、追蹤預算並記錄稽核日誌。proxy 會在請求離開機器前予以拒絕；SDK 在行程內進行評估，屬建議性質，因為它取決於代理是否呼叫它；核心層則負責觀測與回報。依你所需採用相應的深度。"
   },
   "product.oss.title": {
     "message": "開放原始碼核心 vs 託管 Cloud Console"
@@ -117,7 +117,7 @@
     "message": "為 AI 代理而生的治理層。"
   },
   "home.hero.sub": {
-    "message": "Agent Assembly 位於你的代理與外部世界之間，強制執行政策、追蹤成本並攔截不安全的行為 — 在 SDK、網路代理伺服器與核心層。自行架設一套受限功能的堆疊用於評估與開發；完整功能則在託管雲端執行（早期存取）。"
+    "message": "Agent Assembly 位於你的代理與外部世界之間。在你導流經過它的路徑上，它會強制執行政策並追蹤成本 — 在網路代理伺服器層阻擋不安全的行為，在行程內由 SDK 提供建議性檢查，並在核心層觀測。自行架設一套受限功能的堆疊用於評估與開發；完整功能則在託管雲端執行（早期存取）。"
   },
   "home.cta.selfHost": {
     "message": "開始自行架設 →"
@@ -156,7 +156,7 @@
     "message": "身分"
   },
   "home.pillars.identity.text": {
-    "message": "每個代理都會取得一個以團隊為範圍的可驗證身分，讓政策與稽核能回答「這是誰做的」。"
+    "message": "每個已註冊的代理都帶有一個以團隊為範圍的身分，讓政策與稽核能回答「這是誰做的」。"
   },
   "home.pillars.authority.title": {
     "message": "權限"
@@ -168,22 +168,22 @@
     "message": "機密隔離"
   },
   "home.pillars.secret.text": {
-    "message": "真實憑證在執行時才注入，永不進入代理所能看見的模型情境。"
+    "message": "在受檢查路徑上的對外流量會被掃描，符合內建樣式的憑證會在請求轉送前被遮蔽 — 若你將政策設為封鎖，則直接擋下。"
   },
   "home.pillars.eyebrow": {
     "message": "安全模型"
   },
   "home.pillars.title": {
-    "message": "為每個代理設下三道邊界"
+    "message": "為受治理的代理設下三道邊界"
   },
   "home.layers.sdk.text": {
-    "message": "行程內掛鉤（Python、Node.js、Go）發出事件並在執行前套用允許／拒絕。最快的路徑。"
+    "message": "行程內掛鉤（Python、Node.js、Go）發出事件，並在被包裝的工具呼叫執行前於拒絕時擲出例外。本質上屬建議性：它取決於代理是否配合，因此是縱深防禦，而非把關者。"
   },
   "home.layers.proxy.text": {
-    "message": "旁路 MitM 代理伺服器在不改動程式碼的情況下強制執行網路對外連線政策 — 攔下 SDK 遺漏的部分。"
+    "message": "旁路 MitM 代理伺服器在不改動代理程式碼的情況下強制執行網路對外連線政策 — 它需要行程導流經過它並信任其 CA。在 macOS 上，proxy 會在啟動時嘗試安裝，macOS 會提示要求管理者授權；若拒絕，proxy 將無法啟動。在 Linux 上則需執行 sudo aasm proxy install-ca。"
   },
   "home.layers.ebpf.text": {
-    "message": "核心對 SSL 函式庫的 uprobe，加上 exec／檔案系統呼叫掛鉤，攔下一切，包括繞過的嘗試（Linux）。"
+    "message": "僅供觀測的核心探針 — OpenSSL uprobe 加上 exec／檔案系統呼叫掛鉤 — 讓上層未曾看見的行為浮現。僅限 Linux；它只回報，不會阻擋。"
   },
   "home.layers.gateway.text": {
     "message": "大腦：代理註冊表、政策引擎、各團隊預算與稽核軌跡 — 透過 gRPC 與 HTTP。"
@@ -195,7 +195,7 @@
     "message": "三個可獨立部署的攔截層"
   },
   "home.how.lead": {
-    "message": "依你所需採用相應的深度 — 從一行 SDK 匯入到核心層級的強制執行。"
+    "message": "依你所需採用相應的深度 — 從一行 SDK 匯入到核心層級的觀測。每一層都有各自的前提條件，因此它們是收窄缺口，而非消除缺口。"
   },
   "home.paths.developer.title": {
     "message": "開發者 — 自行架設 OSS 執行環境"
@@ -562,5 +562,11 @@
   "theme.tags.tagsPageTitle": {
     "message": "標籤",
     "description": "The title of the tag list page"
+  },
+  "home.how.limitations": {
+    "message": "各層涵蓋與未涵蓋的範圍 →"
+  },
+  "product.layers.limitations": {
+    "message": "各層涵蓋與未涵蓋的範圍 →"
   }
 }
