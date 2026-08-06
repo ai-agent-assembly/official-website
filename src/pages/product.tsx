@@ -33,9 +33,9 @@ export default function Product(): ReactNode {
         <p className={styles.intro}>
           <Translate id="product.intro">
             Agent Assembly is not another agent framework. It is the governance
-            layer that sits between your agents and the outside world — it
-            enforces policy, tracks cost, and intercepts unsafe actions at
-            runtime.
+            layer that sits between your agents and the outside world — on the
+            paths you route through it, it enforces policy, tracks cost, and
+            intercepts unsafe actions at runtime.
           </Translate>
         </p>
 
@@ -50,7 +50,9 @@ export default function Product(): ReactNode {
               Frameworks make agents capable — they plan, call tools, and act.
               But they don’t give an agent an identity, constrain its authority,
               or keep credentials out of the model’s reach. Agent Assembly adds
-              that boundary without you rewriting your agents.
+              that boundary without you rewriting your agents’ logic — though
+              the agent does have to be launched through a governed path for the
+              boundary to apply.
             </Translate>
           </p>
         </section>
@@ -107,12 +109,14 @@ export default function Product(): ReactNode {
               <ul className={styles.list}>
                 <li>
                   <Translate id="product.iai.item.inject">
-                    Credentials injected at execution time
+                    Outbound requests scanned for credentials before they are
+                    forwarded
                   </Translate>
                 </li>
                 <li>
                   <Translate id="product.iai.item.noContext">
-                    Secrets never enter the model context
+                    Recognised credentials redacted by default; blocked outright
+                    if you set policy to block
                   </Translate>
                 </li>
                 <li>
@@ -147,7 +151,7 @@ export default function Product(): ReactNode {
               }}
             >
               {
-                'Three independently-deployable layers — in-process {sdks}, a sidecar {proxy}, and {ebpf} kernel hooks — feed a central {gateway} that holds the registry, evaluates policy, tracks budgets, and records the audit log. Adopt the depth you need.'
+                'Three independently-deployable layers — in-process {sdks}, a sidecar {proxy}, and {ebpf} kernel hooks — feed a central {gateway} that holds the registry, evaluates policy, tracks budgets, and records the audit log. The SDK and proxy can deny an action before it runs; the kernel layer observes and reports. Adopt the depth you need, and read the coverage page for what each layer does not see.'
               }
             </Translate>
           </p>
