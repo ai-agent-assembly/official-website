@@ -183,7 +183,7 @@
     "message": "旁路 MitM 代理伺服器在不改動程式碼的情況下強制執行網路對外連線政策 — 攔下 SDK 遺漏的部分。"
   },
   "home.layers.ebpf.text": {
-    "message": "核心對 SSL 函式庫的 uprobe，加上 exec／檔案系統呼叫掛鉤，攔下一切，包括繞過的嘗試（Linux）。"
+    "message": "僅供觀測的核心探針 — OpenSSL uprobe 加上 exec／檔案系統呼叫掛鉤 — 讓上層未曾看見的行為浮現。僅限 Linux x86_64；它只回報，不會阻擋。"
   },
   "home.layers.gateway.text": {
     "message": "大腦：代理註冊表、政策引擎、各團隊預算與稽核軌跡 — 透過 gRPC 與 HTTP。"

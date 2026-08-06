@@ -316,7 +316,7 @@ export function HowItWorks(): ReactNode {
       text: translate({
         id: 'home.layers.ebpf.text',
         message:
-          'Kernel uprobes on SSL libraries plus exec/file syscall hooks catch everything, including bypass attempts (Linux).',
+          'Observe-only kernel probes — OpenSSL uprobes plus exec/file syscall hooks — surface activity the layers above never saw. Linux x86_64 only; it reports, it does not block.',
       }),
     },
     {
