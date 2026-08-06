@@ -61,7 +61,7 @@ export default function Home(): ReactNode {
       description={translate({
         id: 'home.meta.description',
         message:
-          'Identity, authority, and credential redaction for governed AI agents — enforced at the SDK and the proxy, observed at the kernel. Open source today; managed cloud in early access.',
+          'Identity, authority, and credential redaction for governed AI agents — enforced at the network proxy, advised in-process by the SDK, observed at the kernel. Open source today; managed cloud in early access.',
       })}
     >
       <DraftLocaleBanner />

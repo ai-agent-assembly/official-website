@@ -50,11 +50,11 @@ export function Hero(): ReactNode {
         <p className={styles.heroSub}>
           <Translate id="home.hero.sub">
             Agent Assembly sits between your agents and the outside world. On
-            the paths you route through it, it enforces policy, tracks cost, and
-            intercepts unsafe actions — at the SDK, the network proxy, and the
-            kernel. Self-host a limited-function stack for evaluation and
-            development; full functionality runs in the managed cloud (early
-            access).
+            the paths you route through it, it enforces policy and tracks cost —
+            blocking unsafe actions at the network proxy, advising the SDK
+            in-process, and observing at the kernel. Self-host a
+            limited-function stack for evaluation and development; full
+            functionality runs in the managed cloud (early access).
           </Translate>
         </p>
         {/*
@@ -134,9 +134,9 @@ export function Hero(): ReactNode {
             </span>
             {'\n'}
             <span className={styles.muted}> scan </span>
-            {'AWS_SECRET_ACCESS_KEY'}
+            {'AKIA…'}
             <span className={styles.muted}>
-              {' detected in request body — redacted before forward'}
+              {' matched by prefix — redacted before forward'}
             </span>
           </pre>
         </div>
@@ -305,7 +305,7 @@ export function HowItWorks(): ReactNode {
       text: translate({
         id: 'home.layers.sdk.text',
         message:
-          'In-process hooks (Python, Node.js, Go) emit events and deny a wrapped framework tool call before it runs. The fastest path — once you call the SDK initializer.',
+          'In-process hooks (Python, Node.js, Go) emit events and raise on a deny before the wrapped tool call runs. Advisory by design: it depends on the agent cooperating, so it is defense-in-depth, not the gate.',
       }),
     },
     {
@@ -313,7 +313,7 @@ export function HowItWorks(): ReactNode {
       text: translate({
         id: 'home.layers.proxy.text',
         message:
-          'A sidecar MitM proxy enforces network-egress policy with no agent code changes — it needs the process to route through it and trust its CA.',
+          'A sidecar MitM proxy enforces network-egress policy with no agent code changes — it needs the process to route through it and trust its CA (installed automatically on macOS, via `sudo aasm proxy install-ca` on Linux).',
       }),
     },
     {
@@ -321,7 +321,7 @@ export function HowItWorks(): ReactNode {
       text: translate({
         id: 'home.layers.ebpf.text',
         message:
-          'Observe-only kernel probes — OpenSSL uprobes plus exec/file syscall hooks — surface activity the layers above never saw. Linux x86_64 only; it reports, it does not block.',
+          'Observe-only kernel probes — OpenSSL uprobes plus exec/file syscall hooks — surface activity the layers above never saw. Linux only; it reports, it does not block.',
       }),
     },
     {
