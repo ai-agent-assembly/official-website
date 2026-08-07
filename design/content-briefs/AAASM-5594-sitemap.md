@@ -60,12 +60,16 @@ These come from the hub page and its sources; the reasoning is there, not here. 
 repeated because each is a decision made while writing a component, when the sitemap is
 not open.
 
-1. **The navbar budget does not move.** Four items on the left, three on the right, as
-   today. AAASM-5587 requires the new surfaces to be cross-linked *without* an oversized
-   mega menu, and at narrow widths the navbar collapses into a drawer that is a vertical
-   list of the same items. New routes reach readers from within pages and from the
-   footer — not by becoming navbar entries. The role routes in particular are somewhere
-   a reader is *routed to* from a chooser, not something they navigate to by name.
+1. **The navbar budget does not move: three left, three right, six total.** Counted from
+   `docusaurus.config.ts` `navbar.items` on `origin/main` rather than from memory —
+   left is Product, the Docs mega menu and Blog; right is GitHub, the locale dropdown
+   and the Get-started mega menu. AAASM-5587 requires the new surfaces to be cross-linked
+   *without* an oversized mega menu, and at narrow widths the navbar collapses into a
+   drawer that is a vertical list of the same items — four more top-level entries would
+   make that drawer ten items long. New routes reach readers from within pages and from
+   the footer, not by becoming navbar entries. The role routes in particular are
+   somewhere a reader is *routed to* from a chooser, not something they navigate to by
+   name.
 2. **A URL fragment cannot be redirected.** The homepage carries `#security` and
    `#architecture` anchors today. If a section moves to its own route, the anchor has to
    stay behind on `/` — a fragment is never sent to the server, so no 301 and no
@@ -129,4 +133,4 @@ page. Correcting `design/v1/` is not this ticket's to do.
 
 ---
 
-_AAASM-5594 · last reviewed 2026-08-07_
+_AAASM-5594 · last reviewed 2026-08-08_
