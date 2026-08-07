@@ -201,15 +201,14 @@ export function GovernedField(): ReactNode {
 
     /** An angle on the boundary — i.e. anywhere the corridor is not. */
     function routedAngle(): number {
-      // NOSONAR - safe: visual particle animation only, not security-sensitive
       const span = Math.PI * 2 - GAP_HALF * 2;
-      return GAP_MID + GAP_HALF + Math.random() * span;
+      return GAP_MID + GAP_HALF + Math.random() * span; // NOSONAR - visual only
     }
 
     /** An angle inside the corridor. */
     function unroutedAngle(): number {
-      // NOSONAR - safe: visual particle animation only, not security-sensitive
-      return GAP_MID - GAP_HALF + Math.random() * (GAP_HALF * 2);
+      const spread = GAP_HALF * 2;
+      return GAP_MID - GAP_HALF + Math.random() * spread; // NOSONAR - visual only
     }
 
     function pushLabel(
@@ -278,6 +277,24 @@ export function GovernedField(): ReactNode {
       p.size = 1.6 + Math.random() * 1.5; // NOSONAR - safe: visual only
     }
 
+    /**
+     * Announce what happened as a particle crosses the boundary's radius.
+     * Routed traffic that got a decision says so; traffic in the corridor says
+     * NOT INSPECTED, which is the whole point of the drawing.
+     *
+     * Split out of `step` rather than inlined: `step` is the one function here
+     * that branches on every fate, and folding this in put it over the
+     * cognitive-complexity budget.
+     */
+    function announceCrossing(p: Particle) {
+      const roll = Math.random(); // NOSONAR - visual only
+      if (p.fate === 'unrouted' && roll < 0.5) {
+        pushLabel('NOT INSPECTED', p.angle, rd, lineColor(0.7), 54);
+      } else if (p.fate === 'allow' && roll < 0.14) {
+        pushLabel('ALLOWED', p.angle, rd, palette.allow, 46);
+      }
+    }
+
     function step(p: Particle) {
       if (p.alpha < 1) p.alpha = Math.min(1, p.alpha + 0.04);
 
@@ -324,17 +341,7 @@ export function GovernedField(): ReactNode {
         return;
       }
 
-      // Crossing the boundary's radius. Routed traffic that got a decision is
-      // announced; traffic in the corridor is announced as uninspected, which
-      // is the whole point of the drawing.
-      // prettier-ignore
-      if (prevR < rd && p.radius >= rd) { // NOSONAR - visual animation only
-        if (p.fate === 'unrouted' && Math.random() < 0.5) {
-          pushLabel('NOT INSPECTED', p.angle, rd, lineColor(0.7), 54);
-        } else if (p.fate === 'allow' && Math.random() < 0.14) {
-          pushLabel('ALLOWED', p.angle, rd, palette.allow, 46);
-        }
-      }
+      if (prevR < rd && p.radius >= rd) announceCrossing(p);
 
       // Fully out into the external zone — recycle.
       if (p.radius > diag) respawn(p);
