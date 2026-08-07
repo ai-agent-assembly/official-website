@@ -193,7 +193,16 @@
 .ok {
   color: var(--aa-accent);
 }
+/* Red, for the refusal line in the hero terminal. The light value is not the
+   dark one lightly adjusted: #f87171 reads at 2.58:1 on the light `pre`
+   background (#f6f7f8), the worst contrast on the page, on the line carrying
+   the page's central claim. #b91c1c restores WCAG AA at 6.03:1 — the same
+   ratio .muted already holds on that background. The dark override keeps the
+   original token, which passes on the dark panel. */
 .deny {
+  color: #b91c1c;
+}
+[data-theme='dark'] .deny {
   color: #f87171;
 }
 
