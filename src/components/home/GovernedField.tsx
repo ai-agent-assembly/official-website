@@ -142,13 +142,18 @@ export function GovernedField(): ReactNode {
     });
 
     const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
-    // Ray (upper-right) carrying the boundary label and the OUTSIDE cue, so the
-    // cross-section reads AGENT → GOVERNED PATH → OUTSIDE away from the
-    // centered hero text.
-    const LABEL_ANGLE = -Math.PI * 0.3;
+    // Ray carrying the boundary label and the OUTSIDE cue, so the cross-section
+    // reads AGENT → GOVERNED PATH → OUTSIDE.
+    //
+    // Held close to horizontal on purpose. The hero copy is centred and the
+    // terminal sits under it, so the only reliably empty regions are the left
+    // and right flanks. A steeper ray puts the label behind the headline, where
+    // it is painted over by `.heroInner`'s stacking context and silently lost —
+    // which is exactly what happened to the first version of this drawing.
+    const LABEL_ANGLE = -Math.PI * 0.1;
     // The corridor where the boundary is simply absent. Everything travelling
-    // through it leaves uninspected. Lower-left, opposite the label ray.
-    const GAP_MID = Math.PI * 0.72;
+    // through it leaves uninspected. Opposite the label ray, on the left flank.
+    const GAP_MID = Math.PI * 0.98;
     const GAP_HALF = 0.36;
     const MAX_LABELS = 5;
 
@@ -477,8 +482,11 @@ export function GovernedField(): ReactNode {
     function gapLabel(): void {
       const ecx = cx + parX;
       const ecy = cy + parY;
-      const lx = ecx + Math.cos(GAP_MID) * (rd + 16);
-      const ly = ecy + Math.sin(GAP_MID) * (rd + 16);
+      // Pushed well clear of the boundary: the left flank is where the CTA
+      // row ends and the terminal card begins, and a label sitting on the arc
+      // lands underneath one of them.
+      const lx = ecx + Math.cos(GAP_MID) * (rd + 96);
+      const ly = ecy + Math.sin(GAP_MID) * (rd + 96);
       label({
         text: 'NOT ROUTED',
         x: lx,
