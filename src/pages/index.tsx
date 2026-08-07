@@ -7,9 +7,10 @@ import {
   Hero,
   Problem,
   TrustStrip,
-  ThreePillars,
-  HowItWorks,
-  ChooseYourPath,
+  ThreeSteps,
+  Outcomes,
+  Proof,
+  CurrentPosition,
   InstallBlock,
   NextSteps,
   FinalCTA,
@@ -36,20 +37,35 @@ function DraftLocaleBanner(): ReactNode {
 }
 
 /**
- * Agent Assembly landing page — HORO-42.
+ * Agent Assembly landing page.
  *
- * Section order encodes IA plan §2.2's three-path funnel:
+ * Section order is AAASM-5585's: problem, governed decision, outcome, proof.
+ * It is a reading order, not a menu — each section is the precondition for the
+ * next, and the Epic's comprehension tests are graded against the prefixes.
  *
- *   1. Hero              — 10-second contract (§4.1): H1, sub, 3 CTAs.
- *   2. Problem           — one idea per section (§4.7).
- *   3. TrustStrip        — OSS credibility signals before any deeper ask (§4.5).
- *   4. ThreePillars      — security model, IntersectionObserver-tracked (§5.2).
- *   5. HowItWorks        — architecture, IntersectionObserver-tracked (§5.2).
- *   6. ChooseYourPath    — the three paths, one card each.
- *   7. InstallBlock      — HORO-44 tabbed picker over command_type vocabulary.
- *   8. NextSteps         — HORO-44 docs/examples/repo/SDK outbound row.
- *   9. From the blog     — same-hostname, no UTM.
- *  10. FinalCTA          — dominant CTA repeats at page bottom.
+ *   1. Hero            — 5 seconds: the promise's headline plus the boundary
+ *                        clause that makes it a product claim rather than a
+ *                        category description. Non-severable; keep both above
+ *                        the fold.
+ *   2. TrustStrip      — OSS credibility signals before any deeper ask (§4.5).
+ *   3. Problem         — 15 seconds: the flagship risk, its boundary clause on
+ *                        the same screen, and the three supporting threats.
+ *   4. ThreeSteps      — the product in plain language, BEFORE any
+ *                        implementation path. `#architecture`, tracked (§5.2).
+ *   5. Outcomes        — what a decision can be, and which component makes it.
+ *                        `#security`, tracked (§5.2).
+ *   6. Proof           — 60 seconds, first half: what a reader can check, and
+ *                        what this page declines to claim yet.
+ *   7. CurrentPosition — 60 seconds, second half: default posture, platform
+ *                        position, maturity, known limits.
+ *   8. InstallBlock    — HORO-44 tabbed picker over command_type vocabulary.
+ *   9. NextSteps       — HORO-44 docs/examples/repo/SDK outbound row.
+ *  10. From the blog   — same-hostname, no UTM.
+ *  11. FinalCTA        — dominant CTA repeats at page bottom.
+ *
+ * `#security` and `#architecture` must keep resolving on this route. A URL
+ * fragment is never sent to the server, so no redirect or `_headers` rule can
+ * catch one that moves — the link breaks silently instead of 404ing.
  */
 export default function Home(): ReactNode {
   return (
@@ -81,11 +97,12 @@ export default function Home(): ReactNode {
       <DraftLocaleBanner />
       <Hero />
       <main>
-        <Problem />
         <TrustStrip />
-        <ThreePillars />
-        <HowItWorks />
-        <ChooseYourPath />
+        <Problem />
+        <ThreeSteps />
+        <Outcomes />
+        <Proof />
+        <CurrentPosition />
         <InstallBlock />
         <NextSteps />
         <section className={`${styles.section} ${styles.center}`}>
