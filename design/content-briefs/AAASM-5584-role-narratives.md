@@ -70,10 +70,17 @@ reasoning is there, not here.
    own bound — or says nothing. A hedged strong claim reads as the strong claim to
    every reader who skims.
 
-The hub page's *What no role brief may say* section is the rejected-wording list. It
-is enforceable rather than advisory: ADR 0033 forbidden design 7's absolutes are
-**unwaivable** under ADR 0034 Decision 10 as amended by AAASM-5671, so there is no
-approval that lets one onto a page.
+The hub page's *What no role brief may say* section is the rejected-wording list. Its
+ADR 0033 forbidden design 7 entries are **unwaivable by policy** under ADR 0034
+Decision 10 as amended by AAASM-5671 — there is no approval that lets one onto a page.
+
+**Unwaivable is not the same as gated, and do not read it as one.** Those absolutes are
+unwaivable whatever tooling exists, but no shipped check reads a page for them today —
+AAASM-5599, which implements the rule set, has not started. The one gate that does ship
+looks for a different mistake: a page claiming such an absolute could be waived, when
+it is unwaivable. It never inspects a page that simply breaches the list. So the list
+binds you and nothing will catch you. Treat it as a rule you apply, not a wall you will
+bounce off.
 
 ## Boundaries with the other Website V2 tickets
 
