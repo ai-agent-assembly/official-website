@@ -761,7 +761,7 @@ export function Proof(): ReactNode {
     translate({
       id: 'home.proof.notyet.audit',
       message:
-        'That every decision reaches the log. Emission is best-effort: the chain head advances before the send, and a dropped entry is indistinguishable from a deleted one. Whether a given decision’s record durably arrives is Unmeasured.',
+        'That every decision reaches the log. Emission is best-effort: the chain head advances before the send, and a dropped entry is indistinguishable from a deleted one. Where a record is attempted, whether it durably arrives is Unmeasured. The SDK path is not that case and that word does not cover it: a denied SDK call emits nothing at all, which is measured rather than unknown (AAASM-5665).',
     }),
     translate({
       id: 'home.proof.notyet.identity',
