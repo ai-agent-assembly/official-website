@@ -1,5 +1,21 @@
 # Homepage design record — v1 (AAASM-4143)
 
+> **The hero-background sections below are superseded and must not be
+> reimplemented.** AAASM-5585 replaced the concentric three-layer membrane with
+> a single governed-path boundary carrying an open corridor. Both the
+> *Security-model background rationale* section and the *Revision — concept
+> change* section describe the drawing that was removed, and both state the
+> superseded three-layer model — SDK → proxy → eBPF gated by the gateway — which
+> ADR 0033 records as forbidden design 1, with eBPF as the outer enforcing ring
+> as forbidden design 2. Neither ring refused anything: the SDK is advisory, and
+> no eBPF signal takes part in an allow/deny decision.
+>
+> They are left in place rather than rewritten because a design record is a
+> history, and editing it would lose the decision it recorded. Read them as
+> *what was decided in 2026 for AAASM-4143*, never as a specification to build
+> against. The current record is
+> [`../content-briefs/AAASM-5585-homepage-narrative.md`](../content-briefs/AAASM-5585-homepage-narrative.md).
+
 This directory is the **versioned design record** for the AAASM-4143 homepage
 redesign of [agent-assembly.com](https://agent-assembly.com). It preserves the
 raw design exploration the implementation was derived from, plus the decisions
