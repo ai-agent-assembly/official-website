@@ -477,10 +477,12 @@ export function ThreeSteps(): ReactNode {
 }
 
 interface Outcome {
-  readonly term: string;
-  readonly title: string;
-  readonly text: string;
-  readonly bound: string;
+  /** Stable list key. Not rendered — the visible strings are all translated. */
+  readonly key: string;
+  readonly term: ReactNode;
+  readonly title: ReactNode;
+  readonly text: ReactNode;
+  readonly bound: ReactNode;
 }
 
 /**
@@ -499,84 +501,111 @@ interface Outcome {
 export function Outcomes(): ReactNode {
   const outcomes: readonly Outcome[] = [
     {
-      term: translate({
-        id: 'home.outcome.refuse.term',
-        message: 'Denied before execution',
-      }),
-      title: translate({
-        id: 'home.outcome.refuse.title',
-        message: 'Refused before it ran',
-      }),
-      text: translate({
-        id: 'home.outcome.refuse.text',
-        message:
-          'A connection made on a path you routed through Agent Assembly is checked against the destination list you configured and refused before the proxy dials it.',
-      }),
-      bound: translate({
-        id: 'home.outcome.refuse.bound',
-        message:
-          'The refusal is the proxy’s own local egress configuration, not a control-plane decision, and the destination lists are empty by default — this refusal exists because an operator configured it. One egress control is on by default and no configuration relaxes it: requests to loopback, private, link-local and related address space are refused, including where a public hostname resolves into them.',
-      }),
+      key: 'refuse',
+      term: (
+        <Translate id="home.outcome.refuse.term">
+          Denied before execution
+        </Translate>
+      ),
+      title: (
+        <Translate id="home.outcome.refuse.title">
+          Refused before it ran
+        </Translate>
+      ),
+      text: (
+        <Translate id="home.outcome.refuse.text">
+          A connection made on a path you routed through Agent Assembly is
+          checked against the destination list you configured and refused before
+          the proxy dials it.
+        </Translate>
+      ),
+      bound: (
+        <Translate id="home.outcome.refuse.bound">
+          The refusal is the proxy’s own local egress configuration, not a
+          control-plane decision, and the destination lists are empty by default
+          — this refusal exists because an operator configured it. One egress
+          control is on by default and no configuration relaxes it: requests to
+          loopback, private, link-local and related address space are refused,
+          including where a public hostname resolves into them.
+        </Translate>
+      ),
     },
     {
-      term: translate({
-        id: 'home.outcome.redact.term',
-        message: 'Redacted',
-      }),
-      title: translate({
-        id: 'home.outcome.redact.title',
-        message: 'Removed before it was forwarded',
-      }),
-      text: translate({
-        id: 'home.outcome.redact.text',
-        message:
-          'On the model-provider hosts Agent Assembly inspects, a recognised credential is removed from the request before it is forwarded.',
-      }),
-      bound: translate({
-        id: 'home.outcome.redact.bound',
-        message:
-          'Three built-in hosts, because payload inspection is limited to model-provider hosts by default. The default action is redact and forward, not refuse. Recall is bounded by the pattern set, and model responses on that path are not scanned. This does not keep a credential out of the agent’s own process.',
-      }),
+      key: 'redact',
+      term: <Translate id="home.outcome.redact.term">Redacted</Translate>,
+      title: (
+        <Translate id="home.outcome.redact.title">
+          Removed before it was forwarded
+        </Translate>
+      ),
+      text: (
+        <Translate id="home.outcome.redact.text">
+          On the model-provider hosts Agent Assembly inspects, a recognised
+          credential is removed from the request before it is forwarded.
+        </Translate>
+      ),
+      bound: (
+        <Translate id="home.outcome.redact.bound">
+          Three built-in hosts, because payload inspection is limited to
+          model-provider hosts by default. The default action is redact and
+          forward, not refuse. Recall is bounded by the pattern set, and model
+          responses on that path are not scanned. This does not keep a
+          credential out of the agent’s own process.
+        </Translate>
+      ),
     },
     {
-      term: translate({
-        id: 'home.outcome.evaluate.term',
-        message: 'Evaluated',
-      }),
-      title: translate({
-        id: 'home.outcome.evaluate.title',
-        message: 'Evaluated against your policy',
-      }),
-      text: translate({
-        id: 'home.outcome.evaluate.text',
-        message:
-          'An MCP tool call can be checked against your policy by the control plane and refused before the proxy forwards it. A tool call through a wrapped framework seam is checked before the tool body runs.',
-      }),
-      bound: translate({
-        id: 'home.outcome.evaluate.bound',
-        message:
-          'The MCP path is the only gateway-bound pre-dial refusal in the product, and it is off by default; tool servers over stdio — the most common setup — SSE and WebSocket have no interception mechanism. The SDK is advisory by design, a defence-in-depth posture rather than the authoritative gate: an agent that does not call it is not asking, and the Node SDK’s default mode produces no refusal at all.',
-      }),
+      key: 'evaluate',
+      term: <Translate id="home.outcome.evaluate.term">Evaluated</Translate>,
+      title: (
+        <Translate id="home.outcome.evaluate.title">
+          Evaluated against your policy
+        </Translate>
+      ),
+      text: (
+        <Translate id="home.outcome.evaluate.text">
+          An MCP tool call can be checked against your policy by the control
+          plane and refused before the proxy forwards it. A tool call through a
+          wrapped framework seam is checked before the tool body runs.
+        </Translate>
+      ),
+      bound: (
+        <Translate id="home.outcome.evaluate.bound">
+          The MCP path is the only gateway-bound pre-dial refusal in the
+          product, and it is off by default; tool servers over stdio — the most
+          common setup — SSE and WebSocket have no interception mechanism. The
+          SDK is advisory by design, a defence-in-depth posture rather than the
+          authoritative gate: an agent that does not call it is not asking, and
+          the Node SDK’s default mode produces no refusal at all.
+        </Translate>
+      ),
     },
     {
-      term: translate({
-        id: 'home.outcome.hold.term',
-        message: 'Approval required',
-      }),
-      title: translate({
-        id: 'home.outcome.hold.title',
-        message: 'Blocked pending a decision',
-      }),
-      text: translate({
-        id: 'home.outcome.hold.text',
-        message:
-          'A policy rule can hold an action rather than answering it. The hold is real and it fails closed: the check blocks, and a timeout resolves to a refusal.',
-      }),
-      bound: translate({
-        id: 'home.outcome.hold.bound',
-        message:
-          'Stated here as an unfinished capability, because that is what it is. No shipped operator surface can answer the queue the hold blocks on, so in practice it blocks and then refuses at the timeout with no person involved. Do not plan on human review yet — tracked as AAASM-5657.',
-      }),
+      key: 'hold',
+      term: (
+        <Translate id="home.outcome.hold.term">Approval required</Translate>
+      ),
+      title: (
+        <Translate id="home.outcome.hold.title">
+          Blocked pending a decision
+        </Translate>
+      ),
+      text: (
+        <Translate id="home.outcome.hold.text">
+          A policy rule can hold an action rather than answering it. The hold is
+          real and it fails closed: the check blocks, and a timeout resolves to
+          a refusal.
+        </Translate>
+      ),
+      bound: (
+        <Translate id="home.outcome.hold.bound">
+          Stated here as an unfinished capability, because that is what it is.
+          No shipped operator surface can answer the queue the hold blocks on,
+          so in practice it blocks and then refuses at the timeout with no
+          person involved. Do not plan on human review yet — tracked as
+          AAASM-5657.
+        </Translate>
+      ),
     },
   ];
   return (
@@ -606,7 +635,7 @@ export function Outcomes(): ReactNode {
         </p>
         <div className={styles.outcomeGrid}>
           {outcomes.map((o) => (
-            <div key={o.title} className={styles.card}>
+            <div key={o.key} className={styles.card}>
               <span className={styles.termBadge}>{o.term}</span>
               <h3 className={styles.cardTitle}>{o.title}</h3>
               <p className={styles.cardText}>{o.text}</p>
@@ -795,8 +824,10 @@ export function Proof(): ReactNode {
 }
 
 interface DefaultRow {
-  readonly subject: string;
-  readonly posture: string;
+  /** Stable list key. Not rendered — both visible cells are translated. */
+  readonly key: string;
+  readonly subject: ReactNode;
+  readonly posture: ReactNode;
 }
 
 /**
@@ -811,113 +842,139 @@ interface DefaultRow {
 export function CurrentPosition(): ReactNode {
   const rows: readonly DefaultRow[] = [
     {
-      subject: translate({
-        id: 'home.pos.launch.subject',
-        message: 'Launching a session with no policy',
-      }),
-      posture: translate({
-        id: 'home.pos.launch.posture',
-        message:
-          'Refused. aasm run will not start a tool when no effective policy resolves, and will not start one whose policy parses but declares no rule. An absent policy is not permission.',
-      }),
+      key: 'launch',
+      subject: (
+        <Translate id="home.pos.launch.subject">
+          Launching a session with no policy
+        </Translate>
+      ),
+      posture: (
+        <Translate id="home.pos.launch.posture">
+          Refused. aasm run will not start a tool when no effective policy
+          resolves, and will not start one whose policy parses but declares no
+          rule. An absent policy is not permission.
+        </Translate>
+      ),
     },
     {
-      subject: translate({
-        id: 'home.pos.ssrf.subject',
-        message: 'Private-address egress',
-      }),
-      posture: translate({
-        id: 'home.pos.ssrf.posture',
-        message:
-          'Refused, always. The guard re-checks every resolved address before dialling, so a public hostname that resolves into private space is refused too. No configuration and no environment variable relaxes it.',
-      }),
+      key: 'ssrf',
+      subject: (
+        <Translate id="home.pos.ssrf.subject">Private-address egress</Translate>
+      ),
+      posture: (
+        <Translate id="home.pos.ssrf.posture">
+          Refused, always. The guard re-checks every resolved address before
+          dialling, so a public hostname that resolves into private space is
+          refused too. No configuration and no environment variable relaxes it.
+        </Translate>
+      ),
     },
     {
-      subject: translate({
-        id: 'home.pos.egress.subject',
-        message: 'Your own allow and deny lists',
-      }),
-      posture: translate({
-        id: 'home.pos.egress.posture',
-        message: 'Empty. You configure them, per destination.',
-      }),
+      key: 'egress',
+      subject: (
+        <Translate id="home.pos.egress.subject">
+          Your own allow and deny lists
+        </Translate>
+      ),
+      posture: (
+        <Translate id="home.pos.egress.posture">
+          Empty. You configure them, per destination.
+        </Translate>
+      ),
     },
     {
-      subject: translate({
-        id: 'home.pos.inspection.subject',
-        message: 'Payload inspection',
-      }),
-      posture: translate({
-        id: 'home.pos.inspection.posture',
-        message:
-          'Narrow. Three built-in model-provider hosts are inspected by default. Any other host is tunnelled without payload inspection: the connection is observed, the payload is not.',
-      }),
+      key: 'inspection',
+      subject: (
+        <Translate id="home.pos.inspection.subject">
+          Payload inspection
+        </Translate>
+      ),
+      posture: (
+        <Translate id="home.pos.inspection.posture">
+          Narrow. Three built-in model-provider hosts are inspected by default.
+          Any other host is tunnelled without payload inspection: the connection
+          is observed, the payload is not.
+        </Translate>
+      ),
     },
     {
-      subject: translate({
-        id: 'home.pos.creds.subject',
-        message: 'Recognised credentials',
-      }),
-      posture: translate({
-        id: 'home.pos.creds.posture',
-        message:
-          'Redact and forward. Blocking on a detected credential is opt-in. Model responses are not scanned.',
-      }),
+      key: 'creds',
+      subject: (
+        <Translate id="home.pos.creds.subject">
+          Recognised credentials
+        </Translate>
+      ),
+      posture: (
+        <Translate id="home.pos.creds.posture">
+          Redact and forward. Blocking on a detected credential is opt-in. Model
+          responses are not scanned.
+        </Translate>
+      ),
     },
     {
-      subject: translate({
-        id: 'home.pos.sdk.subject',
-        message: 'SDK enforcement',
-      }),
-      posture: translate({
-        id: 'home.pos.sdk.posture',
-        message:
-          'Off in the default mode. A policy refusal blocks a wrapped tool only in the check-capable mode; asking for enforcement without it is refused loudly at init rather than silently allowed.',
-      }),
+      key: 'sdk',
+      subject: <Translate id="home.pos.sdk.subject">SDK enforcement</Translate>,
+      posture: (
+        <Translate id="home.pos.sdk.posture">
+          Off in the default mode. A policy refusal blocks a wrapped tool only
+          in the check-capable mode; asking for enforcement without it is
+          refused loudly at init rather than silently allowed.
+        </Translate>
+      ),
     },
     {
-      subject: translate({
-        id: 'home.pos.fallthrough.subject',
-        message: 'An action matching no rule',
-      }),
-      posture: translate({
-        id: 'home.pos.fallthrough.posture',
-        message:
-          'Allowed. Default-open within a policy, default-refuse on having one — both halves, or the pair misleads.',
-      }),
+      key: 'fallthrough',
+      subject: (
+        <Translate id="home.pos.fallthrough.subject">
+          An action matching no rule
+        </Translate>
+      ),
+      posture: (
+        <Translate id="home.pos.fallthrough.posture">
+          Allowed. Default-open within a policy, default-refuse on having one —
+          both halves, or the pair misleads.
+        </Translate>
+      ),
     },
     {
-      subject: translate({
-        id: 'home.pos.budget.subject',
-        message: 'Spend caps',
-      }),
-      posture: translate({
-        id: 'home.pos.budget.posture',
-        message:
-          'None unless a policy declares one; an undeclared budget is uncapped. Whether a declared cap is checked in the decision path is Unmeasured, and a corrupt budget store resets the cap silently.',
-      }),
+      key: 'budget',
+      subject: <Translate id="home.pos.budget.subject">Spend caps</Translate>,
+      posture: (
+        <Translate id="home.pos.budget.posture">
+          None unless a policy declares one; an undeclared budget is uncapped.
+          Whether a declared cap is checked in the decision path is Unmeasured,
+          and a corrupt budget store resets the cap silently.
+        </Translate>
+      ),
     },
     {
-      subject: translate({
-        id: 'home.pos.host.subject',
-        message: 'Operating-system-level controls',
-      }),
-      posture: translate({
-        id: 'home.pos.host.posture',
-        message:
-          'Off unless deployed, and not a decision point. On Linux, kernel probes report TLS plaintext, process execution and file activity; no such signal takes part in any allow or deny decision, and file-I/O probes are x86_64 only. macOS has no equivalent adapter — and is also the one platform where the host-enforcement rung is reachable at all, through an opt-in authorized settings write. Windows has neither.',
-      }),
+      key: 'host',
+      subject: (
+        <Translate id="home.pos.host.subject">
+          Operating-system-level controls
+        </Translate>
+      ),
+      posture: (
+        <Translate id="home.pos.host.posture">
+          Off unless deployed, and not a decision point. On Linux, kernel probes
+          report TLS plaintext, process execution and file activity; no such
+          signal takes part in any allow or deny decision, and file-I/O probes
+          are x86_64 only. macOS has no equivalent adapter — and is also the one
+          platform where the host-enforcement rung is reachable at all, through
+          an opt-in authorized settings write. Windows has neither.
+        </Translate>
+      ),
     },
     {
-      subject: translate({
-        id: 'home.pos.audit.subject',
-        message: 'Audit',
-      }),
-      posture: translate({
-        id: 'home.pos.audit.posture',
-        message:
-          'On, best-effort. Hash-chained JSONL, verifiable in the open-source build. Writing is not guaranteed, so the log records what got through rather than what happened.',
-      }),
+      key: 'audit',
+      subject: <Translate id="home.pos.audit.subject">Audit</Translate>,
+      posture: (
+        <Translate id="home.pos.audit.posture">
+          On, best-effort. Hash-chained JSONL, verifiable in the open-source
+          build. Writing is not guaranteed, so the log records what got through
+          rather than what happened.
+        </Translate>
+      ),
     },
   ];
   return (
@@ -956,7 +1013,7 @@ export function CurrentPosition(): ReactNode {
             </thead>
             <tbody>
               {rows.map((r) => (
-                <tr key={r.subject}>
+                <tr key={r.key}>
                   <th scope="row">{r.subject}</th>
                   <td>{r.posture}</td>
                 </tr>
