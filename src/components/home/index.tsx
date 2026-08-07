@@ -421,7 +421,7 @@ export function ThreeSteps(): ReactNode {
       text: translate({
         id: 'home.steps.show.text',
         message:
-          'Decisions are written to a hash-chained audit log you can verify yourself with aasm audit verify-chain, which ships in the open-source build. Where nothing inspected an action, the rule is that the record reports it as not inspected rather than as allowed. Emission is best-effort — a decision can be made and its record lost — so the log is a record of what got through, not a ledger of what happened.',
+          'Decisions are written to a hash-chained audit log you can verify yourself with aasm audit verify-chain, which ships in the open-source build. Where nothing inspected an action, the rule is that the record reports it as not inspected rather than as allowed. Emission is best-effort — a decision can be made and its record lost — so the log is a record of what got through, not a ledger of what happened. What reaches the log also depends on which path you took in step 1: an SDK checkpoint answers the question, but a denied SDK call writes no audit record, in any of the three SDKs. That emission is planned — decided, not built — so the SDK route gives you a decision without evidence of it (AAASM-5665).',
       }),
     },
   ];
