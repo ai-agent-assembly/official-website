@@ -1,9 +1,9 @@
 {
   "home.meta.title": {
-    "message": "Agent Assembly — AI 代理的治理執行環境"
+    "message": "在 AI 代理動手之前，決定它可以做什麼"
   },
   "home.meta.description": {
-    "message": "為受治理的 AI 代理提供身分、權限與憑證遮蔽 — 在網路代理伺服器層強制執行，由 SDK 在行程內提供建議，並在核心層觀測。開放原始碼今日可用；託管雲端已進入早期存取。"
+    "message": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。"
   },
   "home.blog.eyebrow": {
     "message": "部落格文章"
@@ -80,6 +80,9 @@
   "product.layers.body": {
     "message": "三個可獨立部署的層級 — 行程內的 {sdks}、旁路 {proxy} 以及 {ebpf} 核心掛鉤 — 匯入一個中央 {gateway}，由它保存註冊表、評估政策、追蹤預算並記錄稽核日誌。proxy 會在請求離開機器前予以拒絕；SDK 在行程內進行評估，屬建議性質，因為它取決於代理是否呼叫它；核心層則負責觀測與回報。依你所需採用相應的深度。"
   },
+  "product.layers.limitations": {
+    "message": "各層涵蓋與未涵蓋的範圍 →"
+  },
   "product.oss.title": {
     "message": "開放原始碼核心 vs 託管 Cloud Console"
   },
@@ -111,13 +114,13 @@
     "message": "👷 即將推出"
   },
   "home.hero.eyebrow": {
-    "message": "AI 代理的治理執行環境"
+    "message": "在動作之前做出決策，而不是事後才發出警示"
   },
   "home.hero.title": {
-    "message": "為 AI 代理而生的治理層。"
+    "message": "在 AI 代理動手之前，決定它可以做什麼。"
   },
   "home.hero.sub": {
-    "message": "Agent Assembly 位於你的代理與外部世界之間。在你導流經過它的路徑上，它會強制執行政策並追蹤成本 — 在網路代理伺服器層阻擋不安全的行為，在行程內由 SDK 提供建議性檢查，並在核心層觀測。自行架設一套受限功能的堆疊用於評估與開發；完整功能則在託管雲端執行（早期存取）。"
+    "message": "Agent Assembly 會針對你導流經過它的動作，依你的政策加以評估、拒絕，或在決策做出前先行阻擋，並記錄它所做的決定。未經你導流的動作不會被檢查 — 而記錄會如實說明這一點。"
   },
   "home.cta.selfHost": {
     "message": "開始自行架設 →"
@@ -131,15 +134,6 @@
   "home.cta.starRepo": {
     "message": "為核心儲存庫加星"
   },
-  "home.problem.eyebrow": {
-    "message": "問題所在"
-  },
-  "home.problem.title": {
-    "message": "代理框架幫助代理行動，卻沒有任何東西治理它們的行為。"
-  },
-  "home.problem.lead": {
-    "message": "自主代理呼叫工具、動用金錢並觸及正式環境系統 — 使用與部署它們的人相同的憑證，機密還擺在模型的情境視窗之中。Agent Assembly 正是過去所缺少的那道執行期邊界。"
-  },
   "home.trust.label": {
     "message": "開放原始碼。可驗證。"
   },
@@ -152,89 +146,368 @@
   "home.trust.docs": {
     "message": "閱讀文件 →"
   },
-  "home.pillars.identity.title": {
-    "message": "身分"
+  "home.threat.secret.title": {
+    "message": "提示詞裡的一把金鑰"
   },
-  "home.pillars.identity.text": {
-    "message": "每個已註冊的代理都帶有一個以團隊為範圍的身分，讓政策與稽核能回答「這是誰做的」。"
+  "home.threat.secret.body": {
+    "message": "一個代理把一把有效的 API 金鑰貼進了送往模型供應商的請求裡。在 Agent Assembly 會檢查的供應商主機上，這把金鑰被辨識出來，並在請求被轉發之前移除。偵測能力受限於它已知的樣式集合，而預設行為是遮蔽後轉發，並非阻擋。"
   },
-  "home.pillars.authority.title": {
-    "message": "權限"
+  "home.threat.destructive.title": {
+    "message": "一次針對正式環境的工具呼叫"
   },
-  "home.pillars.authority.text": {
-    "message": "允許／拒絕政策、對外連線控制、預算，以及人在迴路中的關卡，限制每個代理被允許執行的範圍。"
+  "home.threat.destructive.body": {
+    "message": "一個代理呼叫了一個會刪除正式環境資料表的工具。這次呼叫依你的政策被評估，並在代理伺服器轉發之前遭到拒絕。此範圍涵蓋以一般 HTTP POST 送出的 MCP 工具呼叫；你以 stdio（最常見的設定方式）、SSE 或 Streamable HTTP 執行的工具伺服器並不在這條路徑上。"
   },
-  "home.pillars.secret.title": {
-    "message": "機密隔離"
+  "home.threat.cost.title": {
+    "message": "一個不斷重試、不斷花錢的迴圈"
   },
-  "home.pillars.secret.text": {
-    "message": "在受檢查路徑上的對外流量會被掃描，符合內建樣式的憑證會在請求轉送前被遮蔽 — 若你將政策設為封鎖，則直接擋下。"
+  "home.threat.cost.body": {
+    "message": "一個陷入重試迴圈的代理，達到了其團隊所宣告的花費上限，下一次呼叫因政策決策而遭到拒絕。上限只有在政策宣告時才存在，而這次拒絕只有在該呼叫前方有元件等待該答案時，才會真的擋下它。"
   },
-  "home.pillars.eyebrow": {
+  "home.problem.eyebrow": {
+    "message": "問題所在"
+  },
+  "home.problem.title": {
+    "message": "代理行動的速度，快過任何人來得及審查的速度。"
+  },
+  "home.problem.lead": {
+    "message": "監控是在事後回答問題。真正關鍵的決策發生在更早的那一刻 — 動作還來得及被拒絕的時候。"
+  },
+  "home.problem.storyLabel": {
+    "message": "實際情況長這樣"
+  },
+  "home.problem.flagship": {
+    "message": "一個編碼代理決定把它正在處理的儲存庫，上傳到一個沒有任何人核准過的端點。由於該代理是透過 Agent Assembly 針對 Claude Code 的受管啟動方式啟動的，這條連線依團隊所設定的目的地清單被評估，並在代理伺服器撥號之前就遭到拒絕。"
+  },
+  "home.problem.boundLabel": {
+    "message": "此說法的適用範圍。"
+  },
+  "home.problem.bound": {
+    "message": "這適用於你導流經過 Agent Assembly 的連線 — 目前是透過針對 Claude Code 的受管啟動方式 — 且主機上已安裝代理伺服器：Linux 上是已發行的執行檔，macOS 上則透過 cargo install aa-proxy。在 Windows 上沒有任何本機中介。它是針對你所設定的已核准目的地清單生效。你未曾導流的代理不會被檢查，而記錄會如實說明這一點。只有在代理伺服器的稽核路徑已設定的情況下，這次拒絕才會留下持久的本機記錄。"
+  },
+  "home.problem.scenariosLink": {
+    "message": "每個情境的決策者、預設狀態與已知繞道方式 →"
+  },
+  "home.steps.route.tag": {
+    "message": "1 · 導流"
+  },
+  "home.steps.route.text": {
+    "message": "一個代理之所以位於受治理路徑上，是因為你把它放上去了：透過 aasm run 啟動、由會將代理伺服器設定寫入工具自身組態的開發工具整合啟動，或由 SDK 呼叫政策檢查點。導流是你要親自去做的動作，每個代理、每次啟動都要做一次。你未曾導流的代理就不在這條路徑上 — 而且並非每個工具都提供受管啟動方式。"
+  },
+  "home.steps.decide.tag": {
+    "message": "2 · 決策"
+  },
+  "home.steps.decide.text": {
+    "message": "在動作生效之前，路徑上會有某個元件決定它是否可以繼續 — 而究竟是哪一個元件，取決於路徑本身。對於連線階段的對外流量以及模型供應商主機，代理伺服器是依它自己的本機組態做出拒絕。控制平面回答政策、預算與核准方面的問題，而它不持有任何流量：它的答案只有在該動作前方有元件等待時，才會真的擋下這個動作。"
+  },
+  "home.steps.show.tag": {
+    "message": "3 · 呈現"
+  },
+  "home.steps.show.text": {
+    "message": "決策會寫入雜湊鏈接的稽核日誌，你可以用 aasm audit verify-chain 自行驗證，該指令隨開放原始碼版本一併提供。在沒有任何元件檢查過某個動作的情況下，規則是記錄應標示為未經檢查，而不是標示為已允許。寫出是盡力而為的 — 決策可能已經做出，但它的記錄卻遺失了 — 所以這份日誌記錄的是成功寫入的內容，而不是實際發生過的全部內容。"
+  },
+  "home.steps.eyebrow": {
+    "message": "運作方式"
+  },
+  "home.steps.title": {
+    "message": "導流、決策、呈現。"
+  },
+  "home.steps.lead": {
+    "message": "三個步驟，依照它們實際發生的順序。要看懂它們不需要任何產品術語，而三者都不能略過 — 第一步正是讓另外兩步成為可能的前提。"
+  },
+  "home.steps.promiseLink": {
+    "message": "同樣這三個步驟，在評估者與工程層級的說明 →"
+  },
+  "home.outcome.refuse.term": {
+    "message": "執行前拒絕"
+  },
+  "home.outcome.refuse.title": {
+    "message": "在它執行之前就被拒絕"
+  },
+  "home.outcome.refuse.text": {
+    "message": "在你導流經過 Agent Assembly 的路徑上所建立的連線，會依你所設定的目的地清單進行檢查，並在代理伺服器撥號之前遭到拒絕。"
+  },
+  "home.outcome.refuse.bound": {
+    "message": "這次拒絕出自代理伺服器自身的本機對外流量組態，而非控制平面的決策；目的地清單預設為空 — 這次拒絕之所以存在，是因為有維運者設定了它。有一項對外流量控制預設開啟且無法透過任何組態放寬：送往回送位址、私有位址、鏈路本機位址及相關位址空間的請求一律被拒絕，包含公開主機名稱解析到這些位址的情況。"
+  },
+  "home.outcome.redact.term": {
+    "message": "已遮蔽"
+  },
+  "home.outcome.redact.title": {
+    "message": "在轉發之前就被移除"
+  },
+  "home.outcome.redact.text": {
+    "message": "在 Agent Assembly 會檢查的模型供應商主機上，被辨識出來的憑證會在請求被轉發之前從中移除。"
+  },
+  "home.outcome.redact.bound": {
+    "message": "共三個內建主機，因為承載內容的檢查預設僅限於模型供應商主機。預設行為是遮蔽後轉發，而非拒絕。偵測涵蓋率受限於樣式集合，且該路徑上的模型回應不會被掃描。這並不能讓憑證不出現在代理自己的行程之中。"
+  },
+  "home.outcome.evaluate.term": {
+    "message": "已評估"
+  },
+  "home.outcome.evaluate.title": {
+    "message": "依你的政策被評估"
+  },
+  "home.outcome.evaluate.text": {
+    "message": "MCP 工具呼叫可以由控制平面依你的政策進行檢查，並在代理伺服器轉發之前遭到拒絕。透過受包裝框架接縫進行的工具呼叫，會在工具本體執行之前被檢查。"
+  },
+  "home.outcome.evaluate.bound": {
+    "message": "MCP 這條路徑是本產品中唯一一個由控制平面決定、且發生在撥號之前的拒絕，而它預設關閉；以 stdio 執行的工具伺服器（最常見的設定方式）、SSE 與 WebSocket 都沒有攔截機制。SDK 依設計即為建議性質，是縱深防禦的一環而非權威閘門：不呼叫它的代理等於根本沒有發問，而 Node SDK 的預設模式完全不會產生任何拒絕。"
+  },
+  "home.outcome.hold.term": {
+    "message": "需要核准"
+  },
+  "home.outcome.hold.title": {
+    "message": "在決策做出前先行阻擋"
+  },
+  "home.outcome.hold.text": {
+    "message": "政策規則可以先擱置一個動作，而不是直接回答它。這種擱置是真實存在的，而且失效時封閉：檢查會被阻擋，逾時則會轉為拒絕。"
+  },
+  "home.outcome.hold.bound": {
+    "message": "這裡把它寫成一項尚未完成的能力，因為它確實如此。目前沒有任何已出貨的維運者介面能夠回應該擱置所等待的佇列，所以實際上它會先阻擋，然後在逾時後拒絕，全程沒有任何人參與。目前還不要把人工審核納入規劃 — 追蹤於 AAASM-5657。"
+  },
+  "home.outcome.eyebrow": {
+    "message": "已支援的結果"
+  },
+  "home.outcome.title": {
+    "message": "一項決策可能是什麼 — 以及是哪個元件做出的"
+  },
+  "home.outcome.lead": {
+    "message": "這不是同一個裁決的四個分支。每一項都有不同的決策者、不同的預設值與不同的觸及範圍，而把正確的保證歸給錯誤的元件，本身就是一種錯誤。特別是遮蔽，它是獨立的一個階段，在連線決策之後才套用。"
+  },
+  "home.outcome.securityLink": {
+    "message": "信任邊界，以及已列舉的繞道方式 →"
+  },
+  "home.proof.chain.title": {
+    "message": "自行驗證稽核鏈"
+  },
+  "home.proof.chain.text": {
+    "message": "aasm audit verify-chain 隨開放原始碼版本一併提供。它證明的是現存項目之間的完整性 — 而不是這份日誌本身沒有缺漏。這條鏈可察覺竄改，但未經簽章：它是對 JSONL 輸出檔所做的無金鑰摘要鏈，所以一份被清空的日誌驗證起來也會是乾淨的，並以零狀態碼結束。"
+  },
+  "home.proof.chain.link": {
+    "message": "驗證能證明什麼、又不能證明什麼 →"
+  },
+  "home.proof.policy.title": {
+    "message": "讀一讀產生該決策的那份政策"
+  },
+  "home.proof.policy.text": {
+    "message": "政策是納入版本控管的 YAML 或 JSON，你可以用既有的 Git 流程審閱它。欄位參考文件已公開，所以本站向你展示的規則，你都可以自己查得到。"
+  },
+  "home.proof.policy.link": {
+    "message": "政策欄位參考 →"
+  },
+  "home.proof.register.title": {
+    "message": "把本頁任何一句話追溯到它的界限"
+  },
+  "home.proof.register.text": {
+    "message": "本頁每一句能力陳述，都是共用主張登錄表十六筆項目之一，皆為原句引用而非改寫。每一筆項目都載明它所達到的用語、隨之而行的界限，以及背後的證據列 — 包含登錄表記為未量測的那兩個主題。"
+  },
+  "home.proof.register.link": {
+    "message": "主張登錄表 →"
+  },
+  "home.proof.source.title": {
+    "message": "讀一讀做出決策的那套執行環境"
+  },
+  "home.proof.source.text": {
+    "message": "閘道、代理伺服器、CLI 與各 SDK 都以 Apache-2.0 授權公開於 GitHub，連同用來鎖定本頁所述各項行為的測試。哪些是開放原始碼、哪些不是，都明白寫出而非暗示。"
+  },
+  "home.proof.source.link": {
+    "message": "開放核心的界線 →"
+  },
+  "home.proof.notyet.demo": {
+    "message": "指名道姓的「已阻止某後果」示範。上述故事的反向對照實驗已經設計出來，但尚未實際執行過，所以本頁描述的是所做出的決策，絕不描述所避免掉的後果。"
+  },
+  "home.proof.notyet.audit": {
+    "message": "每一項決策都會進到日誌裡。寫出是盡力而為的：鏈首會在送出之前就先推進，而被丟棄的項目與被刪除的項目無從分辨。某一項決策的記錄是否持久地抵達，屬於未量測。"
+  },
+  "home.proof.notyet.identity": {
+    "message": "已驗證的代理身分。代理會提出一組身分與持有證明，但代理平面依設計即接受未經驗證的呼叫者，作為啟動引導路徑。請把代理識別碼視為聲稱的，而非已確立的。"
+  },
+  "home.proof.notyet.coverage": {
+    "message": "任何涵蓋率數字 — 百分比、受治理動作的計數，或橫跨一組機器的數值。沒有任何東西可以據以計算，而某個元件回報自己可用，並不能證明它真的看到了什麼。"
+  },
+  "home.proof.eyebrow": {
+    "message": "佐證"
+  },
+  "home.proof.title": {
+    "message": "四件你不必聽信我們、可以自己查證的事"
+  },
+  "home.proof.notyet.title": {
+    "message": "以及四件本頁目前還不會主張的事"
+  },
+  "home.pos.launch.subject": {
+    "message": "在沒有政策的情況下啟動工作階段"
+  },
+  "home.pos.launch.posture": {
+    "message": "拒絕。當無法解析出有效政策時，aasm run 不會啟動工具；政策可以解析但未宣告任何規則時，它同樣不會啟動。沒有政策不等於獲得許可。"
+  },
+  "home.pos.ssrf.subject": {
+    "message": "送往私有位址的對外流量"
+  },
+  "home.pos.ssrf.posture": {
+    "message": "一律拒絕。這道防護會在撥號之前重新檢查每一個解析出來的位址，所以解析到私有位址空間的公開主機名稱同樣會被拒絕。沒有任何組態或環境變數可以放寬它。"
+  },
+  "home.pos.egress.subject": {
+    "message": "你自己的允許與拒絕清單"
+  },
+  "home.pos.egress.posture": {
+    "message": "空的。由你逐一針對目的地設定。"
+  },
+  "home.pos.inspection.subject": {
+    "message": "承載內容檢查"
+  },
+  "home.pos.inspection.posture": {
+    "message": "範圍很窄。預設檢查三個內建的模型供應商主機。其他任何主機都會在不檢查承載內容的情況下建立通道：連線本身已被觀測，承載內容則沒有。"
+  },
+  "home.pos.creds.subject": {
+    "message": "被辨識出來的憑證"
+  },
+  "home.pos.creds.posture": {
+    "message": "遮蔽後轉發。偵測到憑證即行阻擋屬於選擇性啟用。模型回應不會被掃描。"
+  },
+  "home.pos.sdk.subject": {
+    "message": "SDK 強制執行"
+  },
+  "home.pos.sdk.posture": {
+    "message": "預設模式下關閉。只有在具檢查能力的模式下，政策拒絕才會擋下被包裝的工具；在未啟用該模式時要求強制執行，會在初始化時明確報錯，而不是無聲地放行。"
+  },
+  "home.pos.fallthrough.subject": {
+    "message": "未命中任何規則的動作"
+  },
+  "home.pos.fallthrough.posture": {
+    "message": "允許。政策之內預設放行，但「是否具備政策」這件事預設拒絕 — 兩半都要講，否則這組說法會誤導人。"
+  },
+  "home.pos.budget.subject": {
+    "message": "花費上限"
+  },
+  "home.pos.budget.posture": {
+    "message": "除非政策宣告，否則沒有上限；未宣告的預算等於沒有上限。已宣告的上限是否真的在決策路徑中被檢查，屬於未量測，而損毀的預算儲存區會無聲地把上限重設。"
+  },
+  "home.pos.host.subject": {
+    "message": "作業系統層級的控制"
+  },
+  "home.pos.host.posture": {
+    "message": "未部署即為關閉，而且它不是決策點。在 Linux 上，核心探針會回報 TLS 明文、行程執行與檔案活動；這類訊號都不參與任何允許或拒絕的決策，而檔案 I/O 探針僅支援 x86_64。macOS 沒有對應的轉接器 — 但它同時也是唯一一個真的能觸及主機層強制執行等級的平台，途徑是一次選擇性啟用、經授權的設定寫入。Windows 兩者皆無。"
+  },
+  "home.pos.audit.subject": {
+    "message": "稽核"
+  },
+  "home.pos.audit.posture": {
+    "message": "開啟，盡力而為。雜湊鏈接的 JSONL，可在開放原始碼版本中驗證。寫出並無保證，所以這份日誌記錄的是成功寫入的內容，而不是實際發生過的全部內容。"
+  },
+  "home.pos.eyebrow": {
+    "message": "目前狀態"
+  },
+  "home.pos.title": {
+    "message": "開箱即開啟的有哪些，沒開啟的又有哪些"
+  },
+  "home.pos.lead": {
+    "message": "一項存在但預設關閉的能力，跟一項預設開啟的能力，是兩種不同的產品，所以這裡列出你動手設定之前的預設狀態。請雙向閱讀 — 底下有兩列比評估者通常預期的還要強。"
+  },
+  "home.pos.colSubject": {
+    "message": "開箱狀態"
+  },
+  "home.pos.colPosture": {
+    "message": "預設"
+  },
+  "home.pos.platformLabel": {
+    "message": "平台。"
+  },
+  "home.pos.platform": {
+    "message": "交付上述多數能力的代理伺服器，在 Linux 上是已發行的執行檔；在 macOS 上則是 cargo install aa-proxy。在 Windows 上沒有任何形式的本機中介。UDP、QUIC 與 HTTP/3 不在支援的傳輸協定範圍內。"
+  },
+  "home.pos.maturityLabel": {
+    "message": "成熟度。"
+  },
+  "home.pos.maturity": {
+    "message": "開放原始碼的執行環境尚未達到 1.0，是以預先發行系列的形式釋出。託管服務屬於已規劃 — 已決定，但尚未建置 — 所以本站沒有任何內容構成對推出日期、地區、服務等級協議或法規遵循狀態的承諾。"
+  },
+  "home.pos.limitations": {
+    "message": "各整合的已知限制 →"
+  },
+  "home.pos.status": {
+    "message": "各領域的發行狀態 →"
+  },
+  "home.role.evaluator.role": {
+    "message": "正在評估這個產品"
+  },
+  "home.role.evaluator.job": {
+    "message": "終點：啟動一次試用，或留下一個不採用的明確理由"
+  },
+  "home.role.evaluator.text": {
+    "message": "你已經在對的頁面上了。剩下的是產品本身的樣貌 — 它決定什麼、決策在哪裡生效，以及它刻意不做什麼。"
+  },
+  "home.role.evaluator.label": {
+    "message": "這個產品是什麼"
+  },
+  "home.role.security.role": {
+    "message": "資安與風險"
+  },
+  "home.role.security.job": {
+    "message": "終點：對某一次部署做出核准或否決"
+  },
+  "home.role.security.text": {
+    "message": "直接走到邊界的盡頭：已列舉的繞道方式、每項控制的失效行為（包含那些失效時開放的），以及雙向陳述的平台對照表。"
+  },
+  "home.role.security.label": {
     "message": "安全模型"
   },
-  "home.pillars.title": {
-    "message": "為受治理的代理設下三道邊界"
+  "home.role.operator.role": {
+    "message": "平台與 SRE"
   },
-  "home.layers.sdk.text": {
-    "message": "行程內掛鉤（Python、Node.js、Go）發出事件，並在被包裝的工具呼叫執行前於拒絕時擲出例外。本質上屬建議性：它取決於代理是否配合，因此是縱深防禦，而非把關者。"
+  "home.role.operator.job": {
+    "message": "終點：在一台主機上完成一次受治理的啟動"
   },
-  "home.layers.proxy.text": {
-    "message": "旁路 MitM 代理伺服器在不改動代理程式碼的情況下強制執行網路對外連線政策 — 它需要行程導流經過它並信任其 CA。在 macOS 上，proxy 會在啟動時嘗試安裝，macOS 會提示要求管理者授權；若拒絕，proxy 將無法啟動。在 Linux 上則需執行 sudo aasm proxy install-ca。"
+  "home.role.operator.text": {
+    "message": "要先學會的一件事是：導流是逐一代理、逐次啟動的 — 沒有人導流的代理就在這一切之外。接著才是：裝哪個產物、在哪個平台上、從哪個通路取得。"
   },
-  "home.layers.ebpf.text": {
-    "message": "僅供觀測的核心探針 — OpenSSL uprobe 加上 exec／檔案系統呼叫掛鉤 — 讓上層未曾看見的行為浮現。僅限 Linux；它只回報，不會阻擋。"
+  "home.role.operator.label": {
+    "message": "安裝並導流一個代理"
   },
-  "home.layers.gateway.text": {
-    "message": "大腦：代理註冊表、政策引擎、各團隊預算與稽核軌跡 — 透過 gRPC 與 HTTP。"
+  "home.role.developer.role": {
+    "message": "工程開發"
   },
-  "home.how.eyebrow": {
-    "message": "架構"
+  "home.role.developer.job": {
+    "message": "終點：能實際執行並得到決策的程式碼"
   },
-  "home.how.title": {
-    "message": "三個可獨立部署的攔截層"
+  "home.role.developer.text": {
+    "message": "用 Python、Node 或 Go 加上政策檢查點 — 並在清楚知道預設為建議性質、且未經轉接的框架不在包裝範圍內的前提下，選擇 SDK 模式。"
   },
-  "home.how.lead": {
-    "message": "依你所需採用相應的深度 — 從一行 SDK 匯入到核心層級的觀測。每一層都有各自的前提條件，因此它們是收窄缺口，而非消除缺口。"
+  "home.role.developer.label": {
+    "message": "SDK 與框架範例"
   },
-  "home.paths.developer.title": {
-    "message": "開發者 — 自行架設 OSS 執行環境"
+  "home.role.auditor.role": {
+    "message": "產品、QA 與品質保證"
   },
-  "home.paths.developer.text": {
-    "message": "在你自己的基礎架構上執行一套受限功能的堆疊 — gateway、CLI、SDK、proxy 與 eBPF 掛鉤 — 用於評估與開發。免費且採 Apache-2.0 授權。"
+  "home.role.auditor.job": {
+    "message": "終點：一筆被引用的證據列，或一個被記錄下來的缺口"
   },
-  "home.paths.developer.label": {
-    "message": "跳至安裝"
+  "home.role.auditor.text": {
+    "message": "拿一則已公開的主張，找到支撐它的東西。情境頁面記錄了每一項判定、它依據什麼，以及哪些用語在佐證程序實際執行之前先行保留。"
   },
-  "home.paths.security.title": {
-    "message": "平台／安全 — 檢視模型"
+  "home.role.auditor.label": {
+    "message": "各項主張與其判定"
   },
-  "home.paths.security.text": {
-    "message": "在你決定正式環境中要信任什麼之前，先閱讀身分、權限與機密隔離的契約。"
+  "home.role.eyebrow": {
+    "message": "接下來往哪走"
   },
-  "home.paths.security.label": {
-    "message": "閱讀安全模型"
+  "home.role.title": {
+    "message": "從你的工作真正要做出的那個決定開始"
   },
-  "home.paths.cloud.title": {
-    "message": "Cloud — 申請早期存取"
+  "home.role.lead": {
+    "message": "五種讀者，五個不同的起始頁面。底下每一條路線的終點都是一個決定，而不是更多的閱讀。"
   },
-  "home.paths.cloud.text": {
-    "message": "完整功能的託管控制平面，正處於早期存取。僅限設計夥伴計畫 — Cloud 尚未一般提供。"
+  "home.role.cloudNote": {
+    "message": "以託管服務的方式使用它是第五條路徑，而它目前尚未推出 — 控制平面處於早期存取階段，僅開放給設計夥伴。"
   },
-  "home.paths.cloud.label": {
-    "message": "申請 Cloud 早期存取"
-  },
-  "home.paths.eyebrow": {
-    "message": "選擇你的路徑"
-  },
-  "home.paths.title": {
-    "message": "三種開始方式"
+  "home.role.cloudLink": {
+    "message": "申請 Cloud 早期存取 →"
   },
   "home.final.title": {
-    "message": "為你的代理設下邊界。"
+    "message": "把決策放到動作之前。"
   },
   "home.final.lead": {
-    "message": "身分、權限與機密隔離 — 匯聚於單一執行期層。"
+    "message": "導流一個代理，拒絕一次它本不該發出的呼叫，然後讀一讀它留下的記錄。"
   },
   "theme.ErrorPageContent.title": {
     "message": "此頁已當機。",
@@ -252,18 +525,6 @@
     "message": "歷史文章",
     "description": "The page & hero description of the blog archive page"
   },
-  "theme.blog.post.paginator.navAriaLabel": {
-    "message": "部落格文章分頁導覽",
-    "description": "The ARIA label for the blog posts pagination"
-  },
-  "theme.blog.post.paginator.newerPost": {
-    "message": "較新一篇",
-    "description": "The blog post button label to navigate to the newer/previous post"
-  },
-  "theme.blog.post.paginator.olderPost": {
-    "message": "較舊一篇",
-    "description": "The blog post button label to navigate to the older/next post"
-  },
   "theme.blog.paginator.navAriaLabel": {
     "message": "部落格文章列表分頁導覽",
     "description": "The ARIA label for the blog pagination"
@@ -275,6 +536,18 @@
   "theme.blog.paginator.olderEntries": {
     "message": "較舊的文章",
     "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "部落格文章分頁導覽",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "較新一篇",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "較舊一篇",
+    "description": "The blog post button label to navigate to the older/next post"
   },
   "theme.tags.tagsPageLink": {
     "message": "檢視所有標籤",
@@ -312,17 +585,6 @@
     "message": "下一頁",
     "description": "The label used to navigate to the next doc"
   },
-  "theme.docs.tagDocListPageTitle.nDocsTagged": {
-    "message": "{count} 篇文件帶有標籤",
-    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
-  },
-  "theme.docs.tagDocListPageTitle": {
-    "message": "{nDocsTagged}「{tagName}」",
-    "description": "The title of the page for a docs tag"
-  },
-  "theme.docs.versionBadge.label": {
-    "message": "版本：{versionLabel}"
-  },
   "theme.docs.versions.unreleasedVersionLabel": {
     "message": "此為 {siteTitle} {versionLabel} 版尚未發行的文件。",
     "description": "The label used to tell the user that he's browsing an unreleased doc version"
@@ -338,6 +600,17 @@
   "theme.docs.versions.latestVersionLinkLabel": {
     "message": "最新版本",
     "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "{count} 篇文件帶有標籤",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "{nDocsTagged}「{tagName}」",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "版本：{versionLabel}"
   },
   "theme.common.editThisPage": {
     "message": "編輯此頁",
@@ -359,13 +632,13 @@
     "message": "{heading}的直接連結",
     "description": "Title for link to heading"
   },
-  "theme.NotFound.title": {
-    "message": "找不到頁面",
-    "description": "The title of the 404 page"
-  },
   "theme.navbar.mobileVersionsDropdown.label": {
     "message": "選擇版本",
     "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.NotFound.title": {
+    "message": "找不到頁面",
+    "description": "The title of the 404 page"
   },
   "theme.tags.tagsListLabel": {
     "message": "標籤：",
@@ -415,10 +688,6 @@
     "message": "(opens in new tab)",
     "description": "The ARIA label for the external link icon"
   },
-  "theme.NavBar.navAriaLabel": {
-    "message": "主導航",
-    "description": "The ARIA label for the main navigation"
-  },
   "theme.NotFound.p1": {
     "message": "我們沒有您要找的頁面。",
     "description": "The first paragraph of the 404 page"
@@ -426,6 +695,10 @@
   "theme.NotFound.p2": {
     "message": "請聯絡原始連結來源網站的所有者，並通知他們連結已毀損。",
     "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "主導航",
+    "description": "The ARIA label for the main navigation"
   },
   "theme.TOCCollapsible.toggleButtonLabel": {
     "message": "本頁導覽",
@@ -435,6 +708,10 @@
     "message": "選擇語言",
     "description": "The label for the mobile language switcher dropdown"
   },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "閱讀時間約 {readingTime} 分鐘",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
   "theme.blog.post.readMore": {
     "message": "閱讀更多",
     "description": "The label used in blog post item excerpts to link to full blog posts"
@@ -443,9 +720,13 @@
     "message": "閱讀 {title} 全文",
     "description": "The ARIA label for the link to full blog posts from excerpts"
   },
-  "theme.blog.post.readingTime.plurals": {
-    "message": "閱讀時間約 {readingTime} 分鐘",
-    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "切換自動換行",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "主頁面",
+    "description": "The ARIA label for the home page in the breadcrumbs"
   },
   "theme.CodeBlock.copy": {
     "message": "複製",
@@ -459,13 +740,9 @@
     "message": "複製程式碼至剪貼簿",
     "description": "The ARIA label for copy code blocks button"
   },
-  "theme.CodeBlock.wordWrapToggle": {
-    "message": "切換自動換行",
-    "description": "The title attribute for toggle word wrapping button of code block lines"
-  },
-  "theme.docs.breadcrumbs.home": {
-    "message": "主頁面",
-    "description": "The ARIA label for the home page in the breadcrumbs"
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "文件側邊欄",
+    "description": "The ARIA label for the sidebar navigation"
   },
   "theme.docs.sidebar.collapseButtonTitle": {
     "message": "收起側邊欄",
@@ -474,10 +751,6 @@
   "theme.docs.sidebar.collapseButtonAriaLabel": {
     "message": "收起側邊欄",
     "description": "The title attribute for collapse button of doc sidebar"
-  },
-  "theme.docs.sidebar.navAriaLabel": {
-    "message": "文件側邊欄",
-    "description": "The ARIA label for the sidebar navigation"
   },
   "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
     "message": "關閉導覽列",
@@ -491,14 +764,6 @@
     "message": "切換導覽列",
     "description": "The ARIA label for hamburger menu button of mobile navigation"
   },
-  "theme.docs.sidebar.expandButtonTitle": {
-    "message": "展開側邊欄",
-    "description": "The ARIA label and title attribute for expand button of doc sidebar"
-  },
-  "theme.docs.sidebar.expandButtonAriaLabel": {
-    "message": "展開側邊欄",
-    "description": "The ARIA label and title attribute for expand button of doc sidebar"
-  },
   "theme.navbar.mobileDropdown.collapseButton.expandAriaLabel": {
     "message": "Expand the dropdown",
     "description": "The ARIA label of the button to expand the mobile dropdown navbar item"
@@ -506,6 +771,14 @@
   "theme.navbar.mobileDropdown.collapseButton.collapseAriaLabel": {
     "message": "Collapse the dropdown",
     "description": "The ARIA label of the button to collapse the mobile dropdown navbar item"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "展開側邊欄",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "展開側邊欄",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
   },
   "theme.blog.post.plurals": {
     "message": "{count} 篇文章",
@@ -562,11 +835,5 @@
   "theme.tags.tagsPageTitle": {
     "message": "標籤",
     "description": "The title of the tag list page"
-  },
-  "home.how.limitations": {
-    "message": "各層涵蓋與未涵蓋的範圍 →"
-  },
-  "product.layers.limitations": {
-    "message": "各層涵蓋與未涵蓋的範圍 →"
   }
 }
