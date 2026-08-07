@@ -6,18 +6,44 @@ import styles from './styles.module.css';
 import {GovernedField} from './GovernedField';
 import {DOCS_URL} from '@site/src/generated/site-urls';
 
+/*
+ * AAASM-5585 — the homepage narrative.
+ *
+ * Every capability sentence below is quoted from a merged, reviewed source
+ * rather than written here. This page is near the bottom of ADR 0034's truth
+ * hierarchy: it may simplify what those sources say, never broaden it.
+ *
+ *   - The hero headline and subheadline are product-promise.md's, verbatim and
+ *     non-severable. The subheadline IS the boundary clause; it may not move
+ *     below the fold, become a tooltip, or be dropped for layout.
+ *   - The flagship story, its boundary clause and the three supporting threats
+ *     are risk-scenarios.md's Tier 1 wording, verbatim. Tier 2 — any "we
+ *     stopped X", any averted consequence — is gated on AAASM-5532/5529 and
+ *     must not appear here.
+ *   - Outcome, default-posture and platform sentences are role-narratives.md's
+ *     claim register (RC1–RC16). The Bound column is part of the claim; a card
+ *     that drops it is the broadening ADR 0034 §2.3 forbids.
+ *
+ * Two things this page may not say, both known ground truth: there is no
+ * end-to-end audit trail (emission is best-effort, and the node and go SDK
+ * audit sinks are production no-ops — AAASM-5681), and agent identity is
+ * asserted rather than verified (AAASM-5665, RC16).
+ */
+
 // Cross-hostname destinations carry UTM per HORO-47 §5.2. Same-hostname
 // destinations (#install, /early-access) MUST NOT carry UTM — that
 // would overwrite the visitor's session source in GA4.
-const DOCS = `${DOCS_URL}/?utm_source=product_site&utm_medium=docs_link&utm_campaign=agent_assembly_launch`;
+const UTM_DOCS =
+  'utm_source=product_site&utm_medium=docs_link&utm_campaign=agent_assembly_launch';
+const DOCS = `${DOCS_URL}/?${UTM_DOCS}`;
 const GITHUB_CORE =
   'https://github.com/ai-agent-assembly/agent-assembly?utm_source=product_site&utm_medium=referral&utm_campaign=agent_assembly_launch';
 const GITHUB_EXAMPLES =
   'https://github.com/ai-agent-assembly/examples?utm_source=product_site&utm_medium=referral&utm_campaign=oss_install';
 
-// AAASM-5528 — the coverage / known-limitations page the layer claims must
-// resolve to. Cross-hostname, so it carries UTM per HORO-47 §5.2.
-const LIMITATIONS_DOC = `${DOCS_URL}/core/latest/devtools/limitations.html?utm_source=product_site&utm_medium=docs_link&utm_campaign=agent_assembly_launch`;
+// AAASM-5528 — the coverage / known-limitations page the capability claims
+// must resolve to. Cross-hostname, so it carries UTM per HORO-47 §5.2.
+const LIMITATIONS_DOC = `${DOCS_URL}/core/latest/devtools/limitations.html?${UTM_DOCS}`;
 
 // Same-hostname anchors — no UTM.
 const SELF_HOSTING_ANCHOR = '#install';
@@ -31,30 +57,30 @@ export function Hero(): ReactNode {
         <div className={styles.heroEyebrow}>
           <span className={styles.eyebrowLine} />{' '}
           <Translate id="home.hero.eyebrow">
-            Governance runtime for AI agents
+            Decisions before the action, not alerts after it
           </Translate>{' '}
           <span className={styles.eyebrowLine} />
         </div>
         {/*
-         * 10-second rule (IA plan §4.1): the H1 answers "what is it",
-         * the sub answers "what problem does it solve" and "who is it
-         * for", and the three CTAs answer "how do I try it" and "where
-         * does Cloud fit". Keep this stack tight — anything that
-         * pushes the CTAs below the fold breaks the contract.
+         * product-promise.md's approved headline and subheadline. They are
+         * declared NON-SEVERABLE at the source: the headline published alone
+         * reads as a claim over all agent behaviour, which is the single most
+         * common defect in this product's published copy (37 of 69 audited
+         * rows). The subheadline carries the boundary and must stay on this
+         * screen, above the fold. Quote them; do not paraphrase — a paraphrase
+         * is a new claim with its own evidence burden.
          */}
         <h1 className={styles.heroTitle}>
           <Translate id="home.hero.title">
-            A governance layer for AI agents.
+            Decide what an AI agent may do — before it does it.
           </Translate>
         </h1>
         <p className={styles.heroSub}>
           <Translate id="home.hero.sub">
-            Agent Assembly sits between your agents and the outside world. On
-            the paths you route through it, it enforces policy and tracks cost —
-            blocking unsafe actions at the network proxy, advising the SDK
-            in-process, and observing at the kernel. Self-host a
-            limited-function stack for evaluation and development; full
-            functionality runs in the managed cloud (early access).
+            Agent Assembly evaluates the actions you route through it against
+            your policy, refuses them, or blocks them pending a decision, and
+            records what it decided. An action you have not routed through it is
+            not inspected — and the record says so.
           </Translate>
         </p>
         {/*
@@ -105,6 +131,16 @@ export function Hero(): ReactNode {
             <Translate id="home.cta.starRepo">Star the core repo</Translate>
           </TrackedLink>
         </div>
+        {/*
+         * A governed launch, as it actually reads. Decision-scoped only: it
+         * shows what was decided, never an averted consequence — that is
+         * risk-scenarios.md's Tier 2, gated on AAASM-5532 / AAASM-5529.
+         *
+         * Deliberately absent from the previous version of this block: an
+         * "identity verified" line (agent identity is asserted, not verified —
+         * AAASM-5665 / RC16) and a budget line (whether a declared cap is
+         * checked in the decision path is Unmeasured — RC13).
+         */}
         <div
           className={`${styles.terminal} ${styles.heroTerminal}`}
           aria-hidden="true"
@@ -116,27 +152,31 @@ export function Hero(): ReactNode {
           </div>
           <pre className={styles.terminalBody}>
             <span className={styles.muted}>
-              $ aasm policy check payments-agent →
+              $ aasm run claude --policy team.yaml
             </span>
             {'\n'}
-            <span className={styles.muted}> tool: </span>http.post
-            api.stripe.com/charges{'\n'}
-            <span className={styles.ok}>
-              {' '}
-              ✓ identity verified payments-agent@team-a
-            </span>
-            {'\n'}
-            <span className={styles.ok}> ✓ within budget $4.10 / $50.00</span>
-            {'\n'}
+            <span className={styles.muted}> launched on the governed path</span>
+            {'\n\n'}
+            <span className={styles.muted}> CONNECT </span>
+            files.unapproved.example:443{'\n'}
             <span className={styles.deny}>
               {' '}
-              ✗ denied egress host not in allow-list
+              ✗ refused before dial — not in the allow-list you configured
             </span>
-            {'\n'}
-            <span className={styles.muted}> scan </span>
-            {'AKIA…'}
+            {'\n\n'}
+            <span className={styles.muted}> CONNECT </span>
+            api.anthropic.com:443{'\n'}
+            <span className={styles.review}>
+              {' '}
+              ~ redacted {'AKIA…'} matched a known pattern, removed before
+              forward
+            </span>
+            {'\n\n'}
+            <span className={styles.muted}> CONNECT </span>
+            telemetry.vendor.example:443{'\n'}
             <span className={styles.muted}>
-              {' matched by prefix — redacted before forward'}
+              {' '}
+              · connection observed — payload not inspected
             </span>
           </pre>
         </div>

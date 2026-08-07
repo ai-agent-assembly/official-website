@@ -53,15 +53,29 @@ function DraftLocaleBanner(): ReactNode {
  */
 export default function Home(): ReactNode {
   return (
+    /*
+     * A <title> and a description are metadata surfaces: non-severability
+     * cannot reach them, and there is no room for a boundary clause beside
+     * them. Two rules apply and they point the same way.
+     *
+     * risk-scenarios.md forbids ANY scenario sentence here, and sends metadata
+     * to product-promise.md's headline instead — whose indefinite article ("an
+     * AI agent", never "your AI agents") was chosen so it survives being quoted
+     * alone. The description then carries the promise verbatim, which is
+     * self-bounding: the routing clause is inside the sentence.
+     *
+     * The previous description named the SDK / proxy / kernel pipeline, which
+     * is ADR 0033 forbidden design 1 in the one place a search result quotes.
+     */
     <Layout
       title={translate({
         id: 'home.meta.title',
-        message: 'Agent Assembly — governance runtime for AI agents',
+        message: 'Decide what an AI agent may do — before it does it',
       })}
       description={translate({
         id: 'home.meta.description',
         message:
-          'Identity, authority, and credential redaction for governed AI agents — enforced at the network proxy, advised in-process by the SDK, observed at the kernel. Open source today; managed cloud in early access.',
+          'Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.',
       })}
     >
       <DraftLocaleBanner />
