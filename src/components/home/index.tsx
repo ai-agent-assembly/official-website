@@ -1024,6 +1024,221 @@ export function CurrentPosition(): ReactNode {
   );
 }
 
+interface RoleCard {
+  readonly role: string;
+  readonly job: string;
+  readonly text: string;
+  readonly label: string;
+  readonly link: string;
+  readonly eventName: string;
+  readonly alsoFire?: readonly string[];
+  readonly targetProduct: 'agent_assembly' | 'early_access' | 'docs' | 'github';
+  readonly external?: boolean;
+}
+
+/**
+ * The audience router — AAASM-5594's contingent L1 row.
+ *
+ * The merged sitemap records `evaluator`'s L1 entry as `/`, and states that the
+ * row is *not true yet*: `audiences.md` says of the site as it stands that it
+ * "publishes four pages and a blog and routes by none of them", so L1 has four
+ * entries until this ticket rewrites `/` to route by audience. This block is
+ * that routing, and the whole page is the evaluator's own entry.
+ *
+ * Five of the six audiences, matching the sitemap's table. `contributor` has
+ * no L1 entry BY DESIGN — `audiences.md` puts positioning copy and conversion
+ * paths under *belongs elsewhere* for that reader, so an entry here would route
+ * them to the layer their own section calls wrong for their job. Do not add a
+ * sixth card to make the set look complete.
+ *
+ * Each card routes to the audience's *next* destination rather than its entry
+ * page, because for three of the five the entry page is itself a recorded gap.
+ * The four dedicated role routes are AAASM-5587's and do not exist yet; this
+ * block links to pages that resolve today rather than to planned URLs.
+ */
+export function StartByRole(): ReactNode {
+  const roles: readonly RoleCard[] = [
+    {
+      role: translate({
+        id: 'home.role.evaluator.role',
+        message: 'Evaluating it',
+      }),
+      job: translate({
+        id: 'home.role.evaluator.job',
+        message: 'Ends in: a trial started, or a recorded reason not to',
+      }),
+      text: translate({
+        id: 'home.role.evaluator.text',
+        message:
+          'You are on the right page. What is left is the shape of the product itself — what it decides, where the decision is applied, and what it deliberately does not do.',
+      }),
+      label: translate({
+        id: 'home.role.evaluator.label',
+        message: 'What the product is',
+      }),
+      link: '/product',
+      eventName: 'cta_view_docs_click',
+      targetProduct: 'agent_assembly',
+    },
+    {
+      role: translate({
+        id: 'home.role.security.role',
+        message: 'Security and risk',
+      }),
+      job: translate({
+        id: 'home.role.security.job',
+        message: 'Ends in: an approval or a refusal for one deployment',
+      }),
+      text: translate({
+        id: 'home.role.security.text',
+        message:
+          'Go straight to the edge of the boundary: the enumerated bypasses, the failure posture of each control including the ones that fail open, and the platform matrix in both directions.',
+      }),
+      label: translate({
+        id: 'home.role.security.label',
+        message: 'The security model',
+      }),
+      link: SECURITY_DOC,
+      eventName: 'cta_view_docs_click',
+      alsoFire: ['docs_click'],
+      targetProduct: 'docs',
+      external: true,
+    },
+    {
+      role: translate({
+        id: 'home.role.operator.role',
+        message: 'Platform and SRE',
+      }),
+      job: translate({
+        id: 'home.role.operator.job',
+        message: 'Ends in: a governed launch on one host',
+      }),
+      text: translate({
+        id: 'home.role.operator.text',
+        message:
+          'The thing to learn first is that routing is per agent and per launch — an agent nobody routed is outside all of this. Then: which artifact, on which platform, from which channel.',
+      }),
+      label: translate({
+        id: 'home.role.operator.label',
+        message: 'Install and route one agent',
+      }),
+      link: SELF_HOSTING_ANCHOR,
+      eventName: 'cta_start_self_hosting_click',
+      targetProduct: 'agent_assembly',
+    },
+    {
+      role: translate({
+        id: 'home.role.developer.role',
+        message: 'Engineering',
+      }),
+      job: translate({
+        id: 'home.role.developer.job',
+        message: 'Ends in: code that runs and reaches a decision',
+      }),
+      text: translate({
+        id: 'home.role.developer.text',
+        message:
+          'Add a policy checkpoint in Python, Node or Go — and choose an SDK mode knowing that the default is advisory and that an unadapted framework is outside the wrapper.',
+      }),
+      label: translate({
+        id: 'home.role.developer.label',
+        message: 'SDKs and framework examples',
+      }),
+      link: hub('documentation.html'),
+      eventName: 'cta_view_docs_click',
+      alsoFire: ['docs_click'],
+      targetProduct: 'docs',
+      external: true,
+    },
+    {
+      role: translate({
+        id: 'home.role.auditor.role',
+        message: 'Product, QA and assurance',
+      }),
+      job: translate({
+        id: 'home.role.auditor.job',
+        message: 'Ends in: a cited row, or a recorded gap',
+      }),
+      text: translate({
+        id: 'home.role.auditor.text',
+        message:
+          'Take a published claim and reach what backs it. The scenario page records each determination, what it rests on, and which wording is held back until a proof harness runs.',
+      }),
+      label: translate({
+        id: 'home.role.auditor.label',
+        message: 'Claims and their determinations',
+      }),
+      link: SCENARIOS_DOC,
+      eventName: 'cta_view_docs_click',
+      alsoFire: ['docs_click'],
+      targetProduct: 'docs',
+      external: true,
+    },
+  ];
+  return (
+    <section className={styles.section} id="start-by-role">
+      <div className={styles.inner}>
+        <div className={styles.eyebrow}>
+          <Translate id="home.role.eyebrow">Where to go next</Translate>
+        </div>
+        <h2 className={styles.h2}>
+          <Translate id="home.role.title">
+            Start from the decision your job actually ends in
+          </Translate>
+        </h2>
+        <p className={styles.lead}>
+          <Translate id="home.role.lead">
+            Five readers, five different first pages. Each route below ends in a
+            decision rather than in more reading.
+          </Translate>
+        </p>
+        <div className={styles.roleGrid}>
+          {roles.map((r) => (
+            <div key={r.role} className={styles.card}>
+              <h3 className={styles.cardTitle}>{r.role}</h3>
+              <p className={styles.cardText}>{r.text}</p>
+              <p className={styles.roleJob}>{r.job}</p>
+              <TrackedLink
+                className={styles.cardLink}
+                eventName={r.eventName}
+                ctaLocation="body"
+                targetProduct={r.targetProduct}
+                to={r.link}
+                alsoFire={r.alsoFire}
+                linkProps={
+                  r.external
+                    ? {rel: 'noopener noreferrer', target: '_blank'}
+                    : undefined
+                }
+              >
+                {r.label} →
+              </TrackedLink>
+            </div>
+          ))}
+        </div>
+        <p className={styles.sectionFoot}>
+          <Translate id="home.role.cloudNote">
+            Running it as a managed service is a fifth path, and it is not
+            available yet — the control plane is in early access with design
+            partners only.
+          </Translate>{' '}
+          <TrackedLink
+            className={styles.trustLink}
+            eventName="cta_cloud_early_access_click"
+            ctaLocation="body"
+            targetProduct="early_access"
+            to={EARLY_ACCESS_ROUTE}
+          >
+            <Translate id="home.role.cloudLink">
+              Request Cloud Early Access →
+            </Translate>
+          </TrackedLink>
+        </p>
+      </div>
+    </section>
+  );
+}
+
 export function FinalCTA(): ReactNode {
   return (
     <section className={`${styles.section} ${styles.soft} ${styles.center}`}>

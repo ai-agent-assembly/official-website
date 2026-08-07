@@ -11,6 +11,7 @@ import {
   Outcomes,
   Proof,
   CurrentPosition,
+  StartByRole,
   InstallBlock,
   NextSteps,
   FinalCTA,
@@ -58,10 +59,13 @@ function DraftLocaleBanner(): ReactNode {
  *                        what this page declines to claim yet.
  *   7. CurrentPosition — 60 seconds, second half: default posture, platform
  *                        position, maturity, known limits.
- *   8. InstallBlock    — HORO-44 tabbed picker over command_type vocabulary.
- *   9. NextSteps       — HORO-44 docs/examples/repo/SDK outbound row.
- *  10. From the blog   — same-hostname, no UTM.
- *  11. FinalCTA        — dominant CTA repeats at page bottom.
+ *   8. StartByRole     — the audience router. AAASM-5594 records `/` as the
+ *                        `evaluator` L1 entry contingent on this ticket
+ *                        actually routing by audience; this is that routing.
+ *   9. InstallBlock    — HORO-44 tabbed picker over command_type vocabulary.
+ *  10. NextSteps       — HORO-44 docs/examples/repo/SDK outbound row.
+ *  11. From the blog   — same-hostname, no UTM.
+ *  12. FinalCTA        — dominant CTA repeats at page bottom.
  *
  * `#security` and `#architecture` must keep resolving on this route. A URL
  * fragment is never sent to the server, so no redirect or `_headers` rule can
@@ -103,6 +107,7 @@ export default function Home(): ReactNode {
         <Outcomes />
         <Proof />
         <CurrentPosition />
+        <StartByRole />
         <InstallBlock />
         <NextSteps />
         <section className={`${styles.section} ${styles.center}`}>
