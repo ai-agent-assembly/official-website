@@ -10,8 +10,16 @@
   letter-spacing: 0.14em;
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--aa-accent);
+  /* AAASM-5585: was var(--aa-accent). At 12.5px this is small text, so WCAG
+     AA needs 4.5:1, and #0d9488 measures 3.48:1 on the soft ground and
+     3.74:1 on white — a pre-existing failure this rewrite inherited on six
+     section labels. teal-700 measures 5.09:1 and 5.47:1. The dark theme's
+     accent already clears the bar on the dark ground, so it keeps it. */
+  color: #0f766e;
   margin-bottom: 0.75rem;
+}
+[data-theme='dark'] .eyebrow {
+  color: var(--aa-accent);
 }
 .h2 {
   font-size: clamp(1.6rem, 3vw, 2.4rem);
@@ -226,6 +234,13 @@
   display: inline-block;
   margin-top: 0.9rem;
   font-weight: 700;
+  /* The inherited link colour is var(--aa-accent), which measures 3.74:1 on
+     white at 16px — below the 4.5:1 WCAG AA needs for small text. Only the
+     light theme is short; the dark theme's link colour clears it. */
+  color: #0f766e;
+}
+[data-theme='dark'] .cardLink {
+  color: var(--ifm-link-color);
 }
 
 /* How it works layers */
@@ -247,8 +262,12 @@
 }
 .layerTag {
   font-weight: 800;
-  color: var(--aa-accent);
+  /* Same correction as .cardLink and .eyebrow — 16px is small text. */
+  color: #0f766e;
   font-family: var(--ifm-font-family-monospace);
+}
+[data-theme='dark'] .layerTag {
+  color: var(--aa-accent);
 }
 
 .soft {
@@ -792,10 +811,17 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--aa-accent);
+  /* Not var(--aa-accent): #0d9488 on white measures 3.74:1, and this is
+     11px text, so WCAG AA needs 4.5:1. teal-700 measures 5.47:1 and keeps
+     the accent identity. The dark theme's accent already passes on the dark
+     ground, so it is left alone. */
+  color: #0f766e;
   border: 1px solid var(--aa-border);
   border-radius: 999px;
   padding: 0.2rem 0.6rem;
+}
+[data-theme='dark'] .termBadge {
+  color: var(--aa-accent);
 }
 .cardBound {
   margin: 0.9rem 0 0;
@@ -887,6 +913,10 @@
   font-family: var(--ifm-font-family-monospace);
   font-size: 0.76rem;
   line-height: 1.5;
+  /* Same contrast correction as .termBadge — 12px text needs 4.5:1. */
+  color: #0f766e;
+}
+[data-theme='dark'] .roleJob {
   color: var(--aa-accent);
 }
 
