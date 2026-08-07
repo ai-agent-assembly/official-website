@@ -10,8 +10,16 @@
   letter-spacing: 0.14em;
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--aa-accent);
+  /* AAASM-5585: was var(--aa-accent). At 12.5px this is small text, so WCAG
+     AA needs 4.5:1, and #0d9488 measures 3.48:1 on the soft ground and
+     3.74:1 on white — a pre-existing failure this rewrite inherited on six
+     section labels. teal-700 measures 5.09:1 and 5.47:1. The dark theme's
+     accent already clears the bar on the dark ground, so it keeps it. */
+  color: #0f766e;
   margin-bottom: 0.75rem;
+}
+[data-theme='dark'] .eyebrow {
+  color: var(--aa-accent);
 }
 .h2 {
   font-size: clamp(1.6rem, 3vw, 2.4rem);
@@ -185,7 +193,16 @@
 .ok {
   color: var(--aa-accent);
 }
+/* Red, for the refusal line in the hero terminal. The light value is not the
+   dark one lightly adjusted: #f87171 reads at 2.58:1 on the light `pre`
+   background (#f6f7f8), the worst contrast on the page, on the line carrying
+   the page's central claim. #b91c1c restores WCAG AA at 6.03:1 — the same
+   ratio .muted already holds on that background. The dark override keeps the
+   original token, which passes on the dark panel. */
 .deny {
+  color: #b91c1c;
+}
+[data-theme='dark'] .deny {
   color: #f87171;
 }
 
@@ -226,6 +243,13 @@
   display: inline-block;
   margin-top: 0.9rem;
   font-weight: 700;
+  /* The inherited link colour is var(--aa-accent), which measures 3.74:1 on
+     white at 16px — below the 4.5:1 WCAG AA needs for small text. Only the
+     light theme is short; the dark theme's link colour clears it. */
+  color: #0f766e;
+}
+[data-theme='dark'] .cardLink {
+  color: var(--ifm-link-color);
 }
 
 /* How it works layers */
@@ -247,8 +271,12 @@
 }
 .layerTag {
   font-weight: 800;
-  color: var(--aa-accent);
+  /* Same correction as .cardLink and .eyebrow — 16px is small text. */
+  color: #0f766e;
   font-family: var(--ifm-font-family-monospace);
+}
+[data-theme='dark'] .layerTag {
+  color: var(--aa-accent);
 }
 
 .soft {
@@ -708,4 +736,208 @@
   color: var(--aa-text-dim);
   font-size: 0.82rem;
   text-align: center;
+}
+
+/* ============================================================
+   AAASM-5585 — problem / outcome / proof / position / role.
+
+   New classes for the narrative rewrite. Everything here obeys one
+   layout rule taken from the content sources: a claim's bound travels
+   with it on the same screen, so `.boundNote` and `.cardBound` are
+   ordinary visible text — never a tooltip, a disclosure or a footnote.
+   ============================================================ */
+
+/* Amber, for the redaction line in the hero terminal. Pairs with the
+   existing .ok / .deny verdict colours. */
+.review {
+  color: #c2410c;
+}
+[data-theme='dark'] .review {
+  color: #f5a623;
+}
+
+/* The flagship story: a bordered block so the narrative reads as a
+   quoted scenario rather than as body copy. */
+.story {
+  margin-top: 2.2rem;
+  padding: 1.6rem 1.75rem;
+  background: var(--aa-panel);
+  border: 1px solid var(--aa-border);
+  border-left: 3px solid var(--ifm-color-primary);
+  border-radius: 14px;
+  max-width: 54rem;
+}
+.storyLabel {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--aa-text-dim);
+  margin-bottom: 0.65rem;
+}
+.storyBody {
+  font-size: 1.12rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* A claim's bound. Deliberately styled as readable prose rather than
+   fine print — it is part of the claim, not a disclaimer beside it. */
+.boundNote {
+  margin: 1.1rem 0 0;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: var(--aa-bg-soft);
+  border: 1px dashed var(--aa-border);
+  color: var(--aa-text-dim);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.boundNote strong {
+  color: var(--aa-text);
+}
+
+/* Trailing "go deeper" line under a section. */
+.sectionFoot {
+  margin-top: 1.75rem;
+  color: var(--aa-text-dim);
+  font-size: 0.96rem;
+}
+
+/* Outcome + proof cards: two up, so each has room for its bound. */
+.outcomeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-top: 2.2rem;
+}
+/* The ADR 0033 §6 term a card's claim reaches. Kept visible so a
+   technical reader can check the term against its source. */
+.termBadge {
+  display: inline-block;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  /* Not var(--aa-accent): #0d9488 on white measures 3.74:1, and this is
+     11px text, so WCAG AA needs 4.5:1. teal-700 measures 5.47:1 and keeps
+     the accent identity. The dark theme's accent already passes on the dark
+     ground, so it is left alone. */
+  color: #0f766e;
+  border: 1px solid var(--aa-border);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+}
+[data-theme='dark'] .termBadge {
+  color: var(--aa-accent);
+}
+.cardBound {
+  margin: 0.9rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--aa-border);
+  color: var(--aa-text-dim);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+/* What this page will not claim yet. */
+.notYet {
+  margin-top: 2.5rem;
+  padding: 1.5rem 1.75rem;
+  border: 1px dashed var(--aa-border);
+  border-radius: 14px;
+  background: var(--aa-bg-soft);
+}
+.notYetTitle {
+  font-size: 1.05rem;
+  font-weight: 750;
+  margin: 0 0 0.9rem;
+}
+.notYetList {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--aa-text-dim);
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+.notYetList li + li {
+  margin-top: 0.6rem;
+}
+
+/* Default-posture table. Wrapped so a narrow viewport scrolls the
+   table rather than the page. */
+.postureTableWrap {
+  margin-top: 2.2rem;
+  overflow-x: auto;
+}
+.postureTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.94rem;
+  display: table;
+}
+.postureTable th,
+.postureTable td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--aa-border);
+  line-height: 1.6;
+}
+.postureTable thead th {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--aa-text-dim);
+  border-bottom: 1px solid var(--aa-border);
+}
+.postureTable tbody th {
+  width: 15rem;
+  font-weight: 750;
+  color: var(--aa-text);
+}
+.postureTable tbody td {
+  color: var(--aa-text-dim);
+}
+.positionNotes {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 0.9rem;
+}
+.positionNotes .boundNote {
+  margin-top: 0;
+}
+
+/* Role router — five audiences, one card each. */
+.roleGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 2.2rem;
+}
+.roleJob {
+  margin: 0.9rem 0 0;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.76rem;
+  line-height: 1.5;
+  /* Same contrast correction as .termBadge — 12px text needs 4.5:1. */
+  color: #0f766e;
+}
+[data-theme='dark'] .roleJob {
+  color: var(--aa-accent);
+}
+
+@media (max-width: 900px) {
+  .outcomeGrid,
+  .roleGrid {
+    grid-template-columns: 1fr;
+  }
+  .story {
+    padding: 1.25rem 1.15rem;
+  }
+  .postureTable tbody th {
+    width: 10rem;
+  }
 }

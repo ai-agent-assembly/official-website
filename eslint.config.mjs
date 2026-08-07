@@ -12,6 +12,10 @@ export default tseslint.config(
       '.docusaurus/',
       'node_modules/',
       'design/',
+      // Screenshot evidence, same as design/ — no lintable source, and
+      // walking it cost eslint ~90s of wall time once AAASM-5585's captures
+      // landed (2.3s CPU against 91s wall: filesystem, not analysis).
+      'verify/',
       '*.config.mjs',
     ],
   },

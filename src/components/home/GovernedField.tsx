@@ -2,48 +2,56 @@ import React, {type ReactNode, useEffect, useRef} from 'react';
 import styles from './styles.module.css';
 
 /**
- * GovernedField — the hero background for AAASM-4143. A purely decorative layer
- * behind the hero copy that renders the product's real three-layer interception
- * model as a **concentric governance membrane**:
+ * GovernedField — the hero background. A purely decorative layer behind the
+ * hero copy that draws the one distinction the whole product rests on:
  *
- *   AGENT (center) → SDK ring → PROXY ring → eBPF ring → OUTSIDE (LLM / APIs)
+ *   AGENT (centre) → the GOVERNED PATH boundary → OUTSIDE (LLM / APIs)
  *
- * Requests are emitted from the central agent core and travel radially outward.
- * At each ring boundary the request's fate is decided: ALLOWED requests pass
- * through all three rings into the external zone; DENIED requests are absorbed
- * with a flash + a short reason label at the ring they violate and never reach
- * outside; requests that carry a secret have that secret stripped (redacted) at
- * the PROXY ring — the amber secret dot detaches and dissolves while the
- * sanitized request continues outward. Small ephemeral mono labels announce
- * what each layer did (PERMISSION DENIED / EGRESS BLOCKED / SYSCALL BLOCKED /
- * SECRET REDACTED / ALLOWED). The point: only allowed, sanitized requests ever
- * cross the outer ring — secrets never leak outward.
+ * Actions leave the agent core and travel radially outward. Those that were
+ * **routed** meet the boundary and get a decision there — refused before the
+ * dial, a recognised credential removed before the request is forwarded, or
+ * allowed through. Those that were **not routed** leave through the gap in the
+ * boundary and are labelled NOT INSPECTED: nothing looked at them, which is a
+ * different result from being allowed.
+ *
+ * AAASM-5585 replaced the previous drawing deliberately. That version rendered
+ * three concentric rings labelled SDK, PROXY and eBPF with requests being
+ * "denied at SDK" and "denied at eBPF", which is ADR 0033 forbidden design 1
+ * (a fixed SDK→proxy→eBPF pipeline as *the* architecture) plus forbidden
+ * design 2 (eBPF as the outermost, cross-platform, enforcing layer). Neither is
+ * true: the SDK is advisory, and no eBPF signal takes part in any allow/deny
+ * decision. A gap in one boundary is the honest picture; three nested rings
+ * that cover for each other is the inference the architecture exists to stop.
  *
  * Rendered aria-hidden with pointer-events disabled (via styles.field). Honors
- * prefers-reduced-motion by drawing a single static frame — the core, three
- * labeled rings, a few particles mid-flight, the external nodes, and a couple
- * example event labels — with no animation loop and no cursor parallax. Theme
- * palette (light/dark) is tracked live via a MutationObserver, and ring/label
- * opacity is raised in the light theme so the structure reads on white.
+ * prefers-reduced-motion by drawing a single static frame with no animation
+ * loop and no cursor parallax. Theme palette (light/dark) is tracked live via a
+ * MutationObserver, and line/label opacity is raised in the light theme so the
+ * structure reads on white.
  */
 
-type Verdict = 'allow' | 'review' | 'deny';
+/**
+ * What happens to an action in the drawing.
+ *
+ * `unrouted` is not a verdict — it is the absence of one, and it is drawn in
+ * the neutral line colour rather than in an outcome colour for that reason.
+ */
+type Fate = 'allow' | 'redact' | 'refuse' | 'unrouted';
 
 interface Particle {
   angle: number; // radial direction of travel
   radius: number; // distance from the agent core
   speed: number;
-  verdict: Verdict; // allow (teal) | review (secret carrier) | deny (red)
-  denyR: number; // ring radius at which a denied request is absorbed
-  secret: boolean; // review request still carrying its secret dot
-  blocked: boolean; // absorbed at a ring — dissolving in place
+  fate: Fate;
+  secret: boolean; // a redact carrier still holding its credential dot
+  blocked: boolean; // absorbed at the boundary — dissolving in place
   life: number; // dissolve countdown once blocked
   alpha: number;
   size: number;
 }
 
 interface Flash {
-  radius: number; // ring the flash sits on
+  radius: number;
   angle: number;
   life: number;
   maxLife: number;
@@ -51,7 +59,7 @@ interface Flash {
 }
 
 interface Secret {
-  radius: number; // where the secret detached (the PROXY ring)
+  radius: number; // where the credential was removed (the boundary)
   angle: number;
   life: number;
   maxLife: number;
@@ -79,8 +87,8 @@ interface LabelOptions {
 
 interface Palette {
   allow: string;
-  review: string;
-  deny: string;
+  redact: string;
+  refuse: string;
   line: string; // "rgba(r, g, b, " — caller appends alpha + ")"
   halo: string; // background-colored "rgba(r, g, b, " for text halos
   dark: boolean;
@@ -93,27 +101,20 @@ function readPalette(): Palette {
   return dark
     ? {
         allow: '#2dd4bf',
-        review: '#f5a623',
-        deny: '#f87171',
+        redact: '#f5a623',
+        refuse: '#f87171',
         line: 'rgba(230, 237, 243, ',
         halo: 'rgba(13, 17, 23, ',
         dark: true,
       }
     : {
         allow: '#0d9488',
-        review: '#c2410c',
-        deny: '#dc2626',
+        redact: '#c2410c',
+        refuse: '#dc2626',
         line: 'rgba(24, 34, 45, ',
         halo: 'rgba(255, 255, 255, ',
         dark: false,
       };
-}
-
-function pickVerdict(): Verdict {
-  const r = Math.random(); // NOSONAR - safe: visual particle animation only, not security-sensitive
-  if (r < 0.54) return 'allow';
-  if (r < 0.76) return 'review';
-  return 'deny';
 }
 
 export function GovernedField(): ReactNode {
@@ -141,11 +142,20 @@ export function GovernedField(): ReactNode {
     });
 
     const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
-    // Ray (upper-right) along which the ring labels + OUTSIDE cue are stacked,
-    // so the "cross-section" reads AGENT → SDK → PROXY → eBPF → OUTSIDE away
-    // from the centered hero text.
-    const LABEL_ANGLE = -Math.PI * 0.3;
-    const MAX_LABELS = 6;
+    // Ray carrying the boundary label and the OUTSIDE cue, so the cross-section
+    // reads AGENT → GOVERNED PATH → OUTSIDE.
+    //
+    // Held close to horizontal on purpose. The hero copy is centred and the
+    // terminal sits under it, so the only reliably empty regions are the left
+    // and right flanks. A steeper ray puts the label behind the headline, where
+    // it is painted over by `.heroInner`'s stacking context and silently lost —
+    // which is exactly what happened to the first version of this drawing.
+    const LABEL_ANGLE = -Math.PI * 0.1;
+    // The corridor where the boundary is simply absent. Everything travelling
+    // through it leaves uninspected. Opposite the label ray, on the left flank.
+    const GAP_MID = Math.PI * 0.98;
+    const GAP_HALF = 0.36;
+    const MAX_LABELS = 5;
 
     let width = 0;
     let height = 0;
@@ -153,12 +163,11 @@ export function GovernedField(): ReactNode {
     let cx = 0;
     let cy = 0;
     const r0 = 18; // agent core radius (emission origin)
-    let r1 = 0; // SDK ring
-    let r2 = 0; // PROXY ring
-    let r3 = 0; // eBPF ring
+    let rd = 0; // the governed-path boundary
+    let rOut = 0; // faint outside cue — not a control, just the world
     let diag = 0;
 
-    const COUNT = 34;
+    const COUNT = 32;
     const particles: Particle[] = [];
     const flashes: Flash[] = [];
     const secrets: Secret[] = [];
@@ -176,15 +185,30 @@ export function GovernedField(): ReactNode {
       return palette.line + a + ')';
     }
 
-    function verdictColor(v: Verdict): string {
-      if (v === 'deny') return palette.deny;
-      return palette.allow; // allowed + sanitized review carriers travel teal
+    function fateColor(f: Fate): string {
+      if (f === 'refuse') return palette.refuse;
+      if (f === 'unrouted') return palette.line + '0.55)';
+      return palette.allow; // allowed, and redact carriers once sanitized
     }
 
-    function denyReason(denyR: number): string {
-      if (denyR === r1) return 'PERMISSION DENIED';
-      if (denyR === r2) return 'EGRESS BLOCKED';
-      return 'SYSCALL BLOCKED';
+    /** True when `angle` falls inside the ungoverned corridor. */
+    function inGap(angle: number): boolean {
+      const d = Math.abs(
+        Math.atan2(Math.sin(angle - GAP_MID), Math.cos(angle - GAP_MID)),
+      );
+      return d < GAP_HALF;
+    }
+
+    /** An angle on the boundary — i.e. anywhere the corridor is not. */
+    function routedAngle(): number {
+      const span = Math.PI * 2 - GAP_HALF * 2;
+      return GAP_MID + GAP_HALF + Math.random() * span; // NOSONAR - visual only
+    }
+
+    /** An angle inside the corridor. */
+    function unroutedAngle(): number {
+      const spread = GAP_HALF * 2;
+      return GAP_MID - GAP_HALF + Math.random() * spread; // NOSONAR - visual only
     }
 
     function pushLabel(
@@ -225,24 +249,50 @@ export function GovernedField(): ReactNode {
       cx = width * 0.5;
       cy = height * 0.46;
       const maxR = Math.min(width * 0.46, height * 0.66, 540);
-      r3 = maxR;
-      r2 = maxR * 0.68;
-      r1 = maxR * 0.4;
+      rOut = maxR;
+      rd = maxR * 0.6;
       diag = Math.hypot(width, height);
     }
 
+    function pickFate(angle: number): Fate {
+      if (inGap(angle)) return 'unrouted';
+      const r = Math.random(); // NOSONAR - safe: visual particle animation only, not security-sensitive
+      if (r < 0.52) return 'allow';
+      if (r < 0.76) return 'redact';
+      return 'refuse';
+    }
+
     function respawn(p: Particle) {
-      p.angle = Math.random() * Math.PI * 2; // NOSONAR - safe: visual particle animation only, not security-sensitive
-      p.radius = r0 + Math.random() * 6; // NOSONAR - safe: visual particle animation only, not security-sensitive
-      p.speed = 0.55 + Math.random() * 0.7; // NOSONAR - safe: visual particle animation only, not security-sensitive
-      p.verdict = pickVerdict();
-      // Denied requests are caught at one of the three rings.
-      p.denyR = [r1, r2, r3][Math.floor(Math.random() * 3)]; // NOSONAR - safe: visual particle animation only, not security-sensitive
-      p.secret = p.verdict === 'review';
+      // Roughly one action in four is never routed. The corridor is drawn to
+      // scale with that, so the picture does not imply the boundary is closed.
+      const unrouted = Math.random() < 0.26; // NOSONAR - safe: visual only
+      p.angle = unrouted ? unroutedAngle() : routedAngle();
+      p.radius = r0 + Math.random() * 6; // NOSONAR - safe: visual only
+      p.speed = 0.55 + Math.random() * 0.7; // NOSONAR - safe: visual only
+      p.fate = pickFate(p.angle);
+      p.secret = p.fate === 'redact';
       p.blocked = false;
       p.life = 0;
       p.alpha = 0;
-      p.size = 1.6 + Math.random() * 1.5; // NOSONAR - safe: visual particle animation only, not security-sensitive
+      p.size = 1.6 + Math.random() * 1.5; // NOSONAR - safe: visual only
+    }
+
+    /**
+     * Announce what happened as a particle crosses the boundary's radius.
+     * Routed traffic that got a decision says so; traffic in the corridor says
+     * NOT INSPECTED, which is the whole point of the drawing.
+     *
+     * Split out of `step` rather than inlined: `step` is the one function here
+     * that branches on every fate, and folding this in put it over the
+     * cognitive-complexity budget.
+     */
+    function announceCrossing(p: Particle) {
+      const roll = Math.random(); // NOSONAR - visual only
+      if (p.fate === 'unrouted' && roll < 0.5) {
+        pushLabel('NOT INSPECTED', p.angle, rd, lineColor(0.7), 54);
+      } else if (p.fate === 'allow' && roll < 0.14) {
+        pushLabel('ALLOWED', p.angle, rd, palette.allow, 46);
+      }
     }
 
     function step(p: Particle) {
@@ -259,42 +309,39 @@ export function GovernedField(): ReactNode {
       const prevR = p.radius;
       p.radius += p.speed;
 
-      // Secret scanned + stripped at the PROXY ring — detaches and dissolves.
-      if (p.verdict === 'review' && p.secret && p.radius >= r2) {
+      // A recognised credential removed at the boundary before forwarding —
+      // the dot detaches and dissolves, the request itself continues.
+      if (p.fate === 'redact' && p.secret && p.radius >= rd) {
         p.secret = false;
-        secrets.push({radius: r2, angle: p.angle, life: 34, maxLife: 34});
+        secrets.push({radius: rd, angle: p.angle, life: 34, maxLife: 34});
         flashes.push({
-          radius: r2,
+          radius: rd,
           angle: p.angle,
           life: 20,
           maxLife: 20,
-          color: palette.review,
+          color: palette.redact,
         });
-        pushLabel('SECRET REDACTED', p.angle, r2, palette.review, 52);
+        pushLabel('CREDENTIAL REDACTED', p.angle, rd, palette.redact, 52);
         return;
       }
 
-      // Denied request absorbed at the ring it violates — never passes.
-      if (p.verdict === 'deny' && p.radius >= p.denyR) {
-        p.radius = p.denyR;
+      // Refused at the boundary — absorbed before the dial.
+      if (p.fate === 'refuse' && p.radius >= rd) {
+        p.radius = rd;
         p.blocked = true;
         p.life = 24;
         flashes.push({
-          radius: p.denyR,
+          radius: rd,
           angle: p.angle,
           life: 22,
           maxLife: 22,
-          color: palette.deny,
+          color: palette.refuse,
         });
-        pushLabel(denyReason(p.denyR), p.angle, p.denyR, palette.deny, 50);
+        pushLabel('REFUSED BEFORE DIAL', p.angle, rd, palette.refuse, 50);
         return;
       }
 
-      // An allowed / sanitized request crossing the outer ring into the world.
-      // prettier-ignore
-      if (prevR < r3 && p.radius >= r3 && Math.random() < 0.14) { // NOSONAR - visual animation only
-        pushLabel('ALLOWED', p.angle, r3, palette.allow, 46);
-      }
+      if (prevR < rd && p.radius >= rd) announceCrossing(p);
 
       // Fully out into the external zone — recycle.
       if (p.radius > diag) respawn(p);
@@ -302,9 +349,9 @@ export function GovernedField(): ReactNode {
 
     function buildStatic() {
       // A curated, motionless cross-section for prefers-reduced-motion: an
-      // allowed request outside, one mid-flight, a request denied at two rings,
-      // a review carrier past PROXY with its secret dissolving, plus a couple of
-      // example event labels.
+      // allowed action outside the boundary, one mid-flight, one refused at the
+      // boundary, one sanitized just past it, one still carrying its credential,
+      // and one leaving through the corridor uninspected.
       particles.length = 0;
       flashes.length = 0;
       secrets.length = 0;
@@ -312,83 +359,123 @@ export function GovernedField(): ReactNode {
       const mk = (
         angle: number,
         radius: number,
-        verdict: Verdict,
+        fate: Fate,
         secret: boolean,
         blocked: boolean,
-        denyR: number,
       ): Particle => ({
         angle,
         radius,
         speed: 0,
-        verdict,
-        denyR,
+        fate,
         secret,
         blocked,
         life: blocked ? 12 : 0,
         alpha: 1,
         size: 2.6,
       });
+      const refusedAt = -0.9;
+      const redactedAt = 0.5;
       particles.push(
-        mk(-0.5, r3 * 1.14, 'allow', false, false, r3), // outside
-        mk(1.1, r1 * 1.2, 'allow', false, false, r3), // mid-flight
-        mk(2.4, r1, 'deny', false, true, r1), // denied at SDK
-        mk(3.7, r3, 'deny', false, true, r3), // denied at eBPF
-        mk(5.2, r2 * 1.28, 'review', false, false, r3), // sanitized
-        mk(0.4, r1 * 1.15, 'review', true, false, r3), // has secret
+        mk(-1.6, rd * 1.35, 'allow', false, false), // through, outside
+        mk(-2.35, rd * 0.62, 'allow', false, false), // mid-flight
+        mk(refusedAt, rd, 'refuse', false, true), // refused at the boundary
+        mk(redactedAt, rd * 1.22, 'redact', false, false), // sanitized
+        mk(1.45, rd * 0.66, 'redact', true, false), // still carrying it
+        mk(GAP_MID, rd * 1.3, 'unrouted', false, false), // never inspected
       );
       flashes.push(
-        {radius: r1, angle: 2.4, life: 16, maxLife: 22, color: palette.deny},
-        {radius: r3, angle: 3.7, life: 16, maxLife: 22, color: palette.deny},
-        {radius: r2, angle: 5.2, life: 14, maxLife: 20, color: palette.review},
+        {
+          radius: rd,
+          angle: refusedAt,
+          life: 16,
+          maxLife: 22,
+          color: palette.refuse,
+        },
+        {
+          radius: rd,
+          angle: redactedAt,
+          life: 14,
+          maxLife: 20,
+          color: palette.redact,
+        },
       );
-      secrets.push({radius: r2, angle: 5.2, life: 20, maxLife: 34});
-      pushLabel('PERMISSION DENIED', 2.4, r1, palette.deny, 50);
-      pushLabel('SECRET REDACTED', 5.2, r2, palette.review, 50);
-      pushLabel('ALLOWED', -0.5, r3, palette.allow, 46);
+      secrets.push({radius: rd, angle: redactedAt, life: 20, maxLife: 34});
+      pushLabel('REFUSED BEFORE DIAL', refusedAt, rd, palette.refuse, 50);
+      pushLabel('CREDENTIAL REDACTED', redactedAt, rd, palette.redact, 50);
+      pushLabel('NOT INSPECTED', GAP_MID, rd, lineColor(0.7), 50);
     }
 
-    function drawRing(
-      r: number,
-      rotation: number,
-      dash: number[],
-      lw: number,
-      alpha: number,
-    ): void {
+    /**
+     * The boundary, drawn as an arc with the ungoverned corridor left open.
+     * The gap is load-bearing: a closed ring would assert coverage the product
+     * does not have.
+     */
+    function drawBoundary(rotation: number, alpha: number): void {
       const ecx = cx + parX;
       const ecy = cy + parY;
-      // Continuous faint membrane so each layer reads even between dashes.
+      const from = GAP_MID + GAP_HALF;
+      const to = GAP_MID - GAP_HALF + Math.PI * 2;
+
       ctx!.beginPath();
       ctx!.setLineDash([]);
-      ctx!.arc(ecx, ecy, r, 0, Math.PI * 2);
-      ctx!.strokeStyle = lineColor(alpha * 0.5);
-      ctx!.lineWidth = Math.max(1, lw * 0.7);
+      ctx!.arc(ecx, ecy, rd, from, to);
+      ctx!.strokeStyle = lineColor(alpha * 0.6);
+      ctx!.lineWidth = 1.6;
       ctx!.stroke();
-      // Slow rotating dashed emphasis on top.
+
       ctx!.save();
       ctx!.translate(ecx, ecy);
       ctx!.rotate(rotation);
       ctx!.beginPath();
-      ctx!.setLineDash(dash);
-      ctx!.arc(0, 0, r, 0, Math.PI * 2);
+      ctx!.setLineDash([12, 8]);
+      ctx!.arc(0, 0, rd, from, to);
       ctx!.strokeStyle = lineColor(alpha);
-      ctx!.lineWidth = lw;
+      ctx!.lineWidth = 2.1;
       ctx!.stroke();
       ctx!.setLineDash([]);
       ctx!.restore();
+
+      // Tick the two open ends so the gap reads as deliberate, not as a
+      // rendering artifact.
+      for (const a of [from, to]) {
+        const ix = ecx + Math.cos(a) * (rd - 7);
+        const iy = ecy + Math.sin(a) * (rd - 7);
+        const ox = ecx + Math.cos(a) * (rd + 7);
+        const oy = ecy + Math.sin(a) * (rd + 7);
+        ctx!.beginPath();
+        ctx!.moveTo(ix, iy);
+        ctx!.lineTo(ox, oy);
+        ctx!.strokeStyle = lineColor(alpha * 0.8);
+        ctx!.lineWidth = 1.4;
+        ctx!.stroke();
+      }
     }
 
-    function ringLabel(r: number, name: string): void {
+    /** The world beyond. Faint, unlabelled as a control, because it is not one. */
+    function drawOutsideCue(alpha: number): void {
       const ecx = cx + parX;
       const ecy = cy + parY;
-      const lx = ecx + Math.cos(LABEL_ANGLE) * r;
-      const ly = ecy + Math.sin(LABEL_ANGLE) * r;
+      ctx!.beginPath();
+      ctx!.setLineDash([2, 9]);
+      ctx!.arc(ecx, ecy, rOut, 0, Math.PI * 2);
+      ctx!.strokeStyle = lineColor(alpha * 0.4);
+      ctx!.lineWidth = 1;
+      ctx!.stroke();
+      ctx!.setLineDash([]);
+    }
+
+    function boundaryLabel(): void {
+      const ecx = cx + parX;
+      const ecy = cy + parY;
+      const lx = ecx + Math.cos(LABEL_ANGLE) * rd;
+      const ly = ecy + Math.sin(LABEL_ANGLE) * rd;
       ctx!.beginPath();
       ctx!.arc(lx, ly, 2.8, 0, Math.PI * 2);
       ctx!.fillStyle = lineColor(0.95);
       ctx!.globalAlpha = 1;
       ctx!.fill();
       label({
-        text: name,
+        text: 'GOVERNED PATH',
         x: lx + 9,
         y: ly,
         color: lineColor(1),
@@ -399,10 +486,30 @@ export function GovernedField(): ReactNode {
       });
     }
 
+    function gapLabel(): void {
+      const ecx = cx + parX;
+      const ecy = cy + parY;
+      // Pushed well clear of the boundary: the left flank is where the CTA
+      // row ends and the terminal card begins, and a label sitting on the arc
+      // lands underneath one of them.
+      const lx = ecx + Math.cos(GAP_MID) * (rd + 96);
+      const ly = ecy + Math.sin(GAP_MID) * (rd + 96);
+      label({
+        text: 'NOT ROUTED',
+        x: lx,
+        y: ly,
+        color: lineColor(0.72),
+        alpha: 1,
+        size: 10,
+        align: 'center',
+        bold: true,
+      });
+    }
+
     function externalNode(name: string, angle: number): void {
       const ecx = cx + parX;
       const ecy = cy + parY;
-      const rr = r3 + 54;
+      const rr = rOut + 54;
       let x = ecx + Math.cos(angle) * rr;
       let y = ecy + Math.sin(angle) * rr;
       const m = 96;
@@ -478,7 +585,7 @@ export function GovernedField(): ReactNode {
       const ecx = cx + parX;
       const ecy = cy + parY;
 
-      // Faint radial cross-section guide tying the ring labels together.
+      // Faint radial guide tying the core to the boundary label.
       ctx!.beginPath();
       ctx!.setLineDash([2, 6]);
       ctx!.moveTo(
@@ -486,28 +593,23 @@ export function GovernedField(): ReactNode {
         ecy + Math.sin(LABEL_ANGLE) * (r0 + 6),
       );
       ctx!.lineTo(
-        ecx + Math.cos(LABEL_ANGLE) * (r3 + 66),
-        ecy + Math.sin(LABEL_ANGLE) * (r3 + 66),
+        ecx + Math.cos(LABEL_ANGLE) * (rOut + 66),
+        ecy + Math.sin(LABEL_ANGLE) * (rOut + 66),
       );
       ctx!.strokeStyle = lineColor(0.14);
       ctx!.lineWidth = 1;
       ctx!.stroke();
       ctx!.setLineDash([]);
 
-      // Three interception rings, inner→outer, progressively bolder. The outer
-      // eBPF ring is the strongest — it is the last boundary before OUTSIDE.
-      const base = palette.dark ? 0.34 : 0.52;
-      drawRing(r1, rot * 1.0, [4, 6], 1.4, base);
-      drawRing(r2, -rot * 0.8, [12, 8], 1.7, base + 0.05);
-      drawRing(r3, rot * 0.55, [3, 8], 2.1, base + 0.12);
+      const base = palette.dark ? 0.4 : 0.58;
+      drawOutsideCue(base);
+      drawBoundary(rot, base);
+      boundaryLabel();
+      gapLabel();
 
-      ringLabel(r1, 'SDK');
-      ringLabel(r2, 'PROXY');
-      ringLabel(r3, 'eBPF');
-
-      // Inside↔outside cue: OUTSIDE sits just beyond the outer ring on the ray.
-      const ox = ecx + Math.cos(LABEL_ANGLE) * (r3 + 44);
-      const oy = ecy + Math.sin(LABEL_ANGLE) * (r3 + 44);
+      // Inside↔outside cue: OUTSIDE sits beyond the world circle on the ray.
+      const ox = ecx + Math.cos(LABEL_ANGLE) * (rOut + 44);
+      const oy = ecy + Math.sin(LABEL_ANGLE) * (rOut + 44);
       label({
         text: 'OUTSIDE',
         x: ox + 9,
@@ -518,21 +620,19 @@ export function GovernedField(): ReactNode {
         align: 'left',
       });
 
-      // External zone nodes (outside the outer ring).
       externalNode('LLM', -1.15);
       externalNode('EXTERNAL API', 0.32);
       externalNode('SERVICES', 2.3);
 
-      // Request particles (faded near the core so the headline stays calm).
+      // Action particles (faded near the core so the headline stays calm).
       for (const p of particles) {
         const px = ecx + Math.cos(p.angle) * p.radius;
         const py = ecy + Math.sin(p.angle) * p.radius;
-        const col = verdictColor(p.verdict);
-        const near = Math.max(0, Math.min(1, (p.radius - r0) / (r1 - r0)));
+        const col = fateColor(p.fate);
+        const near = Math.max(0, Math.min(1, (p.radius - r0) / (rd - r0)));
         const a = p.alpha * (0.18 + 0.82 * near);
 
         if (!p.blocked) {
-          // Short radial motion trail.
           ctx!.beginPath();
           ctx!.moveTo(px, py);
           ctx!.lineTo(px - Math.cos(p.angle) * 6, py - Math.sin(p.angle) * 6);
@@ -548,33 +648,33 @@ export function GovernedField(): ReactNode {
         ctx!.globalAlpha = a * (p.blocked ? 0.9 : 1);
         ctx!.fill();
 
-        // Attached secret dot on a review carrier that still holds it.
+        // Attached credential dot on a carrier that still holds it.
         if (p.secret) {
           const ox2 = Math.cos(p.angle + Math.PI / 2) * 4;
           const oy2 = Math.sin(p.angle + Math.PI / 2) * 4;
           ctx!.beginPath();
           ctx!.arc(px + ox2, py + oy2, 2.3, 0, Math.PI * 2);
-          ctx!.fillStyle = palette.review;
+          ctx!.fillStyle = palette.redact;
           ctx!.globalAlpha = a;
           ctx!.fill();
         }
       }
       ctx!.globalAlpha = 1;
 
-      // Detached secrets dissolving at the PROXY ring.
+      // Removed credentials dissolving at the boundary.
       for (const s of secrets) {
         const sx = ecx + Math.cos(s.angle) * s.radius;
         const sy = ecy + Math.sin(s.angle) * s.radius;
         const k = s.life / s.maxLife;
         ctx!.beginPath();
         ctx!.arc(sx, sy, 2.3 + (1 - k) * 3, 0, Math.PI * 2);
-        ctx!.fillStyle = palette.review;
+        ctx!.fillStyle = palette.redact;
         ctx!.globalAlpha = Math.max(0, k) * 0.9;
         ctx!.fill();
       }
       ctx!.globalAlpha = 1;
 
-      // Ring flashes where requests are absorbed or secrets stripped.
+      // Boundary flashes where an action was refused or a credential removed.
       for (const f of flashes) {
         const k = f.life / f.maxLife;
         ctx!.beginPath();
@@ -586,7 +686,7 @@ export function GovernedField(): ReactNode {
       }
       ctx!.globalAlpha = 1;
 
-      // Ephemeral event text near each flash/strip point.
+      // Ephemeral event text near each flash / crossing point.
       for (const ev of labels) {
         const k = ev.life / ev.maxLife;
         const lx = ecx + Math.cos(ev.angle) * (ev.radius + 15);
@@ -646,8 +746,7 @@ export function GovernedField(): ReactNode {
           angle: 0,
           radius: 0,
           speed: 0,
-          verdict: 'allow',
-          denyR: 0,
+          fate: 'allow',
           secret: false,
           blocked: false,
           life: 0,
@@ -655,8 +754,8 @@ export function GovernedField(): ReactNode {
           size: 2,
         };
         respawn(p);
-        // Pre-scatter across the membrane so the field is populated at once.
-        p.radius = r0 + Math.random() * (diag * 0.55); // NOSONAR - safe: visual particle animation only, not security-sensitive
+        // Pre-scatter across the field so it is populated at once.
+        p.radius = r0 + Math.random() * (diag * 0.55); // NOSONAR - safe: visual only
         p.alpha = 0.9;
         particles.push(p);
       }
@@ -674,7 +773,7 @@ export function GovernedField(): ReactNode {
     };
     window.addEventListener('resize', onResize);
 
-    // Cursor parallax gives the membrane a subtle sense of depth.
+    // Cursor parallax gives the field a subtle sense of depth.
     let onMove: ((e: MouseEvent) => void) | null = null;
     if (!reduced) {
       onMove = (e: MouseEvent) => {
@@ -696,7 +795,7 @@ export function GovernedField(): ReactNode {
   return (
     <div ref={rootRef} className={styles.field} aria-hidden="true">
       <canvas ref={canvasRef} className={styles.canvas} />
-      {/* Softer than the CSS default so the agent core + inner rings read while
+      {/* Softer than the CSS default so the agent core + boundary read while
           the headline stays legible (particles are also faded near center). */}
       <div
         className={styles.vignette}
@@ -709,7 +808,7 @@ export function GovernedField(): ReactNode {
         }}
       />
       <div className={styles.logStrip}>
-        LAYERS: SDK · PROXY · eBPF · SECRETS: CONTAINED
+        ROUTED → DECIDED · NOT ROUTED → NOT INSPECTED
       </div>
     </div>
   );
