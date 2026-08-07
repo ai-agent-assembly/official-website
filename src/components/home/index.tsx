@@ -1049,7 +1049,7 @@ interface RoleCard {
  * no L1 entry BY DESIGN — `audiences.md` puts positioning copy and conversion
  * paths under *belongs elsewhere* for that reader, so an entry here would route
  * them to the layer their own section calls wrong for their job. Do not add a
- * sixth card to make the set look complete.
+ * sixth card just to round the set out.
  *
  * Each card routes to the audience's *next* destination rather than its entry
  * page, because for three of the five the entry page is itself a recorded gap.
