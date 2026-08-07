@@ -44,6 +44,8 @@ centered hero/CTA copy verbatim (restyled, not rewritten).
 
 ## Security-model background rationale (allow / review / deny)
 
+> **Superseded by AAASM-5585 — ADR 0033 forbidden design 1. Do not reimplement.**
+
 The core requirement is that the background is not decorative — it **literally
 depicts Agent Assembly's business-logic security model**: governed agent
 requests hitting a policy boundary and being classified **ALLOWED / REVIEWED /
@@ -101,6 +103,9 @@ stack to avoid a webfont dependency.
   attaches to agents where they run; does not host/deploy agents).
 
 ## Revision — concept change: concentric 3-layer governance membrane
+
+> **Superseded by AAASM-5585 — ADR 0033 forbidden designs 1 and 2. Do not
+> reimplement.**
 
 The background concept above (2a "Governed Field" particles deflecting off a flat,
 invisible boundary, merged with 2c parallax rings) was **redesigned** into a
