@@ -7,37 +7,59 @@ import styles from './product.module.css';
 
 const DOCS = DOCS_URL;
 const GITHUB = 'https://github.com/ai-agent-assembly';
-// AAASM-5528 — the coverage / known-limitations page the layer claims resolve to.
+// AAASM-5528 — the coverage / known-limitations page the path claims resolve to.
 const LIMITATIONS_DOC = `${DOCS_URL}/core/latest/devtools/limitations.html`;
 
 export default function Product(): ReactNode {
   return (
+    /*
+     * The description is a metadata surface: it has no room for a boundary
+     * clause beside it, so it takes the promise rather than a description of
+     * the architecture — the same rule, and the same sentence, as the homepage.
+     * What stood here called the product "a governance layer for AI agents",
+     * which is the hero line AAASM-5585 rejected, in the one place a search
+     * result quotes it back.
+     */
     <Layout
       title={translate({
         id: 'product.meta.title',
         message: 'Product — Agent Assembly',
       })}
       description={translate({
-        id: 'product.meta.description',
+        id: 'product.meta.description.promise',
         message:
-          'What Agent Assembly is: a governance layer for AI agents — it enforces policy, tracks cost, and blocks unsafe actions on the paths it mediates.',
+          'Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.',
       })}
     >
       <div className={styles.wrap}>
         <div className={styles.kicker}>
           <Translate id="product.kicker">Product</Translate>
         </div>
+        {/*
+         * product-promise.md's approved headline and subheadline, quoted
+         * verbatim and kept together — the source declares them NON-SEVERABLE,
+         * because the headline alone reads as a claim over all agent behaviour
+         * and the subheadline is the boundary that makes it a product claim.
+         * They are the homepage's pair too, deliberately: a reader arriving
+         * here from `/` must not meet a second, differently-worded promise.
+         *
+         * What stood here was "A governance layer for AI agents" plus "it
+         * enforces policy … and blocks unsafe actions at runtime" — the hero
+         * AAASM-5585 removed from `/`. "Enforces" and "blocks" are also the
+         * undifferentiated verbs ADR 0033 §6 rules out: each can mean observed,
+         * detected, evaluated or refused, and the reader cannot tell which.
+         */}
         <h1 className={styles.title}>
-          <Translate id="product.title">
-            A governance layer for AI agents
+          <Translate id="product.promise.headline">
+            Decide what an AI agent may do — before it does it.
           </Translate>
         </h1>
         <p className={styles.intro}>
-          <Translate id="product.intro">
-            Agent Assembly is not another agent framework. It is the governance
-            layer that sits between your agents and the outside world — on the
-            paths you route through it, it enforces policy, tracks cost, and
-            blocks unsafe actions at runtime.
+          <Translate id="product.promise.subheadline">
+            Agent Assembly evaluates the actions you route through it against
+            your policy, refuses them, or blocks them pending a decision, and
+            records what it decided. An action you have not routed through it is
+            not inspected — and the record says so.
           </Translate>
         </p>
 
@@ -89,9 +111,20 @@ export default function Product(): ReactNode {
                     Per-team budgets and quotas
                   </Translate>
                 </li>
+                {/*
+                 * ADR 0033 §6 term, with the bound on the same line. "Approval
+                 * required" means the action was HELD pending a decision — it
+                 * does not assert that a person answers. No shipped operator
+                 * surface can answer the queue the hold blocks on (AAASM-5657),
+                 * so the hold times out into a refusal with nobody involved,
+                 * which is what "human-in-the-loop approval gates" claimed and
+                 * the product does not do.
+                 */}
                 <li>
-                  <Translate id="product.iai.item.approval">
-                    Human-in-the-loop approval gates
+                  <Translate id="product.iai.item.approvalRequired">
+                    Approval required — a policy rule can hold an action rather
+                    than answering it; with no operator surface shipped to
+                    answer the queue, the hold times out into a refusal
                   </Translate>
                 </li>
                 <li>
@@ -136,36 +169,63 @@ export default function Product(): ReactNode {
           </div>
         </section>
 
+        {/*
+         * This section published ADR 0033 forbidden design 1 verbatim: "Three
+         * independently-deployable layers — in-process SDKs, a sidecar proxy,
+         * and eBPF kernel hooks — feed a central gateway". Three things were
+         * wrong with it and each is a separate forbidden design.
+         *
+         *   fd-1  The fixed SDK → proxy → eBPF pipeline presented AS the
+         *         architecture. The elements are roles, not an ordered chain,
+         *         and a deployment instantiates some subset of them.
+         *   fd-2  "the kernel layer" as a cross-platform final tier. eBPF is
+         *         one Linux mechanism, it is not a decision point, and macOS
+         *         and Windows have no equivalent adapter.
+         *   fd-3  "feed a central gateway" makes the control plane a fourth
+         *         interception layer. It holds no traffic; its answer stops an
+         *         action only where something in front of that action waits.
+         *
+         * "Adopt the depth you need" carried the same implication — a stack
+         * with deeper tiers underneath — so it goes with the rest.
+         */}
         <section className={styles.block}>
           <h2 className={styles.blockTitle}>
-            <Translate id="product.layers.title">
-              Runtime boundary &amp; enforcement layers
+            <Translate id="product.path.title">
+              The governed path, and which component decides on it
             </Translate>
           </h2>
           <p className={styles.p}>
-            <Translate
-              id="product.layers.body"
-              values={{
-                sdks: <strong>SDKs</strong>,
-                proxy: <strong>proxy</strong>,
-                ebpf: <strong>eBPF</strong>,
-                gateway: <strong>gateway</strong>,
-              }}
-            >
-              {
-                'Three independently-deployable layers — in-process {sdks}, a sidecar {proxy}, and {ebpf} kernel hooks — feed a central {gateway} that holds the registry, evaluates policy, tracks budgets, and records the audit log. The proxy denies an action before it leaves the machine; the SDK evaluates in-process and is advisory, since it depends on the agent calling it; the kernel layer observes and reports. Adopt the depth you need.'
-              }
+            <Translate id="product.path.model">
+              Agent Assembly is not a fixed pipeline. Governance is a set of
+              roles, and a deployment instantiates the ones you actually put in
+              place — an element you have not deployed is reported as absent,
+              never quietly covered by another one.
+            </Translate>
+          </p>
+          <p className={styles.p}>
+            <Translate id="product.path.deciders">
+              On a path routed through the proxy, an action can be refused
+              before it leaves the machine, on the proxy’s own local
+              configuration. The control plane holds policy, budgets, approvals
+              and audit — and holds no traffic: its answer stops an action only
+              where a component in front of that action waits for it. An SDK
+              checkpoint is reachable only when the agent calls it, so it is
+              advisory by design. Operating-system-level interception is
+              platform-specific: on Linux, kernel probes report TLS plaintext,
+              process execution and file activity, and take part in no allow or
+              deny decision; macOS has no equivalent adapter, and Windows has
+              neither.
             </Translate>
           </p>
           {/*
-           * AAASM-5528: the sentence above stops short of the full coverage
+           * AAASM-5528: the prose above stops short of the full coverage
            * matrix, so it must resolve to the source-backed limitations page
            * rather than telling the reader to go find it. Do not drop this link.
            */}
           <p className={styles.p}>
             <Link to={LIMITATIONS_DOC}>
-              <Translate id="product.layers.limitations">
-                What each layer does and does not cover →
+              <Translate id="product.path.limitations">
+                What is covered on each path, and what is not →
               </Translate>
             </Link>
           </p>
@@ -184,11 +244,18 @@ export default function Product(): ReactNode {
                   Open-source core
                 </Translate>
               </p>
+              {/*
+               * The eBPF entry carries its platform, because an unqualified
+               * one here would contradict the section above — which states
+               * that OS-level interception is platform-specific and that
+               * macOS and Windows have no equivalent adapter — and would
+               * re-imply the cross-platform final tier of fd-2.
+               */}
               <p className={styles.p}>
-                <Translate id="product.oss.core.body">
+                <Translate id="product.oss.core.stack">
                   Self-host a limited-function stack — gateway, CLI, SDKs,
-                  proxy, and eBPF — from the Apache-2.0 crates, for local
-                  evaluation and development. No cost.
+                  proxy, and the Linux eBPF probes — from the Apache-2.0 crates,
+                  for local evaluation and development. No cost.
                 </Translate>
               </p>
             </div>
