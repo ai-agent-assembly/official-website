@@ -74,14 +74,17 @@
   "product.iai.item.redaction": {
     "message": "稽核路徑上的遮蔽處理"
   },
-  "product.layers.title": {
-    "message": "執行期邊界與強制執行層"
+  "product.path.title": {
+    "message": "受治理的路徑，以及路徑上由哪個元件做決定"
   },
-  "product.layers.body": {
-    "message": "三個可獨立部署的層級 — 行程內的 {sdks}、旁路 {proxy} 以及 {ebpf} 核心掛鉤 — 匯入一個中央 {gateway}，由它保存註冊表、評估政策、追蹤預算並記錄稽核日誌。proxy 會在請求離開機器前予以拒絕；SDK 在行程內進行評估，屬建議性質，因為它取決於代理是否呼叫它；核心層則負責觀測與回報。依你所需採用相應的深度。"
+  "product.path.model": {
+    "message": "Agent Assembly 並不是一條固定的管線。治理是一組角色，而一次部署只會實例化你實際佈建的那些 — 你未部署的元件會被回報為缺席，絕不會被另一個元件默默頂替。"
   },
-  "product.layers.limitations": {
-    "message": "各層涵蓋與未涵蓋的範圍 →"
+  "product.path.deciders": {
+    "message": "在導流經過代理伺服器的路徑上，動作可以在離開機器之前就被拒絕，依據的是代理伺服器自己的本機組態。控制平面保存政策、預算、核准與稽核 — 但它不持有任何流量：它的答案只有在該動作前方有元件等待時，才會真的擋下這個動作。SDK 檢查點只有在代理呼叫它時才可觸及，因此它在設計上屬建議性質。作業系統層級的攔截則因平台而異：在 Linux 上，核心探針會回報 TLS 明文、行程執行與檔案活動，且不參與任何允許或拒絕的決策；macOS 沒有對應的轉接器，Windows 則兩者皆無。"
+  },
+  "product.path.limitations": {
+    "message": "各路徑涵蓋與未涵蓋的範圍 →"
   },
   "product.oss.title": {
     "message": "開放原始碼核心 vs 託管 Cloud Console"

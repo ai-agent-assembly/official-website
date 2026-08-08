@@ -169,36 +169,63 @@ export default function Product(): ReactNode {
           </div>
         </section>
 
+        {/*
+         * This section published ADR 0033 forbidden design 1 verbatim: "Three
+         * independently-deployable layers — in-process SDKs, a sidecar proxy,
+         * and eBPF kernel hooks — feed a central gateway". Three things were
+         * wrong with it and each is a separate forbidden design.
+         *
+         *   fd-1  The fixed SDK → proxy → eBPF pipeline presented AS the
+         *         architecture. The elements are roles, not an ordered chain,
+         *         and a deployment instantiates some subset of them.
+         *   fd-2  "the kernel layer" as a cross-platform final tier. eBPF is
+         *         one Linux mechanism, it is not a decision point, and macOS
+         *         and Windows have no equivalent adapter.
+         *   fd-3  "feed a central gateway" makes the control plane a fourth
+         *         interception layer. It holds no traffic; its answer stops an
+         *         action only where something in front of that action waits.
+         *
+         * "Adopt the depth you need" carried the same implication — a stack
+         * with deeper tiers underneath — so it goes with the rest.
+         */}
         <section className={styles.block}>
           <h2 className={styles.blockTitle}>
-            <Translate id="product.layers.title">
-              Runtime boundary &amp; enforcement layers
+            <Translate id="product.path.title">
+              The governed path, and which component decides on it
             </Translate>
           </h2>
           <p className={styles.p}>
-            <Translate
-              id="product.layers.body"
-              values={{
-                sdks: <strong>SDKs</strong>,
-                proxy: <strong>proxy</strong>,
-                ebpf: <strong>eBPF</strong>,
-                gateway: <strong>gateway</strong>,
-              }}
-            >
-              {
-                'Three independently-deployable layers — in-process {sdks}, a sidecar {proxy}, and {ebpf} kernel hooks — feed a central {gateway} that holds the registry, evaluates policy, tracks budgets, and records the audit log. The proxy denies an action before it leaves the machine; the SDK evaluates in-process and is advisory, since it depends on the agent calling it; the kernel layer observes and reports. Adopt the depth you need.'
-              }
+            <Translate id="product.path.model">
+              Agent Assembly is not a fixed pipeline. Governance is a set of
+              roles, and a deployment instantiates the ones you actually put in
+              place — an element you have not deployed is reported as absent,
+              never quietly covered by another one.
+            </Translate>
+          </p>
+          <p className={styles.p}>
+            <Translate id="product.path.deciders">
+              On a path routed through the proxy, an action can be refused
+              before it leaves the machine, on the proxy’s own local
+              configuration. The control plane holds policy, budgets, approvals
+              and audit — and holds no traffic: its answer stops an action only
+              where a component in front of that action waits for it. An SDK
+              checkpoint is reachable only when the agent calls it, so it is
+              advisory by design. Operating-system-level interception is
+              platform-specific: on Linux, kernel probes report TLS plaintext,
+              process execution and file activity, and take part in no allow or
+              deny decision; macOS has no equivalent adapter, and Windows has
+              neither.
             </Translate>
           </p>
           {/*
-           * AAASM-5528: the sentence above stops short of the full coverage
+           * AAASM-5528: the prose above stops short of the full coverage
            * matrix, so it must resolve to the source-backed limitations page
            * rather than telling the reader to go find it. Do not drop this link.
            */}
           <p className={styles.p}>
             <Link to={LIMITATIONS_DOC}>
-              <Translate id="product.layers.limitations">
-                What each layer does and does not cover →
+              <Translate id="product.path.limitations">
+                What is covered on each path, and what is not →
               </Translate>
             </Link>
           </p>
