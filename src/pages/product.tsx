@@ -244,11 +244,18 @@ export default function Product(): ReactNode {
                   Open-source core
                 </Translate>
               </p>
+              {/*
+               * The eBPF entry carries its platform, because an unqualified
+               * one here would contradict the section above — which states
+               * that OS-level interception is platform-specific and that
+               * macOS and Windows have no equivalent adapter — and would
+               * re-imply the cross-platform final tier of fd-2.
+               */}
               <p className={styles.p}>
-                <Translate id="product.oss.core.body">
+                <Translate id="product.oss.core.stack">
                   Self-host a limited-function stack — gateway, CLI, SDKs,
-                  proxy, and eBPF — from the Apache-2.0 crates, for local
-                  evaluation and development. No cost.
+                  proxy, and the Linux eBPF probes — from the Apache-2.0 crates,
+                  for local evaluation and development. No cost.
                 </Translate>
               </p>
             </div>
