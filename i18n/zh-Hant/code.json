@@ -20,17 +20,17 @@
   "product.meta.title": {
     "message": "產品 — Agent Assembly"
   },
-  "product.meta.description": {
-    "message": "Agent Assembly 是什麼：一個為 AI 代理而生的治理層 — 在它所中介的路徑上強制執行政策、追蹤成本並阻擋不安全的行為。"
+  "product.meta.description.promise": {
+    "message": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。"
   },
   "product.kicker": {
     "message": "產品"
   },
-  "product.title": {
-    "message": "為 AI 代理而生的治理層"
+  "product.promise.headline": {
+    "message": "在 AI 代理動手之前，決定它可以做什麼。"
   },
-  "product.intro": {
-    "message": "Agent Assembly 並不是另一個代理框架。它是位於你的代理與外部世界之間的治理層 — 在你導流經過它的路徑上，於執行期強制執行政策、追蹤成本並阻擋不安全的行為。"
+  "product.promise.subheadline": {
+    "message": "Agent Assembly 會針對你導流經過它的動作，依你的政策加以評估、拒絕，或在決策做出前先行阻擋，並記錄它所做的決定。未經你導流的動作不會被檢查 — 而記錄會如實說明這一點。"
   },
   "product.why.title": {
     "message": "為什麼代理框架還不夠"

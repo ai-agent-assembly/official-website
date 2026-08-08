@@ -12,32 +12,54 @@ const LIMITATIONS_DOC = `${DOCS_URL}/core/latest/devtools/limitations.html`;
 
 export default function Product(): ReactNode {
   return (
+    /*
+     * The description is a metadata surface: it has no room for a boundary
+     * clause beside it, so it takes the promise rather than a description of
+     * the architecture — the same rule, and the same sentence, as the homepage.
+     * What stood here called the product "a governance layer for AI agents",
+     * which is the hero line AAASM-5585 rejected, in the one place a search
+     * result quotes it back.
+     */
     <Layout
       title={translate({
         id: 'product.meta.title',
         message: 'Product — Agent Assembly',
       })}
       description={translate({
-        id: 'product.meta.description',
+        id: 'product.meta.description.promise',
         message:
-          'What Agent Assembly is: a governance layer for AI agents — it enforces policy, tracks cost, and blocks unsafe actions on the paths it mediates.',
+          'Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.',
       })}
     >
       <div className={styles.wrap}>
         <div className={styles.kicker}>
           <Translate id="product.kicker">Product</Translate>
         </div>
+        {/*
+         * product-promise.md's approved headline and subheadline, quoted
+         * verbatim and kept together — the source declares them NON-SEVERABLE,
+         * because the headline alone reads as a claim over all agent behaviour
+         * and the subheadline is the boundary that makes it a product claim.
+         * They are the homepage's pair too, deliberately: a reader arriving
+         * here from `/` must not meet a second, differently-worded promise.
+         *
+         * What stood here was "A governance layer for AI agents" plus "it
+         * enforces policy … and blocks unsafe actions at runtime" — the hero
+         * AAASM-5585 removed from `/`. "Enforces" and "blocks" are also the
+         * undifferentiated verbs ADR 0033 §6 rules out: each can mean observed,
+         * detected, evaluated or refused, and the reader cannot tell which.
+         */}
         <h1 className={styles.title}>
-          <Translate id="product.title">
-            A governance layer for AI agents
+          <Translate id="product.promise.headline">
+            Decide what an AI agent may do — before it does it.
           </Translate>
         </h1>
         <p className={styles.intro}>
-          <Translate id="product.intro">
-            Agent Assembly is not another agent framework. It is the governance
-            layer that sits between your agents and the outside world — on the
-            paths you route through it, it enforces policy, tracks cost, and
-            blocks unsafe actions at runtime.
+          <Translate id="product.promise.subheadline">
+            Agent Assembly evaluates the actions you route through it against
+            your policy, refuses them, or blocks them pending a decision, and
+            records what it decided. An action you have not routed through it is
+            not inspected — and the record says so.
           </Translate>
         </p>
 
