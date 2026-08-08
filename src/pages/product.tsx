@@ -7,7 +7,7 @@ import styles from './product.module.css';
 
 const DOCS = DOCS_URL;
 const GITHUB = 'https://github.com/ai-agent-assembly';
-// AAASM-5528 — the coverage / known-limitations page the layer claims resolve to.
+// AAASM-5528 — the coverage / known-limitations page the path claims resolve to.
 const LIMITATIONS_DOC = `${DOCS_URL}/core/latest/devtools/limitations.html`;
 
 export default function Product(): ReactNode {
