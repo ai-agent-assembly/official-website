@@ -111,9 +111,20 @@ export default function Product(): ReactNode {
                     Per-team budgets and quotas
                   </Translate>
                 </li>
+                {/*
+                 * ADR 0033 §6 term, with the bound on the same line. "Approval
+                 * required" means the action was HELD pending a decision — it
+                 * does not assert that a person answers. No shipped operator
+                 * surface can answer the queue the hold blocks on (AAASM-5657),
+                 * so the hold times out into a refusal with nobody involved,
+                 * which is what "human-in-the-loop approval gates" claimed and
+                 * the product does not do.
+                 */}
                 <li>
-                  <Translate id="product.iai.item.approval">
-                    Human-in-the-loop approval gates
+                  <Translate id="product.iai.item.approvalRequired">
+                    Approval required — a policy rule can hold an action rather
+                    than answering it; with no operator surface shipped to
+                    answer the queue, the hold times out into a refusal
                   </Translate>
                 </li>
                 <li>

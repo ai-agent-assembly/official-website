@@ -53,8 +53,8 @@
   "product.iai.item.budgets": {
     "message": "各團隊預算與配額"
   },
-  "product.iai.item.approval": {
-    "message": "人在迴路中的核准關卡"
+  "product.iai.item.approvalRequired": {
+    "message": "需要核准 — 政策規則可以先擱置一個動作，而不是直接回答它；由於沒有任何已出貨的維運者介面能回應該佇列，這種擱置會在逾時後轉為拒絕"
   },
   "product.iai.item.audit": {
     "message": "雜湊鏈稽核軌跡 — 可偵測竄改，但並非不可變更"
