@@ -41,6 +41,35 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 CATALOGUE = HERE / "forbidden-claims.json"
 
+# --------------------------------------------------------------------------- #
+# What the catalogue is NOT allowed to own
+# --------------------------------------------------------------------------- #
+# ADR 0033 forbidden design 7 -- the 14 banned absolutes, verbatim. NEVER
+# waivable, by anyone, for any period (ADR 0034 Decision 10).
+#
+# These live here rather than in forbidden-claims.json because the cheapest
+# route from a red gate to a green one is deleting the offending phrase from a
+# data file, and nothing about that edit looks like disabling a check: CI turns
+# green, review sees a green check, and the phrase is unwatched from then on.
+# Deleting a line below lands in the diff a reviewer reads instead. The
+# catalogue is additive -- it may extend the gate, never narrow it.
+FD7_ABSOLUTES = (
+    "catch everything",
+    "catch-all",
+    "cannot be bypassed",
+    "unbypassable",
+    "nowhere to hide",
+    "every action",
+    "every tool call",
+    "no code changes",
+    "immutable audit",
+    "full fleet",
+    "whole fleet",
+    "universal",
+    "comprehensive",
+    "complete",
+)
+
 _WS = re.compile(r"[\s ​]+")
 _TAG = re.compile(r"<[^>]*>")
 
@@ -135,25 +164,52 @@ def matches(needle: str, hay: str, *, boundary: bool) -> bool:
     return re.search(rf"\b{re.escape(n)}\b", hay) is not None
 
 
-def load_phrases():
-    data = json.loads(CATALOGUE.read_text(encoding="utf-8"))
+def _entry(cls: str, locale: str, phrase: str, prose_only: bool, severity: str) -> dict:
+    return {
+        "class": cls,
+        "locale": locale,
+        "phrase": phrase,
+        "prose_only": prose_only,
+        # Boundary only for single-word prose entries; multi-word phrases are
+        # distinctive enough and CJK has no \b.
+        "boundary": prose_only and " " not in phrase,
+        "severity": severity,
+    }
+
+
+def read_catalogue() -> dict:
+    return json.loads(CATALOGUE.read_text(encoding="utf-8"))
+
+
+def load_phrases(data: dict | None = None):
+    """Expand the catalogue into the concrete phrases that will be searched.
+
+    The fd-7 absolutes are appended from FD7_ABSOLUTES, never read from `data`,
+    so an emptied or trimmed catalogue still scans for all 14.
+    """
+    if data is None:
+        data = read_catalogue()
     out = []
-    for group in data["phrases"]:
+    for group in data.get("phrases", []):
+        cls = group["class"]
+        if cls == "fd-7":
+            # Owned by FD7_ABSOLUTES. Ignored here so a stale data copy cannot
+            # drift from, or appear to authorise, the code-owned list.
+            continue
         prose_only = bool(group.get("prose_only"))
-        for phrase in group["any"]:
-            out.append(
-                {
-                    "class": group["class"],
-                    "locale": group.get("locale", "en"),
-                    "phrase": phrase,
-                    "prose_only": prose_only,
-                    # Boundary only for single-word prose entries; multi-word
-                    # phrases are distinctive enough and CJK has no \b.
-                    "boundary": prose_only and " " not in phrase,
-                    "severity": group.get("severity", "error"),
-                }
-            )
-    return out
+        severity = group.get("severity", "error")
+        locale = group.get("locale", "en")
+        for phrase in group.get("any", []):
+            out.append(_entry(cls, locale, phrase, prose_only, severity))
+    for phrase in FD7_ABSOLUTES:
+        out.append(_entry("fd-7", "en", phrase, True, "error"))
+    seen, deduped = set(), []
+    for e in out:
+        k = _key(e)
+        if k not in seen:
+            seen.add(k)
+            deduped.append(e)
+    return deduped
 
 
 def _key(p) -> tuple[str, str, str]:
