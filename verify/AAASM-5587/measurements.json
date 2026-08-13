@@ -1,8 +1,8 @@
 {
  "_generated_from": {
-  "commit": "51930847e61a0653cf27c92c34ce5b6e1ed2b3e6",
+  "commit": "14b8d2788b3374841566640956c04af2fc73daf0",
   "generated_at": "2026-08-13T11:33:58+00:00",
-  "note": "Screenshots in this directory were captured in the same run as these measurements, from a `pnpm build` of this commit. If this commit is not the tip of the branch, check whether anything under src/, i18n/, static/ or docusaurus.config.ts changed since — nothing else affects rendering.",
+  "note": "Screenshots in this directory were captured in the same run as these measurements, from a `pnpm build` of this commit. If this commit is not the tip of the branch, check whether anything under src/, i18n/, static/ or docusaurus.config.ts changed since — nothing else affects rendering. Re-stamped after a scripts/-only change that does not affect rendering.",
   "widths": [
    "desktop-1440",
    "mobile-390"
