@@ -81,6 +81,12 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build
         run: pnpm build
+      # Runs against build/ rather than src/, because the published artefact is
+      # what readers get: the same claim reaches them through HTML, the RSS and
+      # Atom feeds, and the JS bundles, and a source-only grep sees none of
+      # those. Stdlib Python only — no extra install step. AAASM-5696.
+      - name: Forbidden claims (ADR 0033)
+        run: pnpm claims:check
 
   sonar:
     name: SonarCloud

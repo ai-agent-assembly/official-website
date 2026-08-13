@@ -13,6 +13,7 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "generate:site-metadata": "node scripts/generate-site-metadata.mjs",
+    "claims:check": "python3 scripts/check-forbidden-claims.py build",
     "typecheck": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
