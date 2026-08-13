@@ -849,6 +849,47 @@ export default function Product(): ReactNode {
           </p>
         </section>
 
+        {/*
+         * The outcome beat.
+         *
+         * The page ran gap → decides → applied → limits → proof → run it, which
+         * is a beat short: pain, intervention, OUTCOME, proof. Nothing said what
+         * changes for the reader, so six sections of mechanism and bound arrived
+         * without ever landing on a result.
+         *
+         * It is one paragraph rather than a section of cards on purpose. The
+         * page's problem was never a shortage of material — five of the six
+         * decision cards already end in a bound longer than the claim — so the
+         * remedy has to be the missing beat and nothing more. Every clause here
+         * is a restatement of something established above it, which is why it
+         * carries no bound of its own: the routing condition, the "in front of
+         * the action" condition and the not-inspected record are all stated, in
+         * full, in the three sections it follows.
+         */}
+        <section className={styles.block}>
+          <div className={styles.eyebrow}>
+            <Translate id="product.outcome.eyebrow">What changes</Translate>
+          </div>
+          <h2 className={styles.blockTitle}>
+            <Translate id="product.outcome.title">
+              The moment you find out moves
+            </Translate>
+          </h2>
+          <p className={styles.p}>
+            <Translate id="product.outcome.body">
+              An agent’s first mistake normally surfaces in a bill, a log or an
+              incident review — after the call went out, when the only thing
+              left to decide is how to respond to it. What this changes is the
+              moment. On a path you route through Agent Assembly, with something
+              waiting in front of the action, a call your policy refuses does
+              not go out, and the refusal is what gets recorded. Off that path
+              nothing is claimed and nothing is quietly assumed: the record says
+              the action was not inspected, which is a gap you can go and close
+              rather than one you have to discover.
+            </Translate>
+          </p>
+        </section>
+
         <section className={styles.block}>
           <div className={styles.eyebrow}>
             <Translate id="product.notdo.eyebrow">The boundary</Translate>
