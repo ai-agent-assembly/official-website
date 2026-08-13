@@ -12,18 +12,17 @@
   "phrases": [
     {
       "class": "fd-1",
-      "why": "The fixed SDK -> proxy -> eBPF pipeline as THE architecture, in prose or as a three-box diagram.",
+      "why": "The fixed SDK -> proxy -> eBPF pipeline as THE architecture, in prose or as a three-box diagram. The any_units entries carry a {unit} slot expanded over layer/tier/level/stage/plane in check-forbidden-claims.py, because the framing is what is forbidden and the noun carrying it is interchangeable: five reworded instances escaped the literal list by substituting exactly this word. 'kernel layer' stays literal on purpose -- 'at the kernel level' is ordinary technical prose, not a claim.",
       "locale": "en",
-      "any": [
-        "independently-deployable layers",
-        "independently deployable layers",
-        "enforcement layers",
-        "the kernel layer",
-        "kernel layer",
-        "three interception layers",
-        "three layers",
-        "Adopt the depth you need"
-      ]
+      "any_units": [
+        "independently-deployable {unit}s",
+        "independently deployable {unit}s",
+        "enforcement {unit}s",
+        "three interception {unit}s",
+        "three {unit}s",
+        "three-{unit}"
+      ],
+      "any": ["the kernel layer", "kernel layer", "Adopt the depth you need"]
     },
     {
       "class": "fd-1",
@@ -39,14 +38,14 @@
     },
     {
       "class": "fd-2",
-      "why": "eBPF (or 'the kernel layer') as a cross-platform or universal final layer, or as a mechanism that catches everything including bypass attempts.",
+      "why": "eBPF (or 'the kernel layer') as a cross-platform or universal final layer, or as a mechanism that catches everything including bypass attempts. The any_units entries cover the 'each one catches what the previous one missed' shape, whose noun is likewise interchangeable.",
       "locale": "en",
+      "any_units": ["what the {unit}s above", "each {unit} sees what"],
       "any": [
         "including deliberate bypass attempts",
         "including bypass attempts",
         "catches kernel-level bypass",
-        "catches what the SDK misses",
-        "what the layers above never saw"
+        "catches what the SDK misses"
       ]
     },
     {
@@ -57,12 +56,10 @@
     },
     {
       "class": "rejected-hero",
-      "why": "The hero framing AAASM-5585 removed from the homepage: the product described as a governance layer for agents.",
+      "why": "The hero framing AAASM-5585 removed from the homepage: the product described as a governance layer for agents. 'governance {unit} for' replaces the three literal 'governance layer for ...' entries -- it covers them plus the noun the rewording used ('the governance plane for autonomous software') and does not depend on guessing what follows 'for'.",
       "locale": "en",
+      "any_units": ["governance {unit} for"],
       "any": [
-        "governance layer for AI agents",
-        "governance layer for autonomous agents",
-        "governance layer for agents",
         "governance runtime for AI agents",
         "governance layer that sits between"
       ]

@@ -72,6 +72,34 @@ FD7_ABSOLUTES = (
     "complete",
 )
 
+# The noun slot the stack framings are built on. A catalogue entry may write
+# `{unit}` and is expanded over this set at load time, so one authored line
+# covers every synonym.
+#
+# Why a substitution set and not stemming or normalisation
+# -------------------------------------------------------
+# Stemming was considered and rejected on the evidence. All five phrasings that
+# escaped the literal catalogue -- "three independently deployable TIERS",
+# "three LEVELS", "the three-TIER interception model", "each STAGE sees what
+# the one before it missed", "the governance PLANE" -- are substitutions in
+# this one noun slot, not morphological variants of "layer". No stemmer relates
+# layer to tier, so a stem pipeline would have caught 0 of the 5: it generalises
+# on the wrong axis.
+#
+# It would also cost the two properties that make this script's absences
+# trustworthy. Expansion yields plain strings, so the matcher stays substring
+# plus `\b` and never builds a regex out of catalogue content -- trap 2 above,
+# which corrupts multi-word phrases. And the positive control keeps proving
+# every concrete string that will actually be searched, rather than asserting
+# over a transformation of it. Stemming is language-specific besides, and half
+# this catalogue is zh-Hant, which has neither stems nor word boundaries.
+#
+# The cost of the substitution set is that it only generalises where an author
+# writes `{unit}`, so it is applied to the framings the ADR forbids and not to
+# entries where a synonym is ordinary technical prose -- "at the kernel level"
+# is a normal thing to write, so "kernel layer" stays literal. AAASM-5730.
+UNIT_SYNONYMS = ("layer", "tier", "level", "stage", "plane")
+
 # Minimum number of AUTHORED entries per `class/locale` group in
 # forbidden-claims.json.
 #
@@ -82,11 +110,11 @@ FD7_ABSOLUTES = (
 # in a diff a reviewer reads. A gate whose driver the gate does not defend is
 # not a gate; a floor that punished growth would just be worked around.
 CATALOGUE_FLOOR = {
-    "fd-1/en": 8,
+    "fd-1/en": 9,
     "fd-1/zh-Hant": 6,
-    "fd-2/en": 5,
+    "fd-2/en": 6,
     "fd-3/en": 2,
-    "rejected-hero/en": 5,
+    "rejected-hero/en": 3,
     "rejected-hero/zh-Hant": 2,
     "approval/en": 2,
     "approval/zh-Hant": 2,
@@ -214,7 +242,7 @@ def entry_counts(data: dict) -> dict[str, int]:
     counts: dict[str, int] = {}
     for group in data.get("phrases", []):
         key = f"{group['class']}/{group.get('locale', 'en')}"
-        counts[key] = counts.get(key, 0) + len(group.get("any", []))
+        counts[key] = counts.get(key, 0) + len(group.get("any", [])) + len(group.get("any_units", []))
     return counts
 
 
@@ -241,6 +269,14 @@ def integrity(data: dict) -> list[str]:
                 "fd-7 is owned by FD7_ABSOLUTES in check-forbidden-claims.py and ignored "
                 "here -- remove the fd-7 group from forbidden-claims.json"
             )
+        # A template with no slot expands to five copies of itself, which would
+        # inflate the phrase count while widening nothing.
+        for template in group.get("any_units", []):
+            if "{unit}" not in template:
+                errs.append(
+                    f"{group['class']}/{group.get('locale', 'en')}: any_units entry "
+                    f"{template!r} has no {{unit}} slot -- move it to \"any\""
+                )
 
     for key, count in sorted(counts.items()):
         if key not in CATALOGUE_FLOOR:
@@ -285,6 +321,9 @@ def load_phrases(data: dict | None = None):
         locale = group.get("locale", "en")
         for phrase in group.get("any", []):
             out.append(_entry(cls, locale, phrase, prose_only, severity))
+        for template in group.get("any_units", []):
+            for unit in UNIT_SYNONYMS:
+                out.append(_entry(cls, locale, template.replace("{unit}", unit), prose_only, severity))
     for phrase in FD7_ABSOLUTES:
         out.append(_entry("fd-7", "en", phrase, True, "error"))
     seen, deduped = set(), []
