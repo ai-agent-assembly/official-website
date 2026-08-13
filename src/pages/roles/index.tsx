@@ -78,8 +78,9 @@ export default function RolesIndex(): ReactNode {
             They are not four independent documents. Every capability sentence
             in all four is quoted from one shared claim register, with the bound
             that travels with it — so two of these pages cannot describe the
-            same control at two different strengths. A brief may leave an entry
-            out; it may not restate one more weakly.
+            same control at two different strengths. A brief may cite a register
+            entry or stay silent; it may not restate one at a different
+            strength.
           </Translate>
         </p>
 

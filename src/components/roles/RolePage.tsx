@@ -240,7 +240,7 @@ export default function RolePage({
               values={{register: <RegisterLink />}}
             >
               {
-                'Each card below is one entry of a sixteen-entry claim register shared by all four of these pages, quoted rather than paraphrased. The term says how far the claim reaches; the bound beside it is part of the claim, not context for it. Every entry — including the ones this page does not cite — is published with the manifest rows behind it: {register}.'
+                'Each card below is one entry of a sixteen-entry claim register shared by all four of these pages, quoted rather than paraphrased. The term is the register’s own, copied off the evidence rather than chosen to suit the sentence; the bound beside it is part of the claim, not context for it. Every entry — including the ones this page does not cite — is published with the manifest rows behind it: {register}.'
               }
             </Translate>
           </p>
