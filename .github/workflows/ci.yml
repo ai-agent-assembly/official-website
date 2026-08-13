@@ -79,6 +79,12 @@ jobs:
           cache: pnpm
       - name: Install
         run: pnpm install --frozen-lockfile --ignore-scripts
+      # Proves the gate's own guards fire before the gate is believed: that a
+      # trimmed catalogue fails, that the 14 fd-7 absolutes survive an emptied
+      # one, and that the rewordings which escaped in AAASM-5730 are caught.
+      # Needs no build/, so it runs first and fails fast. AAASM-5730.
+      - name: Forbidden claims gate self-test
+        run: pnpm claims:selftest
       - name: Build
         run: pnpm build
       # Runs against build/ rather than src/, because the published artefact is
