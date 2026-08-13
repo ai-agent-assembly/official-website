@@ -427,9 +427,11 @@ function platforms(): readonly Platform[] {
           Do not read that as no host enforcement on macOS. It is the one
           platform on which the host-enforcement rung is reachable at all,
           through an opt-in, authorized settings write for the managed Claude
-          Code launch. What that write establishes is that the file says the
-          right thing; whether the tool honours those keys while it runs is
-          unmeasured.
+          Code launch. Two things bound that hard. What the write establishes is
+          that the file says the right thing; whether the tool honours those
+          keys while it runs is unmeasured. And the rung is recorded as unearned
+          at the published v0.0.1-rc.6 tag — the evidence it rests on postdates
+          that tag.
         </Translate>
       ),
     },

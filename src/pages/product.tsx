@@ -350,7 +350,9 @@ function applied(): readonly Applied[] {
           macOS has no equivalent adapter — and is simultaneously the only
           platform on which the host-enforcement rung is reachable at all,
           through an opt-in, authorized settings write. Both halves are true and
-          both are required. Windows has neither.
+          both are required. That rung is recorded as unearned at the published
+          v0.0.1-rc.6 tag, because the evidence it rests on postdates that tag.
+          Windows has neither.
         </Translate>
       ),
     },
