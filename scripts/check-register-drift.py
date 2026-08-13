@@ -44,9 +44,10 @@ USAGE
 -----
     python3 scripts/check-register-drift.py build --register <path|url>
 
-`--register` accepts a local path to `role-narratives.md` (a `docs` checkout) or
-an https URL to the raw file. It defaults to the raw file on the docs repo's
-default branch.
+With no `--register`, it fetches the published register over https from a
+constant URL. Pass `--register <path>` to compare against a local
+`role-narratives.md` in a `docs` checkout instead. It deliberately does not
+accept a URL on the command line — see `load_register`.
 
 NOT WIRED INTO CI YET. Wiring it means deciding whether this repository's CI may
 depend on another repository's content over the network, and whether a merge in
@@ -61,10 +62,10 @@ import html
 import pathlib
 import re
 import sys
-import urllib.parse
 import urllib.request
 
-DEFAULT_REGISTER = (
+# The published register. A constant, and the only URL this script fetches.
+REGISTER_URL = (
     "https://raw.githubusercontent.com/ai-agent-assembly/docs/main/"
     "docs/src/role-narratives.md"
 )
@@ -89,6 +90,12 @@ def _local_file(src: str, suffix: str) -> pathlib.Path:
     first is what makes the checks meaningful — `../` segments and symlinks are
     collapsed before anything is asserted about the result, rather than after.
     """
+    if "://" in src:
+        raise ValueError(
+            "--register takes a local path, not a URL. Omit it to fetch the "
+            "published register, or clone the docs repo and pass the path to "
+            "its role-narratives.md"
+        )
     path = pathlib.Path(src).expanduser().resolve(strict=False)
     if path.suffix != suffix:
         raise ValueError(f"expected a {suffix} file, got {path.name}")
@@ -97,29 +104,21 @@ def _local_file(src: str, suffix: str) -> pathlib.Path:
     return path
 
 
-def load_register(src: str) -> str:
-    """Read the register from an https URL or a local markdown file.
+def load_register(src: str | None) -> str:
+    """Read the register: the published one, or a local markdown file.
 
-    Only https is accepted. The register is the artifact every claim on four
-    public pages is checked against, so fetching it over a channel that can be
-    rewritten in transit would make a PASS meaningless — anyone able to edit the
-    response can make any drift look clean.
-
-    The scheme is parsed rather than string-matched, so this rejects `ftp://`
-    and `file://` as well as cleartext http, and is not fooled by case. A local
-    path has no scheme and falls through to the file branch.
+    The network fetch uses REGISTER_URL, a module constant, and nothing from
+    argv ever reaches `urlopen`. That is deliberate rather than incidental.
+    Taking a URL on the command line would mean validating an attacker-shaped
+    string into a network request, and there is no use case here that needs it:
+    you either want the published register (the default) or the one in your
+    `docs` checkout (`--register <path>`). A fork's raw URL is not a third case
+    worth an SSRF surface — clone it and pass the path.
     """
-    scheme = urllib.parse.urlsplit(src).scheme.lower()
-    if not scheme:
-        return _local_file(src, ".md").read_text(encoding="utf-8")
-    if scheme != "https":
-        raise ValueError(
-            f"refusing to fetch the register over {scheme} — only https is "
-            f"accepted, because an in-transit rewrite would make a clean "
-            f"result meaningless"
-        )
-    with urllib.request.urlopen(src, timeout=30) as fh:  # noqa: S310
-        return fh.read().decode("utf-8")
+    if src is None:
+        with urllib.request.urlopen(REGISTER_URL, timeout=30) as fh:  # noqa: S310
+            return fh.read().decode("utf-8")
+    return _local_file(src, ".md").read_text(encoding="utf-8")
 
 
 def parse_register(md: str) -> dict[str, dict[str, str]]:
@@ -248,13 +247,20 @@ def positive_control(rows, found) -> str | None:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("build", nargs="?", default="build")
-    ap.add_argument("--register", default=DEFAULT_REGISTER)
+    ap.add_argument(
+        "--register",
+        default=None,
+        metavar="PATH",
+        help="path to a local role-narratives.md (a docs checkout). "
+             "Omit to fetch the published register over https.",
+    )
     args = ap.parse_args()
 
     try:
         rows = parse_register(load_register(args.register))
     except Exception as exc:  # noqa: BLE001
-        print(f"FAIL: could not read the register from {args.register}: {exc}")
+        source = args.register or REGISTER_URL
+        print(f"FAIL: could not read the register from {source}: {exc}")
         return 2
     if len(rows) < 16:
         print(f"FAIL: parsed {len(rows)} register entries, expected at least 16 — "
