@@ -25,4 +25,12 @@ and we publish exactly where that line falls in
 [Limitations and known bypasses](https://docs.agent-assembly.com/core/latest/devtools/limitations.html).
 
 This blog is where we'll share the build — engineering notes, security decisions, and the
-story of making a governance layer for autonomous agents.
+story of deciding what an agent may do before it does it.
+
+:::note[Editorial note — 13 August 2026]
+
+The closing line originally described the product with a category phrase we have since stopped
+using, because it names a component rather than what the product decides. Wording only — no claim
+in this post has been changed or withdrawn.
+
+:::

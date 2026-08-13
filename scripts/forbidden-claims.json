@@ -1,0 +1,119 @@
+{
+  "$comment": "Forbidden-claim catalogue for the built site (AAASM-5696). Checked by scripts/check-forbidden-claims.py against build/ output, NOT source. Canonical authority is ADR 0033 in ai-agent-assembly/agent-assembly (docs/src/adr/0033-canonical-governance-and-enforcement-architecture.md) -- its 'Explicitly forbidden designs' section and the section 6 claim vocabulary. Do not restate the ADR here; add phrases and cite the design they violate.",
+
+  "$rules": {
+    "framing_not_sentences": "Entries MUST be the bare FRAMING, never a full sentence copied from one page. The first version of this catalogue held '/product's whole sentence, so it matched that one page and missed the same framing on the blog, which continues '...layers: SDK (in-process)'. A sentence-shaped entry finds an instance; a framing-shaped entry finds the class. This is the single most important rule in this file.",
+    "prose_only": "Single common words (universal, complete, comprehensive) are marked prose_only. They are searched in reader-facing text only, never in JS bundles, where 'autocomplete' and React internals produce pure noise -- 22 false positives when this was measured.",
+    "word_boundary": "prose_only entries are matched on WORD BOUNDARIES, because a bare substring 'complete' also matches 'incomplete', which asserts the opposite. Boundaries are applied via Python re (\\b), never via grep -E, which accepts \\b and silently ignores it.",
+    "positive_control": "Every phrase is proven matchable against a synthetic fixture before any absence is reported. An absence with no positive control is not a measurement."
+  },
+
+  "phrases": [
+    {
+      "class": "fd-1",
+      "why": "The fixed SDK -> proxy -> eBPF pipeline as THE architecture, in prose or as a three-box diagram.",
+      "locale": "en",
+      "any": [
+        "independently-deployable layers",
+        "independently deployable layers",
+        "enforcement layers",
+        "the kernel layer",
+        "kernel layer",
+        "three interception layers",
+        "three layers",
+        "Adopt the depth you need"
+      ]
+    },
+    {
+      "class": "fd-1",
+      "locale": "zh-Hant",
+      "any": [
+        "可獨立部署的層級",
+        "強制執行層",
+        "核心層",
+        "核心掛鉤",
+        "三個攔截層",
+        "依你所需採用相應的深度"
+      ]
+    },
+    {
+      "class": "fd-2",
+      "why": "eBPF (or 'the kernel layer') as a cross-platform or universal final layer, or as a mechanism that catches everything including bypass attempts.",
+      "locale": "en",
+      "any": [
+        "including deliberate bypass attempts",
+        "including bypass attempts",
+        "catches kernel-level bypass",
+        "catches what the SDK misses",
+        "what the layers above never saw"
+      ]
+    },
+    {
+      "class": "fd-3",
+      "why": "The gateway as a fourth interception layer. It is E1 and holds no traffic.",
+      "locale": "en",
+      "any": ["feed a central gateway", "fourth interception layer"]
+    },
+    {
+      "class": "rejected-hero",
+      "why": "The hero framing AAASM-5585 removed from the homepage: the product described as a governance layer for agents.",
+      "locale": "en",
+      "any": [
+        "governance layer for AI agents",
+        "governance layer for autonomous agents",
+        "governance layer for agents",
+        "governance runtime for AI agents",
+        "governance layer that sits between"
+      ]
+    },
+    {
+      "class": "rejected-hero",
+      "locale": "zh-Hant",
+      "any": ["代理而生的治理層", "之間的治理層"]
+    },
+    {
+      "class": "approval",
+      "why": "Approval claims must use the ADR 0033 section 6 term 'Approval required' and carry their bound. No shipped operator surface answers the queue (AAASM-5657), so a hold times out into a refusal.",
+      "locale": "en",
+      "any": ["human-in-the-loop approval", "approval gates"]
+    },
+    {
+      "class": "approval",
+      "locale": "zh-Hant",
+      "any": ["人在迴路", "核准關卡"]
+    },
+    {
+      "class": "fd-7",
+      "why": "ADR 0033 forbidden design 7 -- the 14 banned absolutes, verbatim. NEVER waivable, by anyone, for any period (ADR 0034 Decision 10). This list is the source for the AAASM-5536 CI gate: a phrase absent from it is a phrase the gate will never catch, so extend the list rather than relying on review.",
+      "locale": "en",
+      "prose_only": true,
+      "any": [
+        "catch everything",
+        "catch-all",
+        "cannot be bypassed",
+        "unbypassable",
+        "nowhere to hide",
+        "every action",
+        "every tool call",
+        "no code changes",
+        "immutable audit",
+        "full fleet",
+        "whole fleet",
+        "universal",
+        "comprehensive",
+        "complete"
+      ]
+    },
+    {
+      "class": "fd-7-adjacent",
+      "why": "Not on the ADR's literal list, so NOT an fd-7 violation and not treated as one. These are the same claim shape reached by synonym, found on the blog during AAASM-5696. Recorded here so the class is visible; if the owners want them binding, they belong in the ADR's list first, not in this file.",
+      "locale": "en",
+      "severity": "warn",
+      "any": [
+        "without touching agent code",
+        "with no code change",
+        "without code changes"
+      ]
+    }
+  ]
+}
