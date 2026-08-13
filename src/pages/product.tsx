@@ -220,8 +220,7 @@ function decisions(): readonly Decision[] {
       ),
       text: (
         <Translate id="product.decides.spend.text">
-          A policy can declare a spend cap, per agent or across a team, and the
-          gateway holds the counters behind it.
+          A policy can declare a spend cap, per agent or across a team.
         </Translate>
       ),
       bound: (
