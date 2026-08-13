@@ -860,13 +860,17 @@ export default function HowItWorks(): ReactNode {
             </strong>{' '}
             <Translate id="hiw.outside.rule">
               For anything outside the boundary, nothing is known about the
-              action — so it is not reported as allowed and not as clean. The
-              record says the action or its payload was not inspected. Read that
-              as scoped to the action rather than to the connection carrying it:
-              a host the proxy does not inspect is still adjudicated when the
-              connection is made, so the connection is observed while the
-              payload is not. And a quiet log is evidence about the observer,
-              never about the agent.
+              action, so the rule is that it is not reported as allowed and not
+              as clean: the record says the action or its payload was not
+              inspected. Read that as scoped to the action rather than to the
+              connection carrying it — a host the proxy does not inspect is
+              still adjudicated when the connection is made, so the connection
+              is observed while the payload is not. One live defect runs against
+              this rule today: the connection-level event still records an allow
+              for traffic that is about to be tunnelled uninspected, tracked as
+              AAASM-5637. Take the rule and the open defect together rather than
+              as finished behaviour. And a quiet log is evidence about the
+              observer, never about the agent.
             </Translate>
           </p>
         </section>
