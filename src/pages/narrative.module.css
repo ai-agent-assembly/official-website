@@ -320,9 +320,23 @@
  * diagram is a field, not a stack. Three rules hold it to that, and a layout
  * pass that breaks any of them reintroduces the design:
  *
- *   1. No connector runs BETWEEN the deciding roles. The only arrows point at
- *      the control plane (a decision request) and at the evidence pipeline.
- *   2. Nothing is numbered, and nothing is ordered top to bottom by strength.
+ *   1. No connector runs between the roles. There is no connector in this
+ *      figure of any kind — no SVG, no pseudo-element, no arrow glyph — and
+ *      that is the point rather than an omission: the first one added would be
+ *      the first connector in a diagram whose correctness rests on having none.
+ *      An earlier version of this comment described "the only arrows" as
+ *      pointing at the control plane and the evidence pipeline. No such arrows
+ *      ever existed, and a maintainer who trusted the comment would have drawn
+ *      them. Do not.
+ *   2. Nothing is numbered, and nothing in THIS FIGURE is ordered by strength.
+ *      That is a rule about the diagram, not a rule about the site: `/product`
+ *      does rank the three application points ("The strongest of the three"),
+ *      in `product-promise.md`'s own words, and that is deliberate. Ranking
+ *      authority is not the forbidden design; an ordered chain whose members
+ *      cover for each other is. The difference needs a sentence to hold it, and
+ *      `/product` has one — "they are not an ordered chain, one does not cover
+ *      for another". A figure has nowhere to put that sentence, so it carries
+ *      no ranking at all and its caption says the roles are listed in no order.
  *   3. The outside-the-boundary region is drawn detached and dashed, because
  *      it is not a stage — it is where none of this applies.
  *
@@ -486,6 +500,16 @@
   .wrap {
     padding: 3rem 1rem 4rem;
   }
+  /*
+   * `.field` collapsing here is what the diagram's fd-1 defence has to survive.
+   * Below this breakpoint the figure is a single vertical column, so nothing on
+   * screen is left of, right of, or beside anything else, and the control plane
+   * lands directly under the three routed-path roles. The devices that keep it
+   * from reading as a pipeline are therefore textual, not positional: the group
+   * labels on `.fieldPath` and `.fieldPlane`, and a caption that names the boxes
+   * instead of pointing at them. If you reintroduce a spatial word in either,
+   * this rule is what makes it false.
+   */
   .cols,
   .grid2,
   .grid3,
