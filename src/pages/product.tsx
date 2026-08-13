@@ -245,17 +245,23 @@ export default function Product(): ReactNode {
                 </Translate>
               </p>
               {/*
-               * The eBPF entry carries its platform, because an unqualified
-               * one here would contradict the section above — which states
-               * that OS-level interception is platform-specific and that
-               * macOS and Windows have no equivalent adapter — and would
-               * re-imply the cross-platform final tier of fd-2.
+               * Both platform-bound components carry their platform. An
+               * unqualified entry here would contradict the section above —
+               * which states that OS-level interception is platform-specific
+               * and that macOS and Windows have no equivalent adapter — and
+               * would re-imply the cross-platform final tier of fd-2.
+               *
+               * The proxy is Unix-only: ADR 0033 §1 E3, and §5.3 records
+               * aa-proxy as Unsupported on Windows with no build path. Listing
+               * it unqualified tells a Windows reader they can self-host a
+               * stack containing a component that does not build for them.
                */}
               <p className={styles.p}>
                 <Translate id="product.oss.core.stack">
-                  Self-host a limited-function stack — gateway, CLI, SDKs,
-                  proxy, and the Linux eBPF probes — from the Apache-2.0 crates,
-                  for local evaluation and development. No cost.
+                  Self-host a limited-function stack from the Apache-2.0 crates
+                  for local evaluation and development — gateway, CLI and SDKs
+                  on any platform; the proxy on macOS and Linux; the eBPF probes
+                  on Linux. No cost.
                 </Translate>
               </p>
             </div>

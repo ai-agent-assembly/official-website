@@ -93,7 +93,7 @@
     "message": "開放原始碼核心"
   },
   "product.oss.core.stack": {
-    "message": "以 Apache-2.0 crate 自行架設一套受限功能的堆疊 — gateway、CLI、SDK、代理伺服器，以及 Linux 上的 eBPF 探針 — 用於本機評估與開發。免費。"
+    "message": "以 Apache-2.0 crate 自行架設一套受限功能的堆疊，用於本機評估與開發 — gateway、CLI 與 SDK 適用所有平台；代理伺服器適用 macOS 與 Linux；eBPF 探針僅適用 Linux。免費。"
   },
   "product.oss.cloud.title": {
     "message": "託管 Cloud Console"
