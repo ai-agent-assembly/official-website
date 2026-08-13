@@ -573,7 +573,24 @@ export default function HowItWorks(): ReactNode {
            * The diagram. See the `.field` comment in narrative.module.css for
            * the three layout rules that keep it from becoming the pipeline it
            * replaced — the most important being that no connector runs between
-           * the three roles on the left.
+           * the routed-path roles.
+           *
+           * The caption and the two group labels are the only devices that stop
+           * an fd-1 reading, so BOTH must be true at every viewport width. They
+           * were not: the caption said "on the left" and "on the right", and the
+           * grid collapses to one column at 800px, so on every phone and on a
+           * tablet in portrait there is no left or right — and the control plane
+           * landed fourth, directly under the three routed-path roles, which is
+           * exactly the "layer below that picks up what an absent one would have
+           * done" fd-3 forbids.
+           *
+           * The fix is textual rather than positional on purpose. Reordering the
+           * boxes with CSS `order` would leave the DOM sequence — the one a
+           * screen reader follows — disagreeing with the visual one. So the
+           * control plane carries a label that contrasts with the routed-path
+           * group's ("Not on any path" against "On a path you routed"), and the
+           * caption names the boxes instead of pointing at them. Both survive
+           * the collapse. Do not reintroduce a spatial word here.
            */}
           <figure className={styles.field}>
             <div className={styles.fieldPath}>
@@ -623,6 +640,9 @@ export default function HowItWorks(): ReactNode {
               </div>
             </div>
             <div className={styles.fieldPlane}>
+              <p className={styles.fieldLabel}>
+                <Translate id="hiw.field.planeLabel">Not on any path</Translate>
+              </p>
               <p className={styles.planeName}>
                 <Translate id="hiw.field.plane">
                   Governance control plane
@@ -679,13 +699,14 @@ export default function HowItWorks(): ReactNode {
             </div>
             <figcaption className={styles.fieldLegend}>
               <Translate id="hiw.field.legend">
-                Read the picture for what it does not contain. No arrow runs
-                between the three roles on the left: none hands work to another,
-                none is a fallback for another, and one you have not deployed
-                leaves a hole that gets reported rather than filled. The box on
-                the right decides and holds no traffic, so its answer stops an
-                action only where one of the roles on the left is already
-                waiting in front of that action.
+                Read the picture for what it does not contain. Nothing connects
+                the three roles on the routed path to one another, and they are
+                listed in no order: none hands work to another, none is a
+                fallback for another, and one you have not deployed leaves a
+                hole that gets reported rather than filled. The governance
+                control plane is not on any path — it decides and holds no
+                traffic, so its answer stops an action only where one of the
+                routed-path roles is already waiting in front of that action.
               </Translate>
             </figcaption>
           </figure>
