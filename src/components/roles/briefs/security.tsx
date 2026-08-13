@@ -199,6 +199,24 @@ export const securityBrief: RoleBrief = {
       external: true,
     },
     {
+      key: 'posture',
+      text: (
+        <Translate id="roles.security.proof.posture">
+          What is on by default, row by row — the Level 3 table on the product
+          promise. A capability that exists but is off is a different product
+          from one that is on.
+        </Translate>
+      ),
+      label: (
+        <Translate id="roles.security.proof.posture.link">
+          What is on by default →
+        </Translate>
+      ),
+      href: PRODUCT_PROMISE,
+      targetProduct: 'docs',
+      external: true,
+    },
+    {
       key: 'vocabulary',
       text: (
         <Translate id="roles.security.proof.vocabulary">
@@ -369,22 +387,6 @@ export const securityBrief: RoleBrief = {
         </Translate>
       ),
       href: COMPATIBILITY,
-      targetProduct: 'docs',
-      external: true,
-    },
-    {
-      text: (
-        <Translate id="roles.security.next.default">
-          If you need the default posture row by row before any of that, it is
-          the Level 3 table on the product promise.
-        </Translate>
-      ),
-      label: (
-        <Translate id="roles.security.next.default.link">
-          What is on by default →
-        </Translate>
-      ),
-      href: PRODUCT_PROMISE,
       targetProduct: 'docs',
       external: true,
     },
