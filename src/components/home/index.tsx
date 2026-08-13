@@ -1273,6 +1273,41 @@ export function StartByRole(): ReactNode {
             </div>
           ))}
         </div>
+        {/*
+         * AAASM-5587 — the one link this ticket adds to AAASM-5585's page.
+         *
+         * The five cards above route each reader straight out to the Docs Hub
+         * page their job ends at. The role briefs are the step that was missing
+         * between the two: the same product read from one job, end to end, with
+         * every capability sentence quoted from the shared claim register and
+         * its bound beside it.
+         *
+         * It is additive on purpose. AAASM-5594's partition puts this file
+         * under AAASM-5585 and the navbar and footer under AAASM-5596, and
+         * AAASM-5584's own boundary table permits exactly this much — "adding a
+         * link to a role page is fine; rewriting the page is not". So no card
+         * above is repointed and no copy above is touched. It points at the
+         * chooser rather than at four routes, so the navbar budget is untouched
+         * and AAASM-5596 has one destination to add rather than four.
+         */}
+        <p className={styles.sectionFoot}>
+          <Translate id="home.role.briefsNote">
+            Each of the first four routes above has a fuller brief — what is
+            going wrong today, what is supported, how far each answer reaches,
+            what it does not cover, and what to read next.
+          </Translate>{' '}
+          <TrackedLink
+            className={styles.trustLink}
+            eventName="cta_view_docs_click"
+            ctaLocation="body"
+            targetProduct="agent_assembly"
+            to="/roles"
+          >
+            <Translate id="home.role.briefsLink">
+              Read the evaluator briefs →
+            </Translate>
+          </TrackedLink>
+        </p>
         <p className={styles.sectionFoot}>
           <Translate id="home.role.cloudNote">
             Running it as a managed service is a fifth path, and it is not
