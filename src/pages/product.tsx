@@ -865,6 +865,25 @@ export default function Product(): ReactNode {
          * carries no bound of its own: the routing condition, the "in front of
          * the action" condition and the not-inspected record are all stated, in
          * full, in the three sections it follows.
+         *
+         * Two clauses are worded the way they are for a reason, and an editor
+         * tightening this paragraph will want to undo both:
+         *
+         *   - "the refusal is what the record says", NOT "the refusal is what
+         *     gets recorded". The second asserts that a record is made, and RC6
+         *     marks durable arrival of a decision's record `Unmeasured` — the
+         *     Proof card on this same page says emission is best-effort and a
+         *     decision can be made and its record lost. The published wording
+         *     is about what the record SAYS where there is one, which is the
+         *     contrast this sentence needs and all it is entitled to.
+         *   - "nothing is claimed", with NO second clause. An earlier draft read
+         *     "nothing is claimed and nothing is quietly assumed". That second
+         *     half is a whole-system statement, and one open defect currently
+         *     contradicts it: AAASM-5637, the CONNECT-level event that still
+         *     records an allow for traffic about to be tunnelled uninspected,
+         *     is precisely a quiet assumption. RC7 is stated with that defect on
+         *     `/how-it-works`; this page must not re-assert the finished
+         *     behaviour in a summary sentence.
          */}
         <section className={styles.block}>
           <div className={styles.eyebrow}>
@@ -882,10 +901,10 @@ export default function Product(): ReactNode {
               left to decide is how to respond to it. What this changes is the
               moment. On a path you route through Agent Assembly, with something
               waiting in front of the action, a call your policy refuses does
-              not go out, and the refusal is what gets recorded. Off that path
-              nothing is claimed and nothing is quietly assumed: the record says
-              the action was not inspected, which is a gap you can go and close
-              rather than one you have to discover.
+              not go out, and the refusal is what the record says. Off that path
+              nothing is claimed: the record says the action was not inspected,
+              which is a gap you can go and close rather than one you have to
+              discover.
             </Translate>
           </p>
         </section>
