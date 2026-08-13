@@ -1,7 +1,7 @@
 import React from 'react';
 import Translate, {translate} from '@docusaurus/Translate';
 import type {RoleBrief} from '../types';
-import {RC6, RC10, RC11, RC15} from './register';
+import {RC6, RC8, RC10, RC11, RC14, RC15} from './register';
 import {
   DOCKER_CONTAINERS,
   SELF_HOST_OBSERVABILITY,
@@ -245,15 +245,7 @@ export const platformBrief: RoleBrief = {
           Kernel probes report; they do not decide.
         </Translate>
       ),
-      text: (
-        <Translate id="roles.platform.limit.probes.text">
-          On Linux, kernel probes report TLS plaintext, process execution and
-          file activity (RC8). No such signal participates in any allow or deny
-          decision, the one enforcing program terminates a confined process
-          after the offending syscall has already run, and the file-I/O probes
-          are x86_64 only.
-        </Translate>
-      ),
+      entry: RC8,
     },
     {
       key: 'environment',
@@ -304,12 +296,7 @@ export const platformBrief: RoleBrief = {
           Windows has no local mediation.
         </Translate>
       ),
-      text: (
-        <Translate id="roles.platform.limit.platform.text">
-          UDP, QUIC and HTTP/3 are outside the transport set on the platforms
-          that are supported (RC14).
-        </Translate>
-      ),
+      entry: RC14,
     },
   ],
 

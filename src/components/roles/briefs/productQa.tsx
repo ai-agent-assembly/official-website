@@ -1,7 +1,7 @@
 import React from 'react';
 import Translate, {translate} from '@docusaurus/Translate';
 import type {RoleBrief} from '../types';
-import {RC1, RC3, RC4, RC6, RC13} from './register';
+import {RC1, RC3, RC4, RC6, RC12, RC13} from './register';
 import {
   RISK_SCENARIOS,
   PRODUCT_PROMISE,
@@ -178,14 +178,11 @@ export const productQaBrief: RoleBrief = {
       ),
       text: (
         <Translate id="roles.productqa.limit.approval.text">
-          No manifest row reaches the Approval required term (RC12). The hold
-          exists in the gateway path and fails closed on timeout, but no shipped
-          operator surface can answer it, so in practice it holds and then
-          refuses; inside the MCP tunnel a pending decision is downgraded to a
-          refusal outright. An acceptance criterion written against a human
-          approval step cannot pass today. Tracked as AAASM-5657.
+          An acceptance criterion written against a human approval step cannot
+          pass today.
         </Translate>
       ),
+      entry: RC12,
     },
     {
       key: 'prevented',

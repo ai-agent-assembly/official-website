@@ -1,7 +1,19 @@
 import React from 'react';
 import Translate, {translate} from '@docusaurus/Translate';
 import type {RoleBrief} from '../types';
-import {RC1, RC2, RC3, RC4, RC6, RC11} from './register';
+import {
+  RC1,
+  RC2,
+  RC3,
+  RC4,
+  RC6,
+  RC7,
+  RC9,
+  RC11,
+  RC12,
+  RC14,
+  RC16,
+} from './register';
 import {
   SECURITY_MODEL,
   RISK_SCENARIOS,
@@ -195,13 +207,11 @@ export const securityBrief: RoleBrief = {
       ),
       text: (
         <Translate id="roles.security.limit.bypass.text">
-          ADR 0030 §4.1 reserves that claim for its HostEnforced state. RC9 is
-          the whole of it: one path, macOS only, resting on a file read-back
-          whose runtime honouring is unmeasured, and recorded as unearned at the
-          published v0.0.1-rc.6 tag. Treat every other state — including
-          GatewayProtected — as saying nothing about bypass resistance.
+          Treat every other state — including GatewayProtected — as saying
+          nothing about bypass resistance.
         </Translate>
       ),
+      entry: RC9,
     },
     {
       key: 'empty',
@@ -254,15 +264,7 @@ export const securityBrief: RoleBrief = {
           Uninspected is not clean.
         </Translate>
       ),
-      text: (
-        <Translate id="roles.security.limit.uninspected.text">
-          Where nothing inspected an action, the record says nothing was
-          inspected — not that it was allowed (RC7). One live defect runs
-          against that rule today: the CONNECT-level event still records an
-          allow for traffic about to be tunnelled uninspected, tracked as
-          AAASM-5637. State the rule and the open defect together.
-        </Translate>
-      ),
+      entry: RC7,
     },
     {
       key: 'evidence',
@@ -289,15 +291,11 @@ export const securityBrief: RoleBrief = {
       ),
       text: (
         <Translate id="roles.security.limit.agentplane.text">
-          An agent registers with an Ed25519 did:key identity and a possession
-          proof, and delegation lineage is derived server-side (RC16) — but the
-          plane is reachable without authentication by design, as a bootstrap
-          path. An unauthenticated caller that can reach it can register and can
-          submit policy queries, evaluated with tenancy neutralised rather than
-          with the caller’s own. This is a deliberate bootstrap path with a
-          bounded exposure, and it is still not an authenticated plane.
+          A deliberate bootstrap path with a bounded exposure, and still not an
+          authenticated plane.
         </Translate>
       ),
+      entry: RC16,
     },
     {
       key: 'approval',
@@ -306,14 +304,7 @@ export const securityBrief: RoleBrief = {
           Approval required is not a capability you can buy today.
         </Translate>
       ),
-      text: (
-        <Translate id="roles.security.limit.approval.text">
-          No manifest row reaches that term. The hold is real in the gateway
-          path and fails closed on timeout, but no shipped operator surface can
-          answer it, so in practice it holds and then refuses with no person
-          involved. Tracked as AAASM-5657 (RC12).
-        </Translate>
-      ),
+      entry: RC12,
     },
     {
       key: 'platform',
@@ -322,13 +313,7 @@ export const securityBrief: RoleBrief = {
           Windows has no local mediation.
         </Translate>
       ),
-      text: (
-        <Translate id="roles.security.limit.platform.text">
-          UDP, QUIC and HTTP/3 are outside the transport set; so are HTTP/2,
-          gRPC and WebSocket over an intercepted host, and MCP over WebSocket.
-          Unsupported for one element is not Unsupported for the product (RC14).
-        </Translate>
-      ),
+      entry: RC14,
     },
   ],
 

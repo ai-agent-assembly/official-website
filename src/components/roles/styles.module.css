@@ -204,3 +204,17 @@
     gap: 0.9rem;
   }
 }
+
+/*
+ * A register entry rendered inside a limitation. Indented and ruled so it reads
+ * as the source the limitation rests on rather than as more of the limitation's
+ * own prose — the distinction the seam between the two lost.
+ */
+.limitEntry {
+  margin-top: 0.7rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--aa-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

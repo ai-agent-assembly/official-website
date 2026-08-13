@@ -74,7 +74,19 @@ export interface ProofLink {
 export interface Limit {
   readonly key: string;
   readonly title: ReactNode;
-  readonly text: ReactNode;
+  /** The brief's own framing, where it adds something the entry does not. */
+  readonly text?: ReactNode;
+  /**
+   * The register entry this limitation IS, where it is one.
+   *
+   * Six entries — RC7, RC8, RC9, RC12, RC14, RC16 — are cited by the briefs
+   * only from a Limitations section. Attaching the shared object here rather
+   * than restating it in prose is what stops a limitation from becoming a
+   * second, weaker copy of a register entry: it renders through the same path
+   * as a claim card, so it carries the same term and the same bound. RC14
+   * reached two different strengths on two pages before this field existed.
+   */
+  readonly entry?: Claim;
 }
 
 /** The two next steps. Two options is a decision; five is a menu. */

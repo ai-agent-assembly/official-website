@@ -1,7 +1,7 @@
 import React from 'react';
 import Translate, {translate} from '@docusaurus/Translate';
 import type {RoleBrief} from '../types';
-import {RC1, RC3, RC4, RC5, RC15} from './register';
+import {RC1, RC3, RC4, RC5, RC12, RC15} from './register';
 import {
   POLICY_REFERENCE,
   DOCUMENTATION,
@@ -289,13 +289,7 @@ export const engineeringBrief: RoleBrief = {
           Approval required is not something you can integrate against.
         </Translate>
       ),
-      text: (
-        <Translate id="roles.engineering.limit.approval.text">
-          No manifest row reaches that term. The hold exists in the gateway path
-          and fails closed on timeout, but no shipped operator surface can
-          answer it. Tracked as AAASM-5657 (RC12).
-        </Translate>
-      ),
+      entry: RC12,
     },
   ],
 

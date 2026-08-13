@@ -283,7 +283,38 @@ export default function RolePage({
             {brief.limitations.map((l) => (
               <li key={l.key}>
                 <strong className={styles.limitTitle}>{l.title}</strong>
-                <span className={styles.limitText}>{l.text}</span>
+                {l.text ? (
+                  <span className={styles.limitText}>{l.text}</span>
+                ) : null}
+                {/*
+                 * Where the limitation IS a register entry, it renders through
+                 * the same path a claim card does — term, quoted sentence,
+                 * bound — rather than being restated in the brief's own words.
+                 * A limitation is where an entry is most likely to be quietly
+                 * weakened, because it reads as commentary rather than as a
+                 * claim.
+                 */}
+                {l.entry ? (
+                  <div className={styles.limitEntry}>
+                    <div className={styles.claimHead}>
+                      <span
+                        className={`${narrative.termBadge} ${styles.termMulti}`}
+                      >
+                        {l.entry.term}
+                      </span>
+                      <span className={styles.rcBadge}>{l.entry.rc}</span>
+                    </div>
+                    <p className={styles.limitText}>{l.entry.text}</p>
+                    <p className={narrative.cardBound}>
+                      <span className={narrative.boundLabel}>
+                        <Translate id="roles.boundLabel">
+                          Where this stops.
+                        </Translate>
+                      </span>{' '}
+                      {l.entry.bound}
+                    </p>
+                  </div>
+                ) : null}
               </li>
             ))}
           </ul>
