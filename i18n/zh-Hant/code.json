@@ -1417,5 +1417,701 @@
   "theme.tags.tagsPageTitle": {
     "message": "標籤",
     "description": "The title of the tag list page"
+  },
+  "home.role.briefsNote": {
+    "message": "上面前四條路線各自都有一份更完整的簡報 — 今天出了什麼問題、有哪些是已支援的、每個答案能走多遠、它不涵蓋什麼，以及接下來該讀什麼。"
+  },
+  "home.role.briefsLink": {
+    "message": "閱讀評估者簡報 →"
+  },
+  "roles.switcher.label": {
+    "message": "評估者角色"
+  },
+  "roles.kicker": {
+    "message": "評估者簡報"
+  },
+  "roles.identity.audience": {
+    "message": "撰寫對象"
+  },
+  "roles.identity.job": {
+    "message": "它導向的那個決定"
+  },
+  "roles.pain.eyebrow": {
+    "message": "痛點"
+  },
+  "roles.pain.title": {
+    "message": "這一切從哪裡開始"
+  },
+  "roles.trigger.eyebrow": {
+    "message": "觸發點"
+  },
+  "roles.trigger.title": {
+    "message": "為什麼它成了這一季的問題"
+  },
+  "roles.intervention.eyebrow": {
+    "message": "有哪些是已支援的"
+  },
+  "roles.intervention.title": {
+    "message": "Agent Assembly 對此做了什麼 — 以及每個答案能走多遠"
+  },
+  "roles.intervention.register": {
+    "message": "底下每一張卡片，都是這四個頁面共用的十六筆主張登錄表中的一筆項目，皆為原句引用而非改寫。用語說明這項主張能走多遠；旁邊的界限是這項主張的一部分，不是它的背景說明。"
+  },
+  "roles.boundLabel": {
+    "message": "它到哪裡為止。"
+  },
+  "roles.outcome.eyebrow": {
+    "message": "結果"
+  },
+  "roles.outcome.title": {
+    "message": "之後有什麼不一樣"
+  },
+  "roles.proof.eyebrow": {
+    "message": "佐證"
+  },
+  "roles.proof.title": {
+    "message": "你可以查證什麼，以及在哪裡查"
+  },
+  "roles.limits.eyebrow": {
+    "message": "限制"
+  },
+  "roles.limits.title": {
+    "message": "那些你原本會比較晚才發現的事"
+  },
+  "roles.next.eyebrow": {
+    "message": "接下來"
+  },
+  "roles.next.title": {
+    "message": "一頁要讀，一件事要做"
+  },
+  "roles.cta.product": {
+    "message": "這個產品是什麼 →"
+  },
+  "roles.cta.howItWorks": {
+    "message": "它如何運作"
+  },
+  "roles.cta.roles": {
+    "message": "其他角色"
+  },
+  "roles.index.meta.title": {
+    "message": "各角色的評估者簡報 — Agent Assembly"
+  },
+  "roles.index.meta.description": {
+    "message": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。"
+  },
+  "roles.index.kicker": {
+    "message": "評估者簡報"
+  },
+  "roles.index.title": {
+    "message": "同一個產品，從四種工作角度來讀"
+  },
+  "roles.index.intro": {
+    "message": "四種讀者對同一套系統提出四個不同的問題。底下每一份簡報都從頭到尾回答其中一個 — 今天出了什麼問題、Agent Assembly 對此做了什麼、每個答案能走多遠、它不涵蓋什麼，以及接下來該讀什麼。"
+  },
+  "roles.index.lede": {
+    "message": "這不是四份各自獨立的文件。四份之中的每一句能力陳述，都引自同一份共用主張登錄表，並帶著隨之而行的界限 — 所以這幾個頁面不可能把同一項控制描述成兩種不同的強度。一份簡報可以略去某一筆項目；但它不得把某一筆重述得更弱。"
+  },
+  "roles.index.audienceLabel": {
+    "message": "撰寫對象"
+  },
+  "roles.index.read": {
+    "message": "閱讀這份簡報 →"
+  },
+  "roles.index.notYours": {
+    "message": "這些都不是你的工作？產品頁面提供的是同樣的內容，只是沒有綁定任何角色。"
+  },
+  "roles.index.productLink": {
+    "message": "這個產品是什麼 →"
+  },
+  "roles.index.cta.product": {
+    "message": "這個產品是什麼 →"
+  },
+  "roles.index.cta.howItWorks": {
+    "message": "它如何運作"
+  },
+  "roles.engineering.name": {
+    "message": "工程開發"
+  },
+  "roles.engineering.meta.title": {
+    "message": "工程開發 — Agent Assembly"
+  },
+  "roles.engineering.job": {
+    "message": "決定採用它在我的程式碼庫裡要付出什麼代價，以及它實際觸得到我的哪些動作。"
+  },
+  "roles.engineering.pain.a": {
+    "message": "你正要出貨一個代理，而治理這件事是以阻礙者的身分出現，而不是以一套函式庫的身分出現。"
+  },
+  "roles.engineering.pain.b": {
+    "message": "你想知道的事情很小、很具體：我要加什麼、它包裝什麼、政策說不行的時候它會怎麼做，以及它會漏掉什麼。而你通常拿到的是一張架構圖。"
+  },
+  "roles.engineering.trigger": {
+    "message": "資安要求你先提出證據，說明你的代理被允許做什麼，才會核准它使用正式環境憑證，而程式碼庫裡卻沒有任何東西可以指給他們看。"
+  },
+  "roles.engineering.intervention.lead": {
+    "message": "兩種整合形態，而它們並不對等。SDK 會包裝你的框架的工具接縫，在工具主體執行之前檢查一次呼叫。受管啟動則把該行程的對外流量放到代理伺服器前面，而目的地、憑證與 MCP 這幾筆項目正是在那裡生效。前者位於你的程式碼之內，屬於建議性質；後者位於你的行程之外，也是拒絕真正站得住的地方。"
+  },
+  "roles.engineering.outcome.a": {
+    "message": "一次被包裝的工具呼叫，會在它的主體執行之前先被檢查，而在失效關閉的那些路徑上，它會拋出例外而不是執行下去。"
+  },
+  "roles.engineering.outcome.b": {
+    "message": "這項決策會記錄在你的代理身分之下，所以「證據在哪」這個問題有了一個答案，而那個答案不是去日誌裡 grep。"
+  },
+  "roles.engineering.proof.adapters": {
+    "message": "各框架、各語言的轉接器狀態，就是能力清單中 SDK 各列的「框架」與「涵蓋範圍」欄位 — 在你依它做規劃之前，先讀你那個框架的那一列。"
+  },
+  "roles.engineering.proof.adapters.link": {
+    "message": "能力清單 →"
+  },
+  "roles.engineering.proof.policy": {
+    "message": "政策語法，以及它能表達什麼。政策是納入版本控管的 YAML 或 JSON，你用原本就在用的 Git 流程審閱它，所以本站描述的規則，就是你可以自己查得到的規則。"
+  },
+  "roles.engineering.proof.policy.link": {
+    "message": "政策參考文件 →"
+  },
+  "roles.engineering.proof.sdks": {
+    "message": "各語言的 SDK 層級細節 — Python、Node 與 Go 的文件，包含哪些模式會產生拒絕、哪些不會。"
+  },
+  "roles.engineering.proof.sdks.link": {
+    "message": "SDK 文件 →"
+  },
+  "roles.engineering.proof.adr": {
+    "message": "SDK 在信任模型中的位置，以及它為什麼是建議性而非權威性 — 這是在架構決策紀錄裡明白寫出的，不是從一張圖推論出來的。"
+  },
+  "roles.engineering.proof.adr.link": {
+    "message": "ADR 0033 →"
+  },
+  "roles.engineering.limit.advisory.title": {
+    "message": "SDK 在設計上就是建議性的。"
+  },
+  "roles.engineering.limit.advisory.text": {
+    "message": "它是縱深防禦的一層姿態，不是權威的把關點（RC5）。面對不配合的行程仍然站得住的拒絕，是代理伺服器的，位於你的行程之外。"
+  },
+  "roles.engineering.limit.node.title": {
+    "message": "Node 的預設模式不會產生任何拒絕。"
+  },
+  "roles.engineering.limit.node.text": {
+    "message": "除非選用具檢查能力的模式，否則檢查會被導向一個一律放行的無作用用戶端。在沒有選用該模式的情況下要求強制執行，會在初始化時被明確拒絕，而不是無聲地放行；而自動偵測到的框架只會發出警告，不會拋出例外 — 這是刻意的，為的是保住零組態。這是任何一頁 Node 整合說明上最重要的一句話。追蹤於 AAASM-4991。"
+  },
+  "roles.engineering.limit.uneven.title": {
+    "message": "包裝在各框架之間並不一致，而差異就在拒絕訊號上。"
+  },
+  "roles.engineering.limit.uneven.text": {
+    "message": "有些 Python 轉接器會在主體之前拋出例外；另一些則回傳一個哨符字串，所以只攔截政策例外的呼叫端，會把一次被拒絕的呼叫當成一次結果為字串的成功。LangGraph 與 Mastra 的節點掛鉤，以及 LangChain 的回呼處理器，在構造上就無法拒絕 — 它們只是觀測。明確指定的 LangChain 包裝器則可以，而它預設關閉。"
+  },
+  "roles.engineering.limit.go.title": {
+    "message": "Go 需要一次明確的呼叫。"
+  },
+  "roles.engineering.limit.go.text": {
+    "message": "在沒有 FFI 建置標籤與 CGO 的預設建置下，每一次被包裝的呼叫都會被拒絕，而不是被允許；這是失效關閉，但也不是所宣傳的行為。"
+  },
+  "roles.engineering.limit.unadapted.title": {
+    "message": "沒有轉接器的框架不在涵蓋範圍內。"
+  },
+  "roles.engineering.limit.unadapted.text": {
+    "message": "沒有經過被修補接縫的直接呼叫也不在。包裝器觸得到的就是它所包裝的那些，其餘一概不及。"
+  },
+  "roles.engineering.limit.outside.title": {
+    "message": "凡是 SDK 沒有包裝到的，都在它之外。"
+  },
+  "roles.engineering.limit.outside.text": {
+    "message": "原生 HTTP、子行程、檔案系統、資料庫驅動程式，以及從你的行程內部發動的瀏覽器自動化。這一整類正是代理伺服器存在的理由，而在主機層動作上，已發行的版本裡根本沒有任何機制。"
+  },
+  "roles.engineering.limit.stdio.title": {
+    "message": "以 stdio 承載的 MCP 不在受中介的路徑上。"
+  },
+  "roles.engineering.limit.stdio.text": {
+    "message": "而那正是工具伺服器最常見的執行方式（RC4）。"
+  },
+  "roles.engineering.limit.routing.title": {
+    "message": "導流的前提條件在環境裡，不在你的原始碼裡。"
+  },
+  "roles.engineering.limit.routing.text": {
+    "message": "這個工具必須以會設定代理伺服器環境變數、且 CA 受到信任的方式啟動。Codex 與 Windsurf 只注入了前者，沒有後者（RC15），而那正是被量測到會無聲地讓交握失敗的組態。"
+  },
+  "roles.engineering.limit.approval.title": {
+    "message": "「需要核准」不是你可以拿來對接整合的東西。"
+  },
+  "roles.engineering.limit.approval.text": {
+    "message": "能力清單裡沒有任何一列達到這個用語。這個擱置在閘道這條路徑上確實存在，且逾時會失效關閉，但沒有任何已出貨的維運者介面能夠回應它。追蹤於 AAASM-5657（RC12）。"
+  },
+  "roles.engineering.next.read": {
+    "message": "讀政策參考文件 — 一條規則能表達什麼，就是你能要求什麼的界線，而它比多數人預期的還要短。"
+  },
+  "roles.engineering.next.read.link": {
+    "message": "政策參考文件 →"
+  },
+  "roles.engineering.next.do": {
+    "message": "然後挑你那個語言的 SDK 文件，在你動手照著寫之前先查你那個框架的轉接器那一列 — 拒絕訊號因轉接器而異，而 Node 的預設模式差最多。"
+  },
+  "roles.engineering.next.do.link": {
+    "message": "SDK 文件 →"
+  },
+  "roles.platform.name": {
+    "message": "平台與 SRE"
+  },
+  "roles.platform.meta.title": {
+    "message": "平台與 SRE — Agent Assembly"
+  },
+  "roles.platform.job": {
+    "message": "決定這東西會加什麼到我的待命輪值上，以及它壞掉的時候會做什麼。"
+  },
+  "roles.platform.pain.a": {
+    "message": "代理的工作負載進來時沒有任何維運契約。它們由開發者在筆電上啟動、由 CI 在執行器上啟動，會去連你沒有核准過的第三方端點，而出事時的第一個問題 — 它到底做了什麼 — 既沒有負責人，也沒有答案。"
+  },
+  "roles.platform.pain.b": {
+    "message": "你被要求讓它們安全，卻沒有人給你一個立足點。"
+  },
+  "roles.platform.trigger": {
+    "message": "一次事故檢討問起是哪一個代理發出了那次呼叫，而答案要花兩天、橫跨三套系統做日誌關聯，最後仍然只是猜測。"
+  },
+  "roles.platform.intervention.lead": {
+    "message": "少數幾個由你執行、由你負責的行程：一個回答政策問題並保存記錄的控制平面、一個放在線路上的旁掛式代理伺服器，以及一個把某個工具的流量放到代理伺服器前面的受管啟動。有四筆項目決定了這在維運上要付出什麼代價。"
+  },
+  "roles.platform.outcome.a": {
+    "message": "代理的對外流量會變成一件有組態、有失效姿態、有負責人的事，而不是行程周遭自然發生的行為。"
+  },
+  "roles.platform.outcome.b": {
+    "message": "當控制平面已設定卻消失時，依賴它的那些路徑會拒絕，而不是悄悄放寬。反過來並不成立，而底下的限制一節就是從這件事開始講起。"
+  },
+  "roles.platform.proof.docker": {
+    "message": "各種部署形態與容器的部分 — 什麼跑在哪裡，以及一套受限功能的自行架設堆疊包含什麼。"
+  },
+  "roles.platform.proof.docker.link": {
+    "message": "Docker 與容器 →"
+  },
+  "roles.platform.proof.observability": {
+    "message": "執行中的系統會揭露什麼、又不會揭露什麼 — 在你據以設計任何告警之前先讀這個。"
+  },
+  "roles.platform.proof.observability.link": {
+    "message": "自行架設的可觀測性 →"
+  },
+  "roles.platform.proof.posture": {
+    "message": "逐列的失效姿態與預設狀態 — 這兩個欄位是摘要最先砍掉、而維運者最先去看的 — 涵蓋全部 80 列。"
+  },
+  "roles.platform.proof.posture.link": {
+    "message": "能力清單 →"
+  },
+  "roles.platform.proof.position": {
+    "message": "各元件的版本與平台位置，以及每個產物實際上會出現在哪個通路。"
+  },
+  "roles.platform.proof.position.link": {
+    "message": "真實來源與狀態 →"
+  },
+  "roles.platform.proof.troubleshooting": {
+    "message": "針對你實際上真的會被叫起來處理的那些故障，所準備的第一線應對材料。"
+  },
+  "roles.platform.proof.troubleshooting.link": {
+    "message": "疑難排解 →"
+  },
+  "roles.platform.limit.asymmetry.title": {
+    "message": "失效關閉並不對稱。"
+  },
+  "roles.platform.limit.asymmetry.text": {
+    "message": "已設定但連不上會拒絕；而完全沒有設定閘道的執行環境，則會落到一次本機評估，其最終預設是允許（RC11）。兩者之間只差一個組態疏失。"
+  },
+  "roles.platform.limit.silent.title": {
+    "message": "有三種失效模式是無聲的。"
+  },
+  "roles.platform.limit.silent.text": {
+    "message": "讀不到的 eBPF 政策檔會退回成一組空的規則集，且不會發出任何降級事件；損毀的預算儲存區會把上限重設為零花費；滿載的稽核通道會丟掉該筆項目，而該次呼叫仍然回報成功。這三者都不會傳呼你。"
+  },
+  "roles.platform.limit.degradation.title": {
+    "message": "降級會被發出，卻沒有任何地方會呈現它。"
+  },
+  "roles.platform.limit.degradation.text": {
+    "message": "事件型別存在，產生端也存在，但沒有任何消費端 — 健康檢查端點的「已降級的層級」欄位是一份開機時的快照，從此不再更新，而它的狀態是一個寫死的字面值（RC10）。追蹤於 AAASM-5535。要嘛規劃自己去消費這個事件串流，要嘛就規劃好自己不會知道。"
+  },
+  "roles.platform.limit.distribution.title": {
+    "message": "散布通路的狀況並不一致，而它決定了你能安裝什麼。"
+  },
+  "roles.platform.limit.distribution.text": {
+    "message": "代理伺服器在 Linux 上是發行產物；在 macOS 上唯一的途徑是 cargo install。eBPF 載入常駐程式只出現在 crates.io，在 GitHub Release 的產物、Homebrew tap 與安裝指令稿中都沒有 — 所以透過上述任何一種方式安裝的維運者，都沒有主機層元件，而在 macOS 上，受管啟動也沒有代理伺服器可以啟動（RC8、RC9）。追蹤於 AAASM-5653。"
+  },
+  "roles.platform.limit.probes.title": {
+    "message": "核心探針只做回報，它們不做決策。"
+  },
+  "roles.platform.limit.probes.text": {
+    "message": "在 Linux 上，核心探針會回報 TLS 明文、行程執行與檔案活動（RC8）。這類訊號都不參與任何允許或拒絕的決策；那唯一一個做強制執行的程式，是在有問題的系統呼叫已經執行過之後才終止被限制的行程；而檔案 I/O 探針僅支援 x86_64。"
+  },
+  "roles.platform.limit.environment.title": {
+    "message": "受管啟動會把整個父行程的環境交給子行程。"
+  },
+  "roles.platform.limit.environment.text": {
+    "message": "代理內部的 shell 或檔案工具，可以讀到你匯出到啟動它的那個 shell 裡的任何憑證。"
+  },
+  "roles.platform.limit.listener.title": {
+    "message": "代理伺服器會拒絕非回送位址的監聽端。"
+  },
+  "roles.platform.limit.listener.text": {
+    "message": "即使加上遠端用戶端旗標也一樣，因為它沒有監聽端 TLS，也沒有用戶端驗證。不要繞過它。"
+  },
+  "roles.platform.limit.llmonly.title": {
+    "message": "承載內容檢查預設僅限於模型供應商主機。"
+  },
+  "roles.platform.limit.llmonly.text": {
+    "message": "更廣的檢查是你要自己去設定的，而且它帶有延遲與相容性上的代價（RC3）。"
+  },
+  "roles.platform.limit.platform.title": {
+    "message": "Windows 上沒有任何本機中介。"
+  },
+  "roles.platform.limit.platform.text": {
+    "message": "在有支援的平台上，UDP、QUIC 與 HTTP/3 也不在傳輸協定範圍內（RC14）。"
+  },
+  "roles.platform.next.read": {
+    "message": "讀「自行架設的可觀測性」 — 執行中的系統會揭露什麼，正是你在它之上會建立的每一個告警與儀表板的輸入。"
+  },
+  "roles.platform.next.read.link": {
+    "message": "自行架設的可觀測性 →"
+  },
+  "roles.platform.next.do": {
+    "message": "然後在規劃推行之前先確認你的平台與通路 — 上面那條散布限制代表，這個答案會決定你到底裝得到哪些元件。"
+  },
+  "roles.platform.next.do.link": {
+    "message": "相容性對照表 →"
+  },
+  "roles.productqa.name": {
+    "message": "產品、QA 與品質保證"
+  },
+  "roles.productqa.meta.title": {
+    "message": "產品、QA 與品質保證 — Agent Assembly"
+  },
+  "roles.productqa.job": {
+    "message": "決定什麼可以測試、什麼可以簽核，以及什麼必須寫下來成為一條已知限制。"
+  },
+  "roles.productqa.pain.a": {
+    "message": "你被要求為一套系統背書它可以發行，而這套系統的行為並不具決定性、它的失效模式是一項副作用而不是一個錯誤答案，而它的測試判準 — 那件壞事有沒有沒發生 — 是一個「不存在」。"
+  },
+  "roles.productqa.pain.b": {
+    "message": "傳統的斷言確認的是有錯誤被拋出，而那並不是同一件事實。"
+  },
+  "roles.productqa.trigger": {
+    "message": "一項以代理為底的功能進到你的發行版本裡，而驗收條件第一次寫著「必須不能夠」。"
+  },
+  "roles.productqa.intervention.lead": {
+    "message": "在你導流的路徑上，這個產品會把「必須不能夠」變成一項決策。有四個情境備有已核可、可重複使用的措辭 — 旗艦級的對外流量拒絕、機密外洩、一次破壞性的正式環境動作，以及失控的花費 — 每一個都點名了它的決策者、它的預設狀態與它的界線。它們背後的登錄項目列在下面。"
+  },
+  "roles.productqa.outcome.a": {
+    "message": "一次拒絕會變成一項可觀測的決策，所以測試可以針對這項決策做斷言。"
+  },
+  "roles.productqa.outcome.b": {
+    "message": "請針對決策、並針對一個獨立觀測者做斷言，不要針對稽核日誌。RC6 是未量測，所以一筆缺漏的項目無法分辨「那項決策沒有做成」與「那筆記錄被丟掉了」，而讀日誌的測試會把這份模糊繼承成一次不穩定的通過。隨風險情境一起發布的反向對照，正是為了這個理由才建立在一個獨立的監聽器之上。"
+  },
+  "roles.productqa.outcome.c": {
+    "message": "至於針對「被避免掉的後果」所做的斷言，又是另一回事，而且更嚴格 — 在你動手寫之前，先看底下的限制一節。"
+  },
+  "roles.productqa.proof.scenarios": {
+    "message": "那四個情境，每一個都附有一項判定與它所依據的能力清單列 — 特別是反向對照那一節，它明定了「不存在」的檢查、用來證明該檢查看得見該效果的配對正向對照，以及斷言的執行順序。"
+  },
+  "roles.productqa.proof.scenarios.link": {
+    "message": "風險情境與反向對照 →"
+  },
+  "roles.productqa.proof.evidence": {
+    "message": "逐列的證據：「證據」與「是否在主線上執行」這兩個欄位，全部 80 列都有。引用之前先讀那一列 — 有些是由常設的整合測試釘住的，有些只由單元測試釘住。"
+  },
+  "roles.productqa.proof.evidence.link": {
+    "message": "能力清單 →"
+  },
+  "roles.productqa.proof.provisional": {
+    "message": "哪些是刻意還不主張的 — 產品承諾頁上的「暫定」表就是那份被保留下來的主張清單，也是最快看出一條驗收條件不能建立在什麼之上的方式。"
+  },
+  "roles.productqa.proof.provisional.link": {
+    "message": "「暫定」表 →"
+  },
+  "roles.productqa.proof.position": {
+    "message": "發行與版本的位置 — 在某一個平台上錄下的展示，不能作為關於另一個平台上已發行產物的證據。"
+  },
+  "roles.productqa.proof.position.link": {
+    "message": "相容性對照表 →"
+  },
+  "roles.productqa.limit.approval.title": {
+    "message": "核准是缺口，不是一項功能。"
+  },
+  "roles.productqa.limit.approval.text": {
+    "message": "能力清單裡沒有任何一列達到「需要核准」這個用語（RC12）。這個擱置在閘道這條路徑上確實存在，且逾時會失效關閉，但沒有任何已出貨的維運者介面能夠回應它，所以實際上它會先阻擋，然後拒絕；而在 MCP 通道之內，待決的決策會直接被降級成一次拒絕。今天，任何針對人工核准步驟所寫的驗收條件都無法通過。追蹤於 AAASM-5657。"
+  },
+  "roles.productqa.limit.prevented.title": {
+    "message": "「已阻止某後果」的主張是被卡住的。"
+  },
+  "roles.productqa.limit.prevented.text": {
+    "message": "設計出一個反向對照，跟真的執行過一次，並不是同一件事。在 AAASM-5532 與 AAASM-5529 結案之前，請描述所做出的決策，不要描述被避免掉的後果。"
+  },
+  "roles.productqa.limit.absence.title": {
+    "message": "一個錯誤並不等於一個「不存在」。"
+  },
+  "roles.productqa.limit.absence.text": {
+    "message": "一個代理可以收到一次拒絕，同時仍然已經透過另一條路徑抵達了那個端點。只針對錯誤、而不針對獨立觀測者做斷言的測試，量到的是錯的東西。"
+  },
+  "roles.productqa.limit.quality.title": {
+    "message": "證據的品質並不一致。"
+  },
+  "roles.productqa.limit.quality.text": {
+    "message": "有些列是由常設的整合測試釘住的；有些只由單元測試釘住；有些則完全沒有任何證據，被記為缺口。有兩列被明確標示為僅有單元測試。引用之前先讀那一列。"
+  },
+  "roles.productqa.limit.emptylog.title": {
+    "message": "一份空的稽核日誌是關於觀測者的證據，不是關於代理的證據。"
+  },
+  "roles.productqa.limit.emptylog.text": {
+    "message": "而鏈驗證通過，並不代表這份日誌是完整的（RC6）。"
+  },
+  "roles.productqa.limit.norow.title": {
+    "message": "十六筆登錄項目之中，有兩筆根本沒有任何能力清單列作為依據。"
+  },
+  "roles.productqa.limit.norow.text": {
+    "message": "RC6 與 RC13 之所以是未量測，是因為能力清單中關於證據管線與關於預算的唯一列，都是這兩個子系統失效時的那一列。任何針對「這項決策在稽核日誌裡」或「上限有被套用」所寫的驗收條件，目前主張的都是證據基礎並不承載的東西。追蹤於 AAASM-5531。"
+  },
+  "roles.productqa.limit.budget.title": {
+    "message": "預算上限只存在於政策有宣告它的地方。"
+  },
+  "roles.productqa.limit.budget.text": {
+    "message": "未宣告的預算等於沒有上限，而損毀的預算儲存區會無聲地把上限重設（RC13）。"
+  },
+  "roles.productqa.limit.figures.title": {
+    "message": "沒有任何涵蓋率數字可用。"
+  },
+  "roles.productqa.limit.figures.text": {
+    "message": "不得推導出任何百分比、受治理動作的計數，或橫跨整個機群的數值 — 包含從那四個情境推導出來。某個層級自行回報自己可用，並不能作為涵蓋率的證據。"
+  },
+  "roles.productqa.limit.falsesignals.title": {
+    "message": "有三種訊號看起來像涵蓋率，但其實不是。"
+  },
+  "roles.productqa.limit.falsesignals.text": {
+    "message": "一個會直接取代探測結果的環境變數、一個只要路徑上存在某個執行檔就算通過的代理伺服器探測，以及一個被無條件斷定為真的 SDK 層級旗標。不要在其中任何一個之上建立檢查。"
+  },
+  "roles.productqa.limit.platform.title": {
+    "message": "平台與通路會改變答案。"
+  },
+  "roles.productqa.limit.platform.text": {
+    "message": "在 macOS 上錄下的展示，不能作為關於某個已發行 Linux 產物的證據（RC8、RC9、RC14）。"
+  },
+  "roles.productqa.next.read": {
+    "message": "讀風險情境以及它們的反向對照那一節 — 它明定了「不存在」的檢查、配對的正向對照，以及各項斷言必須依循的執行順序。"
+  },
+  "roles.productqa.next.read.link": {
+    "message": "風險情境 →"
+  },
+  "roles.productqa.next.do": {
+    "message": "然後在寫任何驗收條件之前先查「暫定」表 — 那是一份目前還不能拿來斷言的主張清單，而照著其中一筆去寫，是這裡最容易、也最划算避開的錯誤。"
+  },
+  "roles.productqa.next.do.link": {
+    "message": "「暫定」表 →"
+  },
+  "roles.rc1.term": {
+    "message": "執行前拒絕"
+  },
+  "roles.rc1.text": {
+    "message": "在你導流經過 Agent Assembly 的路徑上所建立的連線，會依你所設定的目的地清單進行檢查，並在代理伺服器撥號之前遭到拒絕。"
+  },
+  "roles.rc1.bound": {
+    "message": "這次拒絕出自代理伺服器自身的本機對外流量組態，而非控制平面的決策。目的地清單預設為空 — 這次拒絕之所以存在，是因為有維運者設定了它。在 Linux 上是發行產物；在 macOS 上，以 cargo install 安裝 aa-proxy 是唯一的途徑；在 Windows 上沒有任何本機中介。如果代理伺服器不在這條連線前面，這條連線就只是單純地被建立起來。"
+  },
+  "roles.rc2.term": {
+    "message": "執行前拒絕"
+  },
+  "roles.rc2.text": {
+    "message": "送往回送位址、私有位址、鏈路本機位址及相關位址空間的請求一律被拒絕，包含公開主機名稱解析到這些位址的情況。"
+  },
+  "roles.rc2.bound": {
+    "message": "預設開啟、失效關閉，而且沒有任何組態可以放寬它。它涵蓋的範圍是位址空間，而不是任意的公開目的地 — 它並不提供 RC1 所講的那件事，也不得被當成有做到那件事。"
+  },
+  "roles.rc3.term": {
+    "message": "已遮蔽"
+  },
+  "roles.rc3.text": {
+    "message": "在 Agent Assembly 會檢查的模型供應商主機上，被辨識出來的憑證會在請求被轉發之前從中移除。"
+  },
+  "roles.rc3.bound": {
+    "message": "共三個內建主機，因為承載內容的檢查預設僅限於模型供應商主機。預設行為是遮蔽後轉發，而非拒絕。偵出率受限於樣式集合 — 並沒有 Stripe 的偵測器。該路徑上的模型回應不會被掃描。"
+  },
+  "roles.rc4.term": {
+    "message": "執行前拒絕"
+  },
+  "roles.rc4.text": {
+    "message": "MCP 工具呼叫可以由控制平面依你的政策進行檢查，並在代理伺服器轉發之前遭到拒絕。"
+  },
+  "roles.rc4.bound": {
+    "message": "這是本產品中唯一一個由閘道決定、且發生在撥號之前的拒絕，而它預設關閉。它涵蓋的是在已設定閘道端點的被攔截非 LLM 主機上，以一般 HTTP/1.1 POST 送出的 MCP。以 stdio 執行的工具伺服器 — 最常見的設定方式 — 以及 SSE 與 WebSocket 都沒有攔截機制；Streamable HTTP 則被記錄為在功能上就是壞的，而不只是未被涵蓋。"
+  },
+  "roles.rc5.term": {
+    "message": "執行前拒絕（Python、Go） · 已評估（Node） · 未量測（Node 預設模式）"
+  },
+  "roles.rc5.text": {
+    "message": "透過被包裝的框架接縫發出的工具呼叫，會在工具主體執行之前先被檢查。"
+  },
+  "roles.rc5.bound": {
+    "message": "SDK 在設計上就是建議性的 — 它是縱深防禦的一層姿態，不是權威的把關點，而不去呼叫它的代理根本沒在問。Python 會在主體之前拋出例外，並且失效關閉。Go 也失效關閉，但需要一次明確的呼叫才會包裝那些工具。Node 的預設模式會把檢查導向一個一律放行的無作用用戶端，所以那裡根本不會產生任何拒絕；在沒有具檢查能力的模式時要求強制執行，會在初始化時被明確拒絕並報錯，而不是無聲地放行。"
+  },
+  "roles.rc6.term": {
+    "message": "未量測"
+  },
+  "roles.rc6.text": {
+    "message": "某一項決策的記錄是否持久地抵達稽核鏈，並未被確立。驗證工具是真實存在的 — aasm audit verify-chain 隨開放原始碼版本一併提供 — 但它所證明的是現存項目的完整性，而不是任何一項特定的決策確實產生了一筆記錄。"
+  },
+  "roles.rc6.bound": {
+    "message": "能力清單中關於這個主題的唯一一列，是寫出失敗時會發生什麼的那一列，而該列把這種情況記為未量測、失效放行，且沒有任何證據支持。關於這條鏈的其他一切都是界限，不是能力：它可察覺竄改，但既非不可變更，也未經簽章 — 它是一個無金鑰摘要，所以任何能改寫輸出目的地的人都能重新算出它。鏈首會在送出之前就先推進，而通道滿載時會丟掉該筆項目、該次呼叫卻仍然返回，這使得被丟棄的項目與被刪除的項目無從分辨。一份被清空的日誌驗證起來也會是乾淨的。除非代理伺服器的稽核路徑已設定，否則它根本不會寫出任何本機記錄。"
+  },
+  "roles.rc10.term": {
+    "message": "降級"
+  },
+  "roles.rc10.text": {
+    "message": "在某項控制原本已規劃、目前卻無法使用的情況下，本產品會回報所規劃的等級以及實際達到的等級。"
+  },
+  "roles.rc10.bound": {
+    "message": "降級必須同時帶著兩個等級，否則就不是這個用語。有一列達到它，是針對 eBPF 載入或掛載失敗。回報的那一半並沒有閉合：降級會被發出、有型別，卻沒有任何地方會呈現它；而讀不到的 eBPF 政策檔會無聲地失效放行，根本不會發出任何降級事件。"
+  },
+  "roles.rc11.term": {
+    "message": "執行前拒絕 · 已評估"
+  },
+  "roles.rc11.text": {
+    "message": "在控制平面已設定、卻變成連不上的情況下，決策路徑會拒絕，而不是允許。"
+  },
+  "roles.rc11.bound": {
+    "message": "在有閘道的那些路徑上是失效關閉：執行環境在閘道連不上時會拒絕，代理伺服器會拒絕啟動，而閘道在政策載入失敗時會中止。反過來則不對稱 — 完全沒有設定閘道的執行環境，會落到一次本機評估，其最終預設是允許。已設定然後壞掉是失效關閉；從未設定則是失效放行。"
+  },
+  "roles.rc13.term": {
+    "message": "未量測"
+  },
+  "roles.rc13.text": {
+    "message": "已宣告的花費上限是否真的在決策路徑中被檢查，並沒有任何能力清單列可以確立。"
+  },
+  "roles.rc13.bound": {
+    "message": "能力清單中關於預算的唯一一列，是儲存區讀不到或損毀的那一列，被記為未量測且無聲地失效放行，而它的缺口理由記載了一項正向對照，顯示預算這條路徑從來不會去查詢控制平面的儲存區。無論如何都成立的界限是：上限只存在於政策有宣告它的地方；未宣告的預算等於沒有上限；要真的達成一次拒絕，需要有一個會等待答案的呼叫端；而損毀的儲存區會無聲地把上限重設為零花費。"
+  },
+  "roles.rc15.term": {
+    "message": "執行前拒絕（經由 RC1）"
+  },
+  "roles.rc15.text": {
+    "message": "透過 aasm run 啟動一個工具，會把代理伺服器的設定寫進該工具的環境裡，而那正是把它的對外連線放上這條路徑的原因。"
+  },
+  "roles.rc15.bound": {
+    "message": "寫入某個工具自己的設定檔屬於工具治理，不是資料路徑上的主張；這些轉接器所帶來的任何防止效果，都是代理伺服器的，透過啟動環境借來的。在已出貨的轉接器之中，Claude Code 是唯一一個高於 Integrated 的，也是唯一一個有啟動證據測試的。Copilot 的啟動在構造上一定會失敗。Codex 與 Windsurf 只注入代理伺服器環境變數，沒有 CA 信任，而那正是被量測到會無聲地讓交握失敗的組態。以 no-proxy 旗標執行啟動，是一種已明示的繞道方式。未受管的啟動則是一種繞道方式，而且偵測不到。"
+  },
+  "roles.security.name": {
+    "message": "資安與風險"
+  },
+  "roles.security.meta.title": {
+    "message": "資安與風險 — Agent Assembly"
+  },
+  "roles.security.job": {
+    "message": "決定這東西是否改變了那些已經在跑的代理的風險狀況，以及它不涵蓋什麼。"
+  },
+  "roles.security.pain.a": {
+    "message": "你所管轄範圍內的 AI 代理，早就能觸及網路、檔案系統與 shell。而你手上的那些控制措施是為人、為服務打造的：身分、審查、變更管理，以及你事後才會去讀的日誌。它們沒有任何一個站在代理的決策與代理的動作之間。"
+  },
+  "roles.security.pain.b": {
+    "message": "你的偵測能力完全是回顧性的，而你的補償性控制措施，其實是「還沒有人給過這些代理任何重要的東西」 — 而在某個團隊出貨一個帶著正式環境憑證的代理的那一週，這件事就不再成立了。"
+  },
+  "roles.security.trigger": {
+    "message": "有個團隊要求對一個裡面放著部署金鑰的儲存庫執行一個編碼代理。你被要求簽核，而誠實的答案是：你沒有任何機制能說出它可以觸及什麼 — 只有一個能讓你事後查出來的機制。"
+  },
+  "roles.security.intervention.lead": {
+    "message": "Agent Assembly 是一個放在代理動作前面的決策點 — 範圍限於你導流經過它的路徑 — 再加上一份它做了什麼決定的記錄。就一次資安審查而言，有六筆項目承擔了主要的分量。"
+  },
+  "roles.security.outcome.a": {
+    "message": "對於一個你已導流的代理，送往你所設定的清單之外的目的地的請求，會在連線被開啟之前遭到拒絕。"
+  },
+  "roles.security.outcome.b": {
+    "message": "真正改變的那個安全面向是順序 — 決策發生在效果之前 — 而不是涵蓋率，也不是記錄的完整性：某一次拒絕的項目是否持久地抵達稽核鏈，是 RC6，而它是未量測。你買到的是這個順序；不要以為你買到了一本帳本。"
+  },
+  "roles.security.proof.bypasses": {
+    "message": "各種繞道方式是被逐一列舉並公開出來的，而不是被辯解掉的 — 既以一個限制頁面的形式呈現，也以能力清單中每一列的「已知繞道方式」欄位呈現。"
+  },
+  "roles.security.proof.bypasses.link": {
+    "message": "已列舉的繞道方式 →"
+  },
+  "roles.security.proof.manifest": {
+    "message": "本頁每一句話都要回溯到的那份 80 列證據基礎，其中每一列都帶著它的涵蓋用語、決策時點、預設狀態、失效姿態與證據。"
+  },
+  "roles.security.proof.manifest.link": {
+    "message": "能力清單 →"
+  },
+  "roles.security.proof.model": {
+    "message": "威脅模型、信任邊界與稽核性質 — 鏈驗證能確立什麼、又不能確立什麼。"
+  },
+  "roles.security.proof.model.link": {
+    "message": "安全模型 →"
+  },
+  "roles.security.proof.scenarios": {
+    "message": "逐一情境的決策、決策者與界線，每一個都附上它所依據的能力清單列。"
+  },
+  "roles.security.proof.scenarios.link": {
+    "message": "風險情境 →"
+  },
+  "roles.security.proof.vocabulary": {
+    "message": "主張紀律本身，包含這個產品拒絕發布的那些措辭，以及為什麼再多的核可也不會讓一句沒有佐證的絕對說法變成真的。"
+  },
+  "roles.security.proof.vocabulary.link": {
+    "message": "主張用語 →"
+  },
+  "roles.security.limit.bypass.title": {
+    "message": "抗繞道能力只有一個階級，也只有一列。"
+  },
+  "roles.security.limit.bypass.text": {
+    "message": "ADR 0030 §4.1 把這項主張保留給它的 HostEnforced 狀態。RC9 就是它的全部：一條路徑，僅限 macOS，依據的是一次檔案回讀，而它在執行期間是否真的被遵守屬於未量測，並且在已發布的 v0.0.1-rc.6 標籤上被記為尚未達成。其他每一種狀態 — 包含 GatewayProtected — 都應視為對抗繞道能力隻字未提。"
+  },
+  "roles.security.limit.empty.title": {
+    "message": "目的地清單預設為空。"
+  },
+  "roles.security.limit.empty.text": {
+    "message": "在開箱狀態下，RC1 什麼都不會拒絕。一律開啟的是 RC2，而它涵蓋的範圍是位址空間，而不是你指名的那些目的地。"
+  },
+  "roles.security.limit.routing.title": {
+    "message": "導流是逐一代理、逐次啟動的。"
+  },
+  "roles.security.limit.routing.text": {
+    "message": "在受管啟動之外啟動的代理就在這道界線之外，而且那件事從內部偵測不到（RC15）。"
+  },
+  "roles.security.limit.host.title": {
+    "message": "最大的缺口是主機層動作。"
+  },
+  "roles.security.limit.host.text": {
+    "message": "由原生代理行程所產生的 shell 指令或子行程，在已發行的版本裡根本沒有任何攔截機制；瀏覽器自動化與資料庫查詢也是一樣。政策語言能夠表達這些規則；但已發行的東西裡沒有任何一個能據以行動。"
+  },
+  "roles.security.limit.uninspected.title": {
+    "message": "未經檢查不等於乾淨。"
+  },
+  "roles.security.limit.uninspected.text": {
+    "message": "在沒有任何東西檢查過某個動作的情況下，記錄會寫成未經檢查 — 而不是寫成它被允許（RC7）。今天有一個未修復的缺陷與這條規則相牴觸：對於即將以隧道方式、未經檢查轉送出去的流量，CONNECT 層級的事件仍然會記下一筆允許，追蹤於 AAASM-5637。請把這條規則與這個未修復的缺陷一起講。"
+  },
+  "roles.security.limit.evidence.title": {
+    "message": "這份證據可察覺竄改，但並非不可變更，而且它可能遺失。"
+  },
+  "roles.security.limit.evidence.text": {
+    "message": "被丟棄的項目與被刪除的項目無從分辨，而且沒有任何能力清單列能確立某項決策的記錄真的會持久抵達 — 這裡的用語是未量測（RC6）。不要把稽核鏈當成足以滿足留存或不可否認性要求的那項控制措施來呈現。"
+  },
+  "roles.security.limit.agentplane.title": {
+    "message": "代理平面接受未經驗證的呼叫者。"
+  },
+  "roles.security.limit.agentplane.text": {
+    "message": "代理會以一組 Ed25519 did:key 身分與一份持有證明進行註冊，而委派血緣是在伺服器端推導出來的（RC16） — 但這個平面依設計即可在未經驗證的情況下被觸及，作為啟動引導路徑。任何觸得到它的未經驗證呼叫者都可以註冊，也可以送出政策查詢，而那些查詢是在租戶識別被中性化、而不是以呼叫者自身租戶的情況下被評估的。這是一條刻意設計、暴露面有界的啟動引導路徑，但它終究不是一個經過驗證的平面。"
+  },
+  "roles.security.limit.approval.title": {
+    "message": "「需要核准」不是你今天買得到的能力。"
+  },
+  "roles.security.limit.approval.text": {
+    "message": "能力清單裡沒有任何一列達到這個用語。這個擱置在閘道這條路徑上是真的，而且逾時會失效關閉，但沒有任何已出貨的維運者介面能夠回應它，所以實際上它會先阻擋，然後拒絕，全程沒有任何人參與。追蹤於 AAASM-5657（RC12）。"
+  },
+  "roles.security.limit.platform.title": {
+    "message": "Windows 上沒有任何本機中介。"
+  },
+  "roles.security.limit.platform.text": {
+    "message": "UDP、QUIC 與 HTTP/3 不在傳輸協定範圍內；在被攔截的主機上，HTTP/2、gRPC 與 WebSocket 也不在，以 WebSocket 承載的 MCP 同樣不在。某一個元素為不支援，並不等於整個產品為不支援（RC14）。"
+  },
+  "roles.security.next.read": {
+    "message": "讀安全模型 — 威脅模型、信任邊界，以及稽核鏈能確立什麼、又不能確立什麼。"
+  },
+  "roles.security.next.read.link": {
+    "message": "安全模型 →"
+  },
+  "roles.security.next.do": {
+    "message": "然後在界定一次試用的範圍之前，先查清楚你自己的平台與通路狀況 — 答案會因作業系統、也因你的安裝方式而不同，而它決定了上述哪些你實際上跑得起來。"
+  },
+  "roles.security.next.do.link": {
+    "message": "相容性對照表 →"
+  },
+  "roles.security.next.default": {
+    "message": "如果在這一切之前，你需要的是逐列的預設狀態，那就是產品承諾頁上的第 3 級表格。"
+  },
+  "roles.security.next.default.link": {
+    "message": "預設開啟的有哪些 →"
   }
 }
