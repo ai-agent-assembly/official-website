@@ -587,6 +587,30 @@ export default function Product(): ReactNode {
               Why agent frameworks are not enough
             </Translate>
           </h2>
+          {/*
+           * The concrete opening. `/` — the SHALLOWER page — opens its problem
+           * section with three named scenarios, and this page, the one an
+           * evaluator actually reads, opened with two abstract paragraphs. That
+           * is backwards, and it was the largest persuasive defect in the route
+           * pair.
+           *
+           * The three cases are the subjects of risk-scenarios.md's Tier 1
+           * stories, which `/` already publishes: a destructive tool call, a key
+           * in a prompt, a retry loop that keeps spending. Stated here as things
+           * an AGENT does, never as things this product caught — a scenario that
+           * names an outcome is a capability claim and carries a capability
+           * claim's evidence burden. Nothing below asserts anything about Agent
+           * Assembly, which is why it needs no bound.
+           */}
+          <p className={styles.p}>
+            <Translate id="product.why.concrete">
+              An agent with a shell tool and a database credential can drop a
+              production table. One with a model-provider key can paste it into
+              a request. One in a retry loop can keep spending until somebody
+              notices the bill. None of those is a malfunction — each is an
+              agent doing what it was asked, with the authority it was handed.
+            </Translate>
+          </p>
           <p className={styles.p}>
             <Translate id="product.why.body">
               Frameworks make agents capable — they plan, call tools, and act.
