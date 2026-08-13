@@ -156,7 +156,18 @@ def load_phrases():
     return out
 
 
-def positive_control(phrases) -> list[str]:
+def _key(p) -> tuple[str, str, str]:
+    """Identity of a catalogue entry, used to count DISTINCT failing phrases.
+
+    Failure lines are formatted for humans and contain colons, so deriving the
+    identity by splitting the message counts class-plus-fixture instead of
+    phrase: three failures of one phrase on three fixtures used to read as
+    three phrases, and three failures of three phrases in one fixture as one.
+    """
+    return (p["class"], p["locale"], p["phrase"])
+
+
+def positive_control(phrases) -> list[tuple[tuple[str, str, str], str]]:
     """Prove the matcher fires on EVERY phrase, on every surface it will scan.
 
     Fixtures mimic the real build: minified, unquoted attributes, an
@@ -189,11 +200,11 @@ def positive_control(phrases) -> list[str]:
             fixtures["js-bundle"] = (f'e.jsx("p",{{children:"lead {enc} trail"}})', js_text)
         for name, (fx, fn) in fixtures.items():
             if not matches(p["phrase"], fn(fx), boundary=b):
-                fails.append(f"[{p['class']}/{p['locale']}] {name}: {p['phrase']!r}")
+                fails.append((_key(p), f"[{p['class']}/{p['locale']}] {name}: {p['phrase']!r}"))
     return fails
 
 
-def negative_control(phrases) -> list[str]:
+def negative_control(phrases) -> list[tuple[tuple[str, str, str], str]]:
     """Prove boundary-matched words do NOT fire on a word that contains them.
 
     Without this, `complete` silently matches `incomplete` -- the opposite
@@ -205,7 +216,7 @@ def negative_control(phrases) -> list[str]:
             continue
         decoy = f"in{p['phrase']}ness auto{p['phrase']}"
         if matches(p["phrase"], html_text(f"<p>{decoy}</p>"), boundary=True):
-            fails.append(f"[{p['class']}] {p['phrase']!r} fired on {decoy!r}")
+            fails.append((_key(p), f"[{p['class']}] {p['phrase']!r} fired on {decoy!r}"))
     return fails
 
 
@@ -243,12 +254,13 @@ def main() -> int:
     phrases = load_phrases()
     pf, nf = positive_control(phrases), negative_control(phrases)
     print(f"catalogue      : {len(phrases)} phrases")
+    proven = len(phrases) - len({k for k, _ in pf})
     print(f"positive ctrl  : {'PASS' if not pf else 'FAIL'} "
-          f"({len(phrases) - len({f.split(':')[0] for f in pf})}/{len(phrases)} phrases matched on all surfaces)")
+          f"({proven}/{len(phrases)} phrases matched on all surfaces)")
     print(f"negative ctrl  : {'PASS' if not nf else 'FAIL'} "
           f"(boundary words must not fire on words containing them)")
-    for f in pf + nf:
-        print("  CONTROL FAILED:", f)
+    for _, msg in pf + nf:
+        print("  CONTROL FAILED:", msg)
     if pf or nf:
         print("\nControls failed -- any absence below would not be a measurement.")
         return 2
