@@ -5,24 +5,24 @@
     "framing_not_sentences": "Entries MUST be the bare FRAMING, never a full sentence copied from one page. The first version of this catalogue held '/product's whole sentence, so it matched that one page and missed the same framing on the blog, which continues '...layers: SDK (in-process)'. A sentence-shaped entry finds an instance; a framing-shaped entry finds the class. This is the single most important rule in this file.",
     "prose_only": "Single common words (universal, complete, comprehensive) are marked prose_only. They are searched in reader-facing text only, never in JS bundles, where 'autocomplete' and React internals produce pure noise -- 22 false positives when this was measured.",
     "word_boundary": "prose_only entries are matched on WORD BOUNDARIES, because a bare substring 'complete' also matches 'incomplete', which asserts the opposite. Boundaries are applied via Python re (\\b), never via grep -E, which accepts \\b and silently ignores it.",
-    "positive_control": "Every phrase is proven matchable against a synthetic fixture before any absence is reported. An absence with no positive control is not a measurement."
+    "positive_control": "Every phrase is proven matchable against a synthetic fixture before any absence is reported. An absence with no positive control is not a measurement.",
+    "additive_only": "This file may EXTEND the gate, never narrow it. The 14 ADR 0033 fd-7 absolutes are not here: they are FD7_ABSOLUTES in check-forbidden-claims.py, because they are never waivable (ADR 0034 Decision 10) and deleting a line from a data file does not look like disabling a check, whereas deleting a line from the script does. An fd-7 group added back here is ignored and reported as an integrity failure. AAASM-5730."
   },
 
   "phrases": [
     {
       "class": "fd-1",
-      "why": "The fixed SDK -> proxy -> eBPF pipeline as THE architecture, in prose or as a three-box diagram.",
+      "why": "The fixed SDK -> proxy -> eBPF pipeline as THE architecture, in prose or as a three-box diagram. The any_units entries carry a {unit} slot expanded over layer/tier/level/stage/plane in check-forbidden-claims.py, because the framing is what is forbidden and the noun carrying it is interchangeable: five reworded instances escaped the literal list by substituting exactly this word. Every unit template is ANCHORED to the interception context -- 'independently deployable', 'enforcement', 'interception', 'in-process' -- because bare 'three {unit}s' and 'three-{unit}' also fire on ordinary English ('three tiers: Free, Team, and Enterprise'), and a gate that fails the build citing ADR 0033 over a pricing table is a gate someone disables. Each of the five measured escapes was specific, so the bare numeral+unit generalised further than the evidence required. 'kernel layer' stays literal on purpose -- 'at the kernel level' is ordinary technical prose, not a claim.",
       "locale": "en",
-      "any": [
-        "independently-deployable layers",
-        "independently deployable layers",
-        "enforcement layers",
-        "the kernel layer",
-        "kernel layer",
-        "three interception layers",
-        "three layers",
-        "Adopt the depth you need"
-      ]
+      "any_units": [
+        "independently-deployable {unit}s",
+        "independently deployable {unit}s",
+        "enforcement {unit}s",
+        "three interception {unit}s",
+        "three-{unit} interception",
+        "three {unit}s: in-process"
+      ],
+      "any": ["the kernel layer", "kernel layer", "Adopt the depth you need"]
     },
     {
       "class": "fd-1",
@@ -38,14 +38,14 @@
     },
     {
       "class": "fd-2",
-      "why": "eBPF (or 'the kernel layer') as a cross-platform or universal final layer, or as a mechanism that catches everything including bypass attempts.",
+      "why": "eBPF (or 'the kernel layer') as a cross-platform or universal final layer, or as a mechanism that catches everything including bypass attempts. The any_units entries cover the 'each one catches what the previous one missed' shape, whose noun is likewise interchangeable.",
       "locale": "en",
+      "any_units": ["what the {unit}s above", "each {unit} sees what"],
       "any": [
         "including deliberate bypass attempts",
         "including bypass attempts",
         "catches kernel-level bypass",
-        "catches what the SDK misses",
-        "what the layers above never saw"
+        "catches what the SDK misses"
       ]
     },
     {
@@ -56,12 +56,10 @@
     },
     {
       "class": "rejected-hero",
-      "why": "The hero framing AAASM-5585 removed from the homepage: the product described as a governance layer for agents.",
+      "why": "The hero framing AAASM-5585 removed from the homepage: the product described as a governance layer for agents. 'governance {unit} for' replaces the three literal 'governance layer for ...' entries -- it covers them plus the noun the rewording used ('the governance plane for autonomous software') and does not depend on guessing what follows 'for'.",
       "locale": "en",
+      "any_units": ["governance {unit} for"],
       "any": [
-        "governance layer for AI agents",
-        "governance layer for autonomous agents",
-        "governance layer for agents",
         "governance runtime for AI agents",
         "governance layer that sits between"
       ]
@@ -81,28 +79,6 @@
       "class": "approval",
       "locale": "zh-Hant",
       "any": ["人在迴路", "核准關卡"]
-    },
-    {
-      "class": "fd-7",
-      "why": "ADR 0033 forbidden design 7 -- the 14 banned absolutes, verbatim. NEVER waivable, by anyone, for any period (ADR 0034 Decision 10). This list is the source for the AAASM-5536 CI gate: a phrase absent from it is a phrase the gate will never catch, so extend the list rather than relying on review.",
-      "locale": "en",
-      "prose_only": true,
-      "any": [
-        "catch everything",
-        "catch-all",
-        "cannot be bypassed",
-        "unbypassable",
-        "nowhere to hide",
-        "every action",
-        "every tool call",
-        "no code changes",
-        "immutable audit",
-        "full fleet",
-        "whole fleet",
-        "universal",
-        "comprehensive",
-        "complete"
-      ]
     },
     {
       "class": "fd-7-adjacent",

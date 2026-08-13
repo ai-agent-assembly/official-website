@@ -6,7 +6,9 @@ Run against the BUILT site, never the source:
     pnpm build && python3 scripts/check-forbidden-claims.py build
 
 Exit 0 = clean, 1 = forbidden claim published, 2 = the checker could not prove
-itself and reported nothing trustworthy.
+itself and reported nothing trustworthy -- which includes a catalogue that has
+been trimmed below its floor, because a narrowed gate reports a pass it has not
+earned.
 
 Why this exists as committed code rather than a one-off search
 --------------------------------------------------------------
@@ -31,6 +33,7 @@ Three traps this deliberately avoids
 
 from __future__ import annotations
 
+import copy
 import html
 import json
 import re
@@ -40,6 +43,96 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 CATALOGUE = HERE / "forbidden-claims.json"
+
+# --------------------------------------------------------------------------- #
+# What the catalogue is NOT allowed to own
+# --------------------------------------------------------------------------- #
+# ADR 0033 forbidden design 7 -- the 14 banned absolutes, verbatim. NEVER
+# waivable, by anyone, for any period (ADR 0034 Decision 10).
+#
+# These live here rather than in forbidden-claims.json because the cheapest
+# route from a red gate to a green one is deleting the offending phrase from a
+# data file, and nothing about that edit looks like disabling a check: CI turns
+# green, review sees a green check, and the phrase is unwatched from then on.
+# Deleting a line below lands in the diff a reviewer reads instead. The
+# catalogue is additive -- it may extend the gate, never narrow it.
+FD7_ABSOLUTES = (
+    "catch everything",
+    "catch-all",
+    "cannot be bypassed",
+    "unbypassable",
+    "nowhere to hide",
+    "every action",
+    "every tool call",
+    "no code changes",
+    "immutable audit",
+    "full fleet",
+    "whole fleet",
+    "universal",
+    "comprehensive",
+    "complete",
+)
+
+# The classes allowed to report BELOW `error`, i.e. to print a `warn` line the
+# build survives. Code-owned for the same reason FD7_ABSOLUTES is: severity is
+# what decides whether a hit fails the build, and the one-word data edit
+# `"severity": "warn"` is a cheaper route from a red gate to a green one than
+# deleting a phrase -- it is idiomatic (this catalogue already ships one warn
+# group, with a `why` beside it), it leaves every phrase, count and floor
+# untouched, and the gate still prints all 89 hits. Measured before this check
+# existed: downgrading the seven error-class groups took a build holding 79
+# forbidden claims to `forbidden hits: 0   warnings: 89`, exit 0, with
+# integrity PASS and the self-test at 16/16. AAASM-5730.
+WARN_ONLY_CLASSES = frozenset({"fd-7-adjacent"})
+
+# The noun slot the stack framings are built on. A catalogue entry may write
+# `{unit}` and is expanded over this set at load time, so one authored line
+# covers every synonym.
+#
+# Why a substitution set and not stemming or normalisation
+# -------------------------------------------------------
+# Stemming was considered and rejected on the evidence. All five phrasings that
+# escaped the literal catalogue -- "three independently deployable TIERS",
+# "three LEVELS", "the three-TIER interception model", "each STAGE sees what
+# the one before it missed", "the governance PLANE" -- are substitutions in
+# this one noun slot, not morphological variants of "layer". No stemmer relates
+# layer to tier, so a stem pipeline would have caught 0 of the 5: it generalises
+# on the wrong axis.
+#
+# It would also cost the two properties that make this script's absences
+# trustworthy. Expansion yields plain strings, so the matcher stays substring
+# plus `\b` and never builds a regex out of catalogue content -- trap 2 above,
+# which corrupts multi-word phrases. And the positive control keeps proving
+# every concrete string that will actually be searched, rather than asserting
+# over a transformation of it. Stemming is language-specific besides, and half
+# this catalogue is zh-Hant, which has neither stems nor word boundaries.
+#
+# The cost of the substitution set is that it only generalises where an author
+# writes `{unit}`, so it is applied to the framings the ADR forbids and not to
+# entries where a synonym is ordinary technical prose -- "at the kernel level"
+# is a normal thing to write, so "kernel layer" stays literal. AAASM-5730.
+UNIT_SYNONYMS = ("layer", "tier", "level", "stage", "plane")
+
+# Minimum number of AUTHORED entries per `class/locale` group in
+# forbidden-claims.json.
+#
+# This is a FLOOR, not a fixture, and the direction matters: adding a phrase
+# raises a count above its floor and never needs a code change, so extending
+# the gate stays a one-line edit to the JSON. Only REMOVING below the floor
+# fails -- and the fix for a legitimate removal is to lower the number here,
+# in a diff a reviewer reads. A gate whose driver the gate does not defend is
+# not a gate; a floor that punished growth would just be worked around.
+CATALOGUE_FLOOR = {
+    "fd-1/en": 9,
+    "fd-1/zh-Hant": 6,
+    "fd-2/en": 6,
+    "fd-3/en": 2,
+    "rejected-hero/en": 3,
+    "rejected-hero/zh-Hant": 2,
+    "approval/en": 2,
+    "approval/zh-Hant": 2,
+    "fd-7-adjacent/en": 3,
+}
 
 _WS = re.compile(r"[\s ​]+")
 _TAG = re.compile(r"<[^>]*>")
@@ -135,28 +228,136 @@ def matches(needle: str, hay: str, *, boundary: bool) -> bool:
     return re.search(rf"\b{re.escape(n)}\b", hay) is not None
 
 
-def load_phrases():
-    data = json.loads(CATALOGUE.read_text(encoding="utf-8"))
-    out = []
-    for group in data["phrases"]:
-        prose_only = bool(group.get("prose_only"))
-        for phrase in group["any"]:
-            out.append(
-                {
-                    "class": group["class"],
-                    "locale": group.get("locale", "en"),
-                    "phrase": phrase,
-                    "prose_only": prose_only,
-                    # Boundary only for single-word prose entries; multi-word
-                    # phrases are distinctive enough and CJK has no \b.
-                    "boundary": prose_only and " " not in phrase,
-                    "severity": group.get("severity", "error"),
-                }
+def _entry(cls: str, locale: str, phrase: str, prose_only: bool, severity: str) -> dict:
+    return {
+        "class": cls,
+        "locale": locale,
+        "phrase": phrase,
+        "prose_only": prose_only,
+        # Boundary only for single-word prose entries; multi-word phrases are
+        # distinctive enough and CJK has no \b.
+        "boundary": prose_only and " " not in phrase,
+        "severity": severity,
+    }
+
+
+def read_catalogue() -> dict:
+    return json.loads(CATALOGUE.read_text(encoding="utf-8"))
+
+
+def entry_counts(data: dict) -> dict[str, int]:
+    """Authored entries per `class/locale` -- what a person edits, not what the
+    expansion produces, so the floor is stated in the units of the edit."""
+    counts: dict[str, int] = {}
+    for group in data.get("phrases", []):
+        key = f"{group['class']}/{group.get('locale', 'en')}"
+        counts[key] = counts.get(key, 0) + len(group.get("any", [])) + len(group.get("any_units", []))
+    return counts
+
+
+def integrity(data: dict) -> list[str]:
+    """Prove the catalogue has not been trimmed into a gate that passes green.
+
+    Without this the cheapest route from a red gate to a green one is deleting
+    the offending phrase: an emptied catalogue scored `forbidden hits: 0,
+    EXIT=0` against a build holding 79 real violations, and dropping one group
+    took it 49 -> 35 with no complaint. AAASM-5730.
+    """
+    errs: list[str] = []
+
+    if len(set(FD7_ABSOLUTES)) != 14:
+        errs.append(
+            f"FD7_ABSOLUTES holds {len(set(FD7_ABSOLUTES))} distinct phrases, expected the "
+            "14 of ADR 0033 forbidden design 7 -- never waivable (ADR 0034 Decision 10)"
+        )
+
+    counts = entry_counts(data)
+    for group in data.get("phrases", []):
+        if group["class"] == "fd-7":
+            errs.append(
+                "fd-7 is owned by FD7_ABSOLUTES in check-forbidden-claims.py and ignored "
+                "here -- remove the fd-7 group from forbidden-claims.json"
             )
-    return out
+        severity = group.get("severity", "error")
+        if severity != "error" and group["class"] not in WARN_ONLY_CLASSES:
+            errs.append(
+                f"{group['class']}/{group.get('locale', 'en')}: severity {severity!r} -- only "
+                f"{', '.join(sorted(WARN_ONLY_CLASSES))} may report below error, and that list "
+                "is WARN_ONLY_CLASSES in check-forbidden-claims.py. Downgrading a group in the "
+                "catalogue silences it without changing a phrase, a count or a floor"
+            )
+        # A template with no slot expands to five copies of itself, which would
+        # inflate the phrase count while widening nothing.
+        for template in group.get("any_units", []):
+            if "{unit}" not in template:
+                errs.append(
+                    f"{group['class']}/{group.get('locale', 'en')}: any_units entry "
+                    f"{template!r} has no {{unit}} slot -- move it to \"any\""
+                )
+
+    for key, count in sorted(counts.items()):
+        if key not in CATALOGUE_FLOOR:
+            errs.append(
+                f"{key}: no floor entry -- add \"{key}\": {count} to CATALOGUE_FLOOR in "
+                "check-forbidden-claims.py so the group cannot later be deleted silently"
+            )
+    for key, floor in sorted(CATALOGUE_FLOOR.items()):
+        have = counts.get(key, 0)
+        if have < floor:
+            errs.append(
+                f"{key}: {have} entries, floor is {floor} -- restore the removed phrase(s), "
+                "or lower the floor in CATALOGUE_FLOOR if the removal is intended"
+            )
+
+    return errs
 
 
-def positive_control(phrases) -> list[str]:
+def load_phrases(data: dict | None = None):
+    """Expand the catalogue into the concrete phrases that will be searched.
+
+    The fd-7 absolutes are appended from FD7_ABSOLUTES, never read from `data`,
+    so an emptied or trimmed catalogue still scans for all 14.
+    """
+    if data is None:
+        data = read_catalogue()
+    out = []
+    for group in data.get("phrases", []):
+        cls = group["class"]
+        if cls == "fd-7":
+            # Owned by FD7_ABSOLUTES. Ignored here so a stale data copy cannot
+            # drift from, or appear to authorise, the code-owned list.
+            continue
+        prose_only = bool(group.get("prose_only"))
+        severity = group.get("severity", "error")
+        locale = group.get("locale", "en")
+        for phrase in group.get("any", []):
+            out.append(_entry(cls, locale, phrase, prose_only, severity))
+        for template in group.get("any_units", []):
+            for unit in UNIT_SYNONYMS:
+                out.append(_entry(cls, locale, template.replace("{unit}", unit), prose_only, severity))
+    for phrase in FD7_ABSOLUTES:
+        out.append(_entry("fd-7", "en", phrase, True, "error"))
+    seen, deduped = set(), []
+    for e in out:
+        k = _key(e)
+        if k not in seen:
+            seen.add(k)
+            deduped.append(e)
+    return deduped
+
+
+def _key(p) -> tuple[str, str, str]:
+    """Identity of a catalogue entry, used to count DISTINCT failing phrases.
+
+    Failure lines are formatted for humans and contain colons, so deriving the
+    identity by splitting the message counts class-plus-fixture instead of
+    phrase: three failures of one phrase on three fixtures used to read as
+    three phrases, and three failures of three phrases in one fixture as one.
+    """
+    return (p["class"], p["locale"], p["phrase"])
+
+
+def positive_control(phrases) -> list[tuple[tuple[str, str, str], str]]:
     """Prove the matcher fires on EVERY phrase, on every surface it will scan.
 
     Fixtures mimic the real build: minified, unquoted attributes, an
@@ -189,11 +390,11 @@ def positive_control(phrases) -> list[str]:
             fixtures["js-bundle"] = (f'e.jsx("p",{{children:"lead {enc} trail"}})', js_text)
         for name, (fx, fn) in fixtures.items():
             if not matches(p["phrase"], fn(fx), boundary=b):
-                fails.append(f"[{p['class']}/{p['locale']}] {name}: {p['phrase']!r}")
+                fails.append((_key(p), f"[{p['class']}/{p['locale']}] {name}: {p['phrase']!r}"))
     return fails
 
 
-def negative_control(phrases) -> list[str]:
+def negative_control(phrases) -> list[tuple[tuple[str, str, str], str]]:
     """Prove boundary-matched words do NOT fire on a word that contains them.
 
     Without this, `complete` silently matches `incomplete` -- the opposite
@@ -205,7 +406,7 @@ def negative_control(phrases) -> list[str]:
             continue
         decoy = f"in{p['phrase']}ness auto{p['phrase']}"
         if matches(p["phrase"], html_text(f"<p>{decoy}</p>"), boundary=True):
-            fails.append(f"[{p['class']}] {p['phrase']!r} fired on {decoy!r}")
+            fails.append((_key(p), f"[{p['class']}] {p['phrase']!r} fired on {decoy!r}"))
     return fails
 
 
@@ -234,22 +435,249 @@ def scan(build: Path, phrases):
     return files, hits
 
 
+# --------------------------------------------------------------------------- #
+# self-test
+# --------------------------------------------------------------------------- #
+# One sentence per `class/locale` group that MUST still be caught, keyed by the
+# group that has to catch it. Five of them are the rewordings measured in
+# AAASM-5730, which escaped the catalogue before the {unit} expansion; the rest
+# exist so that every group is asserted on.
+#
+# Why the key, and why one per group
+# ----------------------------------
+# CATALOGUE_FLOOR counts entries; it cannot see what they say. Replacing every
+# phrase with junk of the same length left the floor satisfied, integrity at
+# PASS and the gate at `forbidden hits: 0`, exit 0, against a build holding 79
+# real violations -- and re-narrowing entries into sentence shapes, the
+# regression this catalogue's own $rules calls "the single most important rule
+# in this file", did the same. The self-test did not catch either in full,
+# because it asserted only on fd-1/en, fd-2/en and rejected-hero/en: junking the
+# other six groups, English and zh-Hant alike, kept it at 16/16 while silencing
+# 22 of the 79. Asserting one caught sentence per group makes the floor a
+# statement about COVERAGE rather than cardinality, which is what its docstring
+# already claimed. AAASM-5730.
+MUST_CATCH = (
+    ("fd-1/en", "Agent Assembly ships three independently deployable tiers."),
+    ("fd-1/en", "Governance arrives at three levels: in-process, sidecar, and kernel."),
+    ("fd-1/en", "This is the three-tier interception model in practice."),
+    ("fd-1/zh-Hant", "Agent Assembly 由三個攔截層組成，逐層收斂。"),
+    ("fd-2/en", "SDK then proxy then eBPF: each stage sees what the one before it missed."),
+    ("fd-3/en", "The sidecars feed a central gateway that makes the decision."),
+    ("fd-7/en", "The kernel hooks give comprehensive coverage of every host."),
+    ("fd-7-adjacent/en", "Enforcement arrives without touching agent code."),
+    ("rejected-hero/en", "Agent Assembly is the governance plane for autonomous software."),
+    ("rejected-hero/zh-Hant", "這是為 AI 代理而生的治理層。"),
+    ("approval/en", "Sensitive tool calls wait behind human-in-the-loop approval."),
+    ("approval/zh-Hant", "敏感操作必須通過核准關卡才會執行。"),
+)
+MUST_CLEAR = (
+    "The rollout is incomplete and the form has autocomplete enabled.",
+    "The proxy runs at the kernel level on Linux hosts.",
+    "The policy engine evaluates rules in stages during startup.",
+    # Ordinary English the first cut of the unit expansion fired on as a
+    # build-failing FORBIDDEN fd-1. Zero of them appear on the site today, so
+    # the templates were narrowed prospectively -- but this is a marketing site
+    # with an early-access page and no pricing page yet, and the first author to
+    # meet a red build over a pricing table is the author who turns the gate off.
+    "Pricing comes in three tiers: Free, Team, and Enterprise.",
+    "Logging supports three levels: debug, info, and error.",
+    "The migration runs in three stages over the next quarter.",
+)
+
+# Floors on the control corpora themselves. Emptying the must-catch list used to
+# print `self-test: 11/11 checks passed`, exit 0 -- the assertion count shrank by
+# five and the only thing that would have said so was the number it shrank.
+#
+# Neither floor is implied by the coverage check, which is why both are here and
+# MIN_CATALOGUE_ENTRIES is not: coverage needs one sentence per group, so two of
+# the three fd-1/en sentences can be dropped with every group still covered, and
+# nothing else bounds MUST_CLEAR at all.
+MIN_MUST_CATCH = 12
+MIN_MUST_CLEAR = 6
+
+
+def _prose_hits(sentence: str, phrases):
+    """Every catalogue phrase that fires on one sentence of reader-facing prose.
+
+    No locale filter: the zh-Hant groups have to be assertable too, and the
+    scan()-time rule that confines them to zh-Hant pages is a property of the
+    page tree, not of the matcher.
+    """
+    text = html_text(f"<html><body><div class=x id=p><p>{sentence}</p></div></body></html>")
+    return [p for p in phrases if matches(p["phrase"], text, boundary=p["boundary"])]
+
+
+def _group_key(p) -> str:
+    return f"{p['class']}/{p['locale']}"
+
+
+def sentence_control(phrases, must_catch=None, must_clear=None) -> list[str]:
+    """Prove every group still catches something, and none has widened.
+
+    Runs in the gate itself, not only in --self-test, because a catalogue whose
+    phrases have been junked reports an absence it has not earned and the run
+    that reports it is `claims:check`. The corpora are arguments only so the
+    self-test can shrink them and watch this fail; they default to the committed
+    ones, read at call time so a defaulted run can never lag the constant.
+    """
+    must_catch = MUST_CATCH if must_catch is None else must_catch
+    must_clear = MUST_CLEAR if must_clear is None else must_clear
+    errs: list[str] = []
+    if len(must_catch) < MIN_MUST_CATCH:
+        errs.append(
+            f"MUST_CATCH holds {len(must_catch)} sentences, floor is {MIN_MUST_CATCH} "
+            "(MIN_MUST_CATCH in check-forbidden-claims.py)"
+        )
+    if len(must_clear) < MIN_MUST_CLEAR:
+        errs.append(
+            f"MUST_CLEAR holds {len(must_clear)} sentences, floor is {MIN_MUST_CLEAR} "
+            "(MIN_MUST_CLEAR in check-forbidden-claims.py)"
+        )
+    covered = set()
+    for key, sentence in must_catch:
+        hits = _prose_hits(sentence, phrases)
+        if any(_group_key(h) == key for h in hits):
+            covered.add(key)
+        else:
+            fired = sorted({_group_key(h) for h in hits})
+            errs.append(
+                f"{key}: nothing in that group fired on {sentence!r} -- "
+                + (f"fired instead: {', '.join(fired)}" if fired else "NOTHING FIRED")
+            )
+    for key in sorted({_group_key(p) for p in phrases} - covered):
+        errs.append(
+            f"{key}: no MUST_CATCH sentence proves this group catches anything -- add one to "
+            "MUST_CATCH in check-forbidden-claims.py, so the floor states coverage and not "
+            "just a count of entries"
+        )
+    for sentence in must_clear:
+        hits = _prose_hits(sentence, phrases)
+        if hits:
+            errs.append(
+                f"MUST_CLEAR fired on {sentence!r}: "
+                + ", ".join(f"{_group_key(h)} {h['phrase']!r}" for h in hits)
+            )
+    return errs
+
+
+def self_test() -> int:
+    """Prove the gate's own guards fire, without needing a build directory."""
+    data = read_catalogue()
+    phrases = load_phrases(data)
+    results: list[tuple[bool, str, str]] = []
+
+    def check(ok: bool, name: str, detail: str = "") -> None:
+        results.append((bool(ok), name, detail))
+
+    check(not integrity(data), "committed catalogue passes integrity")
+
+    one_less = copy.deepcopy(data)
+    for g in one_less["phrases"]:
+        if g["class"] == "fd-1" and g.get("locale") == "en" and g.get("any"):
+            g["any"].pop()
+            break
+    check(integrity(one_less), "one phrase removed -> integrity fails")
+
+    no_group = copy.deepcopy(data)
+    no_group["phrases"] = [
+        g for g in no_group["phrases"] if not (g["class"] == "fd-1" and g.get("locale") == "en")
+    ]
+    check(integrity(no_group), "one group removed -> integrity fails")
+    check(integrity({"phrases": []}), "emptied catalogue -> integrity fails")
+
+    downgraded = copy.deepcopy(data)
+    for g in downgraded["phrases"]:
+        if g.get("severity", "error") == "error":
+            g["severity"] = "warn"
+            break
+    check(integrity(downgraded), "group downgraded to warn -> integrity fails")
+
+    grown = copy.deepcopy(data)
+    grown["phrases"][0].setdefault("any", []).append("a newly banned framing")
+    check(not integrity(grown), "phrase added -> integrity still passes (extension stays free)")
+
+    survivors = {p["phrase"] for p in load_phrases({"phrases": []}) if p["class"] == "fd-7"}
+    check(
+        survivors == set(FD7_ABSOLUTES),
+        f"emptied catalogue still scans all {len(FD7_ABSOLUTES)} fd-7 absolutes",
+        f"{len(survivors)} present",
+    )
+
+    junked = copy.deepcopy(data)
+    for g in junked["phrases"]:
+        if g["class"] == "approval" and g.get("locale") == "zh-Hant":
+            # Same count, same floor, same integrity verdict -- different words.
+            g["any"] = ["蘸蘸壹貳" for _ in g["any"]]
+            break
+    check(
+        not integrity(junked) and sentence_control(load_phrases(junked)),
+        "group's phrases junked at the same count -> integrity passes, sentence control fails",
+    )
+
+    for key, s in MUST_CATCH:
+        hits = [h for h in _prose_hits(s, phrases) if _group_key(h) == key]
+        check(hits, f"caught by {key}: {s}", hits[0]["phrase"] if hits else "NOTHING FIRED")
+    for s in MUST_CLEAR:
+        hits = _prose_hits(s, phrases)
+        check(not hits, f"clear : {s}", hits[0]["phrase"] if hits else "")
+    check(
+        not sentence_control(phrases),
+        f"every group is asserted on ({len({_group_key(p) for p in phrases})} groups, "
+        f"{len(MUST_CATCH)} must-catch, {len(MUST_CLEAR)} must-clear)",
+    )
+    check(
+        sentence_control(phrases, must_catch=MUST_CATCH[:1], must_clear=MUST_CLEAR[:1]),
+        "control corpora shrunk -> sentence control fails",
+    )
+
+    check(not positive_control(phrases), f"positive control passes ({len(phrases)} phrases)")
+    check(not negative_control(phrases), "negative control passes")
+
+    failed = 0
+    for ok, name, detail in results:
+        failed += not ok
+        print(f"  {'ok  ' if ok else 'FAIL'} {name}" + (f"   [{detail}]" if detail else ""))
+    print(f"\nself-test: {len(results) - failed}/{len(results)} checks passed")
+    return 0 if not failed else 2
+
+
 def main() -> int:
+    if "--self-test" in sys.argv[1:]:
+        return self_test()
     build = Path(sys.argv[1] if len(sys.argv) > 1 else "build")
     if not build.is_dir():
         print(f"FATAL: no build directory at {build} -- run `pnpm build` first")
         return 2
 
-    phrases = load_phrases()
+    data = read_catalogue()
+    ierr = integrity(data)
+    counts = entry_counts(data)
+    print(f"integrity      : {'PASS' if not ierr else 'FAIL'} "
+          f"({sum(counts.values())} authored entries in {len(counts)} groups, floors sum to "
+          f"{sum(CATALOGUE_FLOOR.values())}; {len(FD7_ABSOLUTES)} fd-7 absolutes code-owned)")
+    for e in ierr:
+        print("  INTEGRITY FAILED:", e)
+    if ierr:
+        print("\nThe catalogue has been narrowed -- a pass below would not be a measurement.")
+        return 2
+
+    phrases = load_phrases(data)
     pf, nf = positive_control(phrases), negative_control(phrases)
+    sf = sentence_control(phrases)
     print(f"catalogue      : {len(phrases)} phrases")
+    proven = len(phrases) - len({k for k, _ in pf})
     print(f"positive ctrl  : {'PASS' if not pf else 'FAIL'} "
-          f"({len(phrases) - len({f.split(':')[0] for f in pf})}/{len(phrases)} phrases matched on all surfaces)")
+          f"({proven}/{len(phrases)} phrases matched on all surfaces)")
     print(f"negative ctrl  : {'PASS' if not nf else 'FAIL'} "
           f"(boundary words must not fire on words containing them)")
-    for f in pf + nf:
-        print("  CONTROL FAILED:", f)
-    if pf or nf:
+    print(f"sentence ctrl  : {'PASS' if not sf else 'FAIL'} "
+          f"({len(MUST_CATCH)} sentences caught across "
+          f"{len({_group_key(p) for p in phrases})} groups, {len(MUST_CLEAR)} left clear)")
+    for _, msg in pf + nf:
+        print("  CONTROL FAILED:", msg)
+    for msg in sf:
+        print("  CONTROL FAILED:", msg)
+    if pf or nf or sf:
         print("\nControls failed -- any absence below would not be a measurement.")
         return 2
 
