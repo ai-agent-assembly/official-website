@@ -1,5 +1,6 @@
 import type {RoleBrief} from '../types';
 import {securityBrief} from './security';
+import {platformBrief} from './platform';
 
 /*
  * AAASM-5587 — the four evaluator routes, in one place and in one order.
@@ -22,4 +23,4 @@ export function rolePath(slug: string): string {
   return `${ROLES_PREFIX}/${slug}`;
 }
 
-export const ROLE_BRIEFS: readonly RoleBrief[] = [securityBrief];
+export const ROLE_BRIEFS: readonly RoleBrief[] = [securityBrief, platformBrief];
