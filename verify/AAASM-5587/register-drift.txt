@@ -1,5 +1,5 @@
 AAASM-5587 — register drift check
-Generated from the tree at 39a9fad against the register on docs origin/main.
+Generated from the tree at 1cf3d09 against the register on docs origin/main.
 Command: python3 scripts/check-register-drift.py build --register <docs>/docs/src/role-narratives.md
 
 register entries in source : 16
