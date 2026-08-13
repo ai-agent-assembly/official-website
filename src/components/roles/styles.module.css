@@ -1,0 +1,184 @@
+/*
+ * AAASM-5587 — what the role surfaces need that `narrative.module.css` does not
+ * already give them.
+ *
+ * The role pages are narrative routes, so they import `narrative.module.css`
+ * for the primitives `/product` and `/how-it-works` already share — `.wrap`,
+ * `.block`, `.card`, `.termBadge`, `.cardBound`. Only the parts that are new to
+ * a role surface live here, which keeps one stylesheet owning the shared look
+ * instead of two drifting copies of it.
+ */
+
+/*
+ * The switcher.
+ *
+ * It is a `<nav>` of four sibling routes, and the current one is rendered as a
+ * non-link with `aria-current`. That is deliberate: a link to the page you are
+ * already on is a keyboard trap in miniature — it takes a tab stop and does
+ * nothing — and the four roles are close enough in name that a reader needs an
+ * unambiguous marker for which one they are reading.
+ */
+.switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+.switcherItem {
+  margin: 0;
+}
+.switcherLink,
+.switcherCurrent {
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--aa-border);
+  font-size: 0.85rem;
+  font-weight: 650;
+  line-height: 1.3;
+  text-decoration: none;
+}
+.switcherLink {
+  background: var(--aa-panel);
+  color: var(--aa-text-dim);
+}
+.switcherLink:hover {
+  background: var(--aa-hover);
+  color: var(--aa-text);
+  text-decoration: none;
+}
+.switcherCurrent {
+  background: var(--aa-hover);
+  border-color: var(--aa-accent);
+  color: var(--aa-text);
+}
+
+/*
+ * The identity line: which audience this page is for, and the decision it ends
+ * in. Rendered as a description list because that is what it is — two labelled
+ * facts — and because a screen-reader user meets the label before the value.
+ */
+.identity {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 2rem;
+  margin: 1.25rem 0 0;
+  padding: 1rem 1.1rem;
+  background: var(--aa-panel);
+  border: 1px solid var(--aa-border);
+  border-radius: 12px;
+}
+.identityPair {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.identityLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--aa-text-dim);
+  margin: 0;
+}
+.identityValue {
+  font-size: 0.95rem;
+  font-weight: 650;
+  margin: 0;
+}
+.identityValue code {
+  font-size: 0.88rem;
+}
+
+/*
+ * The register entry number on a claim card.
+ *
+ * It sits beside `.termBadge` rather than replacing it. The term says how far
+ * the claim reaches; the number says which register row to check it against.
+ * They answer different questions and a card needs both.
+ */
+.claimHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+}
+.rcBadge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px dashed var(--aa-border);
+  color: var(--aa-text-dim);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/*
+ * Proof and limitation lists.
+ *
+ * Both are `<ul>`s with the marker removed and the structure carried by
+ * spacing, matching `.limitList` on the narrative routes. The limitation's
+ * title is a `<strong>` inside the item rather than a heading, because ten
+ * limitations would otherwise put ten `<h3>`s under one `<h2>` and flood the
+ * document outline a screen-reader user navigates by.
+ */
+.proofList {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0 0;
+  display: grid;
+  gap: 1rem;
+}
+.proofItem {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--aa-border);
+}
+.proofItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.proofText {
+  color: var(--aa-text-dim);
+  line-height: 1.65;
+  margin: 0 0 0.4rem;
+}
+.limitTitle {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.limitText {
+  color: var(--aa-text-dim);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* The chooser at `/roles`. */
+.chooserGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.chooserJob {
+  color: var(--aa-text);
+  font-size: 0.88rem;
+  font-weight: 650;
+  margin: 0;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--aa-border);
+}
+
+@media (max-width: 800px) {
+  .chooserGrid {
+    grid-template-columns: 1fr;
+  }
+  .identity {
+    gap: 0.9rem;
+  }
+}
