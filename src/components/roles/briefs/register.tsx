@@ -240,12 +240,12 @@ export const RC13: Claim = {
   bound: (
     <Translate id="roles.rc13.bound">
       The manifest’s only budget row is the one for a store that is unreadable
-      or corrupt, recorded as unmeasured and silently fail-open, and its gap
-      reason records a positive control showing the budget path never queries
-      the control-plane store. What is bounded regardless: a cap exists only
-      where a policy declares one, an undeclared budget is uncapped, reaching a
-      refusal needs a caller that waits for the answer, and a corrupt store
-      resets the cap to zero spend silently.
+      or corrupt, recorded as unmeasured, silently fail-open, and backed by no
+      evidence — its gap reason records a positive control showing the budget
+      path never queries the control-plane store. What is bounded regardless: a
+      cap exists only where a policy declares one, an undeclared budget is
+      uncapped, reaching a refusal needs a caller that waits for the answer, and
+      a corrupt store resets the cap to zero spend silently.
     </Translate>
   ),
 };
