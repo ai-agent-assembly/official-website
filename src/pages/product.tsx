@@ -482,8 +482,8 @@ function checks(): readonly Check[] {
           Each capability sentence on this page is one of sixteen entries in a
           shared claim register, quoted rather than paraphrased. Every entry
           carries the term it reaches, the bound that travels with it, and the
-          evidence rows behind it — including the two subjects the register
-          records as unmeasured.
+          evidence rows behind it — including the four that carry an Unmeasured
+          term, three of them wholly.
         </Translate>
       ),
       linkLabel: (
