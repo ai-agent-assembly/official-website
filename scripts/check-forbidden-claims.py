@@ -463,6 +463,14 @@ REWORDINGS_MUST_CLEAR = (
     "The rollout is incomplete and the form has autocomplete enabled.",
     "The proxy runs at the kernel level on Linux hosts.",
     "The policy engine evaluates rules in stages during startup.",
+    # Ordinary English the first cut of the unit expansion fired on as a
+    # build-failing FORBIDDEN fd-1. Zero of them appear on the site today, so
+    # the templates were narrowed prospectively -- but this is a marketing site
+    # with an early-access page and no pricing page yet, and the first author to
+    # meet a red build over a pricing table is the author who turns the gate off.
+    "Pricing comes in three tiers: Free, Team, and Enterprise.",
+    "Logging supports three levels: debug, info, and error.",
+    "The migration runs in three stages over the next quarter.",
 )
 
 

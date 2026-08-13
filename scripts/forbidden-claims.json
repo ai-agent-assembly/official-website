@@ -12,15 +12,15 @@
   "phrases": [
     {
       "class": "fd-1",
-      "why": "The fixed SDK -> proxy -> eBPF pipeline as THE architecture, in prose or as a three-box diagram. The any_units entries carry a {unit} slot expanded over layer/tier/level/stage/plane in check-forbidden-claims.py, because the framing is what is forbidden and the noun carrying it is interchangeable: five reworded instances escaped the literal list by substituting exactly this word. 'kernel layer' stays literal on purpose -- 'at the kernel level' is ordinary technical prose, not a claim.",
+      "why": "The fixed SDK -> proxy -> eBPF pipeline as THE architecture, in prose or as a three-box diagram. The any_units entries carry a {unit} slot expanded over layer/tier/level/stage/plane in check-forbidden-claims.py, because the framing is what is forbidden and the noun carrying it is interchangeable: five reworded instances escaped the literal list by substituting exactly this word. Every unit template is ANCHORED to the interception context -- 'independently deployable', 'enforcement', 'interception', 'in-process' -- because bare 'three {unit}s' and 'three-{unit}' also fire on ordinary English ('three tiers: Free, Team, and Enterprise'), and a gate that fails the build citing ADR 0033 over a pricing table is a gate someone disables. Each of the five measured escapes was specific, so the bare numeral+unit generalised further than the evidence required. 'kernel layer' stays literal on purpose -- 'at the kernel level' is ordinary technical prose, not a claim.",
       "locale": "en",
       "any_units": [
         "independently-deployable {unit}s",
         "independently deployable {unit}s",
         "enforcement {unit}s",
         "three interception {unit}s",
-        "three {unit}s",
-        "three-{unit}"
+        "three-{unit} interception",
+        "three {unit}s: in-process"
       ],
       "any": ["the kernel layer", "kernel layer", "Adopt the depth you need"]
     },
