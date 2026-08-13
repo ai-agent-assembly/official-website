@@ -70,16 +70,34 @@ REGISTER_URL = (
     "docs/src/role-narratives.md"
 )
 
-# RC12's bound ends by instructing the page AUTHOR not to write three specific
-# phrasings. It is not rendered, deliberately: it addresses an author rather
-# than a reader, and it is the one sentence in the register whose verbatim
-# rendering would publish on a role page the exact wordings the product refuses
-# to publish. The register may hold them because its rejected-wording section
-# sits inside a `claim-gate:ignore` block; a role page has no such exemption.
+# THE ONE SENTENCE THIS CHECK ACCEPTS AS MISSING
+# ----------------------------------------------
+# RC12's bound ends: "Do not write 'held for human review', 'approval
+# workflow', or any wording implying a reviewer acts." It is not rendered,
+# because rendering it verbatim publishes on a public role page the exact
+# phrasings the register's own "What no role brief may say" list forbids.
 #
-# Declared as a named exception so it appears in the output as a decision, not
-# as a silent normalisation. Anything else that goes missing still fails.
-AUTHOR_INSTRUCTION = re.compile(r' do not write .*?reviewer acts\.', re.I)
+# The reason is POLICY, and nothing enforces it. An earlier version of this
+# comment claimed the register may hold those phrasings because its
+# rejected-wording section sits inside a `claim-gate:ignore` block, and that a
+# role page has no such exemption. That was wrong twice over, and measured to be
+# wrong: the forbidden-claims catalogue does not contain "held for human review"
+# or "approval workflow" at all — its `approval` group holds
+# "human-in-the-loop approval" and "approval gates" — and injecting the full
+# sentence into a built page returns `forbidden hits: 0`. There is no gate to be
+# exempt from. AAASM-5584's pointer says exactly this about the list: "it binds
+# you and nothing will catch you. Treat it as a rule you apply, not a wall you
+# will bounce off."
+#
+# Which is why the exception is PRINTED rather than silently applied. An
+# unenforced rule that is also invisible in the output is indistinguishable from
+# an oversight.
+#
+# The exception is this sentence, not the category. RC16's bound ends "Do not
+# describe the agent plane as authenticated", which is equally author-directed
+# and IS rendered, because rendering it publishes nothing the product refuses to
+# publish. Author-directedness is not the test; publishing forbidden wording is.
+RC12_FORBIDDEN_PHRASING = re.compile(r' do not write .*?reviewer acts\.', re.I)
 
 
 def _local_file(src: str, suffix: str) -> pathlib.Path:
@@ -191,8 +209,11 @@ def extract(build_dir: str) -> dict[str, dict]:
     return found
 
 
-def compare(rows, found) -> list[str]:
+def compare(rows, found, declared: list[str] | None = None) -> list[str]:
+    """Returns drift problems. Accepted omissions are appended to `declared`."""
     problems: list[str] = []
+    if declared is None:
+        declared = []
     for rc in sorted(found, key=lambda x: int(x[2:])):
         rec = found[rc]
         if rc not in rows:
@@ -214,8 +235,18 @@ def compare(rows, found) -> list[str]:
         for field, w, g in zip(("term", "claim", "bound"), want, got):
             if w == g:
                 continue
-            if rc == "RC12" and field == "bound" and g == norm(AUTHOR_INSTRUCTION.sub("", w)):
-                continue  # declared exception, see AUTHOR_INSTRUCTION
+            if (
+                rc == "RC12"
+                and field == "bound"
+                and g == norm(RC12_FORBIDDEN_PHRASING.sub("", w))
+            ):
+                declared.append(
+                    "RC12.bound omits the register's closing author instruction "
+                    "(\"do not write ...\") — rendering it would publish the "
+                    "phrasings the rejected-wording list forbids. Every other "
+                    "word of the bound matches."
+                )
+                continue
             problems.append(
                 f"{rc}.{field} drifted from the register\n"
                 f"      register: {w}\n"
@@ -277,17 +308,26 @@ def main() -> int:
         return 2
     print("positive control : PASS (a corrupted bound is detected)")
 
-    problems = compare(rows, found)
+    declared: list[str] = []
+    problems = compare(rows, found, declared)
     for rc in sorted(found, key=lambda x: int(x[2:])):
         pages = ",".join(sorted(found[rc]["pages"]))
         print(f"  {rc:<5} {found[rc]['kind']:<11} {pages}")
     print()
+    for note in declared:
+        print(f"declared exception: {note}")
+    if declared:
+        print()
     if problems:
         print(f"FAIL: {len(problems)} drift(s) from the register\n")
         for p in problems:
             print("  - " + p)
         return 1
-    print(f"PASS: {len(found)} rendered entries match the register exactly.")
+    fields = len(found) * 3
+    print(
+        f"PASS: {len(found)} rendered entries, {fields - len(declared)}/{fields} "
+        f"fields match the register verbatim, {len(declared)} declared exception(s)."
+    )
     return 0
 
 
