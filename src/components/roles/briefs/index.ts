@@ -2,6 +2,7 @@ import type {RoleBrief} from '../types';
 import {securityBrief} from './security';
 import {platformBrief} from './platform';
 import {engineeringBrief} from './engineering';
+import {productQaBrief} from './productQa';
 
 /*
  * AAASM-5587 — the four evaluator routes, in one place and in one order.
@@ -28,4 +29,5 @@ export const ROLE_BRIEFS: readonly RoleBrief[] = [
   securityBrief,
   platformBrief,
   engineeringBrief,
+  productQaBrief,
 ];
