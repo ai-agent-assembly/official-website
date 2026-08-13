@@ -73,6 +73,18 @@ FD7_ABSOLUTES = (
     "complete",
 )
 
+# The classes allowed to report BELOW `error`, i.e. to print a `warn` line the
+# build survives. Code-owned for the same reason FD7_ABSOLUTES is: severity is
+# what decides whether a hit fails the build, and the one-word data edit
+# `"severity": "warn"` is a cheaper route from a red gate to a green one than
+# deleting a phrase -- it is idiomatic (this catalogue already ships one warn
+# group, with a `why` beside it), it leaves every phrase, count and floor
+# untouched, and the gate still prints all 89 hits. Measured before this check
+# existed: downgrading the seven error-class groups took a build holding 79
+# forbidden claims to `forbidden hits: 0   warnings: 89`, exit 0, with
+# integrity PASS and the self-test at 16/16. AAASM-5730.
+WARN_ONLY_CLASSES = frozenset({"fd-7-adjacent"})
+
 # The noun slot the stack framings are built on. A catalogue entry may write
 # `{unit}` and is expanded over this set at load time, so one authored line
 # covers every synonym.
@@ -269,6 +281,14 @@ def integrity(data: dict) -> list[str]:
             errs.append(
                 "fd-7 is owned by FD7_ABSOLUTES in check-forbidden-claims.py and ignored "
                 "here -- remove the fd-7 group from forbidden-claims.json"
+            )
+        severity = group.get("severity", "error")
+        if severity != "error" and group["class"] not in WARN_ONLY_CLASSES:
+            errs.append(
+                f"{group['class']}/{group.get('locale', 'en')}: severity {severity!r} -- only "
+                f"{', '.join(sorted(WARN_ONLY_CLASSES))} may report below error, and that list "
+                "is WARN_ONLY_CLASSES in check-forbidden-claims.py. Downgrading a group in the "
+                "catalogue silences it without changing a phrase, a count or a floor"
             )
         # A template with no slot expands to five copies of itself, which would
         # inflate the phrase count while widening nothing.
@@ -478,6 +498,13 @@ def self_test() -> int:
     ]
     check(integrity(no_group), "one group removed -> integrity fails")
     check(integrity({"phrases": []}), "emptied catalogue -> integrity fails")
+
+    downgraded = copy.deepcopy(data)
+    for g in downgraded["phrases"]:
+        if g.get("severity", "error") == "error":
+            g["severity"] = "warn"
+            break
+    check(integrity(downgraded), "group downgraded to warn -> integrity fails")
 
     grown = copy.deepcopy(data)
     grown["phrases"][0].setdefault("any", []).append("a newly banned framing")
