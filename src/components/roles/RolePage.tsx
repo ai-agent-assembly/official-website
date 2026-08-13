@@ -39,13 +39,26 @@ import styles from './styles.module.css';
  */
 
 /**
- * The promise, quoted. Held here rather than imported from `/product` because
- * `src/pages/product.tsx` is AAASM-5586's file and a shared constant would put
- * this ticket inside it; the duplication is deliberate and the string is the
- * one `product-promise.md` publishes.
+ * The promise, translated.
+ *
+ * Held here rather than imported from `/product` because `src/pages/product.tsx`
+ * is AAASM-5586's file and a shared constant would put this ticket inside it;
+ * the duplication is deliberate and the string is the one `product-promise.md`
+ * publishes.
+ *
+ * It goes through `translate()` and not a bare const. A meta description is the
+ * sentence a search result and a social card quote back, and a bare const ships
+ * the English one on every zh-Hant route — which is exactly the failure mode
+ * AAASM-5593 records for the blog, reintroduced on four new pages while `/`,
+ * `/product` and `/roles` all carry the translated one.
  */
-const META_DESCRIPTION =
-  'Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.';
+function metaDescription(): string {
+  return translate({
+    id: 'roles.meta.description',
+    message:
+      'Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.',
+  });
+}
 
 /** The switcher. The current role is rendered as text, never as a self-link. */
 function RoleSwitcher({current}: {readonly current: string}): ReactNode {
@@ -140,7 +153,7 @@ export default function RolePage({
   readonly brief: RoleBrief;
 }): ReactNode {
   return (
-    <Layout title={brief.metaTitle} description={META_DESCRIPTION}>
+    <Layout title={brief.metaTitle} description={metaDescription()}>
       <div className={narrative.wrap}>
         <RoleSwitcher current={brief.slug} />
 
@@ -227,7 +240,7 @@ export default function RolePage({
               values={{register: <RegisterLink />}}
             >
               {
-                'Each card below is one entry of a sixteen-entry claim register shared by all four of these pages, quoted rather than paraphrased. The term says how far the claim reaches; the bound beside it is part of the claim, not context for it. Every entry \u2014 including the ones this page does not cite \u2014 is published with the manifest rows behind it: {register}.'
+                'Each card below is one entry of a sixteen-entry claim register shared by all four of these pages, quoted rather than paraphrased. The term says how far the claim reaches; the bound beside it is part of the claim, not context for it. Every entry — including the ones this page does not cite — is published with the manifest rows behind it: {register}.'
               }
             </Translate>
           </p>
