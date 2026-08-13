@@ -6,7 +6,9 @@ Run against the BUILT site, never the source:
     pnpm build && python3 scripts/check-forbidden-claims.py build
 
 Exit 0 = clean, 1 = forbidden claim published, 2 = the checker could not prove
-itself and reported nothing trustworthy.
+itself and reported nothing trustworthy -- which includes a catalogue that has
+been trimmed below its floor, because a narrowed gate reports a pass it has not
+earned.
 
 Why this exists as committed code rather than a one-off search
 --------------------------------------------------------------
@@ -69,6 +71,31 @@ FD7_ABSOLUTES = (
     "comprehensive",
     "complete",
 )
+
+# Minimum number of AUTHORED entries per `class/locale` group in
+# forbidden-claims.json.
+#
+# This is a FLOOR, not a fixture, and the direction matters: adding a phrase
+# raises a count above its floor and never needs a code change, so extending
+# the gate stays a one-line edit to the JSON. Only REMOVING below the floor
+# fails -- and the fix for a legitimate removal is to lower the number here,
+# in a diff a reviewer reads. A gate whose driver the gate does not defend is
+# not a gate; a floor that punished growth would just be worked around.
+CATALOGUE_FLOOR = {
+    "fd-1/en": 8,
+    "fd-1/zh-Hant": 6,
+    "fd-2/en": 5,
+    "fd-3/en": 2,
+    "rejected-hero/en": 5,
+    "rejected-hero/zh-Hant": 2,
+    "approval/en": 2,
+    "approval/zh-Hant": 2,
+    "fd-7-adjacent/en": 3,
+}
+
+# Independent bound on the catalogue as a whole, so deleting an entire group
+# that predates its floor entry cannot pass on per-group checks alone.
+MIN_CATALOGUE_ENTRIES = 35
 
 _WS = re.compile(r"[\s ​]+")
 _TAG = re.compile(r"<[^>]*>")
@@ -179,6 +206,63 @@ def _entry(cls: str, locale: str, phrase: str, prose_only: bool, severity: str) 
 
 def read_catalogue() -> dict:
     return json.loads(CATALOGUE.read_text(encoding="utf-8"))
+
+
+def entry_counts(data: dict) -> dict[str, int]:
+    """Authored entries per `class/locale` -- what a person edits, not what the
+    expansion produces, so the floor is stated in the units of the edit."""
+    counts: dict[str, int] = {}
+    for group in data.get("phrases", []):
+        key = f"{group['class']}/{group.get('locale', 'en')}"
+        counts[key] = counts.get(key, 0) + len(group.get("any", []))
+    return counts
+
+
+def integrity(data: dict) -> list[str]:
+    """Prove the catalogue has not been trimmed into a gate that passes green.
+
+    Without this the cheapest route from a red gate to a green one is deleting
+    the offending phrase: an emptied catalogue scored `forbidden hits: 0,
+    EXIT=0` against a build holding 79 real violations, and dropping one group
+    took it 49 -> 35 with no complaint. AAASM-5730.
+    """
+    errs: list[str] = []
+
+    if len(set(FD7_ABSOLUTES)) != 14:
+        errs.append(
+            f"FD7_ABSOLUTES holds {len(set(FD7_ABSOLUTES))} distinct phrases, expected the "
+            "14 of ADR 0033 forbidden design 7 -- never waivable (ADR 0034 Decision 10)"
+        )
+
+    counts = entry_counts(data)
+    for group in data.get("phrases", []):
+        if group["class"] == "fd-7":
+            errs.append(
+                "fd-7 is owned by FD7_ABSOLUTES in check-forbidden-claims.py and ignored "
+                "here -- remove the fd-7 group from forbidden-claims.json"
+            )
+
+    for key, count in sorted(counts.items()):
+        if key not in CATALOGUE_FLOOR:
+            errs.append(
+                f"{key}: no floor entry -- add \"{key}\": {count} to CATALOGUE_FLOOR in "
+                "check-forbidden-claims.py so the group cannot later be deleted silently"
+            )
+    for key, floor in sorted(CATALOGUE_FLOOR.items()):
+        have = counts.get(key, 0)
+        if have < floor:
+            errs.append(
+                f"{key}: {have} entries, floor is {floor} -- restore the removed phrase(s), "
+                "or lower the floor in CATALOGUE_FLOOR if the removal is intended"
+            )
+
+    total = sum(counts.values())
+    if total < MIN_CATALOGUE_ENTRIES:
+        errs.append(
+            f"catalogue holds {total} entries, minimum is {MIN_CATALOGUE_ENTRIES} "
+            "(MIN_CATALOGUE_ENTRIES in check-forbidden-claims.py)"
+        )
+    return errs
 
 
 def load_phrases(data: dict | None = None):
@@ -307,7 +391,19 @@ def main() -> int:
         print(f"FATAL: no build directory at {build} -- run `pnpm build` first")
         return 2
 
-    phrases = load_phrases()
+    data = read_catalogue()
+    ierr = integrity(data)
+    counts = entry_counts(data)
+    print(f"integrity      : {'PASS' if not ierr else 'FAIL'} "
+          f"({sum(counts.values())} authored entries in {len(counts)} groups, "
+          f"minimum {MIN_CATALOGUE_ENTRIES}; {len(FD7_ABSOLUTES)} fd-7 absolutes code-owned)")
+    for e in ierr:
+        print("  INTEGRITY FAILED:", e)
+    if ierr:
+        print("\nThe catalogue has been narrowed -- a pass below would not be a measurement.")
+        return 2
+
+    phrases = load_phrases(data)
     pf, nf = positive_control(phrases), negative_control(phrases)
     print(f"catalogue      : {len(phrases)} phrases")
     proven = len(phrases) - len({k for k, _ in pf})
