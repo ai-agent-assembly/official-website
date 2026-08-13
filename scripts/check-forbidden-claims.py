@@ -466,6 +466,17 @@ def scan(build: Path, phrases):
 # 22 of the 79. Asserting one caught sentence per group makes the floor a
 # statement about COVERAGE rather than cardinality, which is what its docstring
 # already claimed. AAASM-5730.
+# Floors on the control corpora themselves. Emptying the must-catch list used to
+# print `self-test: 11/11 checks passed`, exit 0 -- the assertion count shrank by
+# five and the only thing that would have said so was the number it shrank.
+#
+# Neither floor is implied by the coverage check, which is why both are here and
+# MIN_CATALOGUE_ENTRIES is not: coverage needs one sentence per group, so two of
+# the three fd-1/en sentences can be dropped with every group still covered, and
+# nothing else bounds MUST_CLEAR at all.
+MIN_MUST_CATCH = 12
+MIN_MUST_CLEAR = 6
+
 MUST_CATCH = (
     ("fd-1/en", "Agent Assembly ships three independently deployable tiers."),
     ("fd-1/en", "Governance arrives at three levels: in-process, sidecar, and kernel."),
@@ -510,16 +521,30 @@ def _group_key(p) -> str:
     return f"{p['class']}/{p['locale']}"
 
 
-def sentence_control(phrases) -> list[str]:
+def sentence_control(phrases, must_catch=None, must_clear=None) -> list[str]:
     """Prove every group still catches something, and none has widened.
 
     Runs in the gate itself, not only in --self-test, because a catalogue whose
     phrases have been junked reports an absence it has not earned and the run
-    that reports it is `claims:check`.
+    that reports it is `claims:check`. The corpora are arguments only so the
+    self-test can shrink them and watch this fail; they default to the committed
+    ones, read at call time so a defaulted run can never lag the constant.
     """
+    must_catch = MUST_CATCH if must_catch is None else must_catch
+    must_clear = MUST_CLEAR if must_clear is None else must_clear
     errs: list[str] = []
+    if len(must_catch) < MIN_MUST_CATCH:
+        errs.append(
+            f"MUST_CATCH holds {len(must_catch)} sentences, floor is {MIN_MUST_CATCH} "
+            "(MIN_MUST_CATCH in check-forbidden-claims.py)"
+        )
+    if len(must_clear) < MIN_MUST_CLEAR:
+        errs.append(
+            f"MUST_CLEAR holds {len(must_clear)} sentences, floor is {MIN_MUST_CLEAR} "
+            "(MIN_MUST_CLEAR in check-forbidden-claims.py)"
+        )
     covered = set()
-    for key, sentence in MUST_CATCH:
+    for key, sentence in must_catch:
         hits = _prose_hits(sentence, phrases)
         if any(_group_key(h) == key for h in hits):
             covered.add(key)
@@ -535,7 +560,7 @@ def sentence_control(phrases) -> list[str]:
             "MUST_CATCH in check-forbidden-claims.py, so the floor states coverage and not "
             "just a count of entries"
         )
-    for sentence in MUST_CLEAR:
+    for sentence in must_clear:
         hits = _prose_hits(sentence, phrases)
         if hits:
             errs.append(
@@ -609,6 +634,10 @@ def self_test() -> int:
         not sentence_control(phrases),
         f"every group is asserted on ({len({_group_key(p) for p in phrases})} groups, "
         f"{len(MUST_CATCH)} must-catch, {len(MUST_CLEAR)} must-clear)",
+    )
+    check(
+        sentence_control(phrases, must_catch=MUST_CATCH[:1], must_clear=MUST_CLEAR[:1]),
+        "control corpora shrunk -> sentence control fails",
     )
 
     check(not positive_control(phrases), f"positive control passes ({len(phrases)} phrases)")
