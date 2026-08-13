@@ -19,6 +19,25 @@
 /* page frame                                                          */
 /* ------------------------------------------------------------------ */
 .wrap {
+  /*
+   * `width: 100%` is load-bearing, not tidying — do not drop it as redundant
+   * beside `max-width`.
+   *
+   * The theme lays a page out as an item of a column flex container. Such an
+   * item is sized on the cross axis by its own content, so `.table`'s
+   * `min-width: 38rem` reached up through `.tableWrap` and widened the PAGE:
+   * measured on /how-it-works at a 375px viewport, document scrollWidth 642
+   * against clientWidth 360, with `/product` and `/` clean at the same width.
+   * `.tableWrap`'s `overflow-x: auto` did nothing, because the box it was
+   * meant to clip against had itself been stretched.
+   *
+   * `min-width: 0` was tried first and does NOT fix it — that bounds the main
+   * axis, which for a column container is the height. Resolving the width
+   * against the containing block is what pins this item to the viewport, after
+   * which the scroll container works: measured 360 page / 328 wrap / table
+   * scrolling inside itself.
+   */
+  width: 100%;
   max-width: var(--aa-max);
   margin: 0 auto;
   padding: 4rem 1rem 5rem;
