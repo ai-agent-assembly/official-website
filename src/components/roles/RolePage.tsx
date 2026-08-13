@@ -207,7 +207,11 @@ export default function RolePage({
             {brief.claims.map((c) => (
               <div key={c.rc} className={narrative.card}>
                 <div className={styles.claimHead}>
-                  <span className={narrative.termBadge}>{c.term}</span>
+                  <span
+                    className={`${narrative.termBadge} ${styles.termMulti}`}
+                  >
+                    {c.term}
+                  </span>
                   <span className={styles.rcBadge}>{c.rc}</span>
                 </div>
                 <p className={narrative.cardText}>{c.text}</p>

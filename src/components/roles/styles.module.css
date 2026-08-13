@@ -105,6 +105,28 @@
   align-items: center;
   gap: 0.45rem;
 }
+/*
+ * Two register entries carry more than one §6 term — RC5 is "Denied before
+ * execution (Python, Go) · Evaluated (Node) · Unmeasured (Node default mode)",
+ * and RC11 is a pair. The shared `.termBadge` sets `white-space: nowrap`, which
+ * is correct for `/product`, where every term is one or three words, and wrong
+ * here.
+ *
+ * Measured before this rule existed: at a 390px viewport `/roles/engineering`
+ * reported document scrollWidth 627 against clientWidth 390, with RC5's badge
+ * the only element wider than the viewport. An unbreakable inline box inside
+ * `.wrap` stretches the whole document, so the damage is a horizontally
+ * scrolling PAGE rather than a clipped badge — the same failure mode
+ * `narrative.module.css` records for the `/how-it-works` table.
+ *
+ * The selector is `.claimHead .termMulti` rather than a bare `.termMulti` so it
+ * outranks the shared single-class rule on specificity instead of on stylesheet
+ * order, which is not something this file controls.
+ */
+.claimHead .termMulti {
+  white-space: normal;
+}
+
 .rcBadge {
   display: inline-block;
   padding: 0.2rem 0.5rem;
