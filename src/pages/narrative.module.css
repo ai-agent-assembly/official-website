@@ -1,3 +1,23 @@
+/*
+ * Shared styles for the two evaluator-narrative routes — `/product` and
+ * `/how-it-works` (AAASM-5586). Formerly `product.module.css`, renamed when
+ * the second route landed so the filename says what it serves.
+ *
+ * Both routes are one reading path at two depths, so they share primitives
+ * deliberately: a reader who moves from `/product` to `/how-it-works` should
+ * not experience a change of product. The homepage keeps its own stylesheet
+ * (`src/components/home/styles.module.css`, AAASM-5585's) — this file does not
+ * import from it and must not, because the sitemap partitions the two.
+ *
+ * One rule runs through the whole file and is the reason several classes exist
+ * at all: a claim's bound travels with it, on the same screen. `.cardBound`,
+ * `.boundNote` and `.termBadge` are what make that visible rather than
+ * footnoted, and none of them may be restyled into something a reader skips.
+ */
+
+/* ------------------------------------------------------------------ */
+/* page frame                                                          */
+/* ------------------------------------------------------------------ */
 .wrap {
   max-width: var(--aa-max);
   margin: 0 auto;
@@ -20,13 +40,40 @@
   font-size: 1.15rem;
   color: var(--aa-text-dim);
   max-width: 48rem;
+  line-height: 1.65;
 }
+/*
+ * The evaluator's one-line framing, directly under the promise. Heavier than
+ * body copy because it is the sentence a reader who stops here takes away.
+ */
+.lede {
+  font-size: 1.05rem;
+  color: var(--aa-text);
+  max-width: 48rem;
+  line-height: 1.7;
+  margin-top: 1.25rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--aa-accent);
+}
+
+/* ------------------------------------------------------------------ */
+/* sections                                                            */
+/* ------------------------------------------------------------------ */
 .block {
-  margin-top: 3rem;
+  margin-top: 3.5rem;
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--aa-text-dim);
+  margin-bottom: 0.4rem;
 }
 .blockTitle {
-  font-size: 1.5rem;
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
   font-weight: 800;
+  letter-spacing: -0.01em;
   margin: 0 0 0.75rem;
 }
 .p {
@@ -34,11 +81,42 @@
   max-width: 48rem;
   line-height: 1.7;
 }
+.p + .p {
+  margin-top: 0.9rem;
+}
+.sectionFoot {
+  margin-top: 1.5rem;
+  font-weight: 600;
+}
+.link {
+  font-weight: 650;
+}
+
+/* ------------------------------------------------------------------ */
+/* cards                                                               */
+/* ------------------------------------------------------------------ */
 .cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.25rem;
   margin-top: 1.25rem;
+}
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+/*
+ * auto-fit rather than a fixed column count: the role cards and the
+ * decision-subject cards do not come in the same number, and a page that
+ * hard-codes three leaves a widow when a card is added or dropped.
+ */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
 }
 .panel {
   background: var(--aa-panel);
@@ -50,17 +128,272 @@
   font-weight: 750;
   margin: 0 0 0.5rem;
 }
+.card {
+  background: var(--aa-panel);
+  border: 1px solid var(--aa-border);
+  border-radius: 14px;
+  padding: 1.4rem 1.4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.cardTitle {
+  font-size: 1.05rem;
+  font-weight: 750;
+  margin: 0;
+  line-height: 1.35;
+}
+.cardText {
+  color: var(--aa-text-dim);
+  line-height: 1.65;
+  margin: 0;
+}
+/*
+ * The bound. Visually quieter than the claim but never hidden, and separated
+ * by a rule so a skimming reader sees that the card has two halves. Dropping
+ * this element from a card is the broadening ADR 0034 forbids, so it is styled
+ * as part of the card rather than as an aside.
+ */
+.cardBound {
+  margin: 0.25rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--aa-border);
+  color: var(--aa-text-dim);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.boundLabel {
+  color: var(--aa-text);
+  font-weight: 700;
+}
+/* The ADR 0033 §6 term a claim reaches — an engineering word, kept legible. */
+.termBadge {
+  align-self: flex-start;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--aa-hover);
+  border: 1px solid var(--aa-border);
+  color: var(--aa-text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+/* A boundary clause that belongs to a section rather than to one card. */
+.boundNote {
+  margin-top: 1.25rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 3px solid var(--aa-accent-2);
+  background: var(--aa-bg-soft);
+  border-radius: 0 10px 10px 0;
+  color: var(--aa-text-dim);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  max-width: 52rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* lists                                                               */
+/* ------------------------------------------------------------------ */
 .list {
   color: var(--aa-text-dim);
   padding-left: 1.1rem;
   margin: 0;
   line-height: 1.8;
 }
+/*
+ * The "what it does not do" list. Bordered rather than bulleted because on
+ * this site the limits are a feature of the page, not a disclaimer under it.
+ */
+.limitList {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.limitList li {
+  position: relative;
+  padding: 0.85rem 1rem 0.85rem 2.4rem;
+  background: var(--aa-bg-soft);
+  border: 1px solid var(--aa-border);
+  border-radius: 10px;
+  color: var(--aa-text-dim);
+  line-height: 1.65;
+}
+.limitList li::before {
+  content: '×';
+  position: absolute;
+  left: 1rem;
+  top: 0.8rem;
+  font-weight: 800;
+  color: var(--aa-accent-2);
+}
+
+/* ------------------------------------------------------------------ */
+/* table — mechanism to the term it reaches                            */
+/* ------------------------------------------------------------------ */
+/* Wide content scrolls inside its own box; the page body never scrolls. */
+.tableWrap {
+  margin-top: 1.5rem;
+  overflow-x: auto;
+  border: 1px solid var(--aa-border);
+  border-radius: 14px;
+}
+.table {
+  width: 100%;
+  min-width: 38rem;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+  margin: 0;
+}
+.table th,
+.table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--aa-border);
+  line-height: 1.6;
+}
+.table thead th {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--aa-text-dim);
+  background: var(--aa-bg-soft);
+}
+.table tbody th {
+  font-weight: 700;
+  color: var(--aa-text);
+  width: 38%;
+}
+.table td {
+  color: var(--aa-text-dim);
+}
+.table tbody tr:last-child th,
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* the role field — a diagram that is not a pipeline                   */
+/* ------------------------------------------------------------------ */
+/*
+ * ADR 0033 forbidden design 1 is a SHAPE, not a sentence: an ordered chain
+ * whose members cover for each other cannot express an absent member. So this
+ * diagram is a field, not a stack. Three rules hold it to that, and a layout
+ * pass that breaks any of them reintroduces the design:
+ *
+ *   1. No connector runs BETWEEN the deciding roles. The only arrows point at
+ *      the control plane (a decision request) and at the evidence pipeline.
+ *   2. Nothing is numbered, and nothing is ordered top to bottom by strength.
+ *   3. The outside-the-boundary region is drawn detached and dashed, because
+ *      it is not a stage — it is where none of this applies.
+ *
+ * Built from semantic HTML and CSS grid rather than SVG so it reflows on a
+ * phone, translates with the rest of the page, and is read aloud in order.
+ */
+.field {
+  margin-top: 1.75rem;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+.fieldPath {
+  border: 1px solid var(--aa-border);
+  border-radius: 16px;
+  padding: 1.1rem;
+  background: var(--aa-bg-soft);
+}
+.fieldPlane {
+  border: 2px solid var(--aa-accent);
+  border-radius: 16px;
+  padding: 1.1rem;
+  background: var(--aa-panel);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.fieldLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--aa-text-dim);
+  margin: 0 0 0.75rem;
+}
+.roleChip {
+  background: var(--aa-panel);
+  border: 1px solid var(--aa-border);
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem;
+  margin-bottom: 0.6rem;
+}
+.roleChip:last-child {
+  margin-bottom: 0;
+}
+.roleChipName {
+  font-weight: 700;
+  font-size: 0.92rem;
+  margin: 0;
+}
+.roleChipNote {
+  color: var(--aa-text-dim);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin: 0.2rem 0 0;
+}
+.planeName {
+  font-weight: 800;
+  font-size: 1rem;
+  margin: 0;
+}
+.planeNote {
+  color: var(--aa-text-dim);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  margin: 0.4rem 0 0;
+}
+/* Cross-cutting roles: they touch everything, so they sit under both columns. */
+.fieldSpan {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+/*
+ * Detached on purpose — a gap above it, a dashed border, and no connector into
+ * anything. The absence of an arrow is the content.
+ */
+.fieldOutside {
+  grid-column: 1 / -1;
+  margin-top: 0.6rem;
+  border: 2px dashed var(--aa-border);
+  border-radius: 16px;
+  padding: 1.1rem;
+  background: transparent;
+}
+.fieldOutsideName {
+  font-weight: 750;
+  margin: 0;
+}
+.fieldLegend {
+  margin-top: 1rem;
+  color: var(--aa-text-dim);
+  font-size: 0.88rem;
+  line-height: 1.65;
+  max-width: 52rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* calls to action                                                     */
+/* ------------------------------------------------------------------ */
 .ctaRow {
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
-  margin-top: 2.5rem;
+  margin-top: 3rem;
 }
 .btnPrimary {
   padding: 0.7rem 1.25rem;
@@ -104,8 +437,26 @@
   font-weight: 600;
   white-space: nowrap;
 }
+
+/* ------------------------------------------------------------------ */
+/* responsive                                                          */
+/* ------------------------------------------------------------------ */
+@media (max-width: 996px) {
+  .grid3 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
 @media (max-width: 800px) {
-  .cols {
+  .wrap {
+    padding: 3rem 1rem 4rem;
+  }
+  .cols,
+  .grid3,
+  .field,
+  .fieldSpan {
     grid-template-columns: 1fr;
+  }
+  .table tbody th {
+    width: auto;
   }
 }
