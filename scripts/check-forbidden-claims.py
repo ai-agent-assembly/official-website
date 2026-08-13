@@ -456,17 +456,6 @@ def scan(build: Path, phrases):
 # 22 of the 79. Asserting one caught sentence per group makes the floor a
 # statement about COVERAGE rather than cardinality, which is what its docstring
 # already claimed. AAASM-5730.
-# Floors on the control corpora themselves. Emptying the must-catch list used to
-# print `self-test: 11/11 checks passed`, exit 0 -- the assertion count shrank by
-# five and the only thing that would have said so was the number it shrank.
-#
-# Neither floor is implied by the coverage check, which is why both are here and
-# MIN_CATALOGUE_ENTRIES is not: coverage needs one sentence per group, so two of
-# the three fd-1/en sentences can be dropped with every group still covered, and
-# nothing else bounds MUST_CLEAR at all.
-MIN_MUST_CATCH = 12
-MIN_MUST_CLEAR = 6
-
 MUST_CATCH = (
     ("fd-1/en", "Agent Assembly ships three independently deployable tiers."),
     ("fd-1/en", "Governance arrives at three levels: in-process, sidecar, and kernel."),
@@ -494,6 +483,17 @@ MUST_CLEAR = (
     "Logging supports three levels: debug, info, and error.",
     "The migration runs in three stages over the next quarter.",
 )
+
+# Floors on the control corpora themselves. Emptying the must-catch list used to
+# print `self-test: 11/11 checks passed`, exit 0 -- the assertion count shrank by
+# five and the only thing that would have said so was the number it shrank.
+#
+# Neither floor is implied by the coverage check, which is why both are here and
+# MIN_CATALOGUE_ENTRIES is not: coverage needs one sentence per group, so two of
+# the three fd-1/en sentences can be dropped with every group still covered, and
+# nothing else bounds MUST_CLEAR at all.
+MIN_MUST_CATCH = 12
+MIN_MUST_CLEAR = 6
 
 
 def _prose_hits(sentence: str, phrases):
