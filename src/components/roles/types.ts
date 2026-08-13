@@ -98,6 +98,18 @@ export interface NextStep {
   readonly external?: boolean;
 }
 
+/**
+ * One paragraph of prose, with a stable key.
+ *
+ * The key is carried rather than derived from the array index: an index is a
+ * position, not an identity, so React reuses the wrong DOM node when the list
+ * changes and the key stops meaning anything the moment a paragraph moves.
+ */
+export interface Para {
+  readonly key: string;
+  readonly text: ReactNode;
+}
+
 export interface RoleBrief {
   /** Route slug under the shared `/roles` prefix. */
   readonly slug: string;
@@ -112,11 +124,11 @@ export interface RoleBrief {
   readonly job: ReactNode;
   /** Page `<title>`. A label, never a capability sentence — see RolePage. */
   readonly metaTitle: string;
-  readonly pain: readonly ReactNode[];
+  readonly pain: readonly Para[];
   readonly trigger: ReactNode;
   readonly interventionLead: ReactNode;
   readonly claims: readonly Claim[];
-  readonly outcome: readonly ReactNode[];
+  readonly outcome: readonly Para[];
   readonly proof: readonly ProofLink[];
   readonly limitations: readonly Limit[];
   readonly next: readonly NextStep[];

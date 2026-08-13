@@ -86,13 +86,13 @@ function docsLink(href: string, label: string): React.ReactNode {
   );
 }
 
-const TWO_GAPS = () =>
+const TwoGapsLink = () =>
   docsLink(
     `${ROLE_NARRATIVES}#two-gaps-this-page-found-in-the-manifest`,
     translate({id: 'roles.register.twoGaps', message: 'the two gaps'}),
   );
 
-const T3_SCENARIOS = () =>
+const RiskScenariosLink = () =>
   docsLink(
     RISK_SCENARIOS,
     translate({id: 'roles.register.riskScenarios', message: 'Risk scenarios'}),
@@ -226,7 +226,7 @@ export const RC6: Claim = {
     </Translate>
   ),
   bound: (
-    <Translate id="roles.rc6.bound" values={{twoGaps: <TWO_GAPS />}}>
+    <Translate id="roles.rc6.bound" values={{twoGaps: <TwoGapsLink />}}>
       {
         'The manifest\u2019s only row for this subject is the row for what happens when the write fails, and it carries coverage: unmeasured, failure_posture: fail_open and evidence: gap. So the honest term is the row\u2019s own. Everything else about the chain is a bound, not a capability: it is tamper-evident, not immutable and not signed \u2014 an unkeyed digest, so anyone able to rewrite the sink can recompute it. The chain head advances before the send and a full channel drops the entry while the call still returns, which makes a dropped entry indistinguishable from a deleted one. An emptied log verifies clean. The proxy writes no local record at all unless its audit path is configured. See {twoGaps}.'
       }
@@ -290,7 +290,7 @@ export const RC13: Claim = {
   bound: (
     <Translate
       id="roles.rc13.bound"
-      values={{twoGaps: <TWO_GAPS />, riskScenarios: <T3_SCENARIOS />}}
+      values={{twoGaps: <TwoGapsLink />, riskScenarios: <RiskScenariosLink />}}
     >
       {
         'Same shape as RC6, and the same remedy. The manifest\u2019s only budget row is the one for a store that is unreadable or corrupt, carrying coverage: unmeasured, failure_posture: fail_open_silent and evidence: gap \u2014 its gap reason records a positive control showing the budget path never queries the control-plane store. {riskScenarios}\u2019s T3 reaches Evaluated and states in the same table that it has no positive row; this register does not restate T3\u2019s term over a row that does not carry it. What is bounded regardless: a cap exists only where a policy declares one, an undeclared budget is uncapped, reaching Denied before execution needs a caller that waits for the answer, and a corrupt store resets the cap to zero spend silently. See {twoGaps}.'

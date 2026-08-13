@@ -195,9 +195,9 @@ export default function RolePage({
           <h2 className={narrative.blockTitle}>
             <Translate id="roles.pain.title">Where this starts</Translate>
           </h2>
-          {brief.pain.map((p, i) => (
-            <p key={i} className={narrative.p}>
-              {p}
+          {brief.pain.map((p) => (
+            <p key={p.key} className={narrative.p}>
+              {p.text}
             </p>
           ))}
         </section>
@@ -278,9 +278,9 @@ export default function RolePage({
               What is different after
             </Translate>
           </h2>
-          {brief.outcome.map((o, i) => (
-            <p key={i} className={narrative.p}>
-              {o}
+          {brief.outcome.map((o) => (
+            <p key={o.key} className={narrative.p}>
+              {o.text}
             </p>
           ))}
         </section>

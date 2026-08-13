@@ -57,9 +57,8 @@ this ticket's. Run it by hand after editing `register.tsx`.
 from __future__ import annotations
 
 import argparse
-import glob
 import html
-import os
+import pathlib
 import re
 import sys
 import urllib.request
@@ -81,12 +80,39 @@ DEFAULT_REGISTER = (
 AUTHOR_INSTRUCTION = re.compile(r' do not write .*?reviewer acts\.', re.I)
 
 
+def _local_file(src: str, suffix: str) -> pathlib.Path:
+    """Resolve a CLI-supplied path and refuse anything that is not what we want.
+
+    `src` comes from argv, so it is resolved before use and then checked: it
+    must exist, be a regular file, and carry the expected suffix. Resolving
+    first is what makes the checks meaningful — `../` segments and symlinks are
+    collapsed before anything is asserted about the result, rather than after.
+    """
+    path = pathlib.Path(src).expanduser().resolve(strict=False)
+    if path.suffix != suffix:
+        raise ValueError(f"expected a {suffix} file, got {path.name}")
+    if not path.is_file():
+        raise FileNotFoundError(f"no such file: {path}")
+    return path
+
+
 def load_register(src: str) -> str:
-    if src.startswith("http://") or src.startswith("https://"):
+    """Read the register from an https URL or a local markdown file.
+
+    Only https is accepted. The register is the artifact every claim on four
+    public pages is checked against, so fetching it over a channel that can be
+    rewritten in transit would make a PASS meaningless — an attacker who can
+    edit the response can make any drift look clean.
+    """
+    if src.startswith("https://"):
         with urllib.request.urlopen(src, timeout=30) as fh:  # noqa: S310
             return fh.read().decode("utf-8")
-    with open(src, encoding="utf-8") as fh:
-        return fh.read()
+    if src.startswith("http://"):
+        raise ValueError(
+            "refusing to fetch the register over http — an in-transit rewrite "
+            "would make a clean result meaningless; use https"
+        )
+    return _local_file(src, ".md").read_text(encoding="utf-8")
 
 
 def parse_register(md: str) -> dict[str, dict[str, str]]:
@@ -135,12 +161,20 @@ PATTERNS = {
 
 
 def extract(build_dir: str) -> dict[str, dict]:
+    """Read the rendered role pages out of a build directory.
+
+    `build_dir` comes from argv and is resolved before it is used, then the
+    globbed results are confined to it — the loop only ever opens paths the
+    glob produced under the resolved root, never a path composed from input.
+    """
+    root = pathlib.Path(build_dir).expanduser().resolve(strict=False)
+    if not root.is_dir():
+        raise NotADirectoryError(f"no such build directory: {root}")
     found: dict[str, dict] = {}
-    pages = sorted(glob.glob(os.path.join(build_dir, "roles", "*", "index.html")))
+    pages = sorted((root / "roles").glob("*/index.html"))
     for path in pages:
-        page = os.path.basename(os.path.dirname(path))
-        with open(path, encoding="utf-8") as fh:
-            doc = fh.read()
+        page = path.parent.name
+        doc = path.read_text(encoding="utf-8")
         for kind, pat in PATTERNS.items():
             for term, rc, text, bound in re.findall(pat, doc):
                 bound = re.sub(r"^\s*<span class=boundLabel[^>]*>.*?</span>", "", bound)

@@ -43,16 +43,26 @@ export const productQaBrief: RoleBrief = {
   ),
 
   pain: [
-    <Translate key="a" id="roles.productqa.pain.a">
-      You are asked to give release confidence on a system whose behaviour is
-      non-deterministic, whose failure mode is a side effect rather than a wrong
-      answer, and whose test oracle — did the bad thing not happen — is an
-      absence.
-    </Translate>,
-    <Translate key="b" id="roles.productqa.pain.b">
-      Conventional assertions confirm that an error was raised, which is not the
-      same fact.
-    </Translate>,
+    {
+      key: 'a',
+      text: (
+        <Translate id="roles.productqa.pain.a">
+          You are asked to give release confidence on a system whose behaviour
+          is non-deterministic, whose failure mode is a side effect rather than
+          a wrong answer, and whose test oracle — did the bad thing not happen —
+          is an absence.
+        </Translate>
+      ),
+    },
+    {
+      key: 'b',
+      text: (
+        <Translate id="roles.productqa.pain.b">
+          Conventional assertions confirm that an error was raised, which is not
+          the same fact.
+        </Translate>
+      ),
+    },
   ],
 
   trigger: (
@@ -75,22 +85,37 @@ export const productQaBrief: RoleBrief = {
   claims: [RC1, RC3, RC4, RC13, RC6],
 
   outcome: [
-    <Translate key="a" id="roles.productqa.outcome.a">
-      A refusal becomes an observable decision, so a test can assert on the
-      decision.
-    </Translate>,
-    <Translate key="b" id="roles.productqa.outcome.b">
-      Assert against the decision and against an independent observer, not
-      against the audit log. RC6 is Unmeasured, so a missing entry does not
-      distinguish “the decision was not made” from “the record was dropped”, and
-      a test that reads the log inherits that ambiguity as a flaky pass. The
-      negative control published with the risk scenarios is built on an
-      independent listener for exactly this reason.
-    </Translate>,
-    <Translate key="c" id="roles.productqa.outcome.c">
-      Assertions about the averted consequence are a separate and stricter thing
-      again — see the Limitations below before you write one.
-    </Translate>,
+    {
+      key: 'a',
+      text: (
+        <Translate id="roles.productqa.outcome.a">
+          A refusal becomes an observable decision, so a test can assert on the
+          decision.
+        </Translate>
+      ),
+    },
+    {
+      key: 'b',
+      text: (
+        <Translate id="roles.productqa.outcome.b">
+          Assert against the decision and against an independent observer, not
+          against the audit log. RC6 is Unmeasured, so a missing entry does not
+          distinguish “the decision was not made” from “the record was dropped”,
+          and a test that reads the log inherits that ambiguity as a flaky pass.
+          The negative control published with the risk scenarios is built on an
+          independent listener for exactly this reason.
+        </Translate>
+      ),
+    },
+    {
+      key: 'c',
+      text: (
+        <Translate id="roles.productqa.outcome.c">
+          Assertions about the averted consequence are a separate and stricter
+          thing again — see the Limitations below before you write one.
+        </Translate>
+      ),
+    },
   ],
 
   proof: [

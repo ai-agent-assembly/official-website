@@ -60,18 +60,29 @@ export const securityBrief: RoleBrief = {
   ),
 
   pain: [
-    <Translate key="a" id="roles.security.pain.a">
-      An AI agent in your estate can already reach the network, the filesystem
-      and a shell. The controls you own were built for humans and for services:
-      identity, review, change management, and logs you read afterwards. None of
-      them sits between the agent’s decision and the agent’s action.
-    </Translate>,
-    <Translate key="b" id="roles.security.pain.b">
-      Your detection story is entirely retrospective, and your compensating
-      control is that nobody has given the agents anything important yet — which
-      stops being true the week a team ships an agent with a production
-      credential.
-    </Translate>,
+    {
+      key: 'a',
+      text: (
+        <Translate id="roles.security.pain.a">
+          An AI agent in your estate can already reach the network, the
+          filesystem and a shell. The controls you own were built for humans and
+          for services: identity, review, change management, and logs you read
+          afterwards. None of them sits between the agent’s decision and the
+          agent’s action.
+        </Translate>
+      ),
+    },
+    {
+      key: 'b',
+      text: (
+        <Translate id="roles.security.pain.b">
+          Your detection story is entirely retrospective, and your compensating
+          control is that nobody has given the agents anything important yet —
+          which stops being true the week a team ships an agent with a
+          production credential.
+        </Translate>
+      ),
+    },
   ],
 
   trigger: (
@@ -94,16 +105,26 @@ export const securityBrief: RoleBrief = {
   claims: [RC1, RC2, RC4, RC3, RC11, RC6],
 
   outcome: [
-    <Translate key="a" id="roles.security.outcome.a">
-      For an agent you routed, a request to a destination outside the list you
-      configured is refused before a connection is opened.
-    </Translate>,
-    <Translate key="b" id="roles.security.outcome.b">
-      The security position that changes is ordering — the decision precedes the
-      effect — not coverage, and not the completeness of the record: whether a
-      given refusal’s entry durably reaches the audit chain is RC6, which is
-      Unmeasured. Buy the ordering; do not buy a ledger.
-    </Translate>,
+    {
+      key: 'a',
+      text: (
+        <Translate id="roles.security.outcome.a">
+          For an agent you routed, a request to a destination outside the list
+          you configured is refused before a connection is opened.
+        </Translate>
+      ),
+    },
+    {
+      key: 'b',
+      text: (
+        <Translate id="roles.security.outcome.b">
+          The security position that changes is ordering — the decision precedes
+          the effect — not coverage, and not the completeness of the record:
+          whether a given refusal’s entry durably reaches the audit chain is
+          RC6, which is Unmeasured. Buy the ordering; do not buy a ledger.
+        </Translate>
+      ),
+    },
   ],
 
   proof: [

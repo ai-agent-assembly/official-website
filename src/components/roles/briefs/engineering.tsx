@@ -40,15 +40,25 @@ export const engineeringBrief: RoleBrief = {
   ),
 
   pain: [
-    <Translate key="a" id="roles.engineering.pain.a">
-      You are shipping an agent, and the governance conversation arrives as a
-      blocker rather than as a library.
-    </Translate>,
-    <Translate key="b" id="roles.engineering.pain.b">
-      What you want to know is small and specific: what do I add, what does it
-      wrap, what does it do when the policy says no, and what does it miss. What
-      you usually get is an architecture diagram.
-    </Translate>,
+    {
+      key: 'a',
+      text: (
+        <Translate id="roles.engineering.pain.a">
+          You are shipping an agent, and the governance conversation arrives as
+          a blocker rather than as a library.
+        </Translate>
+      ),
+    },
+    {
+      key: 'b',
+      text: (
+        <Translate id="roles.engineering.pain.b">
+          What you want to know is small and specific: what do I add, what does
+          it wrap, what does it do when the policy says no, and what does it
+          miss. What you usually get is an architecture diagram.
+        </Translate>
+      ),
+    },
   ],
 
   trigger: (
@@ -73,14 +83,24 @@ export const engineeringBrief: RoleBrief = {
   claims: [RC5, RC15, RC1, RC3, RC4],
 
   outcome: [
-    <Translate key="a" id="roles.engineering.outcome.a">
-      A wrapped tool call is checked before its body runs and, on the paths that
-      fail closed, raises rather than executing.
-    </Translate>,
-    <Translate key="b" id="roles.engineering.outcome.b">
-      The decision is recorded against your agent’s identity, so the evidence
-      question has an answer that is not a log grep.
-    </Translate>,
+    {
+      key: 'a',
+      text: (
+        <Translate id="roles.engineering.outcome.a">
+          A wrapped tool call is checked before its body runs and, on the paths
+          that fail closed, raises rather than executing.
+        </Translate>
+      ),
+    },
+    {
+      key: 'b',
+      text: (
+        <Translate id="roles.engineering.outcome.b">
+          The decision is recorded against your agent’s identity, so the
+          evidence question has an answer that is not a log grep.
+        </Translate>
+      ),
+    },
   ],
 
   proof: [

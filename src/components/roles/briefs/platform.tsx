@@ -41,15 +41,26 @@ export const platformBrief: RoleBrief = {
   ),
 
   pain: [
-    <Translate key="a" id="roles.platform.pain.a">
-      Agent workloads arrive without an operational contract. They are started
-      by developers on laptops and by CI on runners, they talk to third-party
-      endpoints you did not approve, and when something goes wrong the first
-      question — what did it actually do — has no owner and no answer.
-    </Translate>,
-    <Translate key="b" id="roles.platform.pain.b">
-      You are asked to make them safe without being given a place to stand.
-    </Translate>,
+    {
+      key: 'a',
+      text: (
+        <Translate id="roles.platform.pain.a">
+          Agent workloads arrive without an operational contract. They are
+          started by developers on laptops and by CI on runners, they talk to
+          third-party endpoints you did not approve, and when something goes
+          wrong the first question — what did it actually do — has no owner and
+          no answer.
+        </Translate>
+      ),
+    },
+    {
+      key: 'b',
+      text: (
+        <Translate id="roles.platform.pain.b">
+          You are asked to make them safe without being given a place to stand.
+        </Translate>
+      ),
+    },
   ],
 
   trigger: (
@@ -71,15 +82,25 @@ export const platformBrief: RoleBrief = {
   claims: [RC11, RC10, RC6, RC15],
 
   outcome: [
-    <Translate key="a" id="roles.platform.outcome.a">
-      Agent egress becomes a thing with a configuration, a failure posture and
-      an owner, rather than ambient process behaviour.
-    </Translate>,
-    <Translate key="b" id="roles.platform.outcome.b">
-      When the control plane is configured and goes away, the paths that depend
-      on it refuse rather than quietly widening. The inverse does not hold, and
-      the Limitations below open with it.
-    </Translate>,
+    {
+      key: 'a',
+      text: (
+        <Translate id="roles.platform.outcome.a">
+          Agent egress becomes a thing with a configuration, a failure posture
+          and an owner, rather than ambient process behaviour.
+        </Translate>
+      ),
+    },
+    {
+      key: 'b',
+      text: (
+        <Translate id="roles.platform.outcome.b">
+          When the control plane is configured and goes away, the paths that
+          depend on it refuse rather than quietly widening. The inverse does not
+          hold, and the Limitations below open with it.
+        </Translate>
+      ),
+    },
   ],
 
   proof: [
