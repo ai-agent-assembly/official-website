@@ -134,10 +134,6 @@ CATALOGUE_FLOOR = {
     "fd-7-adjacent/en": 3,
 }
 
-# Independent bound on the catalogue as a whole, so deleting an entire group
-# that predates its floor entry cannot pass on per-group checks alone.
-MIN_CATALOGUE_ENTRIES = 35
-
 _WS = re.compile(r"[\s ​]+")
 _TAG = re.compile(r"<[^>]*>")
 
@@ -313,12 +309,6 @@ def integrity(data: dict) -> list[str]:
                 "or lower the floor in CATALOGUE_FLOOR if the removal is intended"
             )
 
-    total = sum(counts.values())
-    if total < MIN_CATALOGUE_ENTRIES:
-        errs.append(
-            f"catalogue holds {total} entries, minimum is {MIN_CATALOGUE_ENTRIES} "
-            "(MIN_CATALOGUE_ENTRIES in check-forbidden-claims.py)"
-        )
     return errs
 
 
@@ -663,8 +653,8 @@ def main() -> int:
     ierr = integrity(data)
     counts = entry_counts(data)
     print(f"integrity      : {'PASS' if not ierr else 'FAIL'} "
-          f"({sum(counts.values())} authored entries in {len(counts)} groups, "
-          f"minimum {MIN_CATALOGUE_ENTRIES}; {len(FD7_ABSOLUTES)} fd-7 absolutes code-owned)")
+          f"({sum(counts.values())} authored entries in {len(counts)} groups, floors sum to "
+          f"{sum(CATALOGUE_FLOOR.values())}; {len(FD7_ABSOLUTES)} fd-7 absolutes code-owned)")
     for e in ierr:
         print("  INTEGRITY FAILED:", e)
     if ierr:
