@@ -33,6 +33,7 @@ Three traps this deliberately avoids
 
 from __future__ import annotations
 
+import copy
 import html
 import json
 import re
@@ -424,7 +425,92 @@ def scan(build: Path, phrases):
     return files, hits
 
 
+# --------------------------------------------------------------------------- #
+# self-test
+# --------------------------------------------------------------------------- #
+# The rewordings measured in AAASM-5730. The first five escaped the catalogue
+# before the {unit} expansion; the last three are the shapes a synonym set can
+# plausibly over-reach onto, and must stay clear. They run on every CI build
+# because a guard nobody has watched fire is not evidence that it fires.
+REWORDINGS_MUST_CATCH = (
+    "Agent Assembly ships three independently deployable tiers.",
+    "Governance arrives at three levels: in-process, sidecar, and kernel.",
+    "This is the three-tier interception model in practice.",
+    "SDK then proxy then eBPF: each stage sees what the one before it missed.",
+    "Agent Assembly is the governance plane for autonomous software.",
+)
+REWORDINGS_MUST_CLEAR = (
+    "The rollout is incomplete and the form has autocomplete enabled.",
+    "The proxy runs at the kernel level on Linux hosts.",
+    "The policy engine evaluates rules in stages during startup.",
+)
+
+
+def _prose_hits(sentence: str, phrases):
+    text = html_text(f"<html><body><div class=x id=p><p>{sentence}</p></div></body></html>")
+    return [
+        p for p in phrases
+        if p["locale"] == "en" and matches(p["phrase"], text, boundary=p["boundary"])
+    ]
+
+
+def self_test() -> int:
+    """Prove the gate's own guards fire, without needing a build directory."""
+    data = read_catalogue()
+    phrases = load_phrases(data)
+    results: list[tuple[bool, str, str]] = []
+
+    def check(ok: bool, name: str, detail: str = "") -> None:
+        results.append((bool(ok), name, detail))
+
+    check(not integrity(data), "committed catalogue passes integrity")
+
+    one_less = copy.deepcopy(data)
+    for g in one_less["phrases"]:
+        if g["class"] == "fd-1" and g.get("locale") == "en" and g.get("any"):
+            g["any"].pop()
+            break
+    check(integrity(one_less), "one phrase removed -> integrity fails")
+
+    no_group = copy.deepcopy(data)
+    no_group["phrases"] = [
+        g for g in no_group["phrases"] if not (g["class"] == "fd-1" and g.get("locale") == "en")
+    ]
+    check(integrity(no_group), "one group removed -> integrity fails")
+    check(integrity({"phrases": []}), "emptied catalogue -> integrity fails")
+
+    grown = copy.deepcopy(data)
+    grown["phrases"][0].setdefault("any", []).append("a newly banned framing")
+    check(not integrity(grown), "phrase added -> integrity still passes (extension stays free)")
+
+    survivors = {p["phrase"] for p in load_phrases({"phrases": []}) if p["class"] == "fd-7"}
+    check(
+        survivors == set(FD7_ABSOLUTES),
+        f"emptied catalogue still scans all {len(FD7_ABSOLUTES)} fd-7 absolutes",
+        f"{len(survivors)} present",
+    )
+
+    for s in REWORDINGS_MUST_CATCH:
+        hits = _prose_hits(s, phrases)
+        check(hits, f"caught: {s}", hits[0]["phrase"] if hits else "NOTHING FIRED")
+    for s in REWORDINGS_MUST_CLEAR:
+        hits = _prose_hits(s, phrases)
+        check(not hits, f"clear : {s}", hits[0]["phrase"] if hits else "")
+
+    check(not positive_control(phrases), f"positive control passes ({len(phrases)} phrases)")
+    check(not negative_control(phrases), "negative control passes")
+
+    failed = 0
+    for ok, name, detail in results:
+        failed += not ok
+        print(f"  {'ok  ' if ok else 'FAIL'} {name}" + (f"   [{detail}]" if detail else ""))
+    print(f"\nself-test: {len(results) - failed}/{len(results)} checks passed")
+    return 0 if not failed else 2
+
+
 def main() -> int:
+    if "--self-test" in sys.argv[1:]:
+        return self_test()
     build = Path(sys.argv[1] if len(sys.argv) > 1 else "build")
     if not build.is_dir():
         print(f"FATAL: no build directory at {build} -- run `pnpm build` first")
