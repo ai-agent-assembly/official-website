@@ -1110,8 +1110,9 @@ interface RoleCard {
  *
  * Each card routes to the audience's *next* destination rather than its entry
  * page, because for three of the five the entry page is itself a recorded gap.
- * The four dedicated role routes are AAASM-5587's and do not exist yet; this
- * block links to pages that resolve today rather than to planned URLs.
+ * The four dedicated role routes now exist (AAASM-5587) and are reached from
+ * the chooser linked below this grid, not from the cards — repointing a card is
+ * AAASM-5585's call to make, not AAASM-5587's.
  */
 export function StartByRole(): ReactNode {
   const roles: readonly RoleCard[] = [
@@ -1292,9 +1293,10 @@ export function StartByRole(): ReactNode {
          */}
         <p className={styles.sectionFoot}>
           <Translate id="home.role.briefsNote">
-            Each of the first four routes above has a fuller brief — what is
-            going wrong today, what is supported, how far each answer reaches,
-            what it does not cover, and what to read next.
+            The four role routes above — security, platform, engineering and
+            product — each have a fuller brief: what is going wrong today, what
+            is supported, how far each answer reaches, what it does not cover,
+            and what to read next.
           </Translate>{' '}
           <TrackedLink
             className={styles.trustLink}
