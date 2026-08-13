@@ -2,7 +2,9 @@ import React, {type ReactNode} from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import Translate, {translate} from '@docusaurus/Translate';
+import {TrackedLink} from '@site/src/components/Tracked';
 import {ROLE_BRIEFS, rolePath} from '@site/src/components/roles/briefs';
+import {ROLE_NARRATIVES} from '@site/src/components/roles/briefs/shared';
 import narrative from '@site/src/pages/narrative.module.css';
 import styles from '@site/src/components/roles/styles.module.css';
 
@@ -81,7 +83,25 @@ export default function RolesIndex(): ReactNode {
             same control at two different strengths. A brief may cite a register
             entry or stay silent; it may not restate one at a different
             strength.
-          </Translate>
+          </Translate>{' '}
+          {/*
+           * This is the page that states the quoting rule most prominently, and
+           * it was the one page with no route to the thing being quoted. A rule
+           * a reader cannot check is a promise, not a mechanism.
+           */}
+          <TrackedLink
+            className={narrative.link}
+            eventName="cta_view_docs_click"
+            ctaLocation="body"
+            targetProduct="docs"
+            alsoFire={['docs_click']}
+            to={ROLE_NARRATIVES}
+            linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
+          >
+            <Translate id="roles.index.registerLink">
+              Read the register →
+            </Translate>
+          </TrackedLink>
         </p>
 
         <div className={styles.chooserGrid}>
