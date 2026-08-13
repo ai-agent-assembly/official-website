@@ -172,14 +172,14 @@ export const RC6: Claim = {
   bound: (
     <Translate id="roles.rc6.bound">
       The manifest’s only row for this subject is the row for what happens when
-      the write fails, and that row records the case as unmeasured and
-      fail-open. Everything else about the chain is a bound, not a capability:
-      it is tamper-evident, not immutable and not signed — an unkeyed digest, so
-      anyone able to rewrite the sink can recompute it. The chain head advances
-      before the send and a full channel drops the entry while the call still
-      returns, which makes a dropped entry indistinguishable from a deleted one.
-      An emptied log verifies clean. The proxy writes no local record at all
-      unless its audit path is configured.
+      the write fails, and that row records the case as unmeasured, fail-open,
+      and backed by no evidence. Everything else about the chain is a bound, not
+      a capability: it is tamper-evident, not immutable and not signed — an
+      unkeyed digest, so anyone able to rewrite the sink can recompute it. The
+      chain head advances before the send and a full channel drops the entry
+      while the call still returns, which makes a dropped entry
+      indistinguishable from a deleted one. An emptied log verifies clean. The
+      proxy writes no local record at all unless its audit path is configured.
     </Translate>
   ),
 };
