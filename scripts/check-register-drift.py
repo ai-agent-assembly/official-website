@@ -214,6 +214,53 @@ def extract(build_dir: str) -> dict[str, dict]:
     return found
 
 
+def _accepted_omission(rc: str, field: str, want: str, got: str) -> str | None:
+    """The one omission this check accepts, or None.
+
+    Kept separate so the accepted case is a single named predicate rather than a
+    condition buried in the comparison loop — the exception is the part of this
+    script most likely to be widened by accident.
+    """
+    if rc != "RC12" or field != "bound":
+        return None
+    if got != norm(RC12_FORBIDDEN_PHRASING.sub("", want)):
+        return None
+    return (
+        "RC12.bound omits the register's closing author instruction "
+        '("do not write ...") — rendering it would publish the phrasings the '
+        "rejected-wording list forbids. Every other word of the bound matches."
+    )
+
+
+def _compare_entry(rc, reg, rec, problems, declared) -> None:
+    """Compare one rendered entry against its register row."""
+    want = (norm(reg["term"]), norm(reg["claim"]), norm(reg["bound"]))
+
+    # An entry on several pages must be one entry, not several strings.
+    distinct = set(rec["pages"].values())
+    if len(distinct) > 1:
+        where = sorted(f"{pg} ({kd})" for pg, kd in rec["pages"])
+        problems.append(
+            f"{rc}: rendered differently on {where} — an entry cited by N "
+            f"places must be one object cited N times"
+        )
+        return
+
+    got = next(iter(distinct))
+    for field, w, g in zip(("term", "claim", "bound"), want, got):
+        if w == g:
+            continue
+        note = _accepted_omission(rc, field, w, g)
+        if note:
+            declared.append(note)
+            continue
+        problems.append(
+            f"{rc}.{field} drifted from the register\n"
+            f"      register: {w}\n"
+            f"      rendered: {g}"
+        )
+
+
 def compare(rows, found, declared: list[str] | None = None) -> list[str]:
     """Returns drift problems. Accepted omissions are appended to `declared`."""
     problems: list[str] = []
@@ -225,40 +272,7 @@ def compare(rows, found, declared: list[str] | None = None) -> list[str]:
             where = sorted(pg for pg, _ in rec["pages"])
             problems.append(f"{rc}: rendered on {where} but not in the register")
             continue
-        reg = rows[rc]
-        want = (norm(reg["term"]), norm(reg["claim"]), norm(reg["bound"]))
-
-        # An entry on several pages must be one entry, not several strings.
-        distinct = set(rec["pages"].values())
-        if len(distinct) > 1:
-            where = sorted(f"{pg} ({kd})" for pg, kd in rec["pages"])
-            problems.append(
-                f"{rc}: rendered differently on {where} — an entry cited by N "
-                f"places must be one object cited N times"
-            )
-            continue
-
-        got = next(iter(distinct))
-        for field, w, g in zip(("term", "claim", "bound"), want, got):
-            if w == g:
-                continue
-            if (
-                rc == "RC12"
-                and field == "bound"
-                and g == norm(RC12_FORBIDDEN_PHRASING.sub("", w))
-            ):
-                declared.append(
-                    "RC12.bound omits the register's closing author instruction "
-                    "(\"do not write ...\") — rendering it would publish the "
-                    "phrasings the rejected-wording list forbids. Every other "
-                    "word of the bound matches."
-                )
-                continue
-            problems.append(
-                f"{rc}.{field} drifted from the register\n"
-                f"      register: {w}\n"
-                f"      rendered: {g}"
-            )
+        _compare_entry(rc, rows[rc], rec, problems, declared)
     missing = sorted(set(rows) - set(found), key=lambda x: int(x[2:]))
     if missing:
         print(f"note: register entries not rendered on any role page: {missing}")
