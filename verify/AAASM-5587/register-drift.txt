@@ -1,0 +1,29 @@
+AAASM-5587 — register drift check
+Generated from the tree at 14b8d27 against the register on docs origin/main.
+Command: python3 scripts/check-register-drift.py build --register <docs>/docs/src/role-narratives.md
+
+register entries in source : 16
+register entries rendered  : 16
+positive control : PASS (a corrupted bound is detected)
+  RC1   card        engineering,product-qa,security
+  RC2   card        security
+  RC3   card        engineering,product-qa,security
+  RC4   card        engineering,product-qa,security
+  RC5   card        engineering
+  RC6   card        platform,product-qa,security
+  RC7   limitation  security
+  RC8   limitation  platform
+  RC9   limitation  security
+  RC10  card        platform
+  RC11  card        platform,security
+  RC12  limitation  engineering,product-qa,security
+  RC13  card        product-qa
+  RC14  limitation  platform,security
+  RC15  card        engineering,platform
+  RC16  limitation  security
+
+declared exception: RC12.bound omits the register's closing author instruction ("do not write ...") — rendering it would publish the phrasings the rejected-wording list forbids. Every other word of the bound matches.
+
+PASS: 16 rendered entries, 47/48 fields match the register verbatim, 1 declared exception(s).
+
+exit=0

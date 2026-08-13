@@ -1,0 +1,237 @@
+{
+ "_generated_from": {
+  "commit": "14b8d2788b3374841566640956c04af2fc73daf0",
+  "generated_at": "2026-08-13T11:33:58+00:00",
+  "note": "Screenshots in this directory were captured in the same run as these measurements, from a `pnpm build` of this commit. If this commit is not the tip of the branch, check whether anything under src/, i18n/, static/ or docusaurus.config.ts changed since — nothing else affects rendering. Re-stamped after a scripts/-only change that does not affect rendering.",
+  "widths": [
+   "desktop-1440",
+   "mobile-390"
+  ],
+  "locales": [
+   "en",
+   "zh-Hant"
+  ]
+ },
+ "pages": {
+  "chooser-en@desktop-1440": {
+   "ovf": false,
+   "scrollW": 1440,
+   "clientW": 1440,
+   "h1": 1,
+   "h2": 4,
+   "terms": 0,
+   "bounds": 0,
+   "rc": 0,
+   "title": "Evaluator briefs by role — Agent Assembly | Agent Assembly"
+  },
+  "security-en@desktop-1440": {
+   "ovf": false,
+   "scrollW": 1440,
+   "clientW": 1440,
+   "h1": 1,
+   "h2": 7,
+   "terms": 11,
+   "bounds": 11,
+   "rc": 11,
+   "title": "Security and risk — Agent Assembly | Agent Assembly"
+  },
+  "platform-en@desktop-1440": {
+   "ovf": false,
+   "scrollW": 1440,
+   "clientW": 1440,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "Platform and SRE — Agent Assembly | Agent Assembly"
+  },
+  "engineering-en@desktop-1440": {
+   "ovf": false,
+   "scrollW": 1440,
+   "clientW": 1440,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "Engineering — Agent Assembly | Agent Assembly"
+  },
+  "product-qa-en@desktop-1440": {
+   "ovf": false,
+   "scrollW": 1440,
+   "clientW": 1440,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "Product, QA and assurance — Agent Assembly | Agent Assembly"
+  },
+  "chooser-zh-Hant@desktop-1440": {
+   "ovf": false,
+   "scrollW": 1440,
+   "clientW": 1440,
+   "h1": 1,
+   "h2": 4,
+   "terms": 0,
+   "bounds": 0,
+   "rc": 0,
+   "title": "各角色的評估者簡報 — Agent Assembly | Agent Assembly"
+  },
+  "security-zh-Hant@desktop-1440": {
+   "ovf": false,
+   "scrollW": 1440,
+   "clientW": 1440,
+   "h1": 1,
+   "h2": 7,
+   "terms": 11,
+   "bounds": 11,
+   "rc": 11,
+   "title": "資安與風險 — Agent Assembly | Agent Assembly"
+  },
+  "platform-zh-Hant@desktop-1440": {
+   "ovf": false,
+   "scrollW": 1440,
+   "clientW": 1440,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "平台與 SRE — Agent Assembly | Agent Assembly"
+  },
+  "engineering-zh-Hant@desktop-1440": {
+   "ovf": false,
+   "scrollW": 1440,
+   "clientW": 1440,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "工程開發 — Agent Assembly | Agent Assembly"
+  },
+  "product-qa-zh-Hant@desktop-1440": {
+   "ovf": false,
+   "scrollW": 1440,
+   "clientW": 1440,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "產品、QA 與品質保證 — Agent Assembly | Agent Assembly"
+  },
+  "chooser-en@mobile-390": {
+   "ovf": false,
+   "scrollW": 390,
+   "clientW": 390,
+   "h1": 1,
+   "h2": 4,
+   "terms": 0,
+   "bounds": 0,
+   "rc": 0,
+   "title": "Evaluator briefs by role — Agent Assembly | Agent Assembly"
+  },
+  "security-en@mobile-390": {
+   "ovf": false,
+   "scrollW": 390,
+   "clientW": 390,
+   "h1": 1,
+   "h2": 7,
+   "terms": 11,
+   "bounds": 11,
+   "rc": 11,
+   "title": "Security and risk — Agent Assembly | Agent Assembly"
+  },
+  "platform-en@mobile-390": {
+   "ovf": false,
+   "scrollW": 390,
+   "clientW": 390,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "Platform and SRE — Agent Assembly | Agent Assembly"
+  },
+  "engineering-en@mobile-390": {
+   "ovf": false,
+   "scrollW": 390,
+   "clientW": 390,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "Engineering — Agent Assembly | Agent Assembly"
+  },
+  "product-qa-en@mobile-390": {
+   "ovf": false,
+   "scrollW": 390,
+   "clientW": 390,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "Product, QA and assurance — Agent Assembly | Agent Assembly"
+  },
+  "chooser-zh-Hant@mobile-390": {
+   "ovf": false,
+   "scrollW": 390,
+   "clientW": 390,
+   "h1": 1,
+   "h2": 4,
+   "terms": 0,
+   "bounds": 0,
+   "rc": 0,
+   "title": "各角色的評估者簡報 — Agent Assembly | Agent Assembly"
+  },
+  "security-zh-Hant@mobile-390": {
+   "ovf": false,
+   "scrollW": 390,
+   "clientW": 390,
+   "h1": 1,
+   "h2": 7,
+   "terms": 11,
+   "bounds": 11,
+   "rc": 11,
+   "title": "資安與風險 — Agent Assembly | Agent Assembly"
+  },
+  "platform-zh-Hant@mobile-390": {
+   "ovf": false,
+   "scrollW": 390,
+   "clientW": 390,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "平台與 SRE — Agent Assembly | Agent Assembly"
+  },
+  "engineering-zh-Hant@mobile-390": {
+   "ovf": false,
+   "scrollW": 390,
+   "clientW": 390,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "工程開發 — Agent Assembly | Agent Assembly"
+  },
+  "product-qa-zh-Hant@mobile-390": {
+   "ovf": false,
+   "scrollW": 390,
+   "clientW": 390,
+   "h1": 1,
+   "h2": 7,
+   "terms": 6,
+   "bounds": 6,
+   "rc": 6,
+   "title": "產品、QA 與品質保證 — Agent Assembly | Agent Assembly"
+  }
+ }
+}

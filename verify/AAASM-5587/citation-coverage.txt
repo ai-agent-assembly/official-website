@@ -1,0 +1,26 @@
+AAASM-5587 — cross-brief citation coverage
+Generated from the tree at 14b8d27.
+Does every cell the register's consistency table marks as cited render its RC token?
+
+entry   S   P   E   Q     security platform engineering product-qa
+RC1     ●   ·   ●   ●        Y         -         Y         Y    
+RC2     ●   ·   ·   ·        Y         -         -         -    
+RC3     ●   ●   ●   ●        Y         Y         Y         Y    
+RC4     ●   ·   ●   ●        Y         -         Y         Y    
+RC5     ·   ·   ●   ·        -         -         Y         -    
+RC6     ●   ●   ·   ●        Y         Y         -         Y    
+RC7     ●   ·   ·   ·        Y         -         -         -    
+RC8     ·   ●   ·   ●        -         Y         -         Y    
+RC9     ●   ●   ·   ●        Y         Y         -         Y    
+RC10    ·   ●   ·   ·        -         Y         -         -    
+RC11    ●   ●   ·   ·        Y         Y         -         -    
+RC12    ✗   ·   ✗   ✗        Y         -         Y         Y    
+RC13    ·   ·   ·   ●        -         -         -         Y    
+RC14    ●   ●   ·   ●        Y         Y         -         Y    
+RC15    ●   ●   ●   ·        Y         Y         Y         -    
+RC16    ●   ·   ·   ·        Y         -         -         -    
+
+cells in table                 : 64
+cited (● or ✗)                 : 35
+silent (·, permitted)          : 29
+cited cells rendering the token: 35/35
