@@ -1,0 +1,523 @@
+/*
+ * Shared styles for the two evaluator-narrative routes — `/product` and
+ * `/how-it-works` (AAASM-5586). Formerly `product.module.css`, renamed when
+ * the second route landed so the filename says what it serves.
+ *
+ * Both routes are one reading path at two depths, so they share primitives
+ * deliberately: a reader who moves from `/product` to `/how-it-works` should
+ * not experience a change of product. The homepage keeps its own stylesheet
+ * (`src/components/home/styles.module.css`, AAASM-5585's) — this file does not
+ * import from it and must not, because the sitemap partitions the two.
+ *
+ * One rule runs through the whole file and is the reason several classes exist
+ * at all: a claim's bound travels with it, on the same screen. `.cardBound`,
+ * `.boundNote` and `.termBadge` are what make that visible rather than
+ * footnoted, and none of them may be restyled into something a reader skips.
+ */
+
+/* ------------------------------------------------------------------ */
+/* page frame                                                          */
+/* ------------------------------------------------------------------ */
+.wrap {
+  /*
+   * `width: 100%` is load-bearing, not tidying — do not drop it as redundant
+   * beside `max-width`.
+   *
+   * The theme lays a page out as an item of a column flex container. Such an
+   * item is sized on the cross axis by its own content, so `.table`'s
+   * `min-width: 38rem` reached up through `.tableWrap` and widened the PAGE:
+   * measured on /how-it-works at a 375px viewport, document scrollWidth 642
+   * against clientWidth 360, with `/product` and `/` clean at the same width.
+   * `.tableWrap`'s `overflow-x: auto` did nothing, because the box it was
+   * meant to clip against had itself been stretched.
+   *
+   * `min-width: 0` was tried first and does NOT fix it — that bounds the main
+   * axis, which for a column container is the height. Resolving the width
+   * against the containing block is what pins this item to the viewport, after
+   * which the scroll container works: measured 360 page / 328 wrap / table
+   * scrolling inside itself.
+   */
+  width: 100%;
+  max-width: var(--aa-max);
+  margin: 0 auto;
+  padding: 4rem 1rem 5rem;
+}
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--aa-accent);
+}
+.title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  margin: 0.6rem 0 1rem;
+}
+.intro {
+  font-size: 1.15rem;
+  color: var(--aa-text-dim);
+  max-width: 48rem;
+  line-height: 1.65;
+}
+/*
+ * The evaluator's one-line framing, directly under the promise. Heavier than
+ * body copy because it is the sentence a reader who stops here takes away.
+ */
+.lede {
+  font-size: 1.05rem;
+  color: var(--aa-text);
+  max-width: 48rem;
+  line-height: 1.7;
+  margin-top: 1.25rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--aa-accent);
+}
+
+/* ------------------------------------------------------------------ */
+/* sections                                                            */
+/* ------------------------------------------------------------------ */
+.block {
+  margin-top: 3.5rem;
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--aa-text-dim);
+  margin-bottom: 0.4rem;
+}
+.blockTitle {
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.75rem;
+}
+.p {
+  color: var(--aa-text-dim);
+  max-width: 48rem;
+  line-height: 1.7;
+}
+.p + .p {
+  margin-top: 0.9rem;
+}
+.sectionFoot {
+  margin-top: 1.5rem;
+  font-weight: 600;
+}
+.link {
+  font-weight: 650;
+}
+
+/* ------------------------------------------------------------------ */
+/* cards                                                               */
+/* ------------------------------------------------------------------ */
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+/*
+ * Fixed two columns, matching the homepage's four-card sections. Used where a
+ * section has exactly four cards: auto-fit lays those out three-then-one at a
+ * desktop width, and the orphan reads as a card someone forgot to finish.
+ */
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+/*
+ * auto-fit rather than a fixed column count: the role cards and the
+ * decision-subject cards do not come in the same number, and a page that
+ * hard-codes three leaves a widow when a card is added or dropped.
+ */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+.panel {
+  background: var(--aa-panel);
+  border: 1px solid var(--aa-border);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+.panelTitle {
+  font-weight: 750;
+  margin: 0 0 0.5rem;
+}
+.card {
+  background: var(--aa-panel);
+  border: 1px solid var(--aa-border);
+  border-radius: 14px;
+  padding: 1.4rem 1.4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.cardTitle {
+  font-size: 1.05rem;
+  font-weight: 750;
+  margin: 0;
+  line-height: 1.35;
+}
+.cardText {
+  color: var(--aa-text-dim);
+  line-height: 1.65;
+  margin: 0;
+}
+/*
+ * The bound. Visually quieter than the claim but never hidden, and separated
+ * by a rule so a skimming reader sees that the card has two halves. Dropping
+ * this element from a card is the broadening ADR 0034 forbids, so it is styled
+ * as part of the card rather than as an aside.
+ */
+.cardBound {
+  margin: 0.25rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--aa-border);
+  color: var(--aa-text-dim);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.boundLabel {
+  color: var(--aa-text);
+  font-weight: 700;
+}
+/*
+ * The ADR 0033 §6 term a claim reaches — an engineering word, kept legible.
+ * inline-block because it appears both as a card's first child (flex context)
+ * and inline at the head of a table cell, and an inline element would drop its
+ * vertical padding into the line above.
+ */
+.termBadge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--aa-hover);
+  border: 1px solid var(--aa-border);
+  color: var(--aa-text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+/* A boundary clause that belongs to a section rather than to one card. */
+.boundNote {
+  margin-top: 1.25rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 3px solid var(--aa-accent-2);
+  background: var(--aa-bg-soft);
+  border-radius: 0 10px 10px 0;
+  color: var(--aa-text-dim);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  max-width: 52rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* lists                                                               */
+/* ------------------------------------------------------------------ */
+.list {
+  color: var(--aa-text-dim);
+  padding-left: 1.1rem;
+  margin: 0;
+  line-height: 1.8;
+}
+/*
+ * The "what it does not do" list. Bordered rather than bulleted because on
+ * this site the limits are a feature of the page, not a disclaimer under it.
+ */
+.limitList {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.limitList li {
+  position: relative;
+  padding: 0.85rem 1rem 0.85rem 2.4rem;
+  background: var(--aa-bg-soft);
+  border: 1px solid var(--aa-border);
+  border-radius: 10px;
+  color: var(--aa-text-dim);
+  line-height: 1.65;
+}
+.limitList li::before {
+  content: '×';
+  position: absolute;
+  left: 1rem;
+  top: 0.8rem;
+  font-weight: 800;
+  color: var(--aa-accent-2);
+}
+
+/* ------------------------------------------------------------------ */
+/* table — mechanism to the term it reaches                            */
+/* ------------------------------------------------------------------ */
+/* Wide content scrolls inside its own box; the page body never scrolls. */
+.tableWrap {
+  margin-top: 1.5rem;
+  overflow-x: auto;
+  border: 1px solid var(--aa-border);
+  border-radius: 14px;
+}
+.table {
+  width: 100%;
+  min-width: 38rem;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+  margin: 0;
+}
+.table th,
+.table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--aa-border);
+  line-height: 1.6;
+}
+.table thead th {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--aa-text-dim);
+  background: var(--aa-bg-soft);
+}
+.table tbody th {
+  font-weight: 700;
+  color: var(--aa-text);
+  width: 38%;
+}
+.table td {
+  color: var(--aa-text-dim);
+}
+.table tbody tr:last-child th,
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* the role field — a diagram that is not a pipeline                   */
+/* ------------------------------------------------------------------ */
+/*
+ * ADR 0033 forbidden design 1 is a SHAPE, not a sentence: an ordered chain
+ * whose members cover for each other cannot express an absent member. So this
+ * diagram is a field, not a stack. Three rules hold it to that, and a layout
+ * pass that breaks any of them reintroduces the design:
+ *
+ *   1. No connector runs between the roles. There is no connector in this
+ *      figure of any kind — no SVG, no pseudo-element, no arrow glyph — and
+ *      that is the point rather than an omission: the first one added would be
+ *      the first connector in a diagram whose correctness rests on having none.
+ *      An earlier version of this comment described "the only arrows" as
+ *      pointing at the control plane and the evidence pipeline. No such arrows
+ *      ever existed, and a maintainer who trusted the comment would have drawn
+ *      them. Do not.
+ *   2. Nothing is numbered, and nothing in THIS FIGURE is ordered by strength.
+ *      That is a rule about the diagram, not a rule about the site: `/product`
+ *      does rank the three application points ("The strongest of the three"),
+ *      in `product-promise.md`'s own words, and that is deliberate. Ranking
+ *      authority is not the forbidden design; an ordered chain whose members
+ *      cover for each other is. The difference needs a sentence to hold it, and
+ *      `/product` has one — "they are not an ordered chain, one does not cover
+ *      for another". A figure has nowhere to put that sentence, so it carries
+ *      no ranking at all and its caption says the roles are listed in no order.
+ *   3. The outside-the-boundary region is drawn detached and dashed, because
+ *      it is not a stage — it is where none of this applies.
+ *
+ * Built from semantic HTML and CSS grid rather than SVG so it reflows on a
+ * phone, translates with the rest of the page, and is read aloud in order.
+ */
+.field {
+  margin-top: 1.75rem;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+.fieldPath {
+  border: 1px solid var(--aa-border);
+  border-radius: 16px;
+  padding: 1.1rem;
+  background: var(--aa-bg-soft);
+}
+.fieldPlane {
+  border: 2px solid var(--aa-accent);
+  border-radius: 16px;
+  padding: 1.1rem;
+  background: var(--aa-panel);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.fieldLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--aa-text-dim);
+  margin: 0 0 0.75rem;
+}
+.roleChip {
+  background: var(--aa-panel);
+  border: 1px solid var(--aa-border);
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem;
+  margin-bottom: 0.6rem;
+}
+.roleChip:last-child {
+  margin-bottom: 0;
+}
+.roleChipName {
+  font-weight: 700;
+  font-size: 0.92rem;
+  margin: 0;
+}
+.roleChipNote {
+  color: var(--aa-text-dim);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin: 0.2rem 0 0;
+}
+.planeName {
+  font-weight: 800;
+  font-size: 1rem;
+  margin: 0;
+}
+.planeNote {
+  color: var(--aa-text-dim);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  margin: 0.4rem 0 0;
+}
+/* Cross-cutting roles: they touch everything, so they sit under both columns. */
+.fieldSpan {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+/*
+ * Detached on purpose — a gap above it, a dashed border, and no connector into
+ * anything. The absence of an arrow is the content.
+ */
+.fieldOutside {
+  grid-column: 1 / -1;
+  margin-top: 0.6rem;
+  border: 2px dashed var(--aa-border);
+  border-radius: 16px;
+  padding: 1.1rem;
+  background: transparent;
+}
+.fieldOutsideName {
+  font-weight: 750;
+  margin: 0;
+}
+.fieldLegend {
+  margin-top: 1rem;
+  color: var(--aa-text-dim);
+  font-size: 0.88rem;
+  line-height: 1.65;
+  max-width: 52rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* calls to action                                                     */
+/* ------------------------------------------------------------------ */
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 3rem;
+}
+.btnPrimary {
+  padding: 0.7rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 700;
+  background: var(--ifm-color-primary);
+  color: #06231f;
+}
+.btnPrimary:hover {
+  filter: brightness(1.08);
+  color: #06231f;
+  text-decoration: none;
+}
+.btnGhost {
+  padding: 0.7rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 1px solid var(--aa-border);
+  color: var(--aa-text);
+}
+.btnGhost:hover {
+  border-color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+.btnDisabled {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--aa-hover);
+  color: var(--aa-text-dim);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ */
+/* responsive                                                          */
+/* ------------------------------------------------------------------ */
+@media (max-width: 996px) {
+  .grid3 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 800px) {
+  .wrap {
+    padding: 3rem 1rem 4rem;
+  }
+  /*
+   * `.field` collapsing here is what the diagram's fd-1 defence has to survive.
+   * Below this breakpoint the figure is a single vertical column, so nothing on
+   * screen is left of, right of, or beside anything else, and the control plane
+   * lands directly under the three routed-path roles. The devices that keep it
+   * from reading as a pipeline are therefore textual, not positional: the group
+   * labels on `.fieldPath` and `.fieldPlane`, and a caption that names the boxes
+   * instead of pointing at them. If you reintroduce a spatial word in either,
+   * this rule is what makes it false.
+   */
+  .cols,
+  .grid2,
+  .grid3,
+  .field,
+  .fieldSpan {
+    grid-template-columns: 1fr;
+  }
+  .table tbody th {
+    width: auto;
+  }
+}

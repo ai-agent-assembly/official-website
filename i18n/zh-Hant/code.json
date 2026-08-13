@@ -35,53 +35,11 @@
   "product.why.title": {
     "message": "為什麼代理框架還不夠"
   },
+  "product.why.concrete": {
+    "message": "一個握有 shell 工具與資料庫憑證的代理，可以刪掉正式環境的資料表。一個握有模型供應商金鑰的代理，可以把金鑰貼進請求裡。一個陷在重試迴圈裡的代理，可以一直花錢花到有人注意到帳單。這些都不是故障 — 每一個都是代理照著被交辦的事、用它被賦予的權限在做事。"
+  },
   "product.why.body": {
     "message": "框架讓代理具備能力 — 它們能規劃、呼叫工具並採取行動。但它們不會賦予代理身分、約束其權限，也不會讓憑證遠離模型的可及範圍。Agent Assembly 補上這道邊界，而你無需重寫代理的邏輯 — 不過代理仍必須透過受治理的路徑啟動，這道邊界才會生效。"
-  },
-  "product.iai.title": {
-    "message": "身分、權限與機密隔離"
-  },
-  "product.iai.identityAuthority": {
-    "message": "身分與權限"
-  },
-  "product.iai.item.identity": {
-    "message": "以團隊為範圍的每一代理身分"
-  },
-  "product.iai.item.policy": {
-    "message": "允許／拒絕政策 + 網路對外連線控制"
-  },
-  "product.iai.item.budgets": {
-    "message": "各團隊預算與配額"
-  },
-  "product.iai.item.approvalRequired": {
-    "message": "需要核准 — 政策規則可以先擱置一個動作，而不是直接回答它；由於沒有任何已出貨的維運者介面能回應該佇列，這種擱置會在逾時後轉為拒絕"
-  },
-  "product.iai.item.audit": {
-    "message": "雜湊鏈稽核軌跡 — 可偵測竄改，但並非不可變更"
-  },
-  "product.iai.secretIsolation": {
-    "message": "機密隔離"
-  },
-  "product.iai.item.inject": {
-    "message": "對外請求在轉送前會被掃描是否含有憑證"
-  },
-  "product.iai.item.noContext": {
-    "message": "辨識到的憑證預設會被遮蔽；若你將政策設為封鎖，則直接擋下"
-  },
-  "product.iai.item.resolution": {
-    "message": "各團隊機密解析"
-  },
-  "product.iai.item.redaction": {
-    "message": "稽核路徑上的遮蔽處理"
-  },
-  "product.path.title": {
-    "message": "受治理的路徑，以及路徑上由哪個元件做決定"
-  },
-  "product.path.model": {
-    "message": "Agent Assembly 並不是一條固定的管線。治理是一組角色，而一次部署只會實例化你實際佈建的那些 — 你未部署的元件會被回報為缺席，絕不會被另一個元件默默頂替。"
-  },
-  "product.path.deciders": {
-    "message": "在導流經過代理伺服器的路徑上，動作可以在離開機器之前就被拒絕，依據的是代理伺服器自己的本機組態。控制平面保存政策、預算、核准與稽核 — 但它不持有任何流量：它的答案只有在該動作前方有元件等待時，才會真的擋下這個動作。SDK 檢查點只有在代理呼叫它時才可觸及，因此它在設計上屬建議性質。作業系統層級的攔截則因平台而異：在 Linux 上，核心探針會回報 TLS 明文、行程執行與檔案活動，且不參與任何允許或拒絕的決策；macOS 沒有對應的轉接器，Windows 則兩者皆無。"
   },
   "product.path.limitations": {
     "message": "各路徑涵蓋與未涵蓋的範圍 →"
@@ -511,6 +469,627 @@
   },
   "home.final.lead": {
     "message": "導流一個代理，拒絕一次它本不該發出的呼叫，然後讀一讀它留下的記錄。"
+  },
+  "hiw.role.plane.name": {
+    "message": "治理控制平面"
+  },
+  "hiw.role.plane.what": {
+    "message": "保存政策、身分、預算、核准與稽核，並回答決策請求的權威。它本身不持有任何流量。"
+  },
+  "hiw.role.plane.today": {
+    "message": "在任何平台上都能跑。只有在該動作前面有東西等著答案時，它的拒絕才會擋下這個動作。"
+  },
+  "hiw.role.checkpoint.name": {
+    "message": "受管執行檢查點"
+  },
+  "hiw.role.checkpoint.what": {
+    "message": "在受導流路徑上，動作在執行之前被提交出來等待決策的那些點 — 來自 SDK 的政策檢查、一次受管啟動，或交給沙箱的工具。"
+  },
+  "hiw.role.checkpoint.today": {
+    "message": "在任何平台上都能跑，而且只有在代理主動選擇加入時才觸得到。不去做那個呼叫的行程並沒有在問。"
+  },
+  "hiw.role.mediation.name": {
+    "message": "協定與傳輸中介"
+  },
+  "hiw.role.mediation.what": {
+    "message": "放在線路上的中介者，可以在請求離開這台機器之前拒絕、遮蔽或改寫它。這是「動作之前的拒絕」最強的地方，因為它位於代理的行程之外。"
+  },
+  "hiw.role.mediation.today": {
+    "message": "macOS 與 Linux。沒有 Windows 的建置路徑，所以在 Windows 上這個角色是缺席，而不是降級。"
+  },
+  "hiw.role.host.name": {
+    "message": "平台特定的主機層轉接器"
+  },
+  "hiw.role.host.what": {
+    "message": "對行程、檔案與加密流量的作業系統層級中介。每個平台都需要自己的機制，而沒有機制的平台就是沒有 — 這是最常單純缺席的一個角色。"
+  },
+  "hiw.role.host.today": {
+    "message": "Linux 有一個，而它是觀測。macOS 與 Windows 沒有轉接器；請看平台一節，那裡說明了 macOS 有的是什麼。"
+  },
+  "hiw.role.credentials.name": {
+    "message": "憑證與能力界線"
+  },
+  "hiw.role.credentials.what": {
+    "message": "一個元件被允許要求什麼，以及憑證或能力如何綁定到身分 — 包含對外請求所套用的掃描與遮蔽。"
+  },
+  "hiw.role.credentials.today": {
+    "message": "在任何平台上都能跑。代理會提出一個身分與一份持有證明，而那個身分是被宣稱的，不是被確立的。"
+  },
+  "hiw.role.evidence.name": {
+    "message": "證據與保護狀態管線"
+  },
+  "hiw.role.evidence.what": {
+    "message": "一項宣稱如何被佐證、降級與回報 — 包含回報某個角色已設定但無法使用，或根本不存在。這是讓其他五個角色可被讀懂的角色。"
+  },
+  "hiw.role.evidence.today": {
+    "message": "在任何平台上都能跑。寫出是盡力而為的，所以它記錄的是成功寫入的內容，而不是一本記載實際發生過什麼的帳本。"
+  },
+  "hiw.mech.proxy.name": {
+    "message": "代理伺服器 — 連線階段拒絕、通道內主機重新檢查、憑證阻擋、MCP 工具呼叫裁決"
+  },
+  "hiw.mech.proxy.term": {
+    "message": "執行前拒絕"
+  },
+  "hiw.mech.proxy.note": {
+    "message": "適用於導流經過它並被檢查的流量。"
+  },
+  "hiw.mech.gateway.name": {
+    "message": "控制平面的動作檢查"
+  },
+  "hiw.mech.gateway.term": {
+    "message": "已評估"
+  },
+  "hiw.mech.gateway.note": {
+    "message": "只有透過會等待答案的呼叫端，它才觸得到動作之前的拒絕，而今天這組呼叫端有兩個成員：MCP 路徑，以及會遵守答案的 SDK 外殼。"
+  },
+  "hiw.mech.runtime.name": {
+    "message": "執行環境的政策檢查點"
+  },
+  "hiw.mech.runtime.term": {
+    "message": "已評估"
+  },
+  "hiw.mech.runtime.note": {
+    "message": "只有在 SDK 外殼遵守答案時，它才觸得到動作之前的拒絕。"
+  },
+  "hiw.mech.scanner.name": {
+    "message": "執行環境掃描器"
+  },
+  "hiw.mech.scanner.term": {
+    "message": "已遮蔽"
+  },
+  "hiw.mech.scanner.note": {
+    "message": "它在動作之後才執行，回傳的是計數，不是裁決。"
+  },
+  "hiw.mech.sdk.name": {
+    "message": "SDK 用戶端"
+  },
+  "hiw.mech.sdk.term": {
+    "message": "已評估 — 建議性"
+  },
+  "hiw.mech.sdk.note": {
+    "message": "它不是強制執行點。"
+  },
+  "hiw.mech.probes.name": {
+    "message": "Linux 核心探針，用於加密流量、檔案與行程執行"
+  },
+  "hiw.mech.probes.term": {
+    "message": "已觀測 · 已偵測"
+  },
+  "hiw.mech.probes.note": {
+    "message": "這類訊號都不參與任何允許或拒絕的決策。"
+  },
+  "hiw.mech.guard.name": {
+    "message": "Linux 系統呼叫防護"
+  },
+  "hiw.mech.guard.term": {
+    "message": "已偵測"
+  },
+  "hiw.mech.guard.note": {
+    "message": "外加事後終止該行程。等到行程死亡時，那個有問題的呼叫已經執行過了，所以這明確不是動作之前的拒絕。"
+  },
+  "hiw.mech.sandbox.name": {
+    "message": "WASM 沙箱"
+  },
+  "hiw.mech.sandbox.term": {
+    "message": "執行前拒絕"
+  },
+  "hiw.mech.sandbox.note": {
+    "message": "適用於交給它的工具 — 但它不在代理正常的工具呼叫路徑上，所以它不是一項通用保證。"
+  },
+  "hiw.mech.devtool.name": {
+    "message": "開發工具的組態寫入"
+  },
+  "hiw.mech.devtool.term": {
+    "message": "根本不是資料路徑上的宣稱"
+  },
+  "hiw.mech.devtool.note": {
+    "message": "寫入工具自己的設定檔屬於工具治理：只有在該工具遵守那些設定鍵時才會生效。這些整合所帶來的任何防止效果，都是代理伺服器的，透過它們注入的啟動環境借來的。"
+  },
+  "hiw.platform.linux.name": {
+    "message": "Linux"
+  },
+  "hiw.platform.linux.text": {
+    "message": "傳輸中介是已發行的執行檔。主機層轉接以 eBPF 完成：核心探針會回報加密連線中的明文、行程執行與檔案活動。這一組裡有一個程式是強制執行而非回報 — 一個選擇性啟用的系統呼叫防護，它會終止被限制的行程。"
+  },
+  "hiw.platform.linux.bound": {
+    "message": "沒有任何 eBPF 訊號參與任何允許或拒絕的決策。該防護是在有問題的呼叫已經執行過之後才終止行程，這是偵測後接一記終結，不是動作之前的拒絕；而且除非指名了特定行程，否則它是關閉的。檔案活動探針僅支援 x86_64，而擁有所有核心操作的特權載入常駐程式是發佈到 crate 套件庫，而不在發行下載裡。"
+  },
+  "hiw.platform.macos.name": {
+    "message": "macOS"
+  },
+  "hiw.platform.macos.text": {
+    "message": "傳輸中介可用，而且是通往本站所描述大部分能力的途徑；它是從原始碼安裝，而不是從發行下載取得。這裡沒有作業系統層級的攔截轉接器，而且打造一個是明確的非目標。"
+  },
+  "hiw.platform.macos.bound": {
+    "message": "不要把這句讀成「macOS 上沒有主機層強制執行」。它是唯一一個真的能觸及主機層強制執行等級的平台，途徑是針對受管 Claude Code 啟動的一次選擇性啟用、經授權的設定寫入。有兩件事把它限制得很緊。那次寫入所確立的是「檔案內容寫對了」；該工具在執行期間是否真的遵守那些設定鍵，屬於未量測。而這個等級在已發布的 v0.0.1-rc.6 標籤上被記為尚未達成 — 它所依據的證據晚於該標籤。"
+  },
+  "hiw.platform.windows.name": {
+    "message": "Windows"
+  },
+  "hiw.platform.windows.text": {
+    "message": "這裡沒有任何形式的本機中介。傳輸中介沒有 Windows 建置路徑，也不存在主機層轉接器。"
+  },
+  "hiw.platform.windows.bound": {
+    "message": "控制平面、CLI 與 SDK 在那裡都能跑，所以來自你自己程式碼的政策檢查仍然會得到一項決策。缺的是線路上任何可以把它套用到「不是你的程式碼發出的流量」的東西。"
+  },
+  "hiw.outside.nocall": {
+    "message": "代理從來沒有呼叫檢查點。這個呼叫是自願的；不去做它的行程並沒有在問，關於它也就什麼都不知道。"
+  },
+  "hiw.outside.notHonoured": {
+    "message": "答案沒有被遵守。SDK 做評估並回傳一項決策；「拒絕執行」這件事住在它外圍的語言外殼裡，不在用戶端裡。"
+  },
+  "hiw.outside.notRouted": {
+    "message": "流量從未抵達中介者。代理伺服器設定是由受管啟動注入的 — 環境中原本就有的值、被移掉的值，或手動開起來的工作階段，都會改變涵蓋範圍。"
+  },
+  "hiw.outside.noLaunch": {
+    "message": "這個工具根本沒有受管啟動可提供。有一個已出貨的整合完全無法建出受治理的啟動指令，另一個則被上限鎖在觀測，所以兩者都沒有注入任何可供導流的東西。"
+  },
+  "hiw.outside.notInspected": {
+    "message": "目的地有被中介，但沒有被檢查。預設只對模型供應商主機檢查承載內容，所以其他主機會被建立通道，其連線已被觀測而承載內容沒有。"
+  },
+  "hiw.outside.unhooked": {
+    "message": "加密函式庫不是探針掛得上的那一種。它們掛在 OpenSSL 的符號上，而 Go 自己的 TLS 堆疊與 Node 靜態連結的那一套並不匯出這些符號。"
+  },
+  "hiw.outside.noAdapter": {
+    "message": "平台沒有主機層轉接器 — 如上所述的 macOS 與 Windows。"
+  },
+  "hiw.meta.title": {
+    "message": "它如何運作 — Agent Assembly"
+  },
+  "hiw.meta.description": {
+    "message": "Agent Assembly 的架構是六個角色，而不是一條有先後順序的管線：每個角色是什麼、其中哪些能在動作執行之前拒絕它，以及平台會在哪裡改變答案。"
+  },
+  "hiw.kicker": {
+    "message": "它如何運作"
+  },
+  "hiw.title": {
+    "message": "六個角色 — 而其中只有一部分能擋下任何東西。"
+  },
+  "hiw.intro": {
+    "message": "Agent Assembly 並不是一條固定的管線。它的架構是一組角色，而一次部署只會實例化你實際佈建的那些。本頁會點名這六個角色，說明其中哪些能在動作執行之前拒絕它，並指出平台會在哪裡改變答案。"
+  },
+  "hiw.lede": {
+    "message": "唯一一件要帶走的事：你沒有部署的角色會被回報為缺席。它底下並沒有另一個東西會接手它原本該做的事。"
+  },
+  "hiw.shape.eyebrow": {
+    "message": "形狀"
+  },
+  "hiw.shape.title": {
+    "message": "一片角色的場域，不是一疊層級"
+  },
+  "hiw.shape.body": {
+    "message": "有兩條規則決定了這張圖的形狀，也正是它被畫成這樣的原因。第一，角色可以缺席，而它的缺席是產品會回報出來的事，不是另一個角色悄悄補上的事。第二，角色的權限屬於該角色本身：控制平面做決定但不持有流量，傳輸中介持有流量而且可以拒絕它，而今天 Linux 上的主機轉接器多半只是在看。這個模型裡沒有任何東西讓它們可以互相替代。"
+  },
+  "hiw.field.pathLabel": {
+    "message": "在你導流的路徑上"
+  },
+  "hiw.field.checkpoint": {
+    "message": "受管執行檢查點"
+  },
+  "hiw.field.checkpointNote": {
+    "message": "在動作執行之前做決定 · 向控制平面發問"
+  },
+  "hiw.field.mediation": {
+    "message": "協定與傳輸中介"
+  },
+  "hiw.field.mediationNote": {
+    "message": "在請求離開這台機器之前做決定 · 依自己的組態拒絕，並就工具呼叫向控制平面發問"
+  },
+  "hiw.field.host": {
+    "message": "平台特定的主機層轉接器"
+  },
+  "hiw.field.hostNote": {
+    "message": "因平台而異，而且經常缺席 · 回報給證據管線，不做任何決定"
+  },
+  "hiw.field.planeLabel": {
+    "message": "不在任何路徑上"
+  },
+  "hiw.field.plane": {
+    "message": "治理控制平面"
+  },
+  "hiw.field.planeNote": {
+    "message": "政策 · 身分 · 預算 · 核准 · 稽核。回答決策請求，而且不持有任何流量。"
+  },
+  "hiw.field.credentials": {
+    "message": "憑證與能力界線"
+  },
+  "hiw.field.credentialsNote": {
+    "message": "橫跨其他角色 · 每個角色可以要求什麼，以及憑證如何綁定到身分"
+  },
+  "hiw.field.evidence": {
+    "message": "證據與保護狀態管線"
+  },
+  "hiw.field.evidenceNote": {
+    "message": "橫跨其他角色 · 記錄做了什麼決定，並回報什麼是缺席的"
+  },
+  "hiw.field.outside": {
+    "message": "在你導流的路徑之外"
+  },
+  "hiw.field.outsideNote": {
+    "message": "未受管的啟動 · 從未抵達中介者的流量 · 沒有東西掛鉤的加密函式庫 · 沒有轉接器的平台。沒有被決策 — 而記錄會這樣寫。"
+  },
+  "hiw.field.legend": {
+    "message": "請從這張圖「沒有」的東西來讀它。在受導流路徑上的那三個角色彼此之間沒有任何連線，而且它們的排列沒有先後：沒有誰把工作交給誰，沒有誰是誰的後備，而你沒有部署的那一個會留下一個被回報出來的空洞，不是被填補掉。治理控制平面不在任何路徑上 — 它做決定而且不持有流量，所以只有在受導流路徑上某個角色已經等在該動作前面時，它的答案才會擋下這個動作。"
+  },
+  "hiw.roles.eyebrow": {
+    "message": "六個角色"
+  },
+  "hiw.roles.title": {
+    "message": "每一個是什麼，以及今天你實際拿到什麼"
+  },
+  "hiw.roles.todayLabel": {
+    "message": "今天。"
+  },
+  "hiw.mech.eyebrow": {
+    "message": "被看到、被判斷，還是被擋下"
+  },
+  "hiw.mech.title": {
+    "message": "哪一個機制真的能擋下什麼"
+  },
+  "hiw.mech.lead": {
+    "message": "有三種不同的東西都被稱作保護，而分辨它們就是評估的大半工作。已觀測代表有事件抵達了記錄。已評估代表針對這個動作產生了一項決策。執行前拒絕代表這個動作沒有生效，而且決策發生在前。只有第三種才是防止 — 而下面的表格說明哪個機制觸得到它。"
+  },
+  "hiw.mech.colMechanism": {
+    "message": "機制"
+  },
+  "hiw.mech.colReach": {
+    "message": "今天最高能到哪裡"
+  },
+  "hiw.mech.eventLabel": {
+    "message": "這張表存在就是為了擋掉一種推論。"
+  },
+  "hiw.mech.event": {
+    "message": "一筆稽核事件證明有東西被觀測到了。它永遠不證明那個動作被擋下來了。一筆記錄和一次拒絕是不同的結果，而把前者當成後者的證據，正是整個架構被重寫所要防止的失誤。"
+  },
+  "hiw.platform.eyebrow": {
+    "message": "平台"
+  },
+  "hiw.platform.title": {
+    "message": "平台會在哪裡改變答案"
+  },
+  "hiw.platform.lead": {
+    "message": "主機層轉接是唯一一個真正因平台而異的角色，也是為某一個作業系統畫出來的圖最容易誤導其他作業系統讀者的地方。每個平台都需要自己的機制，而沒有機制的平台就是沒有。"
+  },
+  "hiw.outside.eyebrow": {
+    "message": "界線"
+  },
+  "hiw.outside.title": {
+    "message": "動作什麼時候落在這一切之外"
+  },
+  "hiw.outside.lead": {
+    "message": "當一個動作在生效之前，被提交給某個已設定為做決定、並且會遵守答案的東西時，它就在受治理路徑上。只要這條鏈裡少了任何一環，它就在界線之外。以下是今天會發生這種情況的各種方式，每一種都是量測出來的，而不是想像出來的。"
+  },
+  "hiw.outside.ruleLabel": {
+    "message": "那會記錄成什麼。"
+  },
+  "hiw.outside.rule": {
+    "message": "對於界線之外的任何東西，關於那個動作什麼都不知道，所以規則是：它不會被記為已允許，也不會被記為乾淨 — 記錄會寫成該動作或其承載內容未經檢查。請把這條規則讀成以「動作」為範圍，而不是以承載它的連線為範圍：代理伺服器沒有檢查的主機，在建立連線時仍然會被裁決，所以連線已被觀測而承載內容沒有。今天有一個未修復的缺陷與這條規則相牴觸：對於即將以隧道方式、未經檢查轉送出去的流量，連線層級的事件仍然會記下一筆允許，追蹤於 AAASM-5637。請把規則與這個未修復的缺陷一起讀，不要當成已完成的行為。而一份安靜的日誌是關於觀測者的證據，從來不是關於代理的。"
+  },
+  "hiw.deeper.eyebrow": {
+    "message": "再往下走"
+  },
+  "hiw.deeper.title": {
+    "message": "本頁到此為止，這是刻意的"
+  },
+  "hiw.deeper.lead": {
+    "message": "再往下的答案住在工程紀錄裡，在那裡它們和它們所描述的程式碼一起被版本控管。以下每個連結都指向本頁所根據的來源 — 這裡一句都沒有重述，因為第二份副本會在一個發行週期之內就和第一份分岔。"
+  },
+  "hiw.deeper.adr.title": {
+    "message": "架構決策紀錄"
+  },
+  "hiw.deeper.adr.text": {
+    "message": "關於六個角色、各平台矩陣，以及本頁所用詞彙的正式權威說明，每一列都附有原始碼出處。"
+  },
+  "hiw.deeper.adr.link": {
+    "message": "讀這份決策紀錄 →"
+  },
+  "hiw.deeper.security.title": {
+    "message": "信任界線"
+  },
+  "hiw.deeper.security.text": {
+    "message": "威脅模型、每項控制的失效姿態（包含那些失效放行的），以及被逐一列舉出來的繞過方式。"
+  },
+  "hiw.deeper.security.link": {
+    "message": "讀安全模型 →"
+  },
+  "hiw.deeper.limits.title": {
+    "message": "各整合的限制"
+  },
+  "hiw.deeper.limits.text": {
+    "message": "每個開發工具整合涵蓋什麼、不涵蓋什麼，包含那兩個根本無法把工具放上路徑的整合。"
+  },
+  "hiw.deeper.limits.link": {
+    "message": "讀已知限制 →"
+  },
+  "hiw.deeper.claims.title": {
+    "message": "每一項宣稱，連同它的證據"
+  },
+  "hiw.deeper.claims.text": {
+    "message": "本頁與本站其他頁面所引用的共用登錄表 — 每一筆都帶著它所達到的用詞、它的界線，以及背後的證據列。"
+  },
+  "hiw.deeper.claims.link": {
+    "message": "讀宣稱登錄表 →"
+  },
+  "hiw.cta.product": {
+    "message": "← 產品決定什麼"
+  },
+  "hiw.cta.coreDocs": {
+    "message": "Core 與 gateway 文件"
+  },
+  "product.decides.destinations.term": {
+    "message": "執行前拒絕"
+  },
+  "product.decides.destinations.title": {
+    "message": "它可以連到哪些網路目的地"
+  },
+  "product.decides.destinations.text": {
+    "message": "在你導流經過 Agent Assembly 的路徑上建立的連線，會先對照你設定的目的地清單檢查，並在代理伺服器撥號之前被拒絕。其中一條目的地規則預設開啟且沒有任何組態能放寬它：連往 loopback、私有、link-local 及相關位址空間的請求一律拒絕，包含公開主機名稱解析到這些位址的情況。"
+  },
+  "product.decides.destinations.bound": {
+    "message": "你自己的清單在你寫進去之前是空的，而這個拒絕來自代理伺服器自己的本機組態，不是控制平面的決策。代理伺服器在 Linux 上是已發行的執行檔，在 macOS 上要用 cargo 安裝；在 Windows 上沒有本機中介，也就沒有任何東西站在連線前面可以拒絕它。"
+  },
+  "product.decides.tools.term": {
+    "message": "執行前拒絕"
+  },
+  "product.decides.tools.title": {
+    "message": "哪些工具呼叫可以離開這台機器"
+  },
+  "product.decides.tools.text": {
+    "message": "MCP 工具呼叫可以由控制平面依你的政策檢查，並在代理伺服器轉送之前被拒絕。"
+  },
+  "product.decides.tools.bound": {
+    "message": "這是產品裡唯一一個由控制平面自己在網路之前做出的拒絕，而且在維運者開啟之前它是關閉的。它涵蓋的是以一般 HTTP POST 傳送、且已設定 gateway 端點的被攔截主機上的 MCP。你以標準輸入輸出執行的工具伺服器（最常見的做法）、以 server-sent events 執行的，或以 WebSocket 執行的，都沒有對應的攔截機制。"
+  },
+  "product.decides.sdk.term": {
+    "message": "已評估"
+  },
+  "product.decides.sdk.title": {
+    "message": "你自己的代理程式碼可以呼叫哪些工具"
+  },
+  "product.decides.sdk.text": {
+    "message": "透過被包裝的框架接縫發出的工具呼叫，會在工具主體執行之前先被檢查。"
+  },
+  "product.decides.sdk.bound": {
+    "message": "SDK 在設計上就是建議性的 — 它是縱深防禦的一層姿態，不是權威的把關點，而不去呼叫它的代理根本沒在問。Python 會在主體之前拋出例外並失效關閉；Go 也失效關閉，但需要明確要求包裝；Node SDK 的預設模式會把檢查導向一個一律放行的用戶端，因此在那裡根本不會產生任何拒絕。在未啟用具檢查能力的模式時要求強制執行，會在啟動時明確報錯，而不是無聲地放行。"
+  },
+  "product.decides.creds.term": {
+    "message": "已遮蔽"
+  },
+  "product.decides.creds.title": {
+    "message": "被辨識出的憑證會不會跟著請求一起送出去"
+  },
+  "product.decides.creds.text": {
+    "message": "在 Agent Assembly 會檢查的模型供應商主機上，被辨識出的憑證會在請求轉送出去之前被移除。"
+  },
+  "product.decides.creds.bound": {
+    "message": "只有三個內建主機，因為預設只對模型供應商主機檢查承載內容。預設動作是遮蔽後轉發，不是拒絕 — 偵測到憑證即行阻擋是你要主動選擇啟用的。偵出率受限於既有的樣式集合，而這條路徑上的模型回應並不會被掃描。"
+  },
+  "product.decides.spend.term": {
+    "message": "未量測"
+  },
+  "product.decides.spend.title": {
+    "message": "它可以花多少錢"
+  },
+  "product.decides.spend.text": {
+    "message": "政策可以宣告花費上限，針對單一代理或跨整個團隊。"
+  },
+  "product.decides.spend.bound": {
+    "message": "已宣告的上限是否真的在決策路徑中被檢查，並沒有任何證據列可以佐證，因此對「強制執行」誠實的用詞是未量測 — 上面那句講的是政策可以宣告什麼，不是什麼東西擋下了呼叫。上限只存在於政策有宣告的地方，未宣告的預算等於沒有上限，而讀不到的預算儲存區會無聲地把上限重設。"
+  },
+  "product.decides.hold.term": {
+    "message": "需要核准"
+  },
+  "product.decides.hold.title": {
+    "message": "哪些動作是被擱置而不是被回答"
+  },
+  "product.decides.hold.text": {
+    "message": "政策規則可以擱置一個動作，而不是直接回答它。這個擱置是真的，而且失效關閉：檢查會被阻擋住，逾時則收斂成拒絕。"
+  },
+  "product.decides.hold.bound": {
+    "message": "這裡把它列為尚未完成的能力，因為它就是。沒有任何已出貨的維運者介面能回應這個擱置所等待的佇列，所以實際上它會先擋住，然後在逾時時拒絕，全程沒有任何人參與。現在還不要把人工審查算進計畫裡 — 追蹤於 AAASM-5657。"
+  },
+  "product.applied.proxy.title": {
+    "message": "旁掛式代理伺服器"
+  },
+  "product.applied.proxy.text": {
+    "message": "三者中最強的一個。它在連線階段拒絕、在通道內重新檢查主機、阻擋或移除被辨識出的憑證，並裁決 MCP 工具呼叫 — 這些都在它向上游撥號之前就返回。這是發生在動作之前、且位於代理自身行程之外的拒絕。"
+  },
+  "product.applied.proxy.bound": {
+    "message": "在 Linux 上是已發行的執行檔；在 macOS 上要用 cargo 安裝。在 Windows 上沒有任何形式的本機中介。"
+  },
+  "product.applied.checkpoint.title": {
+    "message": "SDK 檢查點"
+  },
+  "product.applied.checkpoint.text": {
+    "message": "它包裝你的框架的工具接縫，在被包裝的工具主體執行之前拋出 — 那是在你自己的程式碼內部，決策所能套用的最早時點。"
+  },
+  "product.applied.checkpoint.bound": {
+    "message": "刻意設計成建議性的：是縱深防禦的姿態，而不是權威的把關點。不去呼叫它的代理並沒有在問，而沒有人接過的框架則落在包裝之外。"
+  },
+  "product.applied.host.title": {
+    "message": "作業系統層級的控制"
+  },
+  "product.applied.host.text": {
+    "message": "因平台而異，而且就今天存在的部分而言，它們多半只是觀測。在 Linux 上，核心探針會回報 TLS 明文、行程執行與檔案活動，而這類訊號都不參與任何允許或拒絕的決策。"
+  },
+  "product.applied.host.bound": {
+    "message": "macOS 沒有對應的轉接器 — 但它同時也是唯一一個真的能觸及主機層強制執行等級的平台，途徑是一次選擇性啟用、經授權的設定寫入。兩半都成立，而且兩半都必須講。這個等級在已發布的 v0.0.1-rc.6 標籤上被記為尚未達成，因為它所依據的證據晚於該標籤。Windows 兩者皆無。"
+  },
+  "product.notdo.route": {
+    "message": "它不會治理你沒有導流的代理。導流是你要親自去做的事，每個代理、每次啟動都要做一次，而在受管啟動之外開始的工作階段就是完全在這一切之外 — 而且從內部偵測不到。"
+  },
+  "product.notdo.payload": {
+    "message": "它不會檢查送往它沒有攔截的主機的承載內容。預設檢查三個內建的模型供應商主機；其他主機都會被建立通道，也就是連線已被觀測，承載內容則沒有。"
+  },
+  "product.notdo.process": {
+    "message": "它不會讓憑證離開代理自己的行程。它做的是在被檢查的主機上掃描對外請求，並在轉送之前移除被辨識出的憑證。"
+  },
+  "product.notdo.audit": {
+    "message": "它的稽核鏈可偵測竄改，但沒有簽章。它是對日誌檔做的無金鑰摘要，所以任何能改寫該檔案的人都能重新算出它 — 而驗證檢查的是現存項目之間的鏈結，因此一份被刪除後重建的日誌會驗證通過。"
+  },
+  "product.notdo.platform": {
+    "message": "它在 Windows 上沒有任何東西可以提供，那裡完全沒有本機中介。在它確實支援的平台上，UDP、QUIC 與 HTTP/3 也不在傳輸協定範圍內。"
+  },
+  "product.proof.chain.title": {
+    "message": "自己驗證稽核鏈"
+  },
+  "product.proof.chain.text": {
+    "message": "aasm audit verify-chain 隨開放原始碼版本一起出貨。它證明的是現存項目的完整性，不是這份日誌是否完整 — 而且寫出是盡力而為的，所以決策可以做成，記錄卻遺失。"
+  },
+  "product.proof.chain.link": {
+    "message": "驗證能證明什麼、不能證明什麼 →"
+  },
+  "product.proof.policy.title": {
+    "message": "讀出產生這個決策的那條規則"
+  },
+  "product.proof.policy.text": {
+    "message": "政策是版本化的 YAML 或 JSON，你用原本就在用的 Git 流程審閱它。欄位參考文件是公開的，所以本站描述的規則就是你可以自己查到的規則。"
+  },
+  "product.proof.policy.link": {
+    "message": "政策欄位參考 →"
+  },
+  "product.proof.register.title": {
+    "message": "把上面任何一句話追回它的界線"
+  },
+  "product.proof.register.text": {
+    "message": "本頁每一句能力陳述都是共用宣稱登錄表十六筆條目之一，是引用而非改寫。每一筆都帶著它所達到的用詞、隨之而來的界線，以及背後的證據列 — 包含帶有「未量測」用詞的那四筆，其中三筆整筆皆是。"
+  },
+  "product.proof.register.link": {
+    "message": "宣稱登錄表 →"
+  },
+  "product.proof.source.title": {
+    "message": "讀做出決策的那份執行環境原始碼"
+  },
+  "product.proof.source.text": {
+    "message": "gateway、代理伺服器、CLI 與 SDK 都以 Apache-2.0 授權放在 GitHub 上，連同釘住本頁所述各項行為的測試。什麼是開放原始碼、什麼不是，是明講出來的，不是靠暗示。"
+  },
+  "product.proof.source.link": {
+    "message": "開放核心的界線 →"
+  },
+  "product.lede": {
+    "message": "一句話說明：Agent Assembly 是你放在 AI 代理動作前面的一個決策點，外加一份顯示它做了什麼決定的證據軌跡。"
+  },
+  "product.why.eyebrow": {
+    "message": "落差"
+  },
+  "product.why.gap": {
+    "message": "結果是：團隊講得出代理「應該」做什麼，卻拿不出它「被允許」做什麼。日誌與追蹤是在事後回答這個問題，而那個時間點已經太晚：等到請求出現在追蹤裡，請求早就送出去了。"
+  },
+  "product.decides.eyebrow": {
+    "message": "它決定什麼"
+  },
+  "product.decides.title": {
+    "message": "政策回答的六個問題 — 以及每個答案能走多遠"
+  },
+  "product.decides.lead": {
+    "message": "政策是版本化的 YAML 或 JSON，你用原本就在用的 Git 流程審閱它。下面每張卡片都標示了產品實際對這個動作做了什麼，以及隨之而來的界線。它們能走的距離並不相同，而走得最短的那幾張會直說，不會借用其他卡片的自信。"
+  },
+  "product.boundLabel": {
+    "message": "它到哪裡為止。"
+  },
+  "product.posture.eyebrow": {
+    "message": "開箱狀態"
+  },
+  "product.posture.title": {
+    "message": "你動手設定之前的三個預設"
+  },
+  "product.posture.lead": {
+    "message": "一項存在但預設關閉的能力，跟一項預設開啟的能力，是兩種不同的產品。其中兩項比評估者通常預期的還要強，第三項則是最常被比較表漏掉的那一項，因為它的方向相反。"
+  },
+  "product.posture.launch.title": {
+    "message": "在沒有政策的情況下啟動工作階段 — 拒絕"
+  },
+  "product.posture.launch.text": {
+    "message": "當無法解析出有效政策時，aasm run 不會啟動工具；政策可以解析但未宣告任何規則時，它同樣不會啟動。沒有政策不等於獲得許可，空的政策代表尚未設定，而不是全部放行。兩者都在任何東西啟動之前就拒絕。"
+  },
+  "product.posture.egress.title": {
+    "message": "送往私有位址的對外流量 — 一律拒絕"
+  },
+  "product.posture.egress.text": {
+    "message": "一個被交給雲端 metadata 位址、或被交給會解析進你自己網路的內部主機名稱的代理，會在代理伺服器撥號之前被拒絕。這道防護重新檢查的是每一個解析出來的位址而不是名稱，所以解析到私有位址空間的公開主機名稱同樣會被拒絕。沒有任何組態或環境變數可以放寬它。"
+  },
+  "product.posture.fallthrough.title": {
+    "message": "未命中任何規則的動作 — 允許"
+  },
+  "product.posture.fallthrough.text": {
+    "message": "一旦政策生效，未命中任何網路、工具、能力或核准規則的動作會被允許。政策之內預設放行，但「是否具備政策」這件事預設拒絕 — 兩半都要講，否則這組說法會誤導人。"
+  },
+  "product.posture.table": {
+    "message": "完整的預設狀態，逐列列出 →"
+  },
+  "product.applied.eyebrow": {
+    "message": "決策套用在哪裡"
+  },
+  "product.applied.title": {
+    "message": "三個地方，權限本質上並不相同"
+  },
+  "product.applied.lead": {
+    "message": "它們不是一條有先後順序的鏈。其中一個不會替另一個補位，而你沒有部署的元件會被回報為缺席，不會被下一個悄悄接手。「檢查點沒看到，所以底下一定有東西看到了」這種推論，正是這個產品的架構存在要阻止的錯誤。"
+  },
+  "product.applied.planeLabel": {
+    "message": "那控制平面呢？"
+  },
+  "product.applied.plane": {
+    "message": "它保存你的政策、預算、核准與稽核 — 而它不持有任何流量。只有在上面三者之一正等在該動作前面時，它的答案才會真的擋下這個動作。這就是為什麼導流是第一步：前面沒有東西等著的決策，是一筆記錄，不是一次拒絕。"
+  },
+  "product.applied.howItWorks": {
+    "message": "六個角色，以及其中哪些真的能擋下什麼 →"
+  },
+  "product.outcome.eyebrow": {
+    "message": "改變了什麼"
+  },
+  "product.outcome.title": {
+    "message": "你得知的時間點提前了"
+  },
+  "product.outcome.body": {
+    "message": "代理的第一個錯誤，通常是在帳單、日誌或事故檢討裡才浮現 — 那時呼叫早就送出去了，剩下能決定的只有怎麼收拾。這裡改變的是時間點。在你導流經過 Agent Assembly 的路徑上，只要有東西等在該動作前面，被你的政策拒絕的呼叫就不會送出去，而記錄寫的就是那次拒絕。在那條路徑之外，不會有任何宣稱：記錄會寫成該動作未經檢查，那是一個你可以去補上的缺口，而不是一個你必須事後發現的缺口。"
+  },
+  "product.notdo.eyebrow": {
+    "message": "界線"
+  },
+  "product.notdo.title": {
+    "message": "它不做什麼"
+  },
+  "product.notdo.lead": {
+    "message": "這些會列在頁面上，理由我們寧可直說也不要讓你自己撞到：評估者在建置之後才發現一句被誇大的說法，比一開始就讀到一條準確的限制更糟。"
+  },
+  "product.notdo.maturityLabel": {
+    "message": "成熟度。"
+  },
+  "product.notdo.maturity": {
+    "message": "開放原始碼的執行環境尚未達到 1.0，是以預先發行系列的形式釋出。託管服務屬於已規劃 — 已決定，但尚未建置 — 所以本頁沒有任何內容構成對推出日期、地區、服務等級協議或法規遵循狀態的承諾。"
+  },
+  "product.proof.eyebrow": {
+    "message": "佐證"
+  },
+  "product.proof.title": {
+    "message": "四件你不必信我們就能自己查的事"
+  },
+  "product.oss.eyebrow": {
+    "message": "你怎麼跑它"
+  },
+  "product.cta.howItWorks": {
+    "message": "它如何運作"
   },
   "theme.ErrorPageContent.title": {
     "message": "此頁已當機。",
