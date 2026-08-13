@@ -234,7 +234,7 @@ export const platformBrief: RoleBrief = {
           absent from the GitHub Release assets, the Homebrew tap and the
           install script — so an operator who installed through any of those has
           no host-level component and, on macOS, no proxy for the managed launch
-          to start. Tracked as AAASM-5653.
+          to start (RC8, RC9). Tracked as AAASM-5653.
         </Translate>
       ),
     },
