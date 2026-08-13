@@ -448,18 +448,39 @@ def scan(build: Path, phrases):
 # --------------------------------------------------------------------------- #
 # self-test
 # --------------------------------------------------------------------------- #
-# The rewordings measured in AAASM-5730. The first five escaped the catalogue
-# before the {unit} expansion; the last three are the shapes a synonym set can
-# plausibly over-reach onto, and must stay clear. They run on every CI build
-# because a guard nobody has watched fire is not evidence that it fires.
-REWORDINGS_MUST_CATCH = (
-    "Agent Assembly ships three independently deployable tiers.",
-    "Governance arrives at three levels: in-process, sidecar, and kernel.",
-    "This is the three-tier interception model in practice.",
-    "SDK then proxy then eBPF: each stage sees what the one before it missed.",
-    "Agent Assembly is the governance plane for autonomous software.",
+# One sentence per `class/locale` group that MUST still be caught, keyed by the
+# group that has to catch it. Five of them are the rewordings measured in
+# AAASM-5730, which escaped the catalogue before the {unit} expansion; the rest
+# exist so that every group is asserted on.
+#
+# Why the key, and why one per group
+# ----------------------------------
+# CATALOGUE_FLOOR counts entries; it cannot see what they say. Replacing every
+# phrase with junk of the same length left the floor satisfied, integrity at
+# PASS and the gate at `forbidden hits: 0`, exit 0, against a build holding 79
+# real violations -- and re-narrowing entries into sentence shapes, the
+# regression this catalogue's own $rules calls "the single most important rule
+# in this file", did the same. The self-test did not catch either in full,
+# because it asserted only on fd-1/en, fd-2/en and rejected-hero/en: junking the
+# other six groups, English and zh-Hant alike, kept it at 16/16 while silencing
+# 22 of the 79. Asserting one caught sentence per group makes the floor a
+# statement about COVERAGE rather than cardinality, which is what its docstring
+# already claimed. AAASM-5730.
+MUST_CATCH = (
+    ("fd-1/en", "Agent Assembly ships three independently deployable tiers."),
+    ("fd-1/en", "Governance arrives at three levels: in-process, sidecar, and kernel."),
+    ("fd-1/en", "This is the three-tier interception model in practice."),
+    ("fd-1/zh-Hant", "Agent Assembly 由三個攔截層組成，逐層收斂。"),
+    ("fd-2/en", "SDK then proxy then eBPF: each stage sees what the one before it missed."),
+    ("fd-3/en", "The sidecars feed a central gateway that makes the decision."),
+    ("fd-7/en", "The kernel hooks give comprehensive coverage of every host."),
+    ("fd-7-adjacent/en", "Enforcement arrives without touching agent code."),
+    ("rejected-hero/en", "Agent Assembly is the governance plane for autonomous software."),
+    ("rejected-hero/zh-Hant", "這是為 AI 代理而生的治理層。"),
+    ("approval/en", "Sensitive tool calls wait behind human-in-the-loop approval."),
+    ("approval/zh-Hant", "敏感操作必須通過核准關卡才會執行。"),
 )
-REWORDINGS_MUST_CLEAR = (
+MUST_CLEAR = (
     "The rollout is incomplete and the form has autocomplete enabled.",
     "The proxy runs at the kernel level on Linux hosts.",
     "The policy engine evaluates rules in stages during startup.",
@@ -475,11 +496,53 @@ REWORDINGS_MUST_CLEAR = (
 
 
 def _prose_hits(sentence: str, phrases):
+    """Every catalogue phrase that fires on one sentence of reader-facing prose.
+
+    No locale filter: the zh-Hant groups have to be assertable too, and the
+    scan()-time rule that confines them to zh-Hant pages is a property of the
+    page tree, not of the matcher.
+    """
     text = html_text(f"<html><body><div class=x id=p><p>{sentence}</p></div></body></html>")
-    return [
-        p for p in phrases
-        if p["locale"] == "en" and matches(p["phrase"], text, boundary=p["boundary"])
-    ]
+    return [p for p in phrases if matches(p["phrase"], text, boundary=p["boundary"])]
+
+
+def _group_key(p) -> str:
+    return f"{p['class']}/{p['locale']}"
+
+
+def sentence_control(phrases) -> list[str]:
+    """Prove every group still catches something, and none has widened.
+
+    Runs in the gate itself, not only in --self-test, because a catalogue whose
+    phrases have been junked reports an absence it has not earned and the run
+    that reports it is `claims:check`.
+    """
+    errs: list[str] = []
+    covered = set()
+    for key, sentence in MUST_CATCH:
+        hits = _prose_hits(sentence, phrases)
+        if any(_group_key(h) == key for h in hits):
+            covered.add(key)
+        else:
+            fired = sorted({_group_key(h) for h in hits})
+            errs.append(
+                f"{key}: nothing in that group fired on {sentence!r} -- "
+                + (f"fired instead: {', '.join(fired)}" if fired else "NOTHING FIRED")
+            )
+    for key in sorted({_group_key(p) for p in phrases} - covered):
+        errs.append(
+            f"{key}: no MUST_CATCH sentence proves this group catches anything -- add one to "
+            "MUST_CATCH in check-forbidden-claims.py, so the floor states coverage and not "
+            "just a count of entries"
+        )
+    for sentence in MUST_CLEAR:
+        hits = _prose_hits(sentence, phrases)
+        if hits:
+            errs.append(
+                f"MUST_CLEAR fired on {sentence!r}: "
+                + ", ".join(f"{_group_key(h)} {h['phrase']!r}" for h in hits)
+            )
+    return errs
 
 
 def self_test() -> int:
@@ -525,12 +588,28 @@ def self_test() -> int:
         f"{len(survivors)} present",
     )
 
-    for s in REWORDINGS_MUST_CATCH:
-        hits = _prose_hits(s, phrases)
-        check(hits, f"caught: {s}", hits[0]["phrase"] if hits else "NOTHING FIRED")
-    for s in REWORDINGS_MUST_CLEAR:
+    junked = copy.deepcopy(data)
+    for g in junked["phrases"]:
+        if g["class"] == "approval" and g.get("locale") == "zh-Hant":
+            # Same count, same floor, same integrity verdict -- different words.
+            g["any"] = ["蘸蘸壹貳" for _ in g["any"]]
+            break
+    check(
+        not integrity(junked) and sentence_control(load_phrases(junked)),
+        "group's phrases junked at the same count -> integrity passes, sentence control fails",
+    )
+
+    for key, s in MUST_CATCH:
+        hits = [h for h in _prose_hits(s, phrases) if _group_key(h) == key]
+        check(hits, f"caught by {key}: {s}", hits[0]["phrase"] if hits else "NOTHING FIRED")
+    for s in MUST_CLEAR:
         hits = _prose_hits(s, phrases)
         check(not hits, f"clear : {s}", hits[0]["phrase"] if hits else "")
+    check(
+        not sentence_control(phrases),
+        f"every group is asserted on ({len({_group_key(p) for p in phrases})} groups, "
+        f"{len(MUST_CATCH)} must-catch, {len(MUST_CLEAR)} must-clear)",
+    )
 
     check(not positive_control(phrases), f"positive control passes ({len(phrases)} phrases)")
     check(not negative_control(phrases), "negative control passes")
@@ -565,15 +644,21 @@ def main() -> int:
 
     phrases = load_phrases(data)
     pf, nf = positive_control(phrases), negative_control(phrases)
+    sf = sentence_control(phrases)
     print(f"catalogue      : {len(phrases)} phrases")
     proven = len(phrases) - len({k for k, _ in pf})
     print(f"positive ctrl  : {'PASS' if not pf else 'FAIL'} "
           f"({proven}/{len(phrases)} phrases matched on all surfaces)")
     print(f"negative ctrl  : {'PASS' if not nf else 'FAIL'} "
           f"(boundary words must not fire on words containing them)")
+    print(f"sentence ctrl  : {'PASS' if not sf else 'FAIL'} "
+          f"({len(MUST_CATCH)} sentences caught across "
+          f"{len({_group_key(p) for p in phrases})} groups, {len(MUST_CLEAR)} left clear)")
     for _, msg in pf + nf:
         print("  CONTROL FAILED:", msg)
-    if pf or nf:
+    for msg in sf:
+        print("  CONTROL FAILED:", msg)
+    if pf or nf or sf:
         print("\nControls failed -- any absence below would not be a measurement.")
         return 2
 
