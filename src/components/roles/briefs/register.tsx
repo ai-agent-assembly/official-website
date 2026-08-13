@@ -1,6 +1,8 @@
 import React from 'react';
-import Translate from '@docusaurus/Translate';
+import Translate, {translate} from '@docusaurus/Translate';
+import {TrackedLink} from '@site/src/components/Tracked';
 import type {Claim} from '../types';
+import {ROLE_NARRATIVES, RISK_SCENARIOS} from './shared';
 
 /*
  * AAASM-5587 — the shared claim register, as the four role surfaces render it.
@@ -29,17 +31,71 @@ import type {Claim} from '../types';
  *
  * WHAT MAY AND MAY NOT BE EDITED HERE
  * -----------------------------------
- * The text and the bound are quoted from the register, not paraphrased — a
- * paraphrase is a new claim and carries its own evidence burden. ADR 0034 puts
- * this site below the hub in the one-product-truth hierarchy: a surface may
- * simplify what the register says and may never broaden it, and shortening a
- * bound is the most common way to broaden one by accident.
+ * The text and the bound are quoted from the register VERBATIM — a paraphrase
+ * is a new claim and carries its own evidence burden, and 5584's implementer
+ * contract is explicit that "if a layout needs something shorter than the
+ * register gives, that is a layout problem". ADR 0034 puts this site below the
+ * hub in the one-product-truth hierarchy: a surface may simplify what the
+ * register says and may never broaden it, and shortening a bound is the most
+ * common way to broaden one by accident.
+ *
+ * Verbatim includes the parts that are inconvenient to render:
+ *
+ *   - Identifiers stay as the register writes them — `llm_only`, `WrapTools`,
+ *     `aasm run --no-proxy`, `cargo install aa-proxy`. An earlier pass rendered
+ *     each in plain language, which reads better and is a different sentence.
+ *   - Manifest field names stay too. RC6 and RC13 cite three fields each, and
+ *     the field an abridgement drops is `evidence: gap` — the difference
+ *     between "measured and found wanting" and "not measured at all".
+ *   - The register's own cross-references stay, rendered as links rather than
+ *     deleted. They sit inside the Bound column, so cutting one to fit a card
+ *     is the same edit as cutting any other part of a bound.
+ *
+ * `scripts/check-register-drift.py` diffs what this file renders against the
+ * register itself. Run it after editing anything below.
  *
  * The `term` is copied off the entry, which copies it off the manifest rows'
  * own `coverage` field. It is never chosen to suit a sentence. Where an entry
  * carries several terms — RC5, RC11 — they are per path, not per audience, and
  * the register names which path takes which.
  */
+
+/*
+ * The register's own cross-references, rendered as links rather than dropped.
+ *
+ * Two bounds — RC6's and RC13's — end by pointing at the register's "two gaps"
+ * section, and RC13's cites Risk scenarios' T3 mid-sentence. Those pointers are
+ * inside the Bound column, so removing them to fit a card would be the same
+ * edit as removing any other part of a bound. Rendering them as links keeps the
+ * wording intact AND gives the reader the route to the evidence, which is the
+ * thing a "see X" is for.
+ */
+function docsLink(href: string, label: string): React.ReactNode {
+  return (
+    <TrackedLink
+      eventName="cta_view_docs_click"
+      ctaLocation="body"
+      targetProduct="docs"
+      alsoFire={['docs_click']}
+      to={href}
+      linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
+    >
+      {label}
+    </TrackedLink>
+  );
+}
+
+const TWO_GAPS = () =>
+  docsLink(
+    `${ROLE_NARRATIVES}#two-gaps-this-page-found-in-the-manifest`,
+    translate({id: 'roles.register.twoGaps', message: 'the two gaps'}),
+  );
+
+const T3_SCENARIOS = () =>
+  docsLink(
+    RISK_SCENARIOS,
+    translate({id: 'roles.register.riskScenarios', message: 'Risk scenarios'}),
+  );
 
 export const RC1: Claim = {
   rc: 'RC1',
@@ -56,8 +112,8 @@ export const RC1: Claim = {
       The refusal is the proxy’s own local egress configuration, not a
       control-plane decision. The destination lists are empty by default — this
       refusal exists because an operator configured it. Linux release artifact;
-      on macOS a cargo install of aa-proxy is the only route; on Windows there
-      is no local mediation. If the proxy is not in front of the connection, the
+      on macOS cargo install aa-proxy is the only route; on Windows there is no
+      local mediation. If the proxy is not in front of the connection, the
       connection is simply made.
     </Translate>
   ),
@@ -92,10 +148,9 @@ export const RC3: Claim = {
   ),
   bound: (
     <Translate id="roles.rc3.bound">
-      Three built-in hosts, because payload inspection is limited to
-      model-provider hosts by default. The default action is redact and forward,
-      not refuse. Recall is bounded by the pattern set — there is no Stripe
-      detector. Model responses on that path are not scanned.
+      Three built-in hosts, because llm_only defaults on. The default action is
+      redact and forward, not refuse. Recall is bounded by the pattern set —
+      there is no Stripe detector. Model responses on that path are not scanned.
     </Translate>
   ),
 };
@@ -150,10 +205,10 @@ export const RC5: Claim = {
       The SDK is advisory by design — a defence-in-depth posture, not the
       authoritative gate, and an agent that does not call it is not asking.
       Python raises before the body and fails closed. Go fails closed but
-      requires an explicit call to wrap the tools. Node’s default mode routes
-      the check through an allow-all no-op client, so no refusal is produced
-      there at all; asking for enforcement without a check-capable mode is
-      refused loudly at init rather than silently allowed.
+      requires an explicit WrapTools. Node’s default mode routes the check
+      through an allow-all no-op client, so no refusal is produced there at all;
+      asking for enforcement without a check-capable mode is refused loudly at
+      init rather than silently allowed.
     </Translate>
   ),
 };
@@ -170,16 +225,10 @@ export const RC6: Claim = {
     </Translate>
   ),
   bound: (
-    <Translate id="roles.rc6.bound">
-      The manifest’s only row for this subject is the row for what happens when
-      the write fails, and that row records the case as unmeasured, fail-open,
-      and backed by no evidence. Everything else about the chain is a bound, not
-      a capability: it is tamper-evident, not immutable and not signed — an
-      unkeyed digest, so anyone able to rewrite the sink can recompute it. The
-      chain head advances before the send and a full channel drops the entry
-      while the call still returns, which makes a dropped entry
-      indistinguishable from a deleted one. An emptied log verifies clean. The
-      proxy writes no local record at all unless its audit path is configured.
+    <Translate id="roles.rc6.bound" values={{twoGaps: <TWO_GAPS />}}>
+      {
+        'The manifest\u2019s only row for this subject is the row for what happens when the write fails, and it carries coverage: unmeasured, failure_posture: fail_open and evidence: gap. So the honest term is the row\u2019s own. Everything else about the chain is a bound, not a capability: it is tamper-evident, not immutable and not signed \u2014 an unkeyed digest, so anyone able to rewrite the sink can recompute it. The chain head advances before the send and a full channel drops the entry while the call still returns, which makes a dropped entry indistinguishable from a deleted one. An emptied log verifies clean. The proxy writes no local record at all unless its audit path is configured. See {twoGaps}.'
+      }
     </Translate>
   ),
 };
@@ -196,7 +245,7 @@ export const RC10: Claim = {
   bound: (
     <Translate id="roles.rc10.bound">
       Degraded carries both levels or it is not this term. One row reaches it,
-      for an eBPF load or attach failure. The reporting half does not close: a
+      for eBPF load or attach failure. The reporting half does not close: a
       degradation is emitted, typed, and rendered nowhere, and an unreadable
       eBPF policy file fails open silently, raising no degradation event at all.
     </Translate>
@@ -238,14 +287,13 @@ export const RC13: Claim = {
     </Translate>
   ),
   bound: (
-    <Translate id="roles.rc13.bound">
-      The manifest’s only budget row is the one for a store that is unreadable
-      or corrupt, recorded as unmeasured, silently fail-open, and backed by no
-      evidence — its gap reason records a positive control showing the budget
-      path never queries the control-plane store. What is bounded regardless: a
-      cap exists only where a policy declares one, an undeclared budget is
-      uncapped, reaching a refusal needs a caller that waits for the answer, and
-      a corrupt store resets the cap to zero spend silently.
+    <Translate
+      id="roles.rc13.bound"
+      values={{twoGaps: <TWO_GAPS />, riskScenarios: <T3_SCENARIOS />}}
+    >
+      {
+        'Same shape as RC6, and the same remedy. The manifest\u2019s only budget row is the one for a store that is unreadable or corrupt, carrying coverage: unmeasured, failure_posture: fail_open_silent and evidence: gap \u2014 its gap reason records a positive control showing the budget path never queries the control-plane store. {riskScenarios}\u2019s T3 reaches Evaluated and states in the same table that it has no positive row; this register does not restate T3\u2019s term over a row that does not carry it. What is bounded regardless: a cap exists only where a policy declares one, an undeclared budget is uncapped, reaching Denied before execution needs a caller that waits for the answer, and a corrupt store resets the cap to zero spend silently. See {twoGaps}.'
+      }
     </Translate>
   ),
 };
@@ -279,9 +327,8 @@ export const RC15: Claim = {
       the only one above Integrated and the only one with a launch evidence
       test. Copilot’s launch always fails by construction. Codex and Windsurf
       inject the proxy variable with no CA trust, which is the configuration
-      measured as failing the handshake silently. Running the launch with the
-      no-proxy flag is an announced bypass. An unmanaged launch is a bypass and
-      is not detectable.
+      measured as failing the handshake silently. aasm run --no-proxy is an
+      announced bypass. An unmanaged launch is a bypass and is not detectable.
     </Translate>
   ),
 };
