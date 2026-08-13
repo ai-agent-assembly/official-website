@@ -8,10 +8,11 @@ import {ROLE_NARRATIVES, RISK_SCENARIOS} from './shared';
  * AAASM-5587 — the shared claim register, as the four role surfaces render it.
  *
  * `role-narratives.md` on the Docs Hub owns this register and gives sixteen
- * entries; the ten below are the ones the four briefs cite as intervention
- * claims. The remaining six — RC7, RC8, RC9, RC12, RC14, RC16 — are cited only
- * inside a Limitations section, in the prose of the brief that cites them, and
- * so have no card here.
+ * entries, and all sixteen are here. Ten are cited as intervention claims and
+ * render as cards; the other six — RC7, RC8, RC9, RC12, RC14, RC16 — are cited
+ * only inside a Limitations section and render there, through the same shared
+ * objects, so that every register sentence anywhere on these four pages carries
+ * the term that says how far it reaches and the bound that limits it.
  *
  * WHY THIS IS ONE MODULE AND NOT FOUR COPIES
  * ------------------------------------------
@@ -329,6 +330,161 @@ export const RC15: Claim = {
       inject the proxy variable with no CA trust, which is the configuration
       measured as failing the handshake silently. aasm run --no-proxy is an
       announced bypass. An unmanaged launch is a bypass and is not detectable.
+    </Translate>
+  ),
+};
+
+/*
+ * THE SIX ENTRIES THE BRIEFS CITE ONLY INSIDE A LIMITATIONS SECTION
+ * -----------------------------------------------------------------
+ * RC7, RC8, RC9, RC12, RC14 and RC16. They were hand-written prose in each
+ * brief until the seam that produced showed up in review: the register's claim
+ * SENTENCE for RC8 and RC16 had been pulled into a limitation without the term
+ * that says how far it reaches, and RC14 had drifted into two versions — the
+ * security page listing HTTP/2, gRPC, WebSocket and MCP-over-WebSocket as
+ * outside the transport set, the platform page listing only UDP, QUIC and
+ * HTTP/3. The operator got the shorter list. Nothing caught it, because the two
+ * lists were two hand-written strings in two files.
+ *
+ * They live here now for the same reason the other ten do. An entry cited by
+ * three pages is one object cited three times, so the three cannot disagree.
+ *
+ * RC9 carries an ADR 0030 protection state rather than an ADR 0033 §6 term, and
+ * RC12's claim is the register's literal "No claim." Both are rendered as the
+ * register writes them rather than normalised into the shape of the others.
+ */
+
+export const RC7: Claim = {
+  rc: 'RC7',
+  term: <Translate id="roles.rc7.term">Unmeasured</Translate>,
+  text: (
+    <Translate id="roles.rc7.text">
+      Where nothing inspected an action, the record says nothing was inspected —
+      not that it was allowed.
+    </Translate>
+  ),
+  bound: (
+    <Translate id="roles.rc7.bound">
+      Scoped to the action or payload, never to the connection: a host the proxy
+      does not intercept is still adjudicated at CONNECT, so its connection is
+      Observed while its payload is Unmeasured. One live defect runs against
+      this rule today — the CONNECT-level event still records an allow for
+      traffic about to be tunnelled uninspected (AAASM-5637) — so state it as
+      the rule and the open defect together, not as finished behaviour.
+    </Translate>
+  ),
+};
+
+export const RC8: Claim = {
+  rc: 'RC8',
+  term: <Translate id="roles.rc8.term">Observed · Detected</Translate>,
+  text: (
+    <Translate id="roles.rc8.text">
+      On Linux, kernel probes report TLS plaintext, process execution and file
+      activity.
+    </Translate>
+  ),
+  bound: (
+    <Translate id="roles.rc8.bound">
+      No eBPF signal participates in any allow or deny decision. The one
+      enforcing program is an opt-in syscall guard that terminates a confined
+      process after the offending syscall has already run, which is Detected,
+      not Denied before execution. File-I/O probes are x86_64 only. The
+      privileged loader daemon that owns every kernel operation reaches
+      crates.io only — it is absent from the GitHub Release assets, the Homebrew
+      tap and the install script.
+    </Translate>
+  ),
+};
+
+export const RC9: Claim = {
+  rc: 'RC9',
+  term: (
+    <Translate id="roles.rc9.term">— (ADR 0030 protection state)</Translate>
+  ),
+  text: (
+    <Translate id="roles.rc9.text">
+      The managed launch for Claude Code on macOS is the one path that reaches
+      ADR 0030’s HostEnforced rung.
+    </Translate>
+  ),
+  bound: (
+    <Translate id="roles.rc9.bound">
+      ADR 0030 §4.1 makes HostEnforced the only state that claims bypass
+      resistance, and exactly one manifest row carries it. Two things bound it
+      hard. The rung rests on reading back a root-owned managed-settings file,
+      and whether the tool honours those keys at runtime is unmeasured. And the
+      manifest records the rung as unearned at the published v0.0.1-rc.6 tag —
+      the evidence it rests on postdates the tag. macOS host-level interception
+      itself is integrated, scoped to tool governance only: claim the file,
+      never the enforcement.
+    </Translate>
+  ),
+};
+
+/*
+ * RC12's bound ends with an instruction to whoever is writing the page — "Do
+ * not write 'held for human review', 'approval workflow', or any wording
+ * implying a reviewer acts." That sentence is not rendered, and the omission is
+ * deliberate rather than an abridgement of the bound.
+ *
+ * It is addressed to an author, not to a reader, and it is the one sentence in
+ * the register whose verbatim rendering would publish the three phrasings the
+ * product refuses to publish. The register can hold them because its own
+ * rejected-wording section sits inside a `claim-gate:ignore` block; a role page
+ * has no such exemption and should not acquire one. Everything in the bound
+ * that tells a reader what they do and do not get is rendered.
+ */
+export const RC12: Claim = {
+  rc: 'RC12',
+  term: <Translate id="roles.rc12.term">Approval required</Translate>,
+  text: <Translate id="roles.rc12.text">No claim.</Translate>,
+  bound: (
+    <Translate id="roles.rc12.bound">
+      No manifest row reaches this term. The hold itself is real in the gateway
+      path and fails closed on timeout, but no shipped operator surface can
+      answer it, and inside the MCP tunnel a pending decision is downgraded to a
+      refusal, so a human cannot be reached there either. AAASM-5657.
+    </Translate>
+  ),
+};
+
+export const RC14: Claim = {
+  rc: 'RC14',
+  term: <Translate id="roles.rc14.term">Unsupported</Translate>,
+  text: (
+    <Translate id="roles.rc14.text">
+      Named transports and platforms are not available, and the matrix says
+      which.
+    </Translate>
+  ),
+  bound: (
+    <Translate id="roles.rc14.bound">
+      Windows has no local mediation of any kind. UDP, QUIC and HTTP/3 are
+      outside the transport set; so are HTTP/2, gRPC and WebSocket over an
+      intercepted host, and MCP over WebSocket. Unsupported for one element is
+      not Unsupported for the product.
+    </Translate>
+  ),
+};
+
+export const RC16: Claim = {
+  rc: 'RC16',
+  term: <Translate id="roles.rc16.term">Evaluated</Translate>,
+  text: (
+    <Translate id="roles.rc16.text">
+      An agent registers with an Ed25519 did:key identity and a possession
+      proof, and delegation lineage is derived server-side.
+    </Translate>
+  ),
+  bound: (
+    <Translate id="roles.rc16.bound">
+      The agent plane is reachable without authentication by design, as a
+      bootstrap path: an unauthenticated caller that can reach it can register
+      and can submit policy queries. Those queries are evaluated with tenancy
+      neutralised rather than with the caller’s own, so the exposure is that the
+      plane accepts the call. Org scoping is applied per call site rather than
+      at the storage layer. Do not describe the agent plane as authenticated.
     </Translate>
   ),
 };
