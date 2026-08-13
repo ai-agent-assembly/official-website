@@ -32,7 +32,11 @@ import styles from './narrative.module.css';
  * What this page deliberately does NOT do:
  *
  *   - It does not restate `/`'s default-posture table. One product truth, one
- *     owner per surface; a second copy drifts inside a release.
+ *     owner per surface; a second copy of a nine-row table drifts inside a
+ *     release. It does publish three of that table's rows and link to the rest,
+ *     because "one owner" is an argument against duplicating the table and not
+ *     an argument for having no pointer — see the comment above the posture
+ *     section for which three, and why those.
  *   - It does not draw the architecture. That is `/how-it-works`, which is where
  *     the shape can be given enough room to be correct.
  *   - It does not touch `/`. `/#architecture` and `/#security` are live links and
@@ -639,6 +643,114 @@ export default function Product(): ReactNode {
               </div>
             ))}
           </div>
+        </section>
+
+        {/*
+         * The default posture, in three facts.
+         *
+         * This page used to publish none of it, on a "one owner per surface"
+         * rationale: `/` holds the nine-row default-posture table, and a second
+         * copy of a table drifts from the first inside a release. That reasoning
+         * is right about the TABLE and wrong about the page. `/product` is the
+         * navbar's Product item, with its own meta description and its own
+         * sitemap entry, so a reader arriving from search never saw `/` at all —
+         * and two of those rows are ones `product-promise.md` says must be
+         * stated wherever the product is described:
+         *
+         *   - "an action matching no rule → Allowed … state both halves or the
+         *     pair misleads". Omitting it is an accuracy defect: the page listed
+         *     six things a policy refuses and never said what happens to the
+         *     seventh.
+         *   - "launching a session with no policy → Refused … an absent policy
+         *     is not permission", which the same source calls the strongest
+         *     default-on behaviour in the product and the easiest to leave out
+         *     of a comparison. Omitting it is the mirror defect — understating a
+         *     shipped control is graded the same way as overstating one.
+         *
+         * The third is the always-on private-address guard. It is here rather
+         * than only inside the destinations card because it is one of the two
+         * unambiguous shipped wins on this page, and it was carrying an abstract
+         * sentence where the rest of the site gets a scenario.
+         *
+         * These are stated as postures, not as cards with a separate bound: a
+         * default-posture sentence carries its own scope, which is why `/`
+         * publishes them the same way. The full table stays `/`'s, and the link
+         * below is the pointer this page was missing — not a copy of it.
+         */}
+        <section className={styles.block}>
+          <div className={styles.eyebrow}>
+            <Translate id="product.posture.eyebrow">Out of the box</Translate>
+          </div>
+          <h2 className={styles.blockTitle}>
+            <Translate id="product.posture.title">
+              Three defaults, before you configure anything
+            </Translate>
+          </h2>
+          <p className={styles.p}>
+            <Translate id="product.posture.lead">
+              A capability that exists but is off is a different product from
+              one that is on. Two of these are stronger than an evaluator
+              usually expects, and the third is the one most often left out of a
+              comparison because it cuts the other way.
+            </Translate>
+          </p>
+          <div className={styles.grid3}>
+            <div className={styles.panel}>
+              <p className={styles.panelTitle}>
+                <Translate id="product.posture.launch.title">
+                  Launching a session with no policy — refused
+                </Translate>
+              </p>
+              <p className={styles.p}>
+                <Translate id="product.posture.launch.text">
+                  aasm run will not start a tool when no effective policy
+                  resolves, and will not start one whose policy parses but
+                  declares no rule. An absent policy is not permission, and an
+                  empty policy is unconfigured rather than allow-all. Both
+                  refuse before anything launches.
+                </Translate>
+              </p>
+            </div>
+            <div className={styles.panel}>
+              <p className={styles.panelTitle}>
+                <Translate id="product.posture.egress.title">
+                  Private-address egress — refused, always
+                </Translate>
+              </p>
+              <p className={styles.p}>
+                <Translate id="product.posture.egress.text">
+                  An agent handed a link to a cloud metadata address, or to an
+                  internal hostname that resolves into your own network, is
+                  refused before the proxy dials. The guard re-checks each
+                  resolved address rather than the name, so a public hostname
+                  that resolves into private space is refused too. No
+                  configuration and no environment variable relaxes it.
+                </Translate>
+              </p>
+            </div>
+            <div className={styles.panel}>
+              <p className={styles.panelTitle}>
+                <Translate id="product.posture.fallthrough.title">
+                  An action matching no rule — allowed
+                </Translate>
+              </p>
+              <p className={styles.p}>
+                <Translate id="product.posture.fallthrough.text">
+                  Once a policy is in force, an action matching no network,
+                  tool, capability or approval rule is allowed. Default-open
+                  within a policy, default-refuse on having one — both halves,
+                  or the pair misleads.
+                </Translate>
+              </p>
+            </div>
+          </div>
+          <p className={styles.sectionFoot}>
+            <Link className={styles.link} to="/#current-position">
+              <Translate id="product.posture.table">
+                The full default posture, row by row →
+              </Translate>
+            </Link>
+          </p>
         </section>
 
         <section className={styles.block}>
