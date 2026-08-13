@@ -398,81 +398,120 @@ function limits(): readonly string[] {
 }
 
 interface Check {
-  readonly title: string;
-  readonly text: string;
-  readonly linkLabel: string;
+  /** Stable render key. Was `title`, which stopped being a string when the
+   *  copy moved to `<Translate>` elements. */
+  readonly key: string;
+  readonly title: ReactNode;
+  readonly text: ReactNode;
+  readonly linkLabel: ReactNode;
   readonly href: string;
   readonly targetProduct: 'docs' | 'github';
 }
 
-/** Proof means a claim a reader can reach the evidence for, not a confident sentence. */
+/**
+ * Proof means a claim a reader can reach the evidence for, not a confident sentence.
+ *
+ * The copy is held as `<Translate>` elements, the form the other 71 translated
+ * strings on this page already use, rather than as `translate()` calls. Both
+ * extract the same id and message, so this is a form choice, not a content one —
+ * but the call form made this block a 69-line token-for-token duplicate of the
+ * homepage's proof section (`src/components/home/index.tsx`), which publishes the
+ * same four subjects at Level 2 with its own shorter copy. That parallel is
+ * deliberate and required: ADR 0034 puts `/product` at or below `/`, so the two
+ * pages carry the same proof subjects on purpose. Deduplicating it for real would
+ * mean a shared component in `src/components/home/**`, which AAASM-5594's
+ * partition table assigns to AAASM-5585 and puts out of this ticket's reach.
+ */
 function checks(): readonly Check[] {
   return [
     {
-      title: translate({
-        id: 'product.proof.chain.title',
-        message: 'Verify the audit chain yourself',
-      }),
-      text: translate({
-        id: 'product.proof.chain.text',
-        message:
-          'aasm audit verify-chain ships in the open-source build. It proves the integrity of the entries that are present, not that the log is whole — and emission is best-effort, so a decision can be made and its record lost.',
-      }),
-      linkLabel: translate({
-        id: 'product.proof.chain.link',
-        message: 'What verification does and does not establish →',
-      }),
+      key: 'chain',
+      title: (
+        <Translate id="product.proof.chain.title">
+          Verify the audit chain yourself
+        </Translate>
+      ),
+      text: (
+        <Translate id="product.proof.chain.text">
+          aasm audit verify-chain ships in the open-source build. It proves the
+          integrity of the entries that are present, not that the log is whole —
+          and emission is best-effort, so a decision can be made and its record
+          lost.
+        </Translate>
+      ),
+      linkLabel: (
+        <Translate id="product.proof.chain.link">
+          What verification does and does not establish →
+        </Translate>
+      ),
       href: SECURITY_DOC,
       targetProduct: 'docs',
     },
     {
-      title: translate({
-        id: 'product.proof.policy.title',
-        message: 'Read the rule that produced the decision',
-      }),
-      text: translate({
-        id: 'product.proof.policy.text',
-        message:
-          'Policy is versioned YAML or JSON you review through the Git workflow you already use. The field reference is published, so a rule described on this site is a rule you can look up.',
-      }),
-      linkLabel: translate({
-        id: 'product.proof.policy.link',
-        message: 'Policy field reference →',
-      }),
+      key: 'policy',
+      title: (
+        <Translate id="product.proof.policy.title">
+          Read the rule that produced the decision
+        </Translate>
+      ),
+      text: (
+        <Translate id="product.proof.policy.text">
+          Policy is versioned YAML or JSON you review through the Git workflow
+          you already use. The field reference is published, so a rule described
+          on this site is a rule you can look up.
+        </Translate>
+      ),
+      linkLabel: (
+        <Translate id="product.proof.policy.link">
+          Policy field reference →
+        </Translate>
+      ),
       href: POLICY_DOC,
       targetProduct: 'docs',
     },
     {
-      title: translate({
-        id: 'product.proof.register.title',
-        message: 'Trace any sentence above to its bound',
-      }),
-      text: translate({
-        id: 'product.proof.register.text',
-        message:
-          'Each capability sentence on this page is one of sixteen entries in a shared claim register, quoted rather than paraphrased. Every entry carries the term it reaches, the bound that travels with it, and the evidence rows behind it — including the two subjects the register records as unmeasured.',
-      }),
-      linkLabel: translate({
-        id: 'product.proof.register.link',
-        message: 'The claim register →',
-      }),
+      key: 'register',
+      title: (
+        <Translate id="product.proof.register.title">
+          Trace any sentence above to its bound
+        </Translate>
+      ),
+      text: (
+        <Translate id="product.proof.register.text">
+          Each capability sentence on this page is one of sixteen entries in a
+          shared claim register, quoted rather than paraphrased. Every entry
+          carries the term it reaches, the bound that travels with it, and the
+          evidence rows behind it — including the two subjects the register
+          records as unmeasured.
+        </Translate>
+      ),
+      linkLabel: (
+        <Translate id="product.proof.register.link">
+          The claim register →
+        </Translate>
+      ),
       href: CLAIMS_DOC,
       targetProduct: 'docs',
     },
     {
-      title: translate({
-        id: 'product.proof.source.title',
-        message: 'Read the runtime that makes the decision',
-      }),
-      text: translate({
-        id: 'product.proof.source.text',
-        message:
-          'The gateway, proxy, CLI and SDKs are Apache-2.0 on GitHub, with the tests that pin each behaviour described here. What is open source and what is not is stated rather than implied.',
-      }),
-      linkLabel: translate({
-        id: 'product.proof.source.link',
-        message: 'The open-core boundary →',
-      }),
+      key: 'source',
+      title: (
+        <Translate id="product.proof.source.title">
+          Read the runtime that makes the decision
+        </Translate>
+      ),
+      text: (
+        <Translate id="product.proof.source.text">
+          The gateway, proxy, CLI and SDKs are Apache-2.0 on GitHub, with the
+          tests that pin each behaviour described here. What is open source and
+          what is not is stated rather than implied.
+        </Translate>
+      ),
+      linkLabel: (
+        <Translate id="product.proof.source.link">
+          The open-core boundary →
+        </Translate>
+      ),
       href: OPEN_CORE_DOC,
       targetProduct: 'docs',
     },
@@ -717,7 +756,7 @@ export default function Product(): ReactNode {
           </h2>
           <div className={styles.grid2}>
             {checks().map((c) => (
-              <div key={c.title} className={styles.card}>
+              <div key={c.key} className={styles.card}>
                 <h3 className={styles.cardTitle}>{c.title}</h3>
                 <p className={styles.cardText}>{c.text}</p>
                 <TrackedLink
