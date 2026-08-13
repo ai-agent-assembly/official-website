@@ -5,6 +5,7 @@ import Translate, {translate} from '@docusaurus/Translate';
 import {TrackedLink} from '@site/src/components/Tracked';
 import type {RoleBrief, ProofLink, NextStep} from './types';
 import {ROLE_BRIEFS, rolePath} from './briefs';
+import {ROLE_NARRATIVES} from './briefs/shared';
 import narrative from '@site/src/pages/narrative.module.css';
 import styles from './styles.module.css';
 
@@ -108,6 +109,31 @@ function Destination({
   );
 }
 
+/*
+ * The register is linked, not just named.
+ *
+ * Every page here cites entries by number, and some bounds cite an entry no
+ * card on that page carries — RC15's "via RC1" on the platform page is the
+ * clearest case. A number a reader cannot resolve is a citation in appearance
+ * only, so the sentence introducing the register ends in a route to it.
+ */
+function RegisterLink(): ReactNode {
+  return (
+    <TrackedLink
+      eventName="cta_view_docs_click"
+      ctaLocation="body"
+      targetProduct="docs"
+      alsoFire={['docs_click']}
+      to={ROLE_NARRATIVES}
+      linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
+    >
+      <Translate id="roles.intervention.registerLink">
+        the shared claim register
+      </Translate>
+    </TrackedLink>
+  );
+}
+
 export default function RolePage({
   brief,
 }: {
@@ -196,11 +222,13 @@ export default function RolePage({
           </h2>
           <p className={narrative.p}>{brief.interventionLead}</p>
           <p className={narrative.p}>
-            <Translate id="roles.intervention.register">
-              Each card below is one entry of a sixteen-entry claim register
-              shared by all four of these pages, quoted rather than paraphrased.
-              The term says how far the claim reaches; the bound beside it is
-              part of the claim, not context for it.
+            <Translate
+              id="roles.intervention.register"
+              values={{register: <RegisterLink />}}
+            >
+              {
+                'Each card below is one entry of a sixteen-entry claim register shared by all four of these pages, quoted rather than paraphrased. The term says how far the claim reaches; the bound beside it is part of the claim, not context for it. Every entry \u2014 including the ones this page does not cite \u2014 is published with the manifest rows behind it: {register}.'
+              }
             </Translate>
           </p>
           <div className={narrative.cardGrid}>
