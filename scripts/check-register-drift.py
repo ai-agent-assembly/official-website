@@ -42,7 +42,7 @@ fail on every row. The locale risk is a different check and a different ticket.
 
 USAGE
 -----
-    python3 scripts/check-register-drift.py build --register <path|url>
+    python3 scripts/check-register-drift.py build [--register <path>]
 
 With no `--register`, it fetches the published register over https from a
 constant URL. Pass `--register <path>` to compare against a local
@@ -205,7 +205,12 @@ def extract(build_dir: str) -> dict[str, dict]:
                 rec = found.setdefault(
                     rc, {"kind": kind, "pages": {}, "term": term}
                 )
-                rec["pages"][page] = (norm(term), norm(text), norm(bound))
+                # Keyed by (page, kind), not by page. No page renders one entry
+                # twice today, but keying on page alone means a second instance
+                # silently overwrites the first — and the check whose whole job
+                # is catching two renderings that disagree would be the thing
+                # hiding them.
+                rec["pages"][(page, kind)] = (norm(term), norm(text), norm(bound))
     return found
 
 
@@ -217,7 +222,8 @@ def compare(rows, found, declared: list[str] | None = None) -> list[str]:
     for rc in sorted(found, key=lambda x: int(x[2:])):
         rec = found[rc]
         if rc not in rows:
-            problems.append(f"{rc}: rendered on {sorted(rec['pages'])} but not in the register")
+            where = sorted(pg for pg, _ in rec["pages"])
+            problems.append(f"{rc}: rendered on {where} but not in the register")
             continue
         reg = rows[rc]
         want = (norm(reg["term"]), norm(reg["claim"]), norm(reg["bound"]))
@@ -225,9 +231,10 @@ def compare(rows, found, declared: list[str] | None = None) -> list[str]:
         # An entry on several pages must be one entry, not several strings.
         distinct = set(rec["pages"].values())
         if len(distinct) > 1:
+            where = sorted(f"{pg} ({kd})" for pg, kd in rec["pages"])
             problems.append(
-                f"{rc}: rendered differently on {sorted(rec['pages'])} — an entry "
-                f"cited by N pages must be one object cited N times"
+                f"{rc}: rendered differently on {where} — an entry cited by N "
+                f"places must be one object cited N times"
             )
             continue
 
@@ -298,7 +305,11 @@ def main() -> int:
               f"the register's table shape changed and this parser did not")
         return 2
 
-    found = extract(args.build)
+    try:
+        found = extract(args.build)
+    except OSError as exc:
+        print(f"FAIL: {exc}")
+        return 2
     print(f"register entries in source : {len(rows)}")
     print(f"register entries rendered  : {len(found)}")
 
@@ -311,7 +322,7 @@ def main() -> int:
     declared: list[str] = []
     problems = compare(rows, found, declared)
     for rc in sorted(found, key=lambda x: int(x[2:])):
-        pages = ",".join(sorted(found[rc]["pages"]))
+        pages = ",".join(sorted({pg for pg, _ in found[rc]["pages"]}))
         print(f"  {rc:<5} {found[rc]['kind']:<11} {pages}")
     print()
     for note in declared:
