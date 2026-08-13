@@ -127,6 +127,17 @@
   margin-top: 1.5rem;
 }
 /*
+ * Fixed two columns, matching the homepage's four-card sections. Used where a
+ * section has exactly four cards: auto-fit lays those out three-then-one at a
+ * desktop width, and the orphan reads as a card someone forgot to finish.
+ */
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+/*
  * auto-fit rather than a fixed column count: the role cards and the
  * decision-subject cards do not come in the same number, and a page that
  * hard-codes three leaves a widow when a card is added or dropped.
@@ -476,6 +487,7 @@
     padding: 3rem 1rem 4rem;
   }
   .cols,
+  .grid2,
   .grid3,
   .field,
   .fieldSpan {

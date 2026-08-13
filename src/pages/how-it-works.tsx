@@ -867,7 +867,7 @@ export default function HowItWorks(): ReactNode {
               because a second copy drifts from the first inside one release.
             </Translate>
           </p>
-          <div className={styles.cardGrid}>
+          <div className={styles.grid2}>
             <div className={styles.card}>
               <h3 className={styles.cardTitle}>
                 <Translate id="hiw.deeper.adr.title">

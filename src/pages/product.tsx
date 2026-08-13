@@ -715,7 +715,7 @@ export default function Product(): ReactNode {
               Four things you can check without taking our word for it
             </Translate>
           </h2>
-          <div className={styles.cardGrid}>
+          <div className={styles.grid2}>
             {checks().map((c) => (
               <div key={c.title} className={styles.card}>
                 <h3 className={styles.cardTitle}>{c.title}</h3>
