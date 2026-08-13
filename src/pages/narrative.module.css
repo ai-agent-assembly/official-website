@@ -166,8 +166,14 @@
   color: var(--aa-text);
   font-weight: 700;
 }
-/* The ADR 0033 §6 term a claim reaches — an engineering word, kept legible. */
+/*
+ * The ADR 0033 §6 term a claim reaches — an engineering word, kept legible.
+ * inline-block because it appears both as a card's first child (flex context)
+ * and inline at the head of a table cell, and an inline element would drop its
+ * vertical padding into the line above.
+ */
 .termBadge {
+  display: inline-block;
   align-self: flex-start;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
