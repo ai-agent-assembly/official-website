@@ -61,6 +61,7 @@ import html
 import pathlib
 import re
 import sys
+import urllib.parse
 import urllib.request
 
 DEFAULT_REGISTER = (
@@ -101,18 +102,24 @@ def load_register(src: str) -> str:
 
     Only https is accepted. The register is the artifact every claim on four
     public pages is checked against, so fetching it over a channel that can be
-    rewritten in transit would make a PASS meaningless — an attacker who can
-    edit the response can make any drift look clean.
+    rewritten in transit would make a PASS meaningless — anyone able to edit the
+    response can make any drift look clean.
+
+    The scheme is parsed rather than string-matched, so this rejects `ftp://`
+    and `file://` as well as cleartext http, and is not fooled by case. A local
+    path has no scheme and falls through to the file branch.
     """
-    if src.startswith("https://"):
-        with urllib.request.urlopen(src, timeout=30) as fh:  # noqa: S310
-            return fh.read().decode("utf-8")
-    if src.startswith("http://"):
+    scheme = urllib.parse.urlsplit(src).scheme.lower()
+    if not scheme:
+        return _local_file(src, ".md").read_text(encoding="utf-8")
+    if scheme != "https":
         raise ValueError(
-            "refusing to fetch the register over http — an in-transit rewrite "
-            "would make a clean result meaningless; use https"
+            f"refusing to fetch the register over {scheme} — only https is "
+            f"accepted, because an in-transit rewrite would make a clean "
+            f"result meaningless"
         )
-    return _local_file(src, ".md").read_text(encoding="utf-8")
+    with urllib.request.urlopen(src, timeout=30) as fh:  # noqa: S310
+        return fh.read().decode("utf-8")
 
 
 def parse_register(md: str) -> dict[str, dict[str, str]]:
