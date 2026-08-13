@@ -3,7 +3,7 @@ import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import Translate, {translate} from '@docusaurus/Translate';
 import {DOCS_URL} from '@site/src/generated/site-urls';
-import styles from './product.module.css';
+import styles from './narrative.module.css';
 
 const DOCS = DOCS_URL;
 const GITHUB = 'https://github.com/ai-agent-assembly';
