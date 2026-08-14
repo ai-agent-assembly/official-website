@@ -175,6 +175,14 @@ def main() -> int:
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
 
+    if args.json_out is not None and (
+        not re.fullmatch(r"[A-Za-z0-9._/-]+", args.json_out) or ".." in args.json_out
+    ):
+        # Checked here, in the frame that performs the write, as well as inside
+        # safe_output_path. A guard one call away is a guard a reader has to go
+        # looking for.
+        parser.error("--json must be a relative path of plain name segments")
+
     if args.self_test:
         return self_test()
     if not args.origin:
