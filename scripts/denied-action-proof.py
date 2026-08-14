@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Bind /denied-action-proof to the recording it publishes. AAASM-5589.
 
-    python3 scripts/denied-action-proof.py generate      # recording -> module
-    python3 scripts/denied-action-proof.py check build   # built page vs recording
+    python3 scripts/denied-action-proof.py generate          # recording -> module
+    python3 scripts/denied-action-proof.py check build       # built page vs recording
+    python3 scripts/denied-action-proof.py compare BASE.json # re-record vs a baseline
 
 Standard library only, and no network. That is what lets the CI gate run on the
 runner's system `python3` with no install step, which is what keeps it cheap
@@ -40,6 +41,7 @@ import html
 import json
 import re
 import sys
+from datetime import date
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
@@ -124,11 +126,43 @@ def project(recording: dict) -> dict[str, Any]:
     }
 
 
+#: The one field a re-record is allowed to change.
+#:
+#: `scripts/denied-action-capture.py` takes the capture date from the clock
+#: inside the run and offers no way to override it, so this field advances when
+#: and only when the measurement was actually re-taken. Naming it here, in one
+#: place, is what lets `compare` demand equality of everything else instead of
+#: settling for a vague "roughly the same" -- an exclusion that is enumerated
+#: can be argued with; one that is implied cannot.
+REPRODUCTION_EXCLUSIONS = (("provenance", "capturedOn"),)
+
+
+def _check_captured_on(data: dict[str, Any]) -> None:
+    """The capture date is excluded from comparison, so it is checked instead.
+
+    A field nothing compares is a field anything can be. Excluding it from
+    `compare` without asserting it separately would create exactly the hole the
+    exclusion was meant to be narrow enough to avoid.
+    """
+    raw = data.get("provenance", {}).get("capturedOn")
+    try:
+        captured = date.fromisoformat(str(raw))
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"provenance.capturedOn is not an ISO date: {raw!r}") from exc
+    today = date.today()
+    if captured > today:
+        raise ValueError(
+            f"provenance.capturedOn is in the future: {captured} > {today} — "
+            "a recording cannot have been taken on a day that has not happened"
+        )
+
+
 def read_recording() -> dict[str, Any]:
     data = json.loads(RECORDING.read_text(encoding="utf-8"))
     for key in ("provenance", "scenario", "arms", "totals"):
         if key not in data:
             raise ValueError(f"{RECORDING.name} has no {key!r} key")
+    _check_captured_on(data)
     if len(data["arms"]) != 3:
         raise ValueError(
             f"expected 3 arms in {RECORDING.name}, found {len(data['arms'])} — "
@@ -420,6 +454,52 @@ def cmd_check(args: argparse.Namespace) -> int:
     return 0
 
 
+def _strip_exclusions(data: dict[str, Any]) -> dict[str, Any]:
+    stripped = json.loads(json.dumps(data))
+    for path in REPRODUCTION_EXCLUSIONS:
+        node = stripped
+        for key in path[:-1]:
+            node = node.get(key, {})
+        node.pop(path[-1], None)
+    return stripped
+
+
+def cmd_compare(args: argparse.Namespace) -> int:
+    """Assert a re-record reproduces a baseline everywhere it is allowed to."""
+    try:
+        current = read_recording()
+        baseline = json.loads(Path(args.baseline).read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        print(f"FAIL: {exc}")
+        return 2
+
+    print(f"baseline  : {args.baseline}")
+    print(f"current   : {RECORDING.relative_to(REPO)}")
+    for path in REPRODUCTION_EXCLUSIONS:
+        dotted = ".".join(path)
+        was = baseline
+        now = current
+        for key in path:
+            was = was.get(key, "<missing>") if isinstance(was, dict) else "<missing>"
+            now = now.get(key, "<missing>") if isinstance(now, dict) else "<missing>"
+        moved = "advanced" if was != now else "unchanged"
+        print(f"excluded  : {dotted}  {was} -> {now}  ({moved})")
+
+    if _strip_exclusions(current) != _strip_exclusions(baseline):
+        print(
+            "\nFAIL: the re-record differs from the baseline in a measured field.\n"
+            "      Everything except the excluded field above must reproduce exactly;\n"
+            "      a difference here is a difference in behaviour, not in the weather."
+        )
+        return 1
+
+    print(
+        "\nPASS: every measured field reproduced exactly — the three runs, the "
+        "decision, the listings and the versions."
+    )
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -430,6 +510,12 @@ def main() -> int:
     c = sub.add_parser("check", help="built page vs the recording (no network)")
     c.add_argument("build", nargs="?", default="build")
     c.set_defaults(fn=cmd_check)
+
+    p_cmp = sub.add_parser(
+        "compare", help="a re-record vs a baseline, ignoring the capture date"
+    )
+    p_cmp.add_argument("baseline", help="path to the recording to compare against")
+    p_cmp.set_defaults(fn=cmd_compare)
 
     args = ap.parse_args()
     return args.fn(args)
