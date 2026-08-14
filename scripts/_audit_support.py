@@ -50,19 +50,38 @@ class Recorder:
 
 
 def _resolved_within(raw: str, root: Path | None, verb: str) -> Path:
-    """Resolve `raw` against `root` and refuse a result that escapes it.
+    """Build a path under `root` from segments of `raw` that are each checked.
 
-    Resolving first and then testing the RESOLVED path is what makes this
-    worth having: it is not fooled by `..` segments, by a symlink, or by
-    separators embedded mid-string, all of which survive a check on the raw
-    text.
+    The path handed back is assembled from a trusted base plus segments that
+    have individually been proven not to be traversal — it is not the caller's
+    string with a check performed alongside it. That distinction is the whole
+    point: a validate-then-use-the-original shape leaves the original in play,
+    and a reader (or a scanner) cannot tell by looking that the value reaching
+    the filesystem is the value that was approved.
+
+    An absolute path is accepted only if it already sits inside `root`, and is
+    then re-derived the same way.
     """
     base = (root or Path.cwd()).resolve()
     candidate = Path(raw).expanduser()
-    resolved = (base / candidate).resolve() if not candidate.is_absolute() else candidate.resolve()
-    if resolved != base and base not in resolved.parents:
-        raise ValueError(f"refusing to {verb} outside {base}: {raw}")
-    return resolved
+
+    if candidate.is_absolute():
+        try:
+            parts = candidate.resolve().relative_to(base).parts
+        except ValueError as exc:
+            raise ValueError(f"refusing to {verb} outside {base}: {raw}") from exc
+    else:
+        parts = candidate.parts
+
+    safe: list[str] = []
+    for part in parts:
+        if part in {"", ".", ".."} or part != Path(part).name:
+            raise ValueError(f"refusing to {verb} outside {base}: {raw}")
+        safe.append(part)
+    if not safe:
+        raise ValueError(f"empty path, refusing to {verb}: {raw}")
+
+    return base.joinpath(*safe)
 
 
 def safe_output_path(raw: str, *, root: Path | None = None) -> Path:
