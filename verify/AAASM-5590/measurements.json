@@ -1,0 +1,94 @@
+{
+  "ticket": "AAASM-5590",
+  "measured_at": "2026-08-14",
+  "tree": "origin/main @ 5e97cc0 (AAASM-5589 merged) plus this branch",
+  "how": "pnpm build, then pnpm serve on :5590. Production build, not the dev server — the unquoted-attribute behaviour these checks are written against is a minifier artifact and does not appear under `pnpm start`.",
+
+  "routes": {
+    "tool": "scripts/check-route-health.py",
+    "self_test": "7/7",
+    "sitemaps_read": {"sitemap.xml": 44, "zh-Hant/sitemap.xml": 44},
+    "unique_routes_swept": 44,
+    "status_200": 44,
+    "not_200": 0,
+    "control": {
+      "url": "/aaasm-5590-control-no-such-page/",
+      "expected": 404,
+      "observed": 404,
+      "conclusive": true
+    },
+    "note": "Baseline recorded 21 routes. 22 en routes exist now: AAASM-5589 added /denied-action-proof. The remaining 22 are zh-Hant."
+  },
+
+  "metadata": {
+    "tool": "scripts/audit-page-metadata.py",
+    "self_test": "18/18, including an unquoted-attribute fixture and a negative control proving a quote-only regex finds nothing in it",
+    "pages_scanned": 46,
+    "with_canonical": 46,
+    "with_hreflang_alternates": 46,
+    "missing_description": {"before": 8, "after": 2, "remaining": ["/404/", "/zh-Hant/404/"]},
+    "duplicate_description_groups": 9,
+    "term_not_in_body": 0,
+    "ladder_upgrade": 0,
+    "note": "term_not_in_body and ladder_upgrade are the SEO acceptance criterion. Both zero, from a checker whose fixtures trip on a planted violation."
+  },
+
+  "sitemap_locales": {
+    "before": {"sitemap.xml": {"total": 22, "zh_Hant": 0}, "zh-Hant/sitemap.xml": {"total": 22, "zh_Hant": 22}},
+    "after": {"sitemap.xml": {"total": 44, "zh_Hant": 22}, "zh-Hant/sitemap.xml": {"total": 44, "zh_Hant": 22}},
+    "why_it_mattered": "The served robots.txt is Cloudflare-managed and carries no Sitemap: line, so /zh-Hant/sitemap.xml had nothing pointing at it while the HTML hreflang alternates named both locales."
+  },
+
+  "accessibility": {
+    "viewports": ["1280x900", "375x812"],
+    "main_landmark": {
+      "before": {"present": ["/", "/early-access", "/blog", "/404"], "absent": ["/product", "/how-it-works", "/trust", "/denied-action-proof", "/arena", "/roles", "/roles/security", "/roles/engineering", "/roles/platform", "/roles/product-qa"]},
+      "after": "1 on each route checked"
+    },
+    "keyboard": {
+      "focusables_on_denied_action_proof": 25,
+      "positive_tabindex": 0,
+      "first_tab_stop": "Skip to main content",
+      "skip_link_target_exists": true,
+      "skip_link_end_to_end": "Tab -> Enter -> Tab lands on the first link inside <main>, bypassing the navbar. Verified with real key events, not element.focus().",
+      "focus_indicator": "outline-style auto, rgb(0,95,204)"
+    },
+    "contrast": {
+      "method": "WCAG 2.1 ratio computed per text-bearing element against its effective composited background",
+      "control": "a grey-on-grey node planted in the page before each scan; findings count moved 8->9 (light) and 0->1 (dark), and the planted node was named in the output",
+      "dark_mode": {"/": 0, "/denied-action-proof": 0, "note": "dark is the configured default mode and is clean"},
+      "light_mode": {
+        "/": 13, "/product": 12, "/how-it-works": 8, "/trust": 14,
+        "/denied-action-proof": 8, "/roles": 10, "/roles/security": 14, "/early-access": 9,
+        "drivers": [
+          {"color": "#0d9488 (--ifm-color-primary, body links)", "ratio": 3.74, "required": 4.5},
+          {"color": "#0d9488 on a tinted panel", "ratio": 3.48, "required": 4.5},
+          {"color": "#06231f on the Get started CTA", "ratio": 4.42, "required": 4.5},
+          {"color": "#8d949e (--ifm-color-emphasis-600, navbar items)", "ratio": 3.06, "required": 4.5}
+        ]
+      }
+    },
+    "reduced_motion": {"css_animations_on_denied_action_proof": 0, "note": "no running animation to suppress on the page measured"},
+    "images_missing_alt": 0,
+    "empty_links": 0,
+    "heading_order_skips": 0,
+    "h1_per_page": 1
+  },
+
+  "cloud_gating": {
+    "live_links_to_app_agent_assembly_com": 0,
+    "coming_soon_markers": 46,
+    "early_access_wording": "Cloud is a design-partner program, not generally available.",
+    "control": "an unquoted href=https://app.agent-assembly.com/login planted into a copy of the built page was found by the same grep (1 hit) that reports 0 against the real build"
+  },
+
+  "content_gates": {
+    "claims:selftest": "30/30",
+    "claims:check": "0 forbidden hits over 136 files (46 html, 84 js, 6 xml)",
+    "trust:check": "PASS, positive control PASS",
+    "proof:check": "PASS, positive control PASS — covers the AAASM-5589 page",
+    "typecheck": "clean",
+    "lint": "clean",
+    "format:check": "clean"
+  }
+}

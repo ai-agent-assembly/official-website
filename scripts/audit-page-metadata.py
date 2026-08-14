@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Audit the built site's per-page metadata against the page it describes.
 
-AAASM-5590. Reads `build/` output, never source: source is what we wrote, the
+AAASM-5590. Reads `build/` output rather than source: source is what we wrote, the
 build is what a crawler and a social card actually receive, and the two differ
 in exactly the way that matters here (see WHY A PARSER below).
 
@@ -9,14 +9,14 @@ WHAT THIS ANSWERS
 -----------------
 The story's SEO acceptance criterion is "SEO/metadata do not contain broader
 claims than visible page content". That is a containment question, not a
-spell-check: for every page, the governance vocabulary a metadata surface
+spell-check: for each page, the governance vocabulary a metadata surface
 asserts must also be asserted by the body a reader lands on. A description that
 promises `Denied before execution` above a page that only demonstrates
-`Detected` is the specific defect; it is invisible to any check that reads
+`Detected` is the specific defect; it is invisible to a check that reads
 metadata alone, because the sentence is perfectly true in isolation.
 
 Alongside that it inventories the two dull failures that were measured on this
-site and are worth keeping measured: pages with no description at all, and
+site and are worth keeping measured: pages carrying no description, and
 descriptions shared by several pages.
 
 WHY A PARSER, NOT A REGEX
@@ -28,14 +28,14 @@ contains a space:
     <meta data-rh=true name=description content="What Agent Assembly ..." />
 
 An extractor written for `href="..."` matches the second line and not the first,
-so it reports zero canonicals and zero hreflang alternates on every page and
+so it reports zero canonicals and zero hreflang alternates on each page and
 certifies the site clean. That shape has already produced a passing gate over
 real defects on a sibling site. `html.parser` decides quoting per attribute the
 way a browser does, so the class of bug cannot recur here by construction —
 and `--self-test` pins that with an unquoted fixture whose expected result is
 the values, not "no crash".
 
-The self-test is the point of this file as much as the audit is. Every check
+The self-test is the point of this file as much as the audit is. Each check
 below has a fixture that MUST trip it; a checker that silently matches nothing
 looks exactly like a clean site.
 """
@@ -193,7 +193,7 @@ def parse_html(html: str) -> PageMeta:
 def _terms_in(text: str) -> set[str]:
     """ADR 0033 §6 prose terms present in `text`, matched case-insensitively.
 
-    Word boundaries via `re`, never via `grep -E`, which accepts `\\b` and
+    Word boundaries via `re`, not via `grep -E`, which accepts `\\b` and
     silently ignores it. Longest-first so `Denied before execution` is not also
     reported as a bare match of some shorter overlapping term.
     """
@@ -289,7 +289,7 @@ def collect(build_dir: Path) -> list[PageMeta]:
 
 
 # --------------------------------------------------------------------------- #
-# self-test -- every check gets a fixture that must trip it
+# self-test -- each check gets a fixture that must trip it
 # --------------------------------------------------------------------------- #
 
 # The control this whole file exists for. Unquoted attributes, exactly as the
@@ -378,7 +378,7 @@ def self_test() -> int:
     )
 
     # --- C3 term containment -------------------------------------------------
-    broader = _page("/x/", "Denied before execution on every path.", "This page only Observed things.")
+    broader = _page("/x/", "Denied before execution on the routed path.", "This page only Observed things.")
     check(
         "C3 trips when metadata asserts a term the body does not",
         any(x.check == "term-not-in-body" for x in audit_pages([broader])),
@@ -419,7 +419,7 @@ def self_test() -> int:
         repr(_terms_in("undetected")),
     )
     # Body text must exclude script bodies, or a JS bundle mentioning a term
-    # would satisfy containment for a page that never shows it to a reader.
+    # would satisfy containment for a page that does not show it to a reader.
     scripted = parse_html(
         "<html><head><meta name=description content='Denied before execution'></head>"
         "<body><script>var x = 'Denied before execution';</script><p>Observed</p></body></html>"
@@ -455,7 +455,7 @@ def main() -> int:
     parser.add_argument(
         "--strict",
         action="store_true",
-        help="exit non-zero when any finding is reported",
+        help="exit non-zero when a finding is reported",
     )
     args = parser.parse_args()
 

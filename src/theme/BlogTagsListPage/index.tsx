@@ -9,7 +9,7 @@ import {translate} from '@docusaurus/Translate';
  * AAASM-5590 — give `/blog/tags` a description of its own.
  *
  * The theme renders `<PageMetadata title>` and no description, so this page
- * shipped with none at all and a search engine was free to synthesise one from
+ * shipped without one, and a search engine was free to synthesise it from
  * whatever text it found. Three listing routes were in that state; this is one.
  *
  * A wrapper rather than an ejected copy: the only thing wrong with the upstream
@@ -25,7 +25,7 @@ import {translate} from '@docusaurus/Translate';
  * The sentence describes the page and claims nothing about the product. A meta
  * description has no room to carry a bound beside a capability claim, which is
  * why the narrative routes carry the self-bounding product promise verbatim and
- * why an index page like this one carries no capability sentence at all. It also
+ * why an index page like this one carries no capability sentence. It also
  * avoids naming the current tag set, which would drift the moment a tag is added.
  *
  * `translate()` rather than a bare string: a bare const ships the English

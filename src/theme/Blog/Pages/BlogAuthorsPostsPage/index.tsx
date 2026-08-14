@@ -14,7 +14,7 @@ import {translate} from '@docusaurus/Translate';
  * The author's own `description` from `blog/authors.yml` is preferred when one
  * is set, because a hand-written sentence about a person beats a generated one
  * and it is the same string the page renders in its header — metadata and body
- * then say the same thing by construction. `authors.yml` sets none today, so
+ * then say the same thing by construction. `authors.yml` sets no description today, so
  * the generated fallback is what currently ships; the branch is here so that
  * adding one to the YAML is enough, with no second place to update.
  */

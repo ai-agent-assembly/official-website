@@ -63,7 +63,7 @@ const config: Config = {
            * locales, so the site was telling a crawler two different things
            * about which pages exist.
            *
-           * Each sitemap is made complete rather than only the default-locale
+           * Each sitemap lists both locales rather than only the default-locale
            * one: `/sitemap.xml` is the conventional discovery point and has to
            * be right, but a crawler that arrives at either file should learn
            * the same set, and a symmetric rule needs no branch on which locale

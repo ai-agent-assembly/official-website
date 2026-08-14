@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sweep every route the sitemaps advertise and report its HTTP status.
+"""Sweep each route the sitemaps advertise and report its HTTP status.
 
 AAASM-5590. Answers the story's "no regression in current routes" criterion
 against a served production build, and the "Cloud gating" half by asserting that
@@ -13,7 +13,7 @@ accident: an earlier shell version passed the whole URL list to `curl` as one
 argument, because zsh does not word-split unquoted variables. It produced a
 single `000`, reported no failures, and looked exactly like a clean run.
 
-So every sweep here carries a URL that MUST fail. `--self-test` proves the
+So each sweep here carries a URL that MUST fail. `--self-test` proves the
 classifier separates a 200 from a 404 from an unreachable host, and the live
 sweep appends a deliberately bogus path whose 404 is required for the run to be
 considered meaningful. If the control ever comes back 200 the sweep is reported
@@ -36,14 +36,14 @@ from urllib.parse import urlsplit, urlunsplit
 TIMEOUT = 20
 _LOC = re.compile(r"<loc>\s*(.*?)\s*</loc>", re.DOTALL)
 
-# A path no build produces. Appended to every live sweep as the control.
+# A path no build produces. Appended to each live sweep as the control.
 CONTROL_PATH = "/aaasm-5590-control-no-such-page/"
 
 
 @dataclass
 class Result:
     url: str
-    status: int  # 0 means the request never completed
+    status: int  # 0 means the request failed to finish
     note: str = ""
 
     @property
@@ -52,7 +52,7 @@ class Result:
 
 
 def sitemap_urls(sitemap: Path) -> list[str]:
-    """Every <loc> in a sitemap.
+    """Each <loc> in a sitemap.
 
     `re.findall`, not `grep -c`: the generated sitemap is minified onto a single
     line, so a line-counting measurement reports 1 no matter how many URLs it
@@ -75,7 +75,7 @@ def fetch(url: str) -> Result:
             return Result(url, response.status)
     except urllib.error.HTTPError as exc:
         return Result(url, exc.code)
-    except Exception as exc:  # noqa: BLE001 - any transport failure is a 0
+    except Exception as exc:  # noqa: BLE001 - a transport failure is a 0
         return Result(url, 0, type(exc).__name__)
 
 
@@ -84,7 +84,7 @@ def sweep(urls: list[str]) -> list[Result]:
 
 
 def self_test() -> int:
-    """Prove the classifier discriminates before any sweep is believed."""
+    """Prove the classifier discriminates before a sweep is believed."""
     results: list[tuple[str, bool, str]] = []
 
     def check(name: str, ok: bool, detail: str = "") -> None:
@@ -105,7 +105,7 @@ def self_test() -> int:
     try:
         found = sitemap_urls(tmp)
         check(
-            "a single-line sitemap yields every url, not one",
+            "a single-line sitemap yields each url, not one",
             found == ["https://x/a", "https://x/b", "https://x/c"],
             repr(found),
         )

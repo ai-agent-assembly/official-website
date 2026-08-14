@@ -1,0 +1,1535 @@
+{
+  "pages": [
+    {
+      "route": "/404/",
+      "title": "Page Not Found | Agent Assembly",
+      "description": "",
+      "canonical": "https://agent-assembly.com/404.html",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/404.html"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/404.html"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/404.html"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/404.html",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Page Not Found | Agent Assembly"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/arena/",
+      "title": "Arena — Agent Assembly | Agent Assembly",
+      "description": "Arena is the public trial ground for agent-assembly governance. Agents enter, agent-assembly defends, and every match leaves a report.",
+      "canonical": "https://agent-assembly.com/arena",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/arena"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/arena"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/arena"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/arena",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Arena — Agent Assembly | Agent Assembly",
+        "description": "Arena is the public trial ground for agent-assembly governance. Agents enter, agent-assembly defends, and every match leaves a report."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/blog/archive/",
+      "title": "Archive | Agent Assembly",
+      "description": "Archive",
+      "canonical": "https://agent-assembly.com/blog/archive",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/archive"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/archive"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/archive"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/blog/archive",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Archive | Agent Assembly",
+        "description": "Archive"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/blog/authors/",
+      "title": "Authors | Agent Assembly",
+      "description": "The authors who write the Agent Assembly blog, with the number of posts each has published.",
+      "canonical": "https://agent-assembly.com/blog/authors",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/authors"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/authors"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/authors"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/blog/authors",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "description": "The authors who write the Agent Assembly blog, with the number of posts each has published.",
+        "title": "Authors | Agent Assembly"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/blog/authors/team/",
+      "title": "Agent Assembly Team - 2 posts | Agent Assembly",
+      "description": "Posts published by Agent Assembly Team on the Agent Assembly blog.",
+      "canonical": "https://agent-assembly.com/blog/authors/team",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/authors/team"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/authors/team"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/authors/team"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/blog/authors/team",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "description": "Posts published by Agent Assembly Team on the Agent Assembly blog.",
+        "title": "Agent Assembly Team - 2 posts | Agent Assembly"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/blog/",
+      "title": "Agent Assembly Blog | Agent Assembly",
+      "description": "Build notes, engineering write-ups, security notes, and product stories from the team building the runtime boundary for AI agents.",
+      "canonical": "https://agent-assembly.com/blog",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/blog",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Agent Assembly Blog | Agent Assembly",
+        "description": "Build notes, engineering write-ups, security notes, and product stories from the team building the runtime boundary for AI agents."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/blog/sdks-are-not-security-boundaries/",
+      "title": "SDKs Are Not Security Boundaries | Agent Assembly",
+      "description": "An in-process SDK is the fastest way to govern an agent — but it is not, by itself, a",
+      "canonical": "https://agent-assembly.com/blog/sdks-are-not-security-boundaries",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/sdks-are-not-security-boundaries"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/sdks-are-not-security-boundaries"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/sdks-are-not-security-boundaries"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/blog/sdks-are-not-security-boundaries",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "SDKs Are Not Security Boundaries | Agent Assembly",
+        "description": "An in-process SDK is the fastest way to govern an agent — but it is not, by itself, a",
+        "type": "article"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/blog/tags/engineering/",
+      "title": "One post tagged with \"Engineering\" | Agent Assembly",
+      "description": "Engineering write-ups and design decisions.",
+      "canonical": "https://agent-assembly.com/blog/tags/engineering",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/tags/engineering"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/tags/engineering"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/tags/engineering"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/blog/tags/engineering",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "One post tagged with \"Engineering\" | Agent Assembly",
+        "description": "Engineering write-ups and design decisions."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/blog/tags/founders-notes/",
+      "title": "One post tagged with \"Founder's Notes\" | Agent Assembly",
+      "description": "Why this product exists.",
+      "canonical": "https://agent-assembly.com/blog/tags/founders-notes",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/tags/founders-notes"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/tags/founders-notes"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/tags/founders-notes"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/blog/tags/founders-notes",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "One post tagged with \"Founder's Notes\" | Agent Assembly",
+        "description": "Why this product exists."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/blog/tags/",
+      "title": "Tags | Agent Assembly",
+      "description": "Browse Agent Assembly blog posts by topic.",
+      "canonical": "https://agent-assembly.com/blog/tags",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/tags"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/tags"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/tags"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/blog/tags",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "description": "Browse Agent Assembly blog posts by topic.",
+        "title": "Tags | Agent Assembly"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/blog/tags/security/",
+      "title": "2 posts tagged with \"Security\" | Agent Assembly",
+      "description": "Security model, threat boundaries, and secret handling.",
+      "canonical": "https://agent-assembly.com/blog/tags/security",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/tags/security"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/tags/security"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/tags/security"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/blog/tags/security",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "2 posts tagged with \"Security\" | Agent Assembly",
+        "description": "Security model, threat boundaries, and secret handling."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/blog/why-agent-assembly-exists/",
+      "title": "Why Agent Assembly Exists | Agent Assembly",
+      "description": "Autonomous agents are shipping into production faster than the controls around them.",
+      "canonical": "https://agent-assembly.com/blog/why-agent-assembly-exists",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/why-agent-assembly-exists"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/why-agent-assembly-exists"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/why-agent-assembly-exists"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/blog/why-agent-assembly-exists",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Why Agent Assembly Exists | Agent Assembly",
+        "description": "Autonomous agents are shipping into production faster than the controls around them.",
+        "type": "article"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/denied-action-proof/",
+      "title": "A denied action, and the file it did not write | Agent Assembly",
+      "description": "One recorded run in which a policy denial kept an agent tool body from taking effect — with the effect checked afterwards by a separate process that took no part in the decision.",
+      "canonical": "https://agent-assembly.com/denied-action-proof",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/denied-action-proof"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/denied-action-proof"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/denied-action-proof"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/denied-action-proof",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "A denied action, and the file it did not write | Agent Assembly",
+        "description": "One recorded run in which a policy denial kept an agent tool body from taking effect — with the effect checked afterwards by a separate process that took no part in the decision."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/early-access/",
+      "title": "Cloud Early Access — Agent Assembly | Agent Assembly",
+      "description": "Cloud is in early access as a design-partner program. Agent Assembly Cloud is not generally available. The OSS runtime is available today.",
+      "canonical": "https://agent-assembly.com/early-access",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/early-access"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/early-access"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/early-access"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/early-access",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Cloud Early Access — Agent Assembly | Agent Assembly",
+        "description": "Cloud is in early access as a design-partner program. Agent Assembly Cloud is not generally available. The OSS runtime is available today."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/how-it-works/",
+      "title": "How it works — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly’s architecture is six roles rather than an ordered pipeline: what each role is, which of them can refuse an action before it runs, and where the platform changes the answer.",
+      "canonical": "https://agent-assembly.com/how-it-works",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/how-it-works"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/how-it-works"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/how-it-works"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/how-it-works",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "How it works — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly’s architecture is six roles rather than an ordered pipeline: what each role is, which of them can refuse an action before it runs, and where the platform changes the answer."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/",
+      "title": "Decide what an AI agent may do — before it does it | Agent Assembly",
+      "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.",
+      "canonical": "https://agent-assembly.com/",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Decide what an AI agent may do — before it does it | Agent Assembly",
+        "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/product/",
+      "title": "Product — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.",
+      "canonical": "https://agent-assembly.com/product",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/product"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/product"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/product"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/product",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Product — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/roles/engineering/",
+      "title": "Engineering — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.",
+      "canonical": "https://agent-assembly.com/roles/engineering",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/roles/engineering"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/roles/engineering"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/roles/engineering"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/roles/engineering",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Engineering — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/roles/",
+      "title": "Evaluator briefs by role — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.",
+      "canonical": "https://agent-assembly.com/roles/",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/roles/"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/roles/"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/roles/"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/roles/",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Evaluator briefs by role — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/roles/platform/",
+      "title": "Platform and SRE — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.",
+      "canonical": "https://agent-assembly.com/roles/platform",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/roles/platform"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/roles/platform"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/roles/platform"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/roles/platform",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Platform and SRE — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/roles/product-qa/",
+      "title": "Product, QA and assurance — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.",
+      "canonical": "https://agent-assembly.com/roles/product-qa",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/roles/product-qa"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/roles/product-qa"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/roles/product-qa"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/roles/product-qa",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Product, QA and assurance — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/roles/security/",
+      "title": "Security and risk — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.",
+      "canonical": "https://agent-assembly.com/roles/security",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/roles/security"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/roles/security"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/roles/security"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/roles/security",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Security and risk — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/trust/",
+      "title": "Trust, evidence and known limitations — Agent Assembly | Agent Assembly",
+      "description": "What Agent Assembly measures, what it prevents, on which platforms, and what sits outside the boundary — generated from the capability manifest and checked against it.",
+      "canonical": "https://agent-assembly.com/trust",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/trust"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/trust"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/trust"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/img/social-card.png",
+        "url": "https://agent-assembly.com/trust",
+        "locale": "en",
+        "locale:alternate": "zh_Hant",
+        "title": "Trust, evidence and known limitations — Agent Assembly | Agent Assembly",
+        "description": "What Agent Assembly measures, what it prevents, on which platforms, and what sits outside the boundary — generated from the capability manifest and checked against it."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/404/",
+      "title": "找不到頁面 | Agent Assembly",
+      "description": "",
+      "canonical": "https://agent-assembly.com/zh-Hant/404.html",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/404.html"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/404.html"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/404.html"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/404.html",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "找不到頁面 | Agent Assembly"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/arena/",
+      "title": "Arena — Agent Assembly | Agent Assembly",
+      "description": "Arena is the public trial ground for agent-assembly governance. Agents enter, agent-assembly defends, and every match leaves a report.",
+      "canonical": "https://agent-assembly.com/zh-Hant/arena",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/arena"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/arena"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/arena"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/arena",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "Arena — Agent Assembly | Agent Assembly",
+        "description": "Arena is the public trial ground for agent-assembly governance. Agents enter, agent-assembly defends, and every match leaves a report."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/blog/archive/",
+      "title": "歷史文章 | Agent Assembly",
+      "description": "歷史文章",
+      "canonical": "https://agent-assembly.com/zh-Hant/blog/archive",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/archive"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/archive"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/archive"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/blog/archive",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "歷史文章 | Agent Assembly",
+        "description": "歷史文章"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/blog/authors/",
+      "title": "作者列表 | Agent Assembly",
+      "description": "撰寫 Agent Assembly 部落格的作者，以及每位作者已發表的文章數。",
+      "canonical": "https://agent-assembly.com/zh-Hant/blog/authors",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/authors"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/authors"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/authors"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/blog/authors",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "description": "撰寫 Agent Assembly 部落格的作者，以及每位作者已發表的文章數。",
+        "title": "作者列表 | Agent Assembly"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/blog/authors/team/",
+      "title": "Agent Assembly Team - 2 篇文章 | Agent Assembly",
+      "description": "Agent Assembly Team 在 Agent Assembly 部落格發表的文章。",
+      "canonical": "https://agent-assembly.com/zh-Hant/blog/authors/team",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/authors/team"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/authors/team"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/authors/team"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/blog/authors/team",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "description": "Agent Assembly Team 在 Agent Assembly 部落格發表的文章。",
+        "title": "Agent Assembly Team - 2 篇文章 | Agent Assembly"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/blog/",
+      "title": "Agent Assembly 部落格 | Agent Assembly",
+      "description": "來自打造 AI 代理執行期邊界團隊的建置筆記、工程技術文章、安全筆記與產品故事。",
+      "canonical": "https://agent-assembly.com/zh-Hant/blog",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/blog",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "Agent Assembly 部落格 | Agent Assembly",
+        "description": "來自打造 AI 代理執行期邊界團隊的建置筆記、工程技術文章、安全筆記與產品故事。"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/blog/sdks-are-not-security-boundaries/",
+      "title": "SDKs Are Not Security Boundaries | Agent Assembly",
+      "description": "An in-process SDK is the fastest way to govern an agent — but it is not, by itself, a",
+      "canonical": "https://agent-assembly.com/zh-Hant/blog/sdks-are-not-security-boundaries",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/sdks-are-not-security-boundaries"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/sdks-are-not-security-boundaries"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/sdks-are-not-security-boundaries"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/blog/sdks-are-not-security-boundaries",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "SDKs Are Not Security Boundaries | Agent Assembly",
+        "description": "An in-process SDK is the fastest way to govern an agent — but it is not, by itself, a",
+        "type": "article"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/blog/tags/engineering/",
+      "title": "1 篇文章 含有標籤「Engineering」 | Agent Assembly",
+      "description": "Engineering write-ups and design decisions.",
+      "canonical": "https://agent-assembly.com/zh-Hant/blog/tags/engineering",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/tags/engineering"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/tags/engineering"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/tags/engineering"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/blog/tags/engineering",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "1 篇文章 含有標籤「Engineering」 | Agent Assembly",
+        "description": "Engineering write-ups and design decisions."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/blog/tags/founders-notes/",
+      "title": "1 篇文章 含有標籤「Founder's Notes」 | Agent Assembly",
+      "description": "Why this product exists.",
+      "canonical": "https://agent-assembly.com/zh-Hant/blog/tags/founders-notes",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/tags/founders-notes"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/tags/founders-notes"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/tags/founders-notes"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/blog/tags/founders-notes",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "1 篇文章 含有標籤「Founder's Notes」 | Agent Assembly",
+        "description": "Why this product exists."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/blog/tags/",
+      "title": "標籤 | Agent Assembly",
+      "description": "依主題瀏覽 Agent Assembly 部落格文章。",
+      "canonical": "https://agent-assembly.com/zh-Hant/blog/tags",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/tags"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/tags"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/tags"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/blog/tags",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "description": "依主題瀏覽 Agent Assembly 部落格文章。",
+        "title": "標籤 | Agent Assembly"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/blog/tags/security/",
+      "title": "2 篇文章 含有標籤「Security」 | Agent Assembly",
+      "description": "Security model, threat boundaries, and secret handling.",
+      "canonical": "https://agent-assembly.com/zh-Hant/blog/tags/security",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/tags/security"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/tags/security"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/tags/security"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/blog/tags/security",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "2 篇文章 含有標籤「Security」 | Agent Assembly",
+        "description": "Security model, threat boundaries, and secret handling."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/blog/why-agent-assembly-exists/",
+      "title": "Why Agent Assembly Exists | Agent Assembly",
+      "description": "Autonomous agents are shipping into production faster than the controls around them.",
+      "canonical": "https://agent-assembly.com/zh-Hant/blog/why-agent-assembly-exists",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/blog/why-agent-assembly-exists"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/blog/why-agent-assembly-exists"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/blog/why-agent-assembly-exists"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/blog/why-agent-assembly-exists",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "Why Agent Assembly Exists | Agent Assembly",
+        "description": "Autonomous agents are shipping into production faster than the controls around them.",
+        "type": "article"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/denied-action-proof/",
+      "title": "一個被拒絕的動作，以及它沒有寫出的檔案 | Agent Assembly",
+      "description": "一次被記錄下來的執行：政策拒絕使得一個代理工具的主體沒有生效 — 效果由一個未參與該決策的獨立行程於事後查核。",
+      "canonical": "https://agent-assembly.com/zh-Hant/denied-action-proof",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/denied-action-proof"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/denied-action-proof"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/denied-action-proof"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/denied-action-proof",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "一個被拒絕的動作，以及它沒有寫出的檔案 | Agent Assembly",
+        "description": "一次被記錄下來的執行：政策拒絕使得一個代理工具的主體沒有生效 — 效果由一個未參與該決策的獨立行程於事後查核。"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/early-access/",
+      "title": "Cloud Early Access — Agent Assembly | Agent Assembly",
+      "description": "Cloud is in early access as a design-partner program. Agent Assembly Cloud is not generally available. The OSS runtime is available today.",
+      "canonical": "https://agent-assembly.com/zh-Hant/early-access",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/early-access"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/early-access"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/early-access"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/early-access",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "Cloud Early Access — Agent Assembly | Agent Assembly",
+        "description": "Cloud is in early access as a design-partner program. Agent Assembly Cloud is not generally available. The OSS runtime is available today."
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/how-it-works/",
+      "title": "它如何運作 — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly 的架構是六個角色，而不是一條有先後順序的管線：每個角色是什麼、其中哪些能在動作執行之前拒絕它，以及平台會在哪裡改變答案。",
+      "canonical": "https://agent-assembly.com/zh-Hant/how-it-works",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/how-it-works"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/how-it-works"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/how-it-works"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/how-it-works",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "它如何運作 — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly 的架構是六個角色，而不是一條有先後順序的管線：每個角色是什麼、其中哪些能在動作執行之前拒絕它，以及平台會在哪裡改變答案。"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/",
+      "title": "在 AI 代理動手之前，決定它可以做什麼 | Agent Assembly",
+      "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。",
+      "canonical": "https://agent-assembly.com/zh-Hant/",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "在 AI 代理動手之前，決定它可以做什麼 | Agent Assembly",
+        "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/product/",
+      "title": "產品 — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。",
+      "canonical": "https://agent-assembly.com/zh-Hant/product",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/product"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/product"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/product"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/product",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "產品 — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/roles/engineering/",
+      "title": "工程開發 — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。",
+      "canonical": "https://agent-assembly.com/zh-Hant/roles/engineering",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/roles/engineering"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/roles/engineering"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/roles/engineering"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/roles/engineering",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "工程開發 — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/roles/",
+      "title": "各角色的評估者簡報 — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。",
+      "canonical": "https://agent-assembly.com/zh-Hant/roles/",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/roles/"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/roles/"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/roles/"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/roles/",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "各角色的評估者簡報 — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/roles/platform/",
+      "title": "平台與 SRE — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。",
+      "canonical": "https://agent-assembly.com/zh-Hant/roles/platform",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/roles/platform"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/roles/platform"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/roles/platform"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/roles/platform",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "平台與 SRE — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/roles/product-qa/",
+      "title": "產品、QA 與品質保證 — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。",
+      "canonical": "https://agent-assembly.com/zh-Hant/roles/product-qa",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/roles/product-qa"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/roles/product-qa"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/roles/product-qa"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/roles/product-qa",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "產品、QA 與品質保證 — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/roles/security/",
+      "title": "資安與風險 — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。",
+      "canonical": "https://agent-assembly.com/zh-Hant/roles/security",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/roles/security"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/roles/security"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/roles/security"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/roles/security",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "資安與風險 — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，讓有風險的呼叫可以被拒絕，或在決策做出前先行阻擋，而不是事後才被發現。"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    },
+    {
+      "route": "/zh-Hant/trust/",
+      "title": "信任、證據與已知限制 — Agent Assembly | Agent Assembly",
+      "description": "Agent Assembly 量測了什麼、阻止了什麼、在哪些平台上，以及什麼落在邊界之外 — 由能力清單產生，並對照它做檢查。",
+      "canonical": "https://agent-assembly.com/zh-Hant/trust",
+      "alternates": [
+        [
+          "en",
+          "https://agent-assembly.com/trust"
+        ],
+        [
+          "zh-Hant",
+          "https://agent-assembly.com/zh-Hant/trust"
+        ],
+        [
+          "x-default",
+          "https://agent-assembly.com/trust"
+        ]
+      ],
+      "og": {
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png",
+        "url": "https://agent-assembly.com/zh-Hant/trust",
+        "locale": "zh_Hant",
+        "locale:alternate": "en",
+        "title": "信任、證據與已知限制 — Agent Assembly | Agent Assembly",
+        "description": "Agent Assembly 量測了什麼、阻止了什麼、在哪些平台上，以及什麼落在邊界之外 — 由能力清單產生，並對照它做檢查。"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "image": "https://agent-assembly.com/zh-Hant/img/social-card.png"
+      }
+    }
+  ],
+  "findings": [
+    {
+      "check": "missing-description",
+      "route": "/404/",
+      "detail": "no meta description"
+    },
+    {
+      "check": "missing-description",
+      "route": "/zh-Hant/404/",
+      "detail": "no meta description"
+    },
+    {
+      "check": "duplicate-description",
+      "route": "/, /product/, /roles/, /roles/engineering/, /roles/platform/, /roles/product-qa/, /roles/security/",
+      "detail": "7 pages share one description: Agent Assembly decides whether an AI agent’s action is allowed before ..."
+    },
+    {
+      "check": "duplicate-description",
+      "route": "/zh-Hant/, /zh-Hant/product/, /zh-Hant/roles/, /zh-Hant/roles/engineering/, /zh-Hant/roles/platform/, /zh-Hant/roles/product-qa/, /zh-Hant/roles/security/",
+      "detail": "7 pages share one description: Agent Assembly 會在動作執行之前，決定某個 AI 代理的動作是否被允許 — 範圍限於你導流經過它的路徑 — 並記錄所做的決定，..."
+    },
+    {
+      "check": "duplicate-description",
+      "route": "/blog/sdks-are-not-security-boundaries/, /zh-Hant/blog/sdks-are-not-security-boundaries/",
+      "detail": "2 pages share one description: An in-process SDK is the fastest way to govern an agent — but it is no..."
+    },
+    {
+      "check": "duplicate-description",
+      "route": "/arena/, /zh-Hant/arena/",
+      "detail": "2 pages share one description: Arena is the public trial ground for agent-assembly governance. Agents..."
+    },
+    {
+      "check": "duplicate-description",
+      "route": "/blog/why-agent-assembly-exists/, /zh-Hant/blog/why-agent-assembly-exists/",
+      "detail": "2 pages share one description: Autonomous agents are shipping into production faster than the control..."
+    },
+    {
+      "check": "duplicate-description",
+      "route": "/early-access/, /zh-Hant/early-access/",
+      "detail": "2 pages share one description: Cloud is in early access as a design-partner program. Agent Assembly C..."
+    },
+    {
+      "check": "duplicate-description",
+      "route": "/blog/tags/engineering/, /zh-Hant/blog/tags/engineering/",
+      "detail": "2 pages share one description: Engineering write-ups and design decisions...."
+    },
+    {
+      "check": "duplicate-description",
+      "route": "/blog/tags/security/, /zh-Hant/blog/tags/security/",
+      "detail": "2 pages share one description: Security model, threat boundaries, and secret handling...."
+    },
+    {
+      "check": "duplicate-description",
+      "route": "/blog/tags/founders-notes/, /zh-Hant/blog/tags/founders-notes/",
+      "detail": "2 pages share one description: Why this product exists...."
+    }
+  ]
+}
