@@ -323,7 +323,17 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    recording = capture(severed=args.sever_enforcement, captured_on=args.date)
+    # `--date` is the last argument that reaches a written file, and the value
+    # is published on a public page, so it is parsed into a real date and
+    # re-serialised rather than copied through. Anything that is not an ISO
+    # date raises here, before a run happens. Validated inline rather than in an
+    # `argparse` `type=` callable: the callable version of this check was not
+    # recognised as a sanitizer by dataflow analysis (SonarCloud
+    # `pythonsecurity:S8707`, PR #101), and a check the analyser cannot see is
+    # a check the next reader will assume is missing.
+    captured_on = date.fromisoformat(args.date).isoformat()
+
+    recording = capture(severed=args.sever_enforcement, captured_on=captured_on)
     text = json.dumps(recording, indent=2, ensure_ascii=False) + "\n"
 
     if args.sever_enforcement:
