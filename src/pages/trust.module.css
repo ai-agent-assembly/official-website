@@ -1,0 +1,145 @@
+/*
+ * AAASM-5588 — what `/trust` needs that `narrative.module.css` does not already
+ * own.
+ *
+ * The shared narrative primitives carry this page: `.wrap`, `.block`,
+ * `.blockTitle`, `.eyebrow`, `.table`, `.tableWrap`, `.termBadge`, `.limitList`
+ * and the button row are all imported rather than restyled, so this route looks
+ * like `/product`, `/how-it-works` and the role briefs. Only the four things
+ * that are new to an evidence page live here.
+ */
+
+/*
+ * The page identity block: owner, version, last verified, source of truth.
+ *
+ * A definition list rather than a table because these are four labelled facts
+ * about the page and not a data set — and because a `<dl>` keeps the label
+ * bound to its value for a screen reader without needing headers/scope.
+ */
+.meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.75rem 1.5rem;
+  margin: 1.5rem 0 0;
+  padding: 1rem 1.25rem;
+  background: var(--aa-bg-soft);
+  border: 1px solid var(--aa-border);
+  border-radius: 12px;
+}
+
+.metaPair {
+  margin: 0;
+  min-width: 0;
+}
+
+.metaLabel {
+  margin: 0;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--aa-text-dim);
+}
+
+.metaValue {
+  margin: 0.25rem 0 0;
+  color: var(--aa-text);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  /* Long values here are commit hashes and file paths. They must wrap rather
+     than widen the grid column and push the page into a horizontal scroll. */
+  overflow-wrap: anywhere;
+}
+
+/*
+ * A value quoted from the capability manifest.
+ *
+ * Manifest field values — `unmeasured`, `shipped_crates_io_only`, `S1–S13` —
+ * render verbatim in every locale, as the identifiers they are. They are not
+ * translated: a translated copy of a lower-layer value is a second copy that
+ * nothing compares, and `scripts/trust-evidence.py check` reads the English
+ * build only.
+ */
+.mono {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.85em;
+  color: var(--aa-text);
+  overflow-wrap: anywhere;
+}
+
+/* The row count beside a claim term. Tabular figures so the column reads as a
+   column, not as ragged text. */
+.count {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--aa-text);
+  white-space: nowrap;
+}
+
+/*
+ * A count of zero.
+ *
+ * Rendered louder than a positive count rather than quieter. Two of the eleven
+ * ADR 0033 §6 terms are reached by no manifest row at all, and that absence is
+ * the most consequential thing this table says about them — a zero styled as
+ * "nothing here" is read as "not applicable" and skipped.
+ */
+.zero {
+  color: var(--aa-accent-2);
+}
+
+/* The per-area term distribution, inside one table cell. */
+.dist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.distItem {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--aa-border);
+  border-radius: 999px;
+  background: var(--aa-hover);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  /* The badge may wrap internally on a narrow screen; it must not force the
+     table wider than its scroll container. */
+  max-width: 100%;
+}
+
+.distCount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+/*
+ * The evidence-freshness callout.
+ *
+ * Styled as content and placed above the tables rather than as a footnote
+ * beneath them. Every number on this page is derived from one survey of one
+ * commit, and that commit is an ancestor of no released tag — a reader who
+ * meets the tables first has already formed a view by the time a footnote
+ * corrects it.
+ */
+.freshness {
+  margin: 1.5rem 0 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--aa-border);
+  border-left: 3px solid var(--aa-accent-2);
+  border-radius: 10px;
+  background: var(--aa-bg-soft);
+  color: var(--aa-text-dim);
+  line-height: 1.7;
+}
+
+.freshnessTitle {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--aa-text);
+  font-weight: 700;
+}

@@ -532,28 +532,41 @@ class _Tables(HTMLParser):
         self._r: list[str] | None = None
         self._c: list[str] | None = None
 
+    # `</td>`, `</th>` and `</tr>` are all optional in HTML5, and the production
+    # build omits every one of them. The first version of this parser only
+    # closed a cell or a row on its end tag, so it extracted three tables of
+    # nothing from a page holding three full ones — and reported that as "no
+    # table with this header", which is at least loud. Closing implicitly on the
+    # next opening tag, and at the end of every enclosing element, is what makes
+    # it read the artifact a reader actually gets.
+    def _close_cell(self) -> None:
+        if self._c is not None and self._r is not None:
+            self._r.append(re.sub(r"\s+", " ", "".join(self._c)).strip())
+        self._c = None
+
+    def _close_row(self) -> None:
+        self._close_cell()
+        if self._r is not None and self._t is not None:
+            self._t.append(self._r)
+        self._r = None
+
     def handle_starttag(self, tag, attrs):
         if tag == "table":
             self._t = []
         elif tag == "tr" and self._t is not None:
+            self._close_row()
             self._r = []
         elif tag in ("td", "th") and self._r is not None:
+            self._close_cell()
             self._c = []
 
     def handle_endtag(self, tag):
-        if tag in ("td", "th") and self._c is not None and self._r is not None:
-            self._r.append(re.sub(r"\s+", " ", "".join(self._c)).strip())
-            self._c = None
-        elif tag == "tr" and self._r is not None and self._t is not None:
-            if self._c is not None:  # minified HTML may drop </td>
-                self._r.append(re.sub(r"\s+", " ", "".join(self._c)).strip())
-                self._c = None
-            self._t.append(self._r)
-            self._r = None
+        if tag in ("td", "th"):
+            self._close_cell()
+        elif tag in ("tr", "thead", "tbody"):
+            self._close_row()
         elif tag == "table" and self._t is not None:
-            if self._r is not None:
-                self._t.append(self._r)
-                self._r = None
+            self._close_row()
             self.tables.append(self._t)
             self._t = None
 
@@ -575,13 +588,25 @@ def read_page(build_dir: str) -> dict:
     p = _Tables()
     p.feed(doc)
 
-    def find(header_token: str) -> list[list[str]]:
-        for t in p.tables:
-            if t and any(header_token in c for c in t[0]):
-                return t[1:]
+    def find(header: str) -> list[list[str]]:
+        """The one table carrying this exact column heading.
+
+        Exact, not substring. The claim-term table has a `Manifest rows` column
+        and the platform table is found by `Manifest row`; under a substring
+        match the platform lookup returned the claim-term table, whose rows are
+        three cells wide, and the comparison then reported the platform table as
+        rendering nothing rather than reporting the wrong table.
+
+        Ambiguity is fatal for the same reason: two matches mean the check no
+        longer knows which artifact it is asserting over.
+        """
+        hits = [t for t in p.tables if t and header in t[0]]
+        if len(hits) == 1:
+            return hits[0][1:]
         raise ValueError(
-            f"no table on /trust whose header row contains {header_token!r} — "
-            f"found {len(p.tables)} table(s): {[t[0] if t else [] for t in p.tables]}"
+            f"expected exactly one table on /trust with the column heading "
+            f"{header!r}, found {len(hits)} — headers seen: "
+            f"{[t[0] for t in p.tables if t]}"
         )
 
     text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", doc)))
