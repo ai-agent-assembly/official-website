@@ -302,31 +302,19 @@ def capture(*, severed: bool, captured_on: str) -> dict[str, Any]:
     }
 
 
-def _repo_json_path(raw: str) -> Path:
-    """Resolve `--out` and refuse anything outside this repository.
-
-    `--out` is the one argument here that reaches the filesystem, and this
-    script is meant to be run by readers and by agents reproducing the page.
-    An unvalidated path lets a mistyped or generated argument write over a file
-    somewhere else entirely, so the destination is resolved and required to sit
-    inside the repository and to end in `.json` — the shape of the only thing
-    this script produces. Symlinks are resolved before the check, so a link
-    inside the tree cannot be used to reach outside it.
-    """
-    resolved = Path(raw).expanduser().resolve()
-    repo = REPO.resolve()
-    if not resolved.is_relative_to(repo):
-        raise argparse.ArgumentTypeError(
-            f"--out must stay inside {repo}, got {resolved}"
-        )
-    if resolved.suffix != ".json":
-        raise argparse.ArgumentTypeError(f"--out must end in .json, got {resolved.name}")
-    return resolved
+# `--out` used to exist here and was removed rather than validated.
+#
+# It was never useful: `scripts/denied-action-proof.py` reads exactly one path,
+# so a recording written anywhere else is a file nothing reads. It was also the
+# script's only taint source -- an argv string reaching `write_text` -- and a
+# validator behind an `argparse` `type=` callable is not recognised as one by
+# dataflow analysis, so the finding survived the validation
+# (SonarCloud `pythonsecurity:S8707` on PR #101). Deleting the argument removes
+# the path instead of guarding it, and costs nothing.
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--out", type=_repo_json_path, default=RECORDING)
     ap.add_argument("--date", default=date.today().isoformat(), metavar="YYYY-MM-DD")
     ap.add_argument(
         "--sever-enforcement",
@@ -342,9 +330,9 @@ def main() -> int:
         # Never overwrite the committed recording from a severed run.
         sys.stdout.write(text)
     else:
-        args.out.parent.mkdir(parents=True, exist_ok=True)
-        args.out.write_text(text, encoding="utf-8")
-        print(f"wrote {args.out.relative_to(REPO)}")
+        RECORDING.parent.mkdir(parents=True, exist_ok=True)
+        RECORDING.write_text(text, encoding="utf-8")
+        print(f"wrote {RECORDING.relative_to(REPO)}")
 
     held = recording["totals"]["postConditionsHeld"]
     total = recording["totals"]["arms"]
