@@ -107,6 +107,20 @@ jobs:
       # a manifest release. AAASM-5588.
       - name: Trust page matches the capability manifest projection
         run: pnpm trust:check
+      # `/denied-action-proof` publishes one recorded run, and the whole page is
+      # worth reading only if what it renders is what was measured. This asserts
+      # the built HTML still carries the three runs, the decision the enforcement
+      # point acted on, and the versions the run was recorded against — so an
+      # edit that turns an observed `absent` into a nicer word fails here rather
+      # than shipping. Stdlib Python, no network.
+      #
+      # Re-recording is deliberately NOT run in CI: it needs the published SDK
+      # and a real agent framework installed, and a gate that reruns the
+      # experiment on every push would make the page's numbers a moving target
+      # rather than a citation. The recording is committed and re-taken by hand
+      # with `scripts/denied-action-capture.py`. AAASM-5589.
+      - name: Denied-action page matches the recorded run
+        run: pnpm proof:check
 
   sonar:
     name: SonarCloud
