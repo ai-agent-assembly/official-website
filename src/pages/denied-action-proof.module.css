@@ -1,0 +1,204 @@
+/*
+ * AAASM-5589 — what `/denied-action-proof` needs that `narrative.module.css`
+ * does not already own.
+ *
+ * The shared narrative primitives carry this page: `.wrap`, `.block`,
+ * `.blockTitle`, `.eyebrow`, `.table`, `.tableWrap`, `.termBadge`, `.limitList`
+ * and the button row are imported rather than restyled, so this route looks
+ * like `/trust`, `/product` and the role briefs. Only what is new to a
+ * transcript page lives here.
+ */
+
+/*
+ * The page identity block: owner, version, last verified, source of truth.
+ * Same shape as `/trust`, for the same reason — a reader deciding how much
+ * weight to put on a transcript needs to know how old it is first.
+ */
+.meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.75rem 1.5rem;
+  margin: 1.5rem 0 0;
+  padding: 1rem 1.25rem;
+  background: var(--aa-bg-soft);
+  border: 1px solid var(--aa-border);
+  border-radius: 12px;
+}
+
+.metaPair {
+  margin: 0;
+  min-width: 0;
+}
+
+.metaLabel {
+  margin: 0;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--aa-text-dim);
+}
+
+.metaValue {
+  margin: 0.25rem 0 0;
+  color: var(--aa-text);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  /* Values here are versions, module paths and platform triples. They must wrap
+     rather than widen the grid column and push the page into a side scroll. */
+  overflow-wrap: anywhere;
+}
+
+/*
+ * A value quoted verbatim from the recording.
+ *
+ * Recorded values — `write_incident_report`, `deny`, `absent`, the module path
+ * of the component that refused — render as the identifiers they are, in every
+ * locale. They are not translated: `scripts/denied-action-proof.py check` reads
+ * the English build only, and a translated copy of a recorded value is a second
+ * copy that nothing compares.
+ */
+.mono {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.85em;
+  color: var(--aa-text);
+  overflow-wrap: anywhere;
+}
+
+/*
+ * The word this page exists to earn: what the observer saw in the directory.
+ *
+ * `absent` is styled louder than `present`, inverting the usual convention on
+ * purpose. On this page the absence is the finding — a reader who skims the
+ * column reads the emphasis, and emphasising the two `present` rows would put
+ * the weight on the controls rather than on the run they exist to bound.
+ */
+.absent {
+  color: var(--aa-accent-2);
+  font-weight: 700;
+}
+
+.present {
+  color: var(--aa-text-dim);
+}
+
+/*
+ * The four transcript steps.
+ *
+ * An ordered list rather than a diagram: the order is the whole argument (the
+ * decision precedes the effect), and an ordered list carries that to a screen
+ * reader and into a text-only rendering without an alt attribute having to
+ * restate it.
+ */
+.steps {
+  list-style: none;
+  counter-reset: step;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.step {
+  counter-increment: step;
+  position: relative;
+  margin: 0;
+  padding: 0.9rem 1.1rem 0.9rem 3rem;
+  border: 1px solid var(--aa-border);
+  border-left: 3px solid var(--aa-border);
+  border-radius: 10px;
+  background: var(--aa-bg-soft);
+  line-height: 1.7;
+  /* The only movement on this page. It exists so the reduced-motion rule below
+     has something real to switch off rather than being a vacuous declaration. */
+  transition: border-left-color 0.2s ease;
+}
+
+.step:hover,
+.step:focus-within {
+  border-left-color: var(--aa-accent-2);
+}
+
+.step::before {
+  content: counter(step);
+  position: absolute;
+  left: 1rem;
+  top: 0.9rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--aa-hover);
+  border: 1px solid var(--aa-border);
+  color: var(--aa-text-dim);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepTitle {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--aa-text);
+  font-weight: 700;
+}
+
+/*
+ * A command or a captured line, quoted whole.
+ *
+ * Scrolls inside itself rather than wrapping mid-token: the observer command
+ * and the blocked return value are both single strings a reader may want to
+ * copy, and a soft wrap inserted into a shell command is a copy that does not
+ * run.
+ */
+.quote {
+  margin: 0.75rem 0 0;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--aa-border);
+  border-radius: 8px;
+  background: var(--aa-hover);
+  color: var(--aa-text);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/*
+ * The scope callout, above the transcript rather than beneath it.
+ *
+ * One tool, one framework, one SDK build, one machine. A reader who meets the
+ * tables first has already generalised by the time a footnote narrows it.
+ */
+.scope {
+  margin: 1.5rem 0 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--aa-border);
+  border-left: 3px solid var(--aa-accent-2);
+  border-radius: 10px;
+  background: var(--aa-bg-soft);
+  color: var(--aa-text-dim);
+  line-height: 1.7;
+}
+
+.scopeTitle {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--aa-text);
+  font-weight: 700;
+}
+
+/*
+ * Reduced motion.
+ *
+ * This page carries no video, no autoplay and no animated recording: the proof
+ * is text and tables, which is also the non-video fallback. The one transition
+ * it does use is removed here, so a reader who asks for reduced motion gets a
+ * page with none rather than a page whose motion was merely small.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .step {
+    transition: none;
+  }
+}
