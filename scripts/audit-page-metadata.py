@@ -53,6 +53,8 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPTS_DIR))
+from _audit_support import Recorder, safe_output_path  # noqa: E402  - path set above
 
 
 def _load_terms() -> tuple[tuple[str, str], ...]:
@@ -130,29 +132,37 @@ class _HeadParser(HTMLParser):
         self._in_jsonld = False
         self._text: list[str] = []
 
+    def _read_meta(self, a: dict[str, str]) -> None:
+        name = a.get("name", "").lower()
+        prop = a.get("property", "").lower()
+        content = a.get("content", "")
+        if name == "description":
+            self.meta.description = content
+        elif prop.startswith("og:"):
+            self.meta.og[prop[3:]] = content
+        elif name.startswith("twitter:"):
+            self.meta.twitter[name[8:]] = content
+
+    def _read_link(self, a: dict[str, str]) -> None:
+        rel = a.get("rel", "").lower()
+        if rel == "canonical":
+            self.meta.canonical = a.get("href", "")
+        elif rel == "alternate" and a.get("hreflang"):
+            self.meta.alternates.append((a["hreflang"], a.get("href", "")))
+
+    def _enter_non_content(self, tag: str, a: dict[str, str]) -> None:
+        self._skip_depth += 1
+        if tag == "script" and a.get("type", "").lower() == "application/ld+json":
+            self._in_jsonld = True
+
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         a = {k.lower(): (v or "") for k, v in attrs}
         if tag in _NON_CONTENT:
-            self._skip_depth += 1
-            if tag == "script" and a.get("type", "").lower() == "application/ld+json":
-                self._in_jsonld = True
-            return
-        if tag == "meta":
-            name = a.get("name", "").lower()
-            prop = a.get("property", "").lower()
-            content = a.get("content", "")
-            if name == "description":
-                self.meta.description = content
-            elif prop.startswith("og:"):
-                self.meta.og[prop[3:]] = content
-            elif name.startswith("twitter:"):
-                self.meta.twitter[name[8:]] = content
+            self._enter_non_content(tag, a)
+        elif tag == "meta":
+            self._read_meta(a)
         elif tag == "link":
-            rel = a.get("rel", "").lower()
-            if rel == "canonical":
-                self.meta.canonical = a.get("href", "")
-            elif rel == "alternate" and a.get("hreflang"):
-                self.meta.alternates.append((a["hreflang"], a.get("href", "")))
+            self._read_link(a)
         elif tag == "title":
             self._in_title = True
 
@@ -211,61 +221,84 @@ class Finding:
     detail: str
 
 
-def audit_pages(pages: list[PageMeta]) -> list[Finding]:
-    findings: list[Finding] = []
+def _check_missing_description(pages: list[PageMeta]) -> list[Finding]:
+    """C1 -- a page with no description lets the engine invent one."""
+    return [
+        Finding("missing-description", page.route, "no meta description")
+        for page in pages
+        if not page.description.strip()
+    ]
 
-    # C1 -- a page with no description lets the engine invent one.
-    for page in pages:
-        if not page.description.strip():
-            findings.append(Finding("missing-description", page.route, "no meta description"))
 
-    # C2 -- one description across many pages collapses them in a result list.
+def _check_duplicate_description(pages: list[PageMeta]) -> list[Finding]:
+    """C2 -- one description across several pages collapses them in a result list."""
     by_description: dict[str, list[str]] = defaultdict(list)
     for page in pages:
         if page.description.strip():
             by_description[page.description.strip()].append(page.route)
-    for description, routes in sorted(by_description.items()):
-        if len(routes) > 1:
-            findings.append(
-                Finding(
-                    "duplicate-description",
-                    ", ".join(sorted(routes)),
-                    f"{len(routes)} pages share one description: {description[:70]}...",
-                )
-            )
+    return [
+        Finding(
+            "duplicate-description",
+            ", ".join(sorted(routes)),
+            f"{len(routes)} pages share one description: {description[:70]}...",
+        )
+        for description, routes in sorted(by_description.items())
+        if len(routes) > 1
+    ]
 
-    # C3 -- the acceptance criterion proper. A governance term asserted by a
-    # metadata surface must be asserted by the page that surface describes.
+
+def _check_term_containment(pages: list[PageMeta]) -> list[Finding]:
+    """C3 -- the acceptance criterion proper.
+
+    A governance term asserted by a metadata surface must be asserted by the
+    page that surface describes.
+    """
+    findings: list[Finding] = []
     for page in pages:
         body_terms = _terms_in(page.body_text)
         for surface, value in page.metadata_surfaces().items():
-            for term in _terms_in(value) - body_terms:
-                findings.append(
-                    Finding(
-                        "term-not-in-body",
-                        page.route,
-                        f"{surface} asserts '{term}', absent from page body",
-                    )
+            findings.extend(
+                Finding(
+                    "term-not-in-body",
+                    page.route,
+                    f"{surface} asserts '{term}', absent from page body",
                 )
+                for term in sorted(_terms_in(value) - body_terms)
+            )
+    return findings
 
-    # C4 -- and where the terms do form a ladder, metadata must not climb it.
+
+def _check_ladder_upgrade(pages: list[PageMeta]) -> list[Finding]:
+    """C4 -- where the terms do form a ladder, metadata must not climb it."""
+    findings: list[Finding] = []
     for page in pages:
         body_rank = max(
             (LADDER_RANK[t] for t in _terms_in(page.body_text) if t in LADDER_RANK),
             default=-1,
         )
+        reached = LADDER[body_rank] if body_rank >= 0 else "nothing on the ladder"
         for surface, value in page.metadata_surfaces().items():
-            for term in _terms_in(value):
-                if term in LADDER_RANK and LADDER_RANK[term] > body_rank:
-                    findings.append(
-                        Finding(
-                            "ladder-upgrade",
-                            page.route,
-                            f"{surface} claims '{term}'; page reaches at most "
-                            f"'{LADDER[body_rank] if body_rank >= 0 else 'none'}'",
-                        )
-                    )
+            findings.extend(
+                Finding(
+                    "ladder-upgrade",
+                    page.route,
+                    f"{surface} claims '{term}'; page reaches at most '{reached}'",
+                )
+                for term in sorted(_terms_in(value))
+                if LADDER_RANK.get(term, -1) > body_rank
+            )
+    return findings
 
+
+def audit_pages(pages: list[PageMeta]) -> list[Finding]:
+    findings: list[Finding] = []
+    for check in (
+        _check_missing_description,
+        _check_duplicate_description,
+        _check_term_containment,
+        _check_ladder_upgrade,
+    ):
+        findings.extend(check(pages))
     return findings
 
 
@@ -320,10 +353,8 @@ def _page(route: str, description: str, body: str, **kw: object) -> PageMeta:
 
 
 def self_test() -> int:
-    results: list[tuple[str, bool, str]] = []
-
-    def check(name: str, ok: bool, detail: str = "") -> None:
-        results.append((name, ok, detail))
+    recorder = Recorder()
+    check = recorder.check
 
     # --- the unquoted-attribute control -------------------------------------
     p = parse_html(UNQUOTED_FIXTURE)
@@ -436,15 +467,7 @@ def self_test() -> int:
         f"{len(PROSE_TERMS)} terms",
     )
 
-    failed = 0
-    for name, ok, detail in results:
-        if not ok:
-            failed += 1
-            print(f"FAIL  {name}" + (f"  -- {detail}" if detail else ""))
-        else:
-            print(f"ok    {name}")
-    print(f"\nself-test: {len(results) - failed}/{len(results)} checks passed")
-    return 1 if failed else 0
+    return recorder.report()
 
 
 def main() -> int:
@@ -489,7 +512,7 @@ def main() -> int:
         print("no findings")
 
     if args.json_out:
-        Path(args.json_out).write_text(
+        safe_output_path(args.json_out).write_text(
             json.dumps(
                 {
                     "pages": [

@@ -33,8 +33,18 @@ from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _audit_support import (  # noqa: E402  - path set above
+    Recorder,
+    safe_output_path,
+    validated_request_url,
+)
+
 TIMEOUT = 20
-_LOC = re.compile(r"<loc>\s*(.*?)\s*</loc>", re.DOTALL)
+# `[^<]*` rather than a lazy `.*?`: a lazy dot with DOTALL backtracks
+# super-linearly on a long single-line sitemap, and a <loc> body cannot contain
+# `<` anyway.
+_LOC = re.compile(r"<loc>([^<]*)</loc>")
 
 # A path no build produces. Appended to each live sweep as the control.
 CONTROL_PATH = "/aaasm-5590-control-no-such-page/"
@@ -59,7 +69,7 @@ def sitemap_urls(sitemap: Path) -> list[str]:
     holds. That is not hypothetical -- it is what `grep -c '<loc>'` returns for
     this file.
     """
-    return _LOC.findall(sitemap.read_text(encoding="utf-8"))
+    return [m.strip() for m in _LOC.findall(sitemap.read_text(encoding="utf-8"))]
 
 
 def rebase(url: str, origin: str) -> str:
@@ -69,6 +79,10 @@ def rebase(url: str, origin: str) -> str:
 
 
 def fetch(url: str) -> Result:
+    try:
+        url = validated_request_url(url)
+    except ValueError as exc:
+        return Result(url, 0, str(exc))
     request = urllib.request.Request(url, method="GET", headers={"User-Agent": "aaasm-5590-sweep"})
     try:
         with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
@@ -85,10 +99,8 @@ def sweep(urls: list[str]) -> list[Result]:
 
 def self_test() -> int:
     """Prove the classifier discriminates before a sweep is believed."""
-    results: list[tuple[str, bool, str]] = []
-
-    def check(name: str, ok: bool, detail: str = "") -> None:
-        results.append((name, ok, detail))
+    recorder = Recorder()
+    check = recorder.check
 
     check("a 200 is ok", Result("u", 200).ok)
     check("a 404 is not ok", not Result("u", 404).ok)
@@ -122,15 +134,32 @@ def self_test() -> int:
         rebase("https://agent-assembly.com/trust", "http://localhost:5590"),
     )
 
-    failed = 0
-    for name, ok, detail in results:
-        if not ok:
-            failed += 1
-            print(f"FAIL  {name}" + (f"  -- {detail}" if detail else ""))
+    # The guards added for the scanner findings, each with the input that must
+    # be refused -- a guard nothing has ever rejected is a guard nobody has
+    # checked.
+    for bad in ("file:///etc/passwd", "ftp://example.com/x", "not-a-url"):
+        try:
+            validated_request_url(bad)
+        except ValueError:
+            check(f"a non-http(s) target is refused: {bad}", True)
         else:
-            print(f"ok    {name}")
-    print(f"\nself-test: {len(results) - failed}/{len(results)} checks passed")
-    return 1 if failed else 0
+            check(f"a non-http(s) target is refused: {bad}", False, "accepted")
+    check(
+        "an ordinary http url is accepted",
+        validated_request_url("http://localhost:5590/trust") == "http://localhost:5590/trust",
+    )
+    try:
+        safe_output_path("../../escaped.json")
+    except ValueError:
+        check("an output path climbing out of the tree is refused", True)
+    else:
+        check("an output path climbing out of the tree is refused", False, "accepted")
+    check(
+        "an output path inside the tree is accepted",
+        safe_output_path("verify/x.json").name == "x.json",
+    )
+
+    return recorder.report()
 
 
 def main() -> int:
@@ -176,7 +205,7 @@ def main() -> int:
         print("CONTROL DID NOT FAIL -- this sweep proves nothing about the routes above.")
 
     if args.json_out:
-        Path(args.json_out).write_text(
+        safe_output_path(args.json_out).write_text(
             json.dumps(
                 {
                     "origin": args.origin,
