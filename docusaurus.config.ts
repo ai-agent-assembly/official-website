@@ -52,6 +52,61 @@ const config: Config = {
         },
         theme: {customCss: './src/css/custom.css'},
         gtag: {trackingID: 'G-EG3PY1X0CC', anonymizeIP: true},
+        sitemap: {
+          /*
+           * AAASM-5590. Each locale's build emits its own sitemap, so
+           * `/sitemap.xml` listed only the 22 en URLs and the 22 zh-Hant ones
+           * appeared solely in `/zh-Hant/sitemap.xml` — a file nothing points
+           * a crawler at, since
+           * the served robots.txt is Cloudflare-managed and carries no
+           * `Sitemap:` line. The HTML hreflang alternates already name both
+           * locales, so the site was telling a crawler two different things
+           * about which pages exist.
+           *
+           * Each sitemap is made complete rather than only the default-locale
+           * one: `/sitemap.xml` is the conventional discovery point and has to
+           * be right, but a crawler that arrives at either file should learn
+           * the same set, and a symmetric rule needs no branch on which locale
+           * is currently building.
+           *
+           * The current locale is read off `baseUrl`, which Docusaurus rewrites
+           * to `/<locale>/` for a localized build. Deriving it that way keeps
+           * this loop working if a third locale is added, with no list here to
+           * fall out of step with `i18n.locales`.
+           */
+          createSitemapItems: async ({
+            defaultCreateSitemapItems,
+            ...params
+          }) => {
+            const items = await defaultCreateSitemapItems(params);
+            const {defaultLocale, locales} = params.siteConfig.i18n;
+            const origin = params.siteConfig.url;
+            const currentPrefix = `${origin}${params.siteConfig.baseUrl}`;
+            const seen = new Set<string>();
+            const expanded = [];
+            for (const item of items) {
+              if (!item.url.startsWith(currentPrefix)) {
+                // Not ours to rewrite; pass it through untouched.
+                if (!seen.has(item.url)) {
+                  seen.add(item.url);
+                  expanded.push(item);
+                }
+                continue;
+              }
+              const routePath = item.url.slice(currentPrefix.length);
+              for (const locale of locales) {
+                const localePrefix =
+                  locale === defaultLocale ? '/' : `/${locale}/`;
+                const url = `${origin}${localePrefix}${routePath}`;
+                if (!seen.has(url)) {
+                  seen.add(url);
+                  expanded.push({...item, url});
+                }
+              }
+            }
+            return expanded;
+          },
+        },
       } satisfies Preset.Options,
     ],
   ],
