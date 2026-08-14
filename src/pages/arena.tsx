@@ -13,7 +13,7 @@ export default function Arena(): ReactNode {
       title="Arena — Agent Assembly"
       description="Arena is the public trial ground for agent-assembly governance. Agents enter, agent-assembly defends, and every match leaves a report."
     >
-      <div className={styles.wrap}>
+      <main className={styles.wrap}>
         <div className={styles.kicker}>Arena</div>
         <h1 className={styles.title}>
           The public trial ground for agent-assembly governance
@@ -73,7 +73,7 @@ export default function Arena(): ReactNode {
             GitHub
           </Link>
         </div>
-      </div>
+      </main>
     </Layout>
   );
 }

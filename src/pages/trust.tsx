@@ -281,7 +281,7 @@ export default function Trust(): ReactNode {
           'What Agent Assembly measures, what it prevents, on which platforms, and what sits outside the boundary — generated from the capability manifest and checked against it.',
       })}
     >
-      <div className={narrative.wrap}>
+      <main className={narrative.wrap}>
         <div className={narrative.kicker}>
           <Translate id="trust.kicker">Trust and evidence</Translate>
         </div>
@@ -877,7 +877,7 @@ export default function Trust(): ReactNode {
             <Translate id="trust.cta.product">What the product is</Translate>
           </Link>
         </div>
-      </div>
+      </main>
     </Layout>
   );
 }

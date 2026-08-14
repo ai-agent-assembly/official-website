@@ -52,7 +52,7 @@ export default function RolesIndex(): ReactNode {
           'Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.',
       })}
     >
-      <div className={narrative.wrap}>
+      <main className={narrative.wrap}>
         <div className={narrative.kicker}>
           <Translate id="roles.index.kicker">Evaluator briefs</Translate>
         </div>
@@ -144,7 +144,7 @@ export default function RolesIndex(): ReactNode {
             <Translate id="roles.index.cta.howItWorks">How it works</Translate>
           </Link>
         </div>
-      </div>
+      </main>
     </Layout>
   );
 }

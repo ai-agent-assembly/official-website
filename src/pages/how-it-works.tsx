@@ -523,7 +523,7 @@ export default function HowItWorks(): ReactNode {
           'Agent Assembly’s architecture is six roles rather than an ordered pipeline: what each role is, which of them can refuse an action before it runs, and where the platform changes the answer.',
       })}
     >
-      <div className={styles.wrap}>
+      <main className={styles.wrap}>
         <div className={styles.kicker}>
           <Translate id="hiw.kicker">How it works</Translate>
         </div>
@@ -1024,7 +1024,7 @@ export default function HowItWorks(): ReactNode {
             <Translate id="hiw.cta.coreDocs">Core &amp; gateway docs</Translate>
           </TrackedLink>
         </div>
-      </div>
+      </main>
     </Layout>
   );
 }

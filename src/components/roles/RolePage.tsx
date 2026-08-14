@@ -154,7 +154,7 @@ export default function RolePage({
 }): ReactNode {
   return (
     <Layout title={brief.metaTitle} description={metaDescription()}>
-      <div className={narrative.wrap}>
+      <main className={narrative.wrap}>
         <RoleSwitcher current={brief.slug} />
 
         <div className={narrative.kicker}>
@@ -391,7 +391,7 @@ export default function RolePage({
             <Translate id="roles.cta.roles">The other roles</Translate>
           </Link>
         </div>
-      </div>
+      </main>
     </Layout>
   );
 }
