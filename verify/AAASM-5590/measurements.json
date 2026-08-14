@@ -6,7 +6,8 @@
 
   "routes": {
     "tool": "scripts/check-route-health.py",
-    "self_test": "7/7",
+    "_self_test_note": "Recorded as 7/7 while this branch was in progress; the committed script gave 13/13 by the time it was pushed. Re-derived after --json became a stdout flag, which retired the two safe_output_path cases: 11/11.",
+    "self_test": "11/11",
     "sitemaps_read": {"sitemap.xml": 44, "zh-Hant/sitemap.xml": 44},
     "unique_routes_swept": 44,
     "status_200": 44,

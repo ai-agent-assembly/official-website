@@ -37,7 +37,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _audit_support import (  # noqa: E402  - path set above
     Recorder,
     safe_input_dir,
-    safe_output_path,
     validated_request_url,
 )
 
@@ -153,17 +152,6 @@ def self_test() -> int:
         "an ordinary http url is accepted",
         validated_request_url(_SELFTEST_REBASED) == _SELFTEST_REBASED,
     )
-    try:
-        safe_output_path("../../escaped.json")
-    except ValueError:
-        check("an output path climbing out of the tree is refused", True)
-    else:
-        check("an output path climbing out of the tree is refused", False, "accepted")
-    check(
-        "an output path inside the tree is accepted",
-        safe_output_path("verify/x.json").name == "x.json",
-    )
-
     return recorder.report()
 
 
@@ -171,22 +159,23 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--origin", help="origin to sweep, e.g. http://localhost:5590")
     parser.add_argument("--build", default="build", help="build directory holding the sitemaps")
-    parser.add_argument("--json", dest="json_out", help="write results as JSON")
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="print results as JSON on stdout (redirect it where you want it)",
+    )
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
-
-    if args.json_out is not None and (
-        not re.fullmatch(r"[A-Za-z0-9._/-]+", args.json_out) or ".." in args.json_out
-    ):
-        # Checked here, in the frame that performs the write, as well as inside
-        # safe_output_path. A guard one call away is a guard a reader has to go
-        # looking for.
-        parser.error("--json must be a relative path of plain name segments")
 
     if args.self_test:
         return self_test()
     if not args.origin:
         parser.error("--origin is required unless --self-test is given")
+
+    # With --json, stdout carries the JSON and nothing else, so the progress
+    # lines move to stderr. A stream a caller redirects into a file has to hold
+    # one thing.
+    log = sys.stderr if args.json else sys.stdout
 
     build = safe_input_dir(args.build)
     sitemaps = sorted(build.rglob("sitemap.xml"))
@@ -203,7 +192,7 @@ def main() -> int:
         found = sitemap_urls(sitemap)
         label = str(sitemap.relative_to(build))
         counts[label] = len(found)
-        print(f"{label}: {len(found)} urls")
+        print(f"{label}: {len(found)} urls", file=log)
         urls.extend(found)
     urls = sorted(dict.fromkeys(urls))
 
@@ -213,18 +202,30 @@ def main() -> int:
     control_result = fetch(control)
 
     failures = [r for r in results if not r.ok]
-    print(f"\nswept {len(results)} routes from {len(sitemaps)} sitemap(s)")
-    print(f"200: {len(results) - len(failures)}   not-200: {len(failures)}")
+    print(f"\nswept {len(results)} routes from {len(sitemaps)} sitemap(s)", file=log)
+    print(f"200: {len(results) - len(failures)}   not-200: {len(failures)}", file=log)
     for r in failures:
-        print(f"  {r.status or r.note}  {r.url}")
+        print(f"  {r.status or r.note}  {r.url}", file=log)
 
-    print(f"\ncontrol {control} -> {control_result.status or control_result.note}")
+    print(f"\ncontrol {control} -> {control_result.status or control_result.note}", file=log)
     conclusive = control_result.status == 404
     if not conclusive:
-        print("CONTROL DID NOT FAIL -- this sweep proves nothing about the routes above.")
+        print("CONTROL DID NOT FAIL -- this sweep proves nothing about the routes above.", file=log)
 
-    if args.json_out:
-        safe_output_path(args.json_out).write_text(
+    if args.json:
+        # Printed, not written. `--json <path>` took a destination from argv and
+        # opened a file with it, and four successive guards on that path did not
+        # clear SonarCloud `pythonsecurity:S8707` — the same rule, on the same
+        # shape, that AAASM-5589 spent three attempts on in
+        # `denied-action-capture.py`. Nothing consumed the file: the one
+        # artifact it ever produced, `verify/AAASM-5590/measurements.json`, is
+        # committed, and no workflow or package script passes `--json`.
+        #
+        # So the destination was deleted rather than guarded again. A caller who
+        # wants a file redirects into one, which is the shell's job and not this
+        # script's, and the filesystem write this rule is about no longer exists.
+        # Removing a sink beats guarding it — the same call AAASM-5589 reached.
+        sys.stdout.write(
             json.dumps(
                 {
                     "origin": args.origin,
@@ -242,8 +243,7 @@ def main() -> int:
                 },
                 indent=2,
             )
-            + "\n",
-            encoding="utf-8",
+            + "\n"
         )
 
     return 0 if (conclusive and not failures) else 1
