@@ -1,5 +1,5 @@
 AAASM-5589 — falsification evidence for the denied-action proof
-Recorded against tree 8208f0c68bba409fdae7869c210bc0ffd46c944a on 2026-08-14T01:22:51Z
+Recorded against tree de9c020ba2b8391784e84d54fa8608ea11234d5c on 2026-08-14T01:31:48Z
 Artifact under test: metadata/denied-action-proof.json
   sha256 56325ec7655a7c0903de948226911dc284f7fd4c0a86e5f65bb85f6f61235c4b
   Written by scripts/denied-action-capture.py against agent-assembly 0.0.1rc6
