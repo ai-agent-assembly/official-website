@@ -1,0 +1,133 @@
+AAASM-5588 — falsification evidence for the trust/manifest binding
+Recorded against tree e4e0e4cb9001ef4e59807eb1b0de929cd9feaffd on 2026-08-14T00:41:10Z
+Manifest under test: ai-agent-assembly/agent-assembly governance/capability-manifest.yaml
+  blob 88aba6189356d5833d0cd61f6b3c341b40305c07 (branch main), byte-identical to the
+  local checkout the projection was generated from.
+
+A check that cannot fail is not a check. Each of the three below is shown
+failing on a seeded defect and passing on the real tree.
+
+================================================================
+1. SOURCE-OF-TRUTH DRIFT — one value changed in the manifest
+================================================================
+Seed: capabilities[] row S7, coverage: unmeasured -> denied_before_execution.
+Diff against the real manifest is exactly one line:
+797c797
+<   coverage: unmeasured
+---
+>   coverage: denied_before_execution
+
+$ python3 scripts/trust-evidence.py upstream --manifest <drifted>
+manifest         : /private/tmp/claude-501/-Users-bryant-Bryant-Developments-AI-agent-assembly/1f288c79-054b-4b11-a15d-6e83751cf02d/scratchpad/manifest-drifted.yaml
+projection       : metadata/trust-evidence.json
+rows in manifest : 80
+positive control : PASS (a corrupted total is detected)
+
+FAIL: the published projection drifted from the manifest in 6 place(s)
+
+  - terms: published an entry the manifest does not have: {"prose": "Denied before execution", "rows": 13, "token": "denied_before_execution"}
+  - terms: published an entry the manifest does not have: {"prose": "Unmeasured", "rows": 36, "token": "unmeasured"}
+  - terms: manifest has an entry that is not published: {"prose": "Denied before execution", "rows": 14, "token": "denied_before_execution"}
+  - terms: manifest has an entry that is not published: {"prose": "Unmeasured", "rows": 35, "token": "unmeasured"}
+  - domains: published an entry the manifest does not have: {"domain": "sdk", "gapOnly": 5, "ids": "S1\u2013S13", "rows": 13, "terms": [{"prose": "Denied before execution", "rows": 4, "token": "denied_before_execution"}, {"prose": "Unmeasured", "rows": 4, "token": "unmeasured"}, {"prose": "Evaluated", "rows": 3, "token": "evaluated"}, {"prose": "Observed", "rows": 2, "token": "observed"}]}
+  - domains: manifest has an entry that is not published: {"domain": "sdk", "gapOnly": 5, "ids": "S1\u2013S13", "rows": 13, "terms": [{"prose": "Denied before execution", "rows": 5, "token": "denied_before_execution"}, {"prose": "Evaluated", "rows": 3, "token": "evaluated"}, {"prose": "Unmeasured", "rows": 3, "token": "unmeasured"}, {"prose": "Observed", "rows": 2, "token": "observed"}]}
+
+Regenerate with:
+  python3 scripts/trust-evidence.py generate --manifest <path>
+and re-translate any zh-Hant string whose English changed.
+EXIT=1
+
+$ pnpm trust:upstream          # the real published manifest
+manifest         : https://raw.githubusercontent.com/ai-agent-assembly/agent-assembly/main/governance/capability-manifest.yaml
+projection       : metadata/trust-evidence.json
+rows in manifest : 80
+positive control : PASS (a corrupted total is detected)
+
+PASS: the published projection matches the manifest in every field.
+EXIT=0
+
+================================================================
+2. RENDER DRIFT — the page stops rendering what was generated
+================================================================
+Seed: src/generated/trust-evidence.ts, Unmeasured rows 36 -> 12, then a full
+`pnpm build`. This is the whole chain: module -> build -> shipped HTML.
+
+seeded: Unmeasured 36 -> 12
+(rebuilt)
+$ pnpm trust:check
+projection  : metadata/trust-evidence.json
+built page  : build/trust/index.html
+rows 80, terms 11, areas 9, platform rows 4
+positive control : PASS (a seeded term, platform and date drift is detected)
+
+FAIL: the built page drifted from the projection in 1 place(s)
+
+  - the claim-term table does not render the published terms
+      expected: [('Observed', '5'), ('Detected', '2'), ('Evaluated', '11'), ('Denied before execution', '13'), ('Redacted', '5'), ('Approval required', '0'), ('Degraded', '1'), ('Unmeasured', '36'), ('Experimental', '1'), ('Planned', '0'), ('Unsupported', '6')]
+      rendered: [('Observed', '5'), ('Detected', '2'), ('Evaluated', '11'), ('Denied before execution', '13'), ('Redacted', '5'), ('Approval required', '0'), ('Degraded', '1'), ('Unmeasured', '12'), ('Experimental', '1'), ('Planned', '0'), ('Unsupported', '6')]
+EXIT=1
+
+Restored, rebuilt:
+$ pnpm trust:check
+projection  : metadata/trust-evidence.json
+built page  : build/trust/index.html
+rows 80, terms 11, areas 9, platform rows 4
+positive control : PASS (a seeded term, platform and date drift is detected)
+
+PASS: the built page renders the projection exactly — 11 claim terms, 9 areas, 4 platform rows, and its provenance.
+EXIT=0
+
+================================================================
+3. THE fd-7 CLAIMS GATE ACTUALLY COVERS /trust
+================================================================
+A gate that never fires on a page is indistinguishable from a page with
+nothing to find. Two banned absolutes injected into the SHIPPED HTML:
+
+injected: 'comprehensive' and 'immutable audit'
+$ pnpm claims:check
+integrity      : PASS (35 authored entries in 9 groups, floors sum to 35; 14 fd-7 absolutes code-owned)
+catalogue      : 85 phrases
+positive ctrl  : PASS (85/85 phrases matched on all surfaces)
+negative ctrl  : PASS (boundary words must not fire on words containing them)
+sentence ctrl  : PASS (12 sentences caught across 10 groups, 6 left clear)
+scanned        : 130 files (44 html, 80 js, 6 xml)
+forbidden hits : 2   warnings: 0
+
+  FORBIDDEN fd-7             html  trust/index.html                                           'immutable audit'
+  FORBIDDEN fd-7             html  trust/index.html                                           'comprehensive'
+
+FAIL: 2 forbidden claim(s) published. Canonical authority: ADR 0033, Explicitly forbidden designs.
+EXIT=1
+
+Rebuilt clean:
+$ pnpm claims:check
+integrity      : PASS (35 authored entries in 9 groups, floors sum to 35; 14 fd-7 absolutes code-owned)
+catalogue      : 85 phrases
+positive ctrl  : PASS (85/85 phrases matched on all surfaces)
+negative ctrl  : PASS (boundary words must not fire on words containing them)
+sentence ctrl  : PASS (12 sentences caught across 10 groups, 6 left clear)
+scanned        : 130 files (44 html, 80 js, 6 xml)
+forbidden hits : 0   warnings: 0
+
+
+PASS: no forbidden claim in the built output.
+EXIT=0
+
+$ pnpm claims:selftest
+  ok   negative control passes
+
+self-test: 30/30 checks passed
+EXIT=
+
+================================================================
+4. THE STDLIB MANIFEST SCANNER AGREES WITH PyYAML
+================================================================
+The scanner in scripts/trust-evidence.py reads YAML with the standard
+library, because the CI job running the claim gates has no PyYAML. It was
+cross-checked against yaml.safe_load of the same bytes over the WHOLE
+projection — counts, per-area distributions and the four platform rows,
+not only id/domain/coverage. Result: FULL PROJECTION AGREES.
+The cross-check also caught a real defect before it shipped: the first
+version attributed policy_context items to platform, giving P1 three
+platforms, two of which were policy names. A closed-enum guard on
+platform values now makes that failure loud instead of published.
