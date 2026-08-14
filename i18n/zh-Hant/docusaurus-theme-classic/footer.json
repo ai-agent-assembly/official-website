@@ -23,6 +23,10 @@
     "message": "文件",
     "description": "The label of footer link with label=Documentation linking to https://docs.agent-assembly.com"
   },
+  "link.item.label.Trust and evidence": {
+    "message": "信任與證據",
+    "description": "The label of footer link with label=Trust and evidence linking to /trust"
+  },
   "link.item.label.Blog": {
     "message": "部落格",
     "description": "The label of footer link with label=Blog linking to /blog"

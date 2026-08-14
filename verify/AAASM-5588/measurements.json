@@ -1,0 +1,128 @@
+{
+  "ticket": "AAASM-5588",
+  "takenAt": "2026-08-14T00:44:07.079Z",
+  "shots": {
+    "trust-en-desktop-1280": {
+      "innerWidth": 1280,
+      "docScrollWidth": 1280,
+      "docClientWidth": 1280,
+      "pageScrollsHorizontally": false,
+      "overflowingOutsideAScroller": [],
+      "tables": 3,
+      "tableRows": [
+        12,
+        10,
+        5
+      ],
+      "tablesInScroller": true,
+      "h1": "What is measured, what is prevented, and what is neither",
+      "h2Count": 7
+    },
+    "trust-en-desktop-1280-dark": {
+      "innerWidth": 1280,
+      "docScrollWidth": 1280,
+      "docClientWidth": 1280,
+      "pageScrollsHorizontally": false,
+      "overflowingOutsideAScroller": [],
+      "tables": 3,
+      "tableRows": [
+        12,
+        10,
+        5
+      ],
+      "tablesInScroller": true,
+      "h1": "What is measured, what is prevented, and what is neither",
+      "h2Count": 7
+    },
+    "trust-en-mobile-375": {
+      "innerWidth": 375,
+      "docScrollWidth": 375,
+      "docClientWidth": 375,
+      "pageScrollsHorizontally": false,
+      "overflowingOutsideAScroller": [],
+      "tables": 3,
+      "tableRows": [
+        12,
+        10,
+        5
+      ],
+      "tablesInScroller": true,
+      "h1": "What is measured, what is prevented, and what is neither",
+      "h2Count": 7
+    },
+    "trust-zh-Hant-desktop-1280": {
+      "innerWidth": 1280,
+      "docScrollWidth": 1280,
+      "docClientWidth": 1280,
+      "pageScrollsHorizontally": false,
+      "overflowingOutsideAScroller": [],
+      "tables": 3,
+      "tableRows": [
+        12,
+        10,
+        5
+      ],
+      "tablesInScroller": true,
+      "h1": "什麼被量測了、什麼被阻止了，以及什麼兩者皆非",
+      "h2Count": 7
+    },
+    "trust-zh-Hant-mobile-375": {
+      "innerWidth": 375,
+      "docScrollWidth": 375,
+      "docClientWidth": 375,
+      "pageScrollsHorizontally": false,
+      "overflowingOutsideAScroller": [],
+      "tables": 3,
+      "tableRows": [
+        12,
+        10,
+        5
+      ],
+      "tablesInScroller": true,
+      "h1": "什麼被量測了、什麼被阻止了，以及什麼兩者皆非",
+      "h2Count": 7
+    }
+  },
+  "keyboard": {
+    "focusablesTabbedThrough": 44,
+    "everyStopHasAFocusIndicator": true,
+    "stopsWithoutAnyFocusIndicator": [],
+    "firstTenStops": [
+      "A \"Skip to main content\"",
+      "A \"Agent Assembly\"",
+      "A \"Product\"",
+      "BUTTON \"Docs▾\"",
+      "A \"Blog\"",
+      "A \"GitHub\"",
+      "A \"English\"",
+      "BUTTON \"Get started▾\"",
+      "BUTTON \"\"",
+      "A \"capability-manifest.yaml\""
+    ],
+    "inPageAnchors": 4
+  },
+  "reducedMotion": {
+    "no-preference": {
+      "matchesReduce": false,
+      "movingElements": 47,
+      "sample": [
+        "trans A.skipToContent_pRpv 0.2s",
+        "trans A.navbar__brand 0.2s",
+        "trans A.navbar__item navbar__link 0.2s",
+        "trans SPAN.caret_xuzG 0.15s",
+        "trans DIV.panel_ti5e 0.15s, 0.15s, 0.15s",
+        "trans A.link_xC2K 0.2s"
+      ]
+    },
+    "reduce": {
+      "matchesReduce": true,
+      "movingElements": 4,
+      "sample": [
+        "trans SPAN.caret_xuzG 0.15s",
+        "trans DIV.panel_ti5e 0.15s, 0.15s, 0.15s",
+        "trans SPAN.caret_xuzG 0.15s",
+        "trans DIV.panel_ti5e panelRight_Slgf 0.15s, 0.15s, 0.15s"
+      ]
+    }
+  }
+}

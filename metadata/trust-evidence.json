@@ -1,0 +1,355 @@
+{
+  "provenance": {
+    "manifestVersion": "1.0.0",
+    "ticket": "AAASM-5531",
+    "epic": "AAASM-5526",
+    "fixVersion": "agent-assembly v0.0.1-rc.7",
+    "evidenceTree": "299de38830b5f1b3a239661c35e7bc98c1a78ee4",
+    "evidenceDate": "2026-08-06"
+  },
+  "totals": {
+    "rows": 80,
+    "gapOnly": 44,
+    "withLocatedTest": 26,
+    "withUnlocatedTest": 11
+  },
+  "terms": [
+    {
+      "token": "observed",
+      "prose": "Observed",
+      "rows": 5
+    },
+    {
+      "token": "detected",
+      "prose": "Detected",
+      "rows": 2
+    },
+    {
+      "token": "evaluated",
+      "prose": "Evaluated",
+      "rows": 11
+    },
+    {
+      "token": "denied_before_execution",
+      "prose": "Denied before execution",
+      "rows": 13
+    },
+    {
+      "token": "redacted",
+      "prose": "Redacted",
+      "rows": 5
+    },
+    {
+      "token": "approval_required",
+      "prose": "Approval required",
+      "rows": 0
+    },
+    {
+      "token": "degraded",
+      "prose": "Degraded",
+      "rows": 1
+    },
+    {
+      "token": "unmeasured",
+      "prose": "Unmeasured",
+      "rows": 36
+    },
+    {
+      "token": "experimental",
+      "prose": "Experimental",
+      "rows": 1
+    },
+    {
+      "token": "planned",
+      "prose": "Planned",
+      "rows": 0
+    },
+    {
+      "token": "unsupported",
+      "prose": "Unsupported",
+      "rows": 6
+    }
+  ],
+  "domains": [
+    {
+      "domain": "network",
+      "rows": 13,
+      "ids": "N1–N13",
+      "gapOnly": 7,
+      "terms": [
+        {
+          "token": "unmeasured",
+          "prose": "Unmeasured",
+          "rows": 6
+        },
+        {
+          "token": "denied_before_execution",
+          "prose": "Denied before execution",
+          "rows": 3
+        },
+        {
+          "token": "unsupported",
+          "prose": "Unsupported",
+          "rows": 2
+        },
+        {
+          "token": "evaluated",
+          "prose": "Evaluated",
+          "rows": 1
+        },
+        {
+          "token": "redacted",
+          "prose": "Redacted",
+          "rows": 1
+        }
+      ]
+    },
+    {
+      "domain": "sdk",
+      "rows": 13,
+      "ids": "S1–S13",
+      "gapOnly": 5,
+      "terms": [
+        {
+          "token": "denied_before_execution",
+          "prose": "Denied before execution",
+          "rows": 4
+        },
+        {
+          "token": "unmeasured",
+          "prose": "Unmeasured",
+          "rows": 4
+        },
+        {
+          "token": "evaluated",
+          "prose": "Evaluated",
+          "rows": 3
+        },
+        {
+          "token": "observed",
+          "prose": "Observed",
+          "rows": 2
+        }
+      ]
+    },
+    {
+      "domain": "degraded_mode",
+      "rows": 11,
+      "ids": "G1–G11",
+      "gapOnly": 6,
+      "terms": [
+        {
+          "token": "unmeasured",
+          "prose": "Unmeasured",
+          "rows": 5
+        },
+        {
+          "token": "denied_before_execution",
+          "prose": "Denied before execution",
+          "rows": 2
+        },
+        {
+          "token": "evaluated",
+          "prose": "Evaluated",
+          "rows": 2
+        },
+        {
+          "token": "degraded",
+          "prose": "Degraded",
+          "rows": 1
+        },
+        {
+          "token": "redacted",
+          "prose": "Redacted",
+          "rows": 1
+        }
+      ]
+    },
+    {
+      "domain": "mcp",
+      "rows": 10,
+      "ids": "M1–M10",
+      "gapOnly": 8,
+      "terms": [
+        {
+          "token": "unmeasured",
+          "prose": "Unmeasured",
+          "rows": 6
+        },
+        {
+          "token": "denied_before_execution",
+          "prose": "Denied before execution",
+          "rows": 2
+        },
+        {
+          "token": "redacted",
+          "prose": "Redacted",
+          "rows": 1
+        },
+        {
+          "token": "unsupported",
+          "prose": "Unsupported",
+          "rows": 1
+        }
+      ]
+    },
+    {
+      "domain": "devtool_launch",
+      "rows": 8,
+      "ids": "L1–L8",
+      "gapOnly": 6,
+      "terms": [
+        {
+          "token": "unmeasured",
+          "prose": "Unmeasured",
+          "rows": 5
+        },
+        {
+          "token": "denied_before_execution",
+          "prose": "Denied before execution",
+          "rows": 1
+        },
+        {
+          "token": "observed",
+          "prose": "Observed",
+          "rows": 1
+        },
+        {
+          "token": "unsupported",
+          "prose": "Unsupported",
+          "rows": 1
+        }
+      ]
+    },
+    {
+      "domain": "host_action",
+      "rows": 8,
+      "ids": "H1–H8",
+      "gapOnly": 5,
+      "terms": [
+        {
+          "token": "unmeasured",
+          "prose": "Unmeasured",
+          "rows": 5
+        },
+        {
+          "token": "denied_before_execution",
+          "prose": "Denied before execution",
+          "rows": 1
+        },
+        {
+          "token": "detected",
+          "prose": "Detected",
+          "rows": 1
+        },
+        {
+          "token": "observed",
+          "prose": "Observed",
+          "rows": 1
+        }
+      ]
+    },
+    {
+      "domain": "identity",
+      "rows": 7,
+      "ids": "I1–I7",
+      "gapOnly": 3,
+      "terms": [
+        {
+          "token": "evaluated",
+          "prose": "Evaluated",
+          "rows": 5
+        },
+        {
+          "token": "unmeasured",
+          "prose": "Unmeasured",
+          "rows": 2
+        }
+      ]
+    },
+    {
+      "domain": "credentials",
+      "rows": 6,
+      "ids": "C1–C6",
+      "gapOnly": 3,
+      "terms": [
+        {
+          "token": "unmeasured",
+          "prose": "Unmeasured",
+          "rows": 3
+        },
+        {
+          "token": "redacted",
+          "prose": "Redacted",
+          "rows": 2
+        },
+        {
+          "token": "detected",
+          "prose": "Detected",
+          "rows": 1
+        }
+      ]
+    },
+    {
+      "domain": "platform",
+      "rows": 4,
+      "ids": "P1–P4",
+      "gapOnly": 1,
+      "terms": [
+        {
+          "token": "unsupported",
+          "prose": "Unsupported",
+          "rows": 2
+        },
+        {
+          "token": "experimental",
+          "prose": "Experimental",
+          "rows": 1
+        },
+        {
+          "token": "observed",
+          "prose": "Observed",
+          "rows": 1
+        }
+      ]
+    }
+  ],
+  "platforms": [
+    {
+      "id": "P1",
+      "capability": "Linux x86_64 host-level interception",
+      "coverage": "experimental",
+      "platform": ["linux_x86_64"],
+      "reachability": "shipped_crates_io_only",
+      "defaultState": "off",
+      "gapOnly": false
+    },
+    {
+      "id": "P2",
+      "capability": "Linux aarch64 host-level interception",
+      "coverage": "observed",
+      "platform": ["linux_aarch64"],
+      "reachability": "shipped_crates_io_only",
+      "defaultState": "on",
+      "gapOnly": false
+    },
+    {
+      "id": "P3",
+      "capability": "macOS host-level interception",
+      "coverage": "unsupported",
+      "platform": ["macos"],
+      "reachability": "shipped_crates_io_only",
+      "defaultState": "on",
+      "gapOnly": false
+    },
+    {
+      "id": "P4",
+      "capability": "Windows mediation",
+      "coverage": "unsupported",
+      "platform": ["windows"],
+      "reachability": "absent_mechanism",
+      "defaultState": "not_applicable",
+      "gapOnly": true
+    }
+  ]
+}

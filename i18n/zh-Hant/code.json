@@ -2164,5 +2164,287 @@
   },
   "roles.security.proof.posture.link": {
     "message": "預設開啟的有哪些 →"
+  },
+  "trust.term.observed": {
+    "message": "已觀測"
+  },
+  "trust.term.detected": {
+    "message": "已偵測"
+  },
+  "trust.term.evaluated": {
+    "message": "已評估"
+  },
+  "trust.term.denied": {
+    "message": "執行前拒絕"
+  },
+  "trust.term.redacted": {
+    "message": "已遮蔽"
+  },
+  "trust.term.approval": {
+    "message": "需要核准"
+  },
+  "trust.term.degraded": {
+    "message": "降級"
+  },
+  "trust.term.unmeasured": {
+    "message": "未量測"
+  },
+  "trust.term.experimental": {
+    "message": "實驗性"
+  },
+  "trust.term.planned": {
+    "message": "已規劃"
+  },
+  "trust.term.unsupported": {
+    "message": "不支援"
+  },
+  "trust.means.observed": {
+    "message": "有一則事件抵達了證據管線。它絕不代表該動作被擋下來了。"
+  },
+  "trust.means.detected": {
+    "message": "在已觀測的材料中找到了一個值得注意的樣態，並點名了偵測器。一項發現不蘊含任何決策。"
+  },
+  "trust.means.evaluated": {
+    "message": "控制平面針對這個動作產生了一項決策。要進一步達到拒絕，還需要一個會等待答案並遵從它的呼叫端。"
+  },
+  "trust.means.denied": {
+    "message": "該動作沒有生效，而且決策發生在效果之前。這個用語點名的是做出拒絕的元件，不是做出決策的元件。"
+  },
+  "trust.means.redacted": {
+    "message": "該動作在移除內容後繼續進行，而記錄會點名被移除的欄位。遮蔽器位在管線的哪個位置，就是它的界限。"
+  },
+  "trust.means.approval": {
+    "message": "該動作被擱置以等待人做出決定，並以一筆待核准記錄為證。"
+  },
+  "trust.means.degraded": {
+    "message": "某項已規劃的控制已被設定但無法使用，因此實際達到的等級低於規劃的等級。它必須同時帶有兩個等級，否則就不是這個用語。"
+  },
+  "trust.means.unmeasured": {
+    "message": "沒有任何控制檢查過這個動作或酬載；關於它我們一無所知。它的範圍限定在動作或酬載 — 同一段流量在連線層級仍可能有觀測存在。"
+  },
+  "trust.means.experimental": {
+    "message": "已實作但尚未針對正式環境使用完成驗證，並點名了缺少的那項驗證。"
+  },
+  "trust.means.planned": {
+    "message": "已決定但尚未實作。它帶的是一則票號，不帶任何能力主張。"
+  },
+  "trust.means.unsupported": {
+    "message": "在這個平台或組態上無法使用，且未宣告任何計畫。單一元素的不支援，不等於整個產品的不支援。"
+  },
+  "trust.meta.title": {
+    "message": "信任、證據與已知限制 — Agent Assembly"
+  },
+  "trust.meta.description": {
+    "message": "Agent Assembly 量測了什麼、阻止了什麼、在哪些平台上，以及什麼落在邊界之外 — 由能力清單產生，並對照它做檢查。"
+  },
+  "trust.kicker": {
+    "message": "信任與證據"
+  },
+  "trust.title": {
+    "message": "什麼被量測了、什麼被阻止了，以及什麼兩者皆非"
+  },
+  "trust.lede": {
+    "message": "這一頁的存在，是為了讓你不必讀原始碼就能確定防護邊界。頁面上的每一個數字都是從能力清單產生的 — 那份清單逐列記錄了什麼被檢查過、又檢查出什麼 — 而本儲存庫裡有一項檢查會在這一頁與那份清單不再一致時失敗。"
+  },
+  "trust.meta.owner": {
+    "message": "負責團隊"
+  },
+  "trust.meta.version": {
+    "message": "頁面版本"
+  },
+  "trust.meta.verified": {
+    "message": "最後查核日期"
+  },
+  "trust.meta.source": {
+    "message": "真實來源"
+  },
+  "trust.meta.sourceLink": {
+    "message": "capability-manifest.yaml"
+  },
+  "trust.fresh.eyebrow": {
+    "message": "證據新鮮度"
+  },
+  "trust.fresh.title": {
+    "message": "這些數字有多舊，以及它們描述的是什麼"
+  },
+  "trust.fresh.body": {
+    "message": "底下每一個數字都來自對 {rows} 筆能力列的同一次調查，於 {date} 針對樹 {tree} 取得。"
+  },
+  "trust.fresh.calloutTitle": {
+    "message": "這些證據描述的是開發分支，不是某個發行版本。"
+  },
+  "trust.fresh.callout": {
+    "message": "被調查的樹 {tree} 不是任何已發行標籤的祖先 — 它比 v0.0.1-rc.6 超前 2,788 個提交 — 所以能力清單記載：在重新針對該標籤推導之前，對任何已發行的參考點而言每一列都是未量測。請把這一頁讀成在描述開發分支。如果你評估的是已發布的建置，那麼對任何一列而言，誠實的答案都是它並未在那裡被量測過。"
+  },
+  "trust.fresh.gaps": {
+    "message": "在這 {rows} 列當中，有 {gap} 列完全沒有測試 — 它們的證據被記載為缺口。有 {located} 列至少帶有一項能力清單能以路徑指出的測試，另有 {unlocated} 列只點名了一套測試卻沒有路徑；這兩個集合有一列重疊，所以它們相加並不等於其餘的部分。缺口列在這裡就以缺口呈現，這正是能力清單對任何呈現它的介面所要求的。"
+  },
+  "trust.terms.eyebrow": {
+    "message": "如何讀一個狀態"
+  },
+  "trust.terms.title": {
+    "message": "一項能力可能處在的十一種狀態"
+  },
+  "trust.terms.lead": {
+    "message": "一項治理主張若少了它的時機與姿態就是不完整的，所以 {adr} 定義了剛好十一個用語，並要求每一個介面都必須從中挑一個，而不是用「保護」或「強制執行」這類未加區分的動詞。這裡列出全部十一個，並附上達到各用語的能力清單列數。其中兩個沒有任何一列達到，而那兩列正是最值得先讀的。"
+  },
+  "trust.terms.adrLink": {
+    "message": "ADR 0033 §6"
+  },
+  "trust.terms.colTerm": {
+    "message": "主張用語"
+  },
+  "trust.terms.colRows": {
+    "message": "能力清單列數"
+  },
+  "trust.terms.colMeans": {
+    "message": "它的意思，以及它到哪裡為止"
+  },
+  "trust.terms.zeroes": {
+    "message": "沒有任何能力清單列達到需要核准。這道擱置本身在閘道路徑中確實存在，並會在逾時時保持關閉，但沒有任何已出貨的維運者介面能夠回應它，所以一個等待人回覆的請求最後是被拒絕，而不是被審核 — 追蹤於 AAASM-5657。也沒有任何一列帶有已規劃：已規劃的意思是已決定但尚未實作，它帶的是一張票而不是一項能力，所以它描述的是路線圖項目，不是調查結果。"
+  },
+  "trust.areas.eyebrow": {
+    "message": "涵蓋範圍"
+  },
+  "trust.areas.title": {
+    "message": "這次調查逐一領域發現了什麼"
+  },
+  "trust.areas.lead": {
+    "message": "底下每一個領域都是它裡面的全部能力清單列，沒有省略任何一列，也沒有挑選任何一列 — 所以本表某一列中各狀態的組成，就是調查中的組成。請讀它的分布，而不是其中最強的那個用語：一個在三列上達到拒絕、卻在六列上未量測的領域，並不是一個附帶但書的受治理領域。"
+  },
+  "trust.areas.colArea": {
+    "message": "領域"
+  },
+  "trust.areas.colRows": {
+    "message": "列數"
+  },
+  "trust.areas.colIds": {
+    "message": "能力清單編號"
+  },
+  "trust.areas.colDist": {
+    "message": "這些列如何被歸類"
+  },
+  "trust.platform.eyebrow": {
+    "message": "平台"
+  },
+  "trust.platform.title": {
+    "message": "主機層級的控制，依平台分開列出"
+  },
+  "trust.platform.lead": {
+    "message": "主機層級攔截是本產品中因平台而差異最大的部分，所以它不會被歸納成單一答案。以下就是能力清單自己的四筆平台列。可取得性與預設狀態被印在每一列旁邊，因為少了它們的支援表等於在宣稱某樣東西可以取得，但其實沒有任何管道會出貨它。"
+  },
+  "trust.platform.colId": {
+    "message": "能力清單列"
+  },
+  "trust.platform.colCap": {
+    "message": "能力"
+  },
+  "trust.platform.colState": {
+    "message": "狀態"
+  },
+  "trust.platform.colReach": {
+    "message": "你如何取得它"
+  },
+  "trust.platform.colDefault": {
+    "message": "預設"
+  },
+  "trust.platform.note": {
+    "message": "這張表有兩種常見的錯誤讀法。Windows 沒有任何形式的本機中介，所以它那一列並不是其他列的較弱版本 — 那裡根本沒有機制可以設定。另外，某一列在主機層級攔截上標為不支援，並不代表該平台上的傳輸中介也是如此：在 macOS 上代理伺服器是可以取得的，但只能透過 cargo install，而主機層級攔截在那裡則完全不存在。"
+  },
+  "trust.audit.eyebrow": {
+    "message": "稽核"
+  },
+  "trust.audit.title": {
+    "message": "稽核鏈證明了什麼，又沒有證明什麼"
+  },
+  "trust.audit.evident": {
+    "message": "每個工作階段的日誌都是雜湊鏈接的：每一筆項目都帶有一個未加金鑰的 SHA-256 摘要，涵蓋它自己的欄位加上前一筆的摘要，而 aasm audit verify-chain 會重新走過整條鏈。這使得粗心的竄改可以被察覺。它是防竄改可察覺的，但它既不是防竄改的、也不是不可變更的 — 該摘要未加金鑰，所以它不是簽章，任何能改寫輸出端的人都能把它重新算一遍。"
+  },
+  "trust.audit.appendOnly": {
+    "message": "唯附加是另一項不同的主張，而且在這裡是更弱的一項：這份日誌的唯附加來自慣例而非來自約束，因為保留期限的清理會刪除資料列。這條鏈同時也只涵蓋 JSONL 輸出端 — 資料庫鏡像並不儲存任何鏈結中介資料。"
+  },
+  "trust.audit.limit1": {
+    "message": "寫出是盡力而為的。鏈頭會在項目送出之前就前進，而通道滿載時會把它丟棄，但呼叫端仍然回報成功 — 所以一筆被丟棄的項目和一筆被刪除的項目無法區分，而一份被清空的日誌驗證起來會是乾淨的。"
+  },
+  "trust.audit.limit2": {
+    "message": "某個特定決策的記錄是否確實持久地抵達這條鏈，沒有任何能力清單列能夠確立。清單中關於這個主題的唯一一列，講的是寫入失敗時會發生什麼事，而它帶有未量測、fail_open 以及一個證據缺口。"
+  },
+  "trust.audit.limit3": {
+    "message": "一則稽核事件顯示的是有某件事被觀測到了。它絕不顯示該動作被擋下來了。"
+  },
+  "trust.outside.eyebrow": {
+    "message": "邊界之外"
+  },
+  "trust.outside.title": {
+    "message": "這一頁不主張什麼"
+  },
+  "trust.outside.compliance": {
+    "message": "本站任何地方都不提供法規遵循狀態、服務等級協議、託管地區、資料處理協議或 BAA。這些都尚未經過核准，所以這裡的任何內容都不應被讀成其中之一 — 包括以省略的方式被讀成如此。"
+  },
+  "trust.outside.maturity": {
+    "message": "開放原始碼的執行環境尚未達到 1.0，是以預先發行系列的形式釋出。託管服務屬於已規劃 — 已決定，但尚未建置 — 所以本站沒有任何內容構成對推出日期、地區、服務等級協議或法規遵循狀態的承諾。"
+  },
+  "trust.outside.path": {
+    "message": "治理只適用於你選擇經由 Agent Assembly 繞送的路徑。在那些路徑之外啟動的代理，不是一個受到較弱治理的代理；它是一個未受治理的代理，而能力清單記載：未受管理的啟動是偵測不到的。"
+  },
+  "trust.outside.unmeasured": {
+    "message": "凡是狀態未量測之處，這裡就印出未量測。它不會被軟化成某個受支援的狀態，也不會被省略 — 缺少證據只會降低一個狀態，絕不會提高它。"
+  },
+  "trust.check.eyebrow": {
+    "message": "自己動手查核"
+  },
+  "trust.check.title": {
+    "message": "這一頁是從哪些來源推導出來的"
+  },
+  "trust.check.manifest": {
+    "message": "能力清單"
+  },
+  "trust.check.manifestNote": {
+    "message": "— 這一頁每一個數字背後的每一列，連同它的證據、它的已知繞道方式，以及它所處的邊界。"
+  },
+  "trust.check.adr": {
+    "message": "ADR 0033 — 治理與強制執行架構"
+  },
+  "trust.check.adrNote": {
+    "message": "— 主張用語、平台矩陣，以及本產品自我禁止的那些設計。"
+  },
+  "trust.check.vocab": {
+    "message": "主張用語與被禁止的絕對詞"
+  },
+  "trust.check.vocabNote": {
+    "message": "— 每個用語在各介面上所許可的措辭，以及任何介面都不得公開的字句。"
+  },
+  "trust.check.security": {
+    "message": "安全模型"
+  },
+  "trust.check.securityNote": {
+    "message": "— 這些控制所要回應的威脅模型。"
+  },
+  "trust.check.register": {
+    "message": "共用主張登錄表"
+  },
+  "trust.check.registerNote": {
+    "message": "— 十六筆編號的主張，每一筆都附上它達到的用語，以及限制它的界限。本站的角色簡報都引用它。"
+  },
+  "trust.check.arena": {
+    "message": "Arena"
+  },
+  "trust.check.arenaNote": {
+    "message": "— 針對治理路徑執行的對抗性試驗，每一場比賽都留下一份報告。"
+  },
+  "trust.check.advisories": {
+    "message": "安全公告"
+  },
+  "trust.check.advisoriesNote": {
+    "message": "— 核心儲存庫已公開的揭露。"
+  },
+  "trust.cta.roles": {
+    "message": "讀你角色的簡報 →"
+  },
+  "trust.cta.how": {
+    "message": "它如何運作"
+  },
+  "trust.cta.product": {
+    "message": "這個產品是什麼"
   }
 }
