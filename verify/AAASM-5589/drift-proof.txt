@@ -1,0 +1,211 @@
+AAASM-5589 — falsification evidence for the denied-action proof
+Recorded against tree 8208f0c68bba409fdae7869c210bc0ffd46c944a on 2026-08-14T01:22:51Z
+Artifact under test: metadata/denied-action-proof.json
+  sha256 56325ec7655a7c0903de948226911dc284f7fd4c0a86e5f65bb85f6f61235c4b
+  Written by scripts/denied-action-capture.py against agent-assembly 0.0.1rc6
+  and smolagents 1.26.0, both installed from PyPI, on Darwin 25.4.0 arm64.
+
+A check that cannot fail is not a check. Section 1 is the one this ticket
+exists for: it severs the enforcement path and shows the POST-CONDITION —
+not a label, not a verdict — going red. Sections 2 to 4 show the gates that
+keep the published page tied to that run failing on a seeded defect and
+passing on the real tree.
+
+================================================================
+1. THE POST-CONDITION FAILS WHEN THE ENFORCEMENT PATH IS SEVERED
+================================================================
+This is the load-bearing one. `--sever-enforcement` runs the `denied` arm
+with `SmolagentsAdapter.register_hooks` never called. Nothing else moves:
+same tool, same policy, same rule id, same directory, same observer. If the
+report file's absence were an artefact of the harness rather than of the
+enforcement point, this run would still show it absent.
+
+$ .proofenv/bin/python scripts/denied-action-capture.py --sever-enforcement
+post-conditions  : 2/3 held
+  FAIL [denied] expected the report file absent, observed present
+EXIT=1
+
+The denied arm's own fields from that run, verbatim from its stdout:
+
+  {
+    "id": "denied",
+    "enforcementInstalled": false,
+    "policyDeniesTool": true,
+    "listingAfter": [
+      "incident-report.txt"
+    ],
+    "observedSideEffect": true,
+    "expectedSideEffect": false,
+    "postConditionHolds": false
+  }
+
+`policyDeniesTool` is still true. The policy did not change; the component
+that honours it was removed, and the file appeared. That is what makes the
+committed run's empty listing a measurement of enforcement rather than a
+property of the fixture.
+
+$ .proofenv/bin/python scripts/denied-action-capture.py
+wrote metadata/denied-action-proof.json
+post-conditions  : 3/3 held
+EXIT=0
+
+$ pnpm exec prettier --write metadata/denied-action-proof.json
+$ git status --porcelain metadata/
+(no output)
+
+The re-run reproduced the committed recording byte for byte. The transcript
+is deterministic, so a future difference in this file is a difference in
+behaviour rather than in the weather.
+
+================================================================
+2. RENDER DRIFT — the page stops rendering what was recorded
+================================================================
+Seed: src/generated/denied-action-proof.ts, the `denied` row's `reportFile`
+`absent` -> `present`, then a full `pnpm build`. This is the whole chain:
+module -> build -> shipped HTML.
+
+seeded: denied reportFile absent -> present
+(rebuilt)
+$ pnpm proof:check
+recording   : metadata/denied-action-proof.json
+built page  : build/denied-action-proof/index.html
+3 runs, 5 decision fields, sdk 0.0.1rc6, captured 2026-08-14
+positive control : PASS (a seeded observed-side-effect, decision-field and version drift is detected)
+
+FAIL: the built page drifted from the recording in 1 place(s)
+
+  - the run table does not render the recorded runs
+      expected: [['denied', 'installed', 'deny', 'absent', 'held'], ['allowed', 'installed', 'allow', 'present', 'held'], ['enforcement_removed', 'removed', 'deny', 'present', 'held']]
+      rendered: [['denied', 'installed', 'deny', 'present', 'held'], ['allowed', 'installed', 'allow', 'present', 'held'], ['enforcement_removed', 'removed', 'deny', 'present', 'held']]
+
+Re-record with scripts/denied-action-capture.py, then `pnpm proof:generate`.
+EXIT=1
+
+Restored, rebuilt:
+$ pnpm proof:check
+recording   : metadata/denied-action-proof.json
+built page  : build/denied-action-proof/index.html
+3 runs, 5 decision fields, sdk 0.0.1rc6, captured 2026-08-14
+positive control : PASS (a seeded observed-side-effect, decision-field and version drift is detected)
+
+PASS: the built page renders the recording exactly — 3 runs, the decision the enforcement point acted on, and the versions it was recorded against.
+EXIT=0
+
+  A REAL DEFECT THIS SECTION CAUGHT, BEFORE IT SHIPPED
+  ----------------------------------------------------
+  The first version of the positive control seeded `absent` -> `present`,
+  i.e. it substituted the other legitimate value. Run against the seeded
+  build above, the control's poisoned value MATCHED what the drifted page
+  rendered, so that seeded drift stopped firing, only 2 of 3 fired, and
+  `check` reported EXIT=2 ("cannot prove itself") instead of EXIT=1
+  ("drifted"). A control that a defect can cancel is not a control. Every
+  seed now appends a suffix no legitimate rendering can carry. Fixed in
+  `8208f0c`; the EXIT=1 above is from the fixed script.
+
+================================================================
+3. THE fd-7 CLAIMS GATE ACTUALLY REACHES THIS PAGE
+================================================================
+A gate that never fires on a page is indistinguishable from a page with
+nothing to find. Two banned absolutes injected into the SHIPPED HTML of the
+new route:
+
+injected: 'comprehensive' and 'cannot be bypassed' into build/denied-action-proof/index.html
+$ pnpm claims:check
+integrity      : PASS (35 authored entries in 9 groups, floors sum to 35; 14 fd-7 absolutes code-owned)
+catalogue      : 85 phrases
+positive ctrl  : PASS (85/85 phrases matched on all surfaces)
+negative ctrl  : PASS (boundary words must not fire on words containing them)
+sentence ctrl  : PASS (12 sentences caught across 10 groups, 6 left clear)
+scanned        : 134 files (46 html, 82 js, 6 xml)
+forbidden hits : 2   warnings: 0
+
+  FORBIDDEN fd-7             html  denied-action-proof/index.html                             'cannot be bypassed'
+  FORBIDDEN fd-7             html  denied-action-proof/index.html                             'comprehensive'
+
+FAIL: 2 forbidden claim(s) published. Canonical authority: ADR 0033, Explicitly forbidden designs.
+EXIT=1
+
+Restored:
+$ pnpm claims:check
+integrity      : PASS (35 authored entries in 9 groups, floors sum to 35; 14 fd-7 absolutes code-owned)
+catalogue      : 85 phrases
+positive ctrl  : PASS (85/85 phrases matched on all surfaces)
+negative ctrl  : PASS (boundary words must not fire on words containing them)
+sentence ctrl  : PASS (12 sentences caught across 10 groups, 6 left clear)
+scanned        : 134 files (46 html, 82 js, 6 xml)
+forbidden hits : 0   warnings: 0
+
+
+PASS: no forbidden claim in the built output.
+EXIT=0
+
+$ pnpm claims:selftest
+self-test: 30/30 checks passed
+EXIT=0
+
+Note the scanned-file count moved 130 -> 134 against AAASM-5588's run: the
+two new routes in two locales. The gate reaches them.
+
+================================================================
+4. THE TRUST PAGE'S OWN GATE STILL PASSES
+================================================================
+This branch is stacked on AAASM-5588 and edits `/trust`, so its binding is
+re-checked rather than assumed.
+
+$ pnpm trust:check
+projection  : metadata/trust-evidence.json
+built page  : build/trust/index.html
+rows 80, terms 11, areas 9, platform rows 4
+positive control : PASS (a seeded term, platform and date drift is detected)
+
+PASS: the built page renders the projection exactly — 11 claim terms, 9 areas, 4 platform rows, and its provenance.
+EXIT=0
+
+================================================================
+5. WHAT THE RECORDED RUN DOES AND DOES NOT ESTABLISH
+================================================================
+Establishes, for this run only:
+  - The tool body did not take effect. Read from a directory listing taken
+    by a separate OS process importing only `os`, `sys` and `json`.
+  - The refusal preceded the effect. The same tool, same policy, with the
+    shim removed, wrote the file (section 1 and the `enforcement_removed`
+    row); with the shim present and the policy allowing, it also wrote the
+    file (`allowed` row). Both controls came out the other way.
+  - ADR 0033 §6 term reached: `Denied before execution`. The verdict alone
+    would reach only `Evaluated`; the post-condition is what carries it.
+
+Does not establish, and the page says so:
+  - Anything about a second tool, a second framework, a second SDK, a second
+    platform, or the other language SDKs.
+  - Anything about a gateway producing the verdict. The decision came from
+    an in-process interceptor in the SDK's `enforce` posture.
+  - Anything about durable audit evidence. Neither audit hook resolves on
+    the SDK's own shipped interceptor, so a denied call leaves nothing
+    behind; SDK-side recording is `Planned` under §6.
+  - Anything about a tool body reached by a route other than the framework's
+    tool-execution entry.
+
+================================================================
+6. ACCESSIBILITY, MOTION AND THE NON-VIDEO FALLBACK
+================================================================
+Measured in `measurements.json` beside this file. The page carries no video,
+no audio, no autoplay and no canvas in either motion preference — the
+transcript IS the non-video fallback rather than a substitute for one:
+
+  videoElements 0, canvasElements 0, under both preferences
+
+Its one transition is switched off when reduced motion is asked for, which
+is measured rather than asserted:
+
+  no-preference  transitionProperty border-left-color, duration 0.2s  (x4)
+  reduce         transitionProperty none,              duration 0s    (x4)
+
+The 4 elements still moving under `reduce` in the whole-document count are
+Docusaurus navbar and dropdown chrome, not page content — the same residual
+AAASM-5588 recorded.
+
+Keyboard: 26 focus stops, every one with a visible focus indicator, none
+without. Layout: no horizontal page scroll at 1280 or 375 in either locale,
+and both tables sit inside their own scroll container. The zh-Hant build
+renders the same 2 tables with the same 5 and 3 rows as English, which is
+the evidence the translation did not drop a row.
