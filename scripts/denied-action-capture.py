@@ -302,9 +302,31 @@ def capture(*, severed: bool, captured_on: str) -> dict[str, Any]:
     }
 
 
+def _repo_json_path(raw: str) -> Path:
+    """Resolve `--out` and refuse anything outside this repository.
+
+    `--out` is the one argument here that reaches the filesystem, and this
+    script is meant to be run by readers and by agents reproducing the page.
+    An unvalidated path lets a mistyped or generated argument write over a file
+    somewhere else entirely, so the destination is resolved and required to sit
+    inside the repository and to end in `.json` — the shape of the only thing
+    this script produces. Symlinks are resolved before the check, so a link
+    inside the tree cannot be used to reach outside it.
+    """
+    resolved = Path(raw).expanduser().resolve()
+    repo = REPO.resolve()
+    if not resolved.is_relative_to(repo):
+        raise argparse.ArgumentTypeError(
+            f"--out must stay inside {repo}, got {resolved}"
+        )
+    if resolved.suffix != ".json":
+        raise argparse.ArgumentTypeError(f"--out must end in .json, got {resolved.name}")
+    return resolved
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--out", type=Path, default=RECORDING)
+    ap.add_argument("--out", type=_repo_json_path, default=RECORDING)
     ap.add_argument("--date", default=date.today().isoformat(), metavar="YYYY-MM-DD")
     ap.add_argument(
         "--sever-enforcement",
