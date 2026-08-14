@@ -107,6 +107,11 @@ const config: Config = {
           title: 'Resources',
           items: [
             {label: 'Documentation', href: DOCS_URL},
+            // AAASM-5588. In the footer rather than the navbar: it is the page
+            // an evaluator goes looking for once they have a reason to, not one
+            // to interrupt a first visit with, and the footer is where a
+            // trust surface is conventionally looked for.
+            {label: 'Trust and evidence', to: '/trust'},
             {label: 'Blog', to: '/blog'},
           ],
         },
