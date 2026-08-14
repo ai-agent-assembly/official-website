@@ -1,0 +1,171 @@
+{
+  "ticket": "AAASM-5589",
+  "takenAt": "2026-08-14T01:43:58.965Z",
+  "shots": {
+    "proof-en-desktop-1280": {
+      "innerWidth": 1280,
+      "docScrollWidth": 1280,
+      "docClientWidth": 1280,
+      "pageScrollsHorizontally": false,
+      "overflowingOutsideAScroller": [],
+      "tables": 2,
+      "tableRows": [
+        5,
+        3
+      ],
+      "tablesInScroller": true,
+      "h1": "A denied action, and the file it did not write",
+      "h2Count": 5,
+      "transcriptSteps": 4,
+      "limitations": 30
+    },
+    "proof-en-mobile-375": {
+      "innerWidth": 375,
+      "docScrollWidth": 375,
+      "docClientWidth": 375,
+      "pageScrollsHorizontally": false,
+      "overflowingOutsideAScroller": [],
+      "tables": 2,
+      "tableRows": [
+        5,
+        3
+      ],
+      "tablesInScroller": true,
+      "h1": "A denied action, and the file it did not write",
+      "h2Count": 5,
+      "transcriptSteps": 4,
+      "limitations": 50
+    },
+    "proof-zh-Hant-desktop-1280": {
+      "innerWidth": 1280,
+      "docScrollWidth": 1280,
+      "docClientWidth": 1280,
+      "pageScrollsHorizontally": false,
+      "overflowingOutsideAScroller": [],
+      "tables": 2,
+      "tableRows": [
+        5,
+        3
+      ],
+      "tablesInScroller": true,
+      "h1": "一個被拒絕的動作，以及它沒有寫出的檔案",
+      "h2Count": 5,
+      "transcriptSteps": 4,
+      "limitations": 30
+    },
+    "proof-zh-Hant-mobile-375": {
+      "innerWidth": 375,
+      "docScrollWidth": 375,
+      "docClientWidth": 375,
+      "pageScrollsHorizontally": false,
+      "overflowingOutsideAScroller": [],
+      "tables": 2,
+      "tableRows": [
+        5,
+        3
+      ],
+      "tablesInScroller": true,
+      "h1": "一個被拒絕的動作，以及它沒有寫出的檔案",
+      "h2Count": 5,
+      "transcriptSteps": 4,
+      "limitations": 50
+    },
+    "proof-en-desktop-1280-dark": {
+      "innerWidth": 1280,
+      "docScrollWidth": 1280,
+      "docClientWidth": 1280,
+      "pageScrollsHorizontally": false,
+      "overflowingOutsideAScroller": [],
+      "tables": 2,
+      "tableRows": [
+        5,
+        3
+      ],
+      "tablesInScroller": true,
+      "h1": "A denied action, and the file it did not write",
+      "h2Count": 5,
+      "transcriptSteps": 4,
+      "limitations": 30
+    }
+  },
+  "keyboard": {
+    "focusablesTabbedThrough": 26,
+    "everyStopHasAFocusIndicator": true,
+    "stopsWithoutAnyFocusIndicator": [],
+    "firstTenStops": [
+      "A \"Skip to main content\"",
+      "A \"Agent Assembly\"",
+      "A \"Product\"",
+      "BUTTON \"Docs▾\"",
+      "A \"Blog\"",
+      "A \"GitHub\"",
+      "A \"English\"",
+      "BUTTON \"Get started▾\"",
+      "BUTTON \"\"",
+      "A \"denied-action-proof.json\""
+    ],
+    "inPageAnchors": 3
+  },
+  "reducedMotion": {
+    "no-preference": {
+      "matchesReduce": false,
+      "movingElements": 47,
+      "sample": [
+        "trans A.skipToContent_pRpv 0.2s",
+        "trans A.navbar__brand 0.2s",
+        "trans A.navbar__item navbar__link 0.2s",
+        "trans SPAN.caret_xuzG 0.15s",
+        "trans DIV.panel_ti5e 0.15, 0.15, 0.15s",
+        "trans A.link_xC2K 0.2s",
+        "trans A.link_xC2K 0.2s",
+        "trans A.link_xC2K 0.2s"
+      ]
+    },
+    "reduce": {
+      "matchesReduce": true,
+      "movingElements": 4,
+      "sample": [
+        "trans SPAN.caret_xuzG 0.15s",
+        "trans DIV.panel_ti5e 0.15, 0.15, 0.15s",
+        "trans SPAN.caret_xuzG 0.15s",
+        "trans DIV.panel_ti5e panelRight_Slgf 0.15, 0.15, 0.15s"
+      ]
+    }
+  },
+  "pageMotion": {
+    "no-preference": {
+      "transcriptSteps": 4,
+      "transitionDurations": [
+        "0.2s",
+        "0.2s",
+        "0.2s",
+        "0.2s"
+      ],
+      "transitionProperties": [
+        "border-left-color",
+        "border-left-color",
+        "border-left-color",
+        "border-left-color"
+      ],
+      "videoElements": 0,
+      "canvasElements": 0
+    },
+    "reduce": {
+      "transcriptSteps": 4,
+      "transitionDurations": [
+        "0s",
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "transitionProperties": [
+        "none",
+        "none",
+        "none",
+        "none"
+      ],
+      "videoElements": 0,
+      "canvasElements": 0
+    }
+  }
+}

@@ -21,3 +21,8 @@ yarn-error.log*
 
 # Python bytecode from scripts/ (e.g. importing check-forbidden-claims.py as a module)
 __pycache__/
+
+# The virtualenv /denied-action-proof tells readers to create when reproducing
+# the recording. The page prints the command, so anyone following it lands here
+# and should not have to notice the venv before committing. AAASM-5589.
+/.proofenv

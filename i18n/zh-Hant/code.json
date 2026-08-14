@@ -239,6 +239,15 @@
   "home.outcome.securityLink": {
     "message": "信任邊界，以及已列舉的繞道方式 →"
   },
+  "home.proof.denied.title": {
+    "message": "看見一個動作被拒絕，以及它沒有造成的效果"
+  },
+  "home.proof.denied.text": {
+    "message": "一次被記錄下來的執行：一個代理工具呼叫在其函式主體執行前就被拒絕，而該主體會寫入的檔案，事後由一個未參與該決策的獨立行程確認並不存在。旁邊還有兩次對照執行 — 一次允許同一個呼叫，一次移除強制點 — 兩次都寫出了檔案。這是一個工具、一條路徑、一個版本上的結果，該頁也如此說明。"
+  },
+  "home.proof.denied.link": {
+    "message": "被拒絕動作的證明 →"
+  },
   "home.proof.chain.title": {
     "message": "自行驗證稽核鏈"
   },
@@ -275,9 +284,6 @@
   "home.proof.source.link": {
     "message": "開放核心的界線 →"
   },
-  "home.proof.notyet.demo": {
-    "message": "指名道姓的「已阻止某後果」示範。上述故事的反向對照實驗已經設計出來，但尚未實際執行過，所以本頁描述的是所做出的決策，絕不描述所避免掉的後果。"
-  },
   "home.proof.notyet.audit": {
     "message": "每一項決策都會進到日誌裡。寫出是盡力而為的：鏈首會在送出之前就先推進，而被丟棄的項目與被刪除的項目無從分辨。在有嘗試寫出記錄的情況下，它是否持久地抵達，屬於未量測。SDK 這條路徑並不屬於這種情況，這個詞也涵蓋不到它：被拒絕的 SDK 呼叫根本不會寫出任何東西，這是量測到的結果，而不是未知（AAASM-5665）。"
   },
@@ -291,10 +297,10 @@
     "message": "佐證"
   },
   "home.proof.title": {
-    "message": "四件你不必聽信我們、可以自己查證的事"
+    "message": "五件你不必聽信我們、可以自己查證的事"
   },
   "home.proof.notyet.title": {
-    "message": "以及四件本頁目前還不會主張的事"
+    "message": "以及三件本頁目前還不會主張的事"
   },
   "home.pos.launch.subject": {
     "message": "在沒有政策的情況下啟動工作階段"
@@ -2396,6 +2402,12 @@
   "trust.check.title": {
     "message": "這一頁是從哪些來源推導出來的"
   },
+  "trust.check.denied": {
+    "message": "被拒絕動作的證明"
+  },
+  "trust.check.deniedNote": {
+    "message": "— 一次被記錄下來的執行：一個被拒絕的工具呼叫，沒有留下其主體會寫入的那個檔案的任何痕跡，事後由一個獨立行程確認，並附上讓這個「不存在」成為量測結果的兩次對照執行。一個工具、一條路徑、一個版本。"
+  },
   "trust.check.manifest": {
     "message": "能力清單"
   },
@@ -2446,5 +2458,188 @@
   },
   "trust.cta.product": {
     "message": "這個產品是什麼"
+  },
+  "proof.term.denied": {
+    "message": "執行前拒絕"
+  },
+  "proof.meta.title": {
+    "message": "一個被拒絕的動作，以及它沒有寫出的檔案"
+  },
+  "proof.meta.description": {
+    "message": "一次被記錄下來的執行：政策拒絕使得一個代理工具的主體沒有生效 — 效果由一個未參與該決策的獨立行程於事後查核。"
+  },
+  "proof.kicker": {
+    "message": "證據"
+  },
+  "proof.title": {
+    "message": "一個被拒絕的動作，以及它沒有寫出的檔案"
+  },
+  "proof.lede": {
+    "message": "DENIED 標記是頁面自己畫給自己看的標籤，而把它錄下來只是同一個標籤加上了製作品質。這一頁改為公布一次執行：一個真實的代理工具呼叫，被已發行 SDK 自身的強制點拒絕，而該工具存在的目的所要產生的效果，事後由一個未參與該決策的程式讀回。"
+  },
+  "proof.meta.owner": {
+    "message": "負責人"
+  },
+  "proof.meta.version": {
+    "message": "頁面版本"
+  },
+  "proof.meta.verified": {
+    "message": "最後查核"
+  },
+  "proof.meta.source": {
+    "message": "真實來源"
+  },
+  "proof.meta.sourceLink": {
+    "message": "denied-action-proof.json"
+  },
+  "proof.scope.title": {
+    "message": "這是一次執行，不是一般性的陳述"
+  },
+  "proof.scope.body": {
+    "message": "一個工具呼叫、一條程式路徑，於 {date} 針對 Python SDK {sdk}、smolagents {framework}、Python {python}，在 {platform} 上錄得。它所顯示的內容只對那一次執行成立。它不是關於其他工具、其他框架、其他路徑或其他機器的陳述，本頁任何內容都不應被如此解讀。"
+  },
+  "proof.scenario.eyebrow": {
+    "message": "這個情境"
+  },
+  "proof.scenario.title": {
+    "message": "被要求的是什麼，走的是哪一條路徑"
+  },
+  "proof.scenario.body": {
+    "message": "一個名為 {tool} 的代理工具，會把一個叫做 {file} 的報告檔案寫進工作目錄。那個檔案就是副作用 — 是這個工具存在的目的所要產生的東西，也是讀者不必相信任何人就能自行尋找的東西。政策依一條名為 {rule} 的規則拒絕這個工具。"
+  },
+  "proof.scenario.path": {
+    "message": "這個呼叫走的是框架一般的工具執行路徑 {path}。拒絕它的元件是 {point} — 隨 SDK 出貨，不是為這一頁寫的。它先取得決策，並以一個拒絕回覆取代工具主體的執行結果交還給呼叫端。"
+  },
+  "proof.scenario.decisionSource": {
+    "message": "決策本身來自 {source}，而不是一個運行中的閘道。這是這次執行所能顯示範圍上的真實限制，在此明說而非留待推論：被實際走過的，是從一個拒絕裁決到一個沒有執行的主體之間那段路徑，而不是該裁決的產生過程。"
+  },
+  "proof.steps.eyebrow": {
+    "message": "逐步紀錄"
+  },
+  "proof.steps.title": {
+    "message": "四個步驟，依實際發生的順序"
+  },
+  "proof.step1.title": {
+    "message": "工具呼叫被發出"
+  },
+  "proof.step1.body": {
+    "message": "代理以框架呼叫任何工具的相同方式呼叫這個工具。工具自己的程式碼完全不知道它正被治理。"
+  },
+  "proof.step2.title": {
+    "message": "產生一個決策，而且是先產生"
+  },
+  "proof.step2.body": {
+    "message": "強制點在轉發這個呼叫之前先要求一個裁決。它據以行動的那筆紀錄逐欄列在下方。"
+  },
+  "proof.step3.title": {
+    "message": "呼叫端收到的是拒絕，不是結果"
+  },
+  "proof.step3.body": {
+    "message": "工具主體沒有被觸及。呼叫端收到的是一段拒絕字串，而那本身仍然只是一個標籤。"
+  },
+  "proof.step4.title": {
+    "message": "另一個行程去看那個目錄"
+  },
+  "proof.step4.body": {
+    "message": "這一步才讓前面三步值得一讀。這份目錄清單是由一個未參與該決策的程式取得的。"
+  },
+  "proof.decision.title": {
+    "message": "強制點據以行動的那筆決策紀錄"
+  },
+  "proof.decision.colField": {
+    "message": "決策欄位"
+  },
+  "proof.decision.colValue": {
+    "message": "記錄到的值"
+  },
+  "proof.decision.caller": {
+    "message": "呼叫端取代工具結果所收到的內容："
+  },
+  "proof.decision.audit": {
+    "message": "這筆紀錄由這次執行所提供的攔截器擷取。在 SDK 自身出貨的攔截器上，兩個稽核掛鉤都不會解析到，因此一次被拒絕的呼叫不會留下任何持久的東西 — 那條路徑上的紀錄功能仍屬「已規劃」，而這一頁呈現的是一個決策，不是稽核軌跡。"
+  },
+  "proof.post.eyebrow": {
+    "message": "後置條件"
+  },
+  "proof.post.title": {
+    "message": "一個獨立行程在該目錄裡看到什麼"
+  },
+  "proof.post.body": {
+    "message": "呼叫返回之後，該目錄由一個以自己的作業系統行程啟動的程式列出。它匯入三個標準函式庫模組、此外別無其他，因此它無法查詢政策引擎、強制點，或該工具呼叫的回傳值。它的答案是一項觀測，而不是一份回報。"
+  },
+  "proof.post.colRun": {
+    "message": "執行"
+  },
+  "proof.post.colEnforce": {
+    "message": "強制"
+  },
+  "proof.post.colPolicy": {
+    "message": "政策"
+  },
+  "proof.post.colFile": {
+    "message": "事後的報告檔案"
+  },
+  "proof.post.colHolds": {
+    "message": "後置條件"
+  },
+  "proof.post.controls": {
+    "message": "只有第一列什麼也決定不了 — 一個什麼都不寫的測試裝置會產生同樣的清單，一條沒有任何元件查詢過的政策也會。第二列移動政策而固定強制點；第三列移除強制點而固定政策。兩者都寫出了檔案。{runs} 次執行中有 {held} 次的結果與其設計所預測的一致，而第一列的「不存在」之所以是一項量測，正是因為另外兩次得到了相反的結果。"
+  },
+  "proof.post.term": {
+    "message": "在 {adr} 所定義的主張詞彙中，這次執行達到的是 {term}。單靠裁決只能達到「已評估」；讓它得以使用較強詞彙的是上面那個表格，因為該詞彙要求由位於效果之前的元件做出拒絕，並且要求該效果被證明不存在。若副作用哪天不再被查核，誠實的詞彙就會退回「已評估」。"
+  },
+  "proof.post.adrLink": {
+    "message": "ADR 0033 §6"
+  },
+  "proof.limits.eyebrow": {
+    "message": "已知的排除範圍"
+  },
+  "proof.limits.title": {
+    "message": "這次執行沒有顯示什麼"
+  },
+  "proof.limits.one": {
+    "message": "一個工具、一個框架轉接器、一個 SDK 版本、一台機器。同一條路徑上的第二個工具並沒有被執行，讀者不應把這個結果套用到它身上。"
+  },
+  "proof.limits.gateway": {
+    "message": "裁決來自一個行程內的攔截器，所以這次執行走過的是從拒絕裁決到未執行主體之間的路徑 — 不是閘道產生該裁決的過程，也不是兩者之間的網路。"
+  },
+  "proof.limits.route": {
+    "message": "強制點位於框架的工具執行入口。同一個行程中經由其他途徑觸及的工具主體，不在這次執行所量測的範圍內，這次執行對它也未作任何正反陳述。"
+  },
+  "proof.limits.audit": {
+    "message": "沒有寫出任何持久的證據紀錄。上面呈現的決策是由這次執行自己的攔截器記在記憶體中的；SDK 端的紀錄功能仍屬「已規劃」。"
+  },
+  "proof.limits.platform": {
+    "message": "其他作業系統、其他 Python 版本，以及其他語言的 SDK 都未在此被執行。本頁既不確認也不否認它們的狀態。"
+  },
+  "proof.repro.eyebrow": {
+    "message": "自行重現"
+  },
+  "proof.repro.title": {
+    "message": "自己跑一次，然後試著推翻它"
+  },
+  "proof.repro.body": {
+    "message": "上面的一切都出自 {script}，針對由下方第二道指令從 PyPI 安裝的已發行 SDK {release} 執行。執行本身不會接觸任何閘道、不需要憑證，也不會開啟任何網路連線。它會寫出這一頁所呈現的那份紀錄。"
+  },
+  "proof.repro.scriptLink": {
+    "message": "denied-action-capture.py"
+  },
+  "proof.repro.falsify": {
+    "message": "接著切斷強制路徑，看著這項檢查變紅。同一支腳本會在強制點未安裝的情況下執行那個被拒絕的呼叫；報告檔案出現、後置條件失敗，指令以非零狀態結束。一項不可能失敗的檢查不是檢查，所以這一項在被當成通過提出之前，先被展示為失敗。"
+  },
+  "proof.repro.method": {
+    "message": "這套方法 — 先斷言效果不存在、再斷言錯誤，並為該次執行配上一次移除治理的對照 — 來自 {sdkRepo} 及其 Go 與 Node 姊妹專案中的負對照測試套件，追蹤於 {ticket}。那些套件以測試替身代替真正做出決策的元件，這對單元測試而言是正確的做法，但也意味著它們所證明的內容無法從已安裝的套件重現。這一頁把同一套方法套用在一個已發行的版本上，因此你可以從發行版執行它。"
+  },
+  "proof.repro.sdkRepoLink": {
+    "message": "Python SDK 儲存庫"
+  },
+  "proof.cta.trust": {
+    "message": "還有什麼被量測了，什麼沒有 →"
+  },
+  "proof.cta.how": {
+    "message": "它如何運作"
+  },
+  "proof.cta.roles": {
+    "message": "閱讀你角色的簡介"
   }
 }
