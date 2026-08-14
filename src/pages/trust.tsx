@@ -766,6 +766,28 @@ export default function Trust(): ReactNode {
             </Translate>
           </h2>
           <ul className={narrative.list}>
+            {/*
+             * First in the list, and the only same-hostname entry.
+             *
+             * Everything else here is a document a reader must take on its own
+             * terms. This one is a run: it is the single item on this page
+             * whose claim was settled by watching for an effect rather than by
+             * reading an assertion, so it is what an evaluator should open
+             * first. AAASM-5589.
+             */}
+            <li>
+              <Link to="/denied-action-proof" className={narrative.link}>
+                <Translate id="trust.check.denied">
+                  The denied-action proof
+                </Translate>
+              </Link>{' '}
+              <Translate id="trust.check.deniedNote">
+                — one recorded run in which a refused tool call left no trace of
+                the file its body writes, checked afterwards by a separate
+                process, with the two control runs that make that absence a
+                measurement. One tool, one path, one version.
+              </Translate>
+            </li>
             <li>
               <Out to={CAPABILITY_MANIFEST} className={narrative.link}>
                 <Translate id="trust.check.manifest">
