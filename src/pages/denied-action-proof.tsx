@@ -589,7 +589,7 @@ export default function DeniedActionProof(): ReactNode {
               }}
             >
               {
-                'Everything above came out of {script}, which installs the published SDK {release} from PyPI and needs no gateway, no credentials and no network. It writes the recording this page renders.'
+                'Everything above came out of {script}, run against the published SDK {release} installed from PyPI by the second command below. The run itself reaches no gateway, needs no credentials and opens no network connection. It writes the recording this page renders.'
               }
             </Translate>
           </p>

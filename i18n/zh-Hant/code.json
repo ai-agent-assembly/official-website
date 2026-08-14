@@ -2619,7 +2619,7 @@
     "message": "自己跑一次，然後試著推翻它"
   },
   "proof.repro.body": {
-    "message": "上面的一切都出自 {script}，它會從 PyPI 安裝已發行的 SDK {release}，不需要閘道、不需要憑證、也不需要網路。它會寫出這一頁所呈現的那份紀錄。"
+    "message": "上面的一切都出自 {script}，針對由下方第二道指令從 PyPI 安裝的已發行 SDK {release} 執行。執行本身不會接觸任何閘道、不需要憑證，也不會開啟任何網路連線。它會寫出這一頁所呈現的那份紀錄。"
   },
   "proof.repro.scriptLink": {
     "message": "denied-action-capture.py"
