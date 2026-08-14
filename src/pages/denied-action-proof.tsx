@@ -634,7 +634,7 @@ export default function DeniedActionProof(): ReactNode {
               }}
             >
               {
-                'The method — assert the effect is missing before asserting the error, and pair the run with a control that removes the governance — comes from the negative-control suites in {sdkRepo} and its Go and Node siblings, tracked under {ticket}. This page applies it to a published build so a reader reproduces it from a release rather than from a branch.'
+                'The method — assert the effect is missing before asserting the error, and pair the run with a control that removes the governance — comes from the negative-control suites in {sdkRepo} and its Go and Node siblings, tracked under {ticket}. Those suites stand a test double in for the component that decides, which is the right call for a unit test and means what they establish is not reproducible from an installed package. This page runs the same method against a published build, so you can run it from a release.'
               }
             </Translate>
           </p>

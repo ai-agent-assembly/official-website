@@ -48,10 +48,20 @@ Method provenance
 -----------------
 The ordering rule -- assert the absence of the effect *before* asserting the
 error, so a harness that stops early still fails -- is AAASM-5529's, from the
-negative-control suites in the three SDK repos. This applies that method to the
-**released** SDK on a real framework adapter, so a reader reproduces it from
-PyPI rather than from an unmerged branch, and reads the post-condition from
-outside the process rather than from a fixture inside it.
+negative-control suites on `main` in the three SDK repos.
+
+What this adds is not a different method but a different subject. Those suites
+stand a test double in for the component that decides (`install_fake_core` /
+`FakeRuntimeClient`), which is the right call for a unit test and means what
+they establish is not reproducible from an installed package. This runs the
+same method against the **released** SDK on a real framework adapter, so a
+reader reproduces it from PyPI, and reads the post-condition from outside the
+process rather than from a fixture inside it.
+
+An earlier draft of this paragraph said the upstream suites were on an unmerged
+branch. That was false -- read out of a stale local checkout rather than from
+`origin/main` -- and it is recorded here because the correction changes which
+justification this file rests on, not merely its wording.
 
 Safety
 ------
@@ -340,6 +350,13 @@ def main() -> int:
         # Never overwrite the committed recording from a severed run.
         sys.stdout.write(text)
     else:
+        # The destination is `RECORDING`, a module constant built from
+        # `__file__`. No argument reaches it: `--out` no longer exists, and the
+        # only argv-derived value on this line is `text`, which is what gets
+        # written, not where. That property is the reason this script needs no
+        # path validation, and it is worth stating because it is easy to break
+        # -- the moment a destination is computed from an input, this line needs
+        # the check it does not need today.
         RECORDING.parent.mkdir(parents=True, exist_ok=True)
         RECORDING.write_text(text, encoding="utf-8")
         print(f"wrote {RECORDING.relative_to(REPO)}")
