@@ -195,9 +195,15 @@ def main() -> int:
         return 2
 
     urls: list[str] = []
+    # Counted once, on the single read. The JSON below used to call
+    # sitemap_urls again, which read every sitemap a second time to report a
+    # number this loop already had.
+    counts: dict[str, int] = {}
     for sitemap in sitemaps:
         found = sitemap_urls(sitemap)
-        print(f"{sitemap.relative_to(build)}: {len(found)} urls")
+        label = str(sitemap.relative_to(build))
+        counts[label] = len(found)
+        print(f"{label}: {len(found)} urls")
         urls.extend(found)
     urls = sorted(dict.fromkeys(urls))
 
@@ -222,7 +228,7 @@ def main() -> int:
             json.dumps(
                 {
                     "origin": args.origin,
-                    "sitemaps": {str(s.relative_to(build)): len(sitemap_urls(s)) for s in sitemaps},
+                    "sitemaps": counts,
                     "swept": len(results),
                     "ok": len(results) - len(failures),
                     "failures": [{"url": r.url, "status": r.status, "note": r.note} for r in failures],
