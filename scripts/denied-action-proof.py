@@ -358,7 +358,13 @@ def control_page(proj: dict, page: dict) -> str | None:
     if not page["rows"] or not page["decision"]:
         return "extracted 0 rows from a bound table — nothing was compared"
     poisoned = json.loads(json.dumps(proj))
-    poisoned["rows"][0]["reportFile"] = "present"
+    # Every seed appends rather than substitutes a real value. Substituting
+    # `absent` -> `present` was tried first and is wrong: a page that had
+    # genuinely drifted to `present` made the seeded value match what shipped,
+    # so the control stopped firing exactly when it was needed, and `check`
+    # reported 2 (cannot prove itself) instead of 1 (drift). A suffix no
+    # legitimate rendering can carry cannot be cancelled by the defect.
+    poisoned["rows"][0]["reportFile"] += "_x"
     poisoned["decision"][0]["value"] += "_x"
     poisoned["provenance"]["sdk"] += "_x"
     fired = compare_page(poisoned, page)
@@ -394,8 +400,8 @@ def cmd_check(args: argparse.Namespace) -> int:
         print(f"positive control : FAIL ({control})")
         return 2
     print(
-        "positive control : PASS (a seeded side-effect, decision-field and "
-        "version drift is detected)"
+        "positive control : PASS (a seeded observed-side-effect, decision-field "
+        "and version drift is detected)"
     )
 
     problems = compare_page(proj, page)
