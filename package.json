@@ -18,6 +18,8 @@
     "trust:generate": "python3 scripts/trust-evidence.py generate && prettier --write src/generated/trust-evidence.ts",
     "trust:check": "python3 scripts/trust-evidence.py check build",
     "trust:upstream": "python3 scripts/trust-evidence.py upstream",
+    "proof:generate": "python3 scripts/denied-action-proof.py generate && prettier --write src/generated/denied-action-proof.ts",
+    "proof:check": "python3 scripts/denied-action-proof.py check build",
     "typecheck": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
