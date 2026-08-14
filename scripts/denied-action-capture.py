@@ -339,14 +339,22 @@ def capture(*, severed: bool) -> dict[str, Any]:
 # a hand-settable timestamp is a small untruth pointed directly at the subject
 # matter. `capturedOn` is now taken inside the run and cannot disagree with it.
 #
-# Both were also this script's only taint sources -- argv values reaching
-# `write_text` -- and validating them did not clear SonarCloud
-# `pythonsecurity:S8707`: a sanitiser behind an `argparse` `type=` callable is
-# not recognised as one by dataflow analysis, and an inline `date.fromisoformat`
-# round-trip did not clear it either. Removing a source beats guarding it, and
-# in both cases the deletion improved the artifact independently of the
-# scanner. What is left, `--sever-enforcement`, is a `store_true` whose branch
-# writes to stdout and never reaches the recording.
+# Both were also taint sources -- argv values reaching `write_text` -- and
+# validating them did not clear SonarCloud `pythonsecurity:S8707`: a sanitiser
+# behind an `argparse` `type=` callable is not recognised as one by dataflow
+# analysis, and an inline `date.fromisoformat` round-trip did not clear it
+# either. Removing a source beats guarding it, and in both cases the deletion
+# improved the artifact independently of the scanner.
+#
+# They were not the last source. `--sever-enforcement` is a `store_true`, and
+# an earlier revision of this comment said its branch "writes to stdout and
+# never reaches the recording" -- true of control flow, false of data flow.
+# The flag's *value* was passed to `capture(severed=...)`, so it reached the
+# recording dict, the serialised text, and from there `write_text`'s content
+# argument, which is the operand SonarCloud reported. `main` below therefore
+# passes a literal to each arm instead of forwarding the parsed value: argv
+# selects which arm runs, and nothing from argv is carried into what either
+# arm writes.
 
 
 def main() -> int:
@@ -358,23 +366,24 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    recording = capture(severed=args.sever_enforcement)
-    text = json.dumps(recording, indent=2, ensure_ascii=False) + "\n"
-
     if args.sever_enforcement:
         # Never overwrite the committed recording from a severed run.
-        sys.stdout.write(text)
+        recording = capture(severed=True)
+        sys.stdout.write(json.dumps(recording, indent=2, ensure_ascii=False) + "\n")
     else:
-        # The destination is `RECORDING`, a module constant built from
-        # `__file__`, and `text` is built entirely inside this process. No
-        # command-line value reaches either operand: the only argument left is
-        # `--sever-enforcement`, whose branch writes to stdout and never gets
-        # here. That is why this script needs no path validation, and it is
-        # worth stating because it is easy to break -- the moment a destination
-        # or a payload is computed from an input, this line needs the check it
-        # does not need today.
+        # Both operands are built here from values this process owns: the
+        # destination is `RECORDING`, a module constant derived from
+        # `__file__`, and the payload is serialised from `capture(severed=False)`
+        # -- a literal, not the parsed flag. That is why this line needs no
+        # path validation, and it is worth stating because it is easy to break:
+        # the moment a destination or a payload is computed from an input, this
+        # line needs the check it does not need today.
+        recording = capture(severed=False)
         RECORDING.parent.mkdir(parents=True, exist_ok=True)
-        RECORDING.write_text(text, encoding="utf-8")
+        RECORDING.write_text(
+            json.dumps(recording, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
         print(f"wrote {RECORDING.relative_to(REPO)}")
 
     held = recording["totals"]["postConditionsHeld"]
