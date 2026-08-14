@@ -50,12 +50,45 @@ post-conditions  : 3/3 held
 EXIT=0
 
 $ pnpm exec prettier --write metadata/denied-action-proof.json
-$ git status --porcelain metadata/
-(no output)
+$ python3 scripts/denied-action-proof.py compare /tmp/baseline.json
+excluded  : provenance.capturedOn  2026-08-14 -> 2026-08-14  (unchanged)
 
-The re-run reproduced the committed recording byte for byte. The transcript
-is deterministic, so a future difference in this file is a difference in
-behaviour rather than in the weather.
+PASS: every measured field reproduced exactly — the three runs, the decision, the listings and the versions.
+EXIT=0
+
+Every MEASURED field reproduces exactly. One field is excluded and does not:
+`provenance.capturedOn` advances to the day the re-record actually ran,
+because the measurement was genuinely re-taken. (It reads `unchanged` above
+only because the re-run happened on the same day as the original.)
+
+That exclusion is stated rather than hidden, and it is narrow by
+construction: `scripts/denied-action-capture.py` takes the date from the
+clock inside the run and offers NO WAY to override it, so the field cannot
+be made to disagree with the run it labels. An earlier version of this
+script had a `--date` argument, which meant someone could re-measure today
+and stamp last week -- a hand-settable timestamp on a page whose whole
+argument is that a stated fact was checked. It was removed.
+
+  THE EXCLUSION IS NOT A HOLE -- FOUR CONTROLS
+  --------------------------------------------
+  A field nothing compares is a field anything can be, so the excluded one
+  is asserted separately and the comparison is shown failing.
+
+  A  baseline differing ONLY in capturedOn (2026-08-07 vs 2026-08-14)
+       -> "excluded : provenance.capturedOn 2026-08-07 -> 2026-08-14 (advanced)"
+       -> PASS, EXIT=0        the exclusion works
+  B  baseline with arms[0].observedSideEffect flipped true
+       -> "FAIL: the re-record differs from the baseline in a measured field."
+       -> EXIT=1              the comparison can still fail
+  C  capturedOn set to 2099-01-01
+       -> "FAIL: provenance.capturedOn is in the future: 2099-01-01 > 2026-08-14"
+       -> EXIT=2              a future date is refused
+  D  capturedOn set to 'last tuesday'
+       -> "FAIL: provenance.capturedOn is not an ISO date: 'last tuesday'"
+       -> EXIT=2              a malformed date is refused
+
+  B is the one that matters: without it, "everything else matched" would be
+  a claim about a comparison nobody had shown capable of disagreeing.
 
   A SEVERED RUN CANNOT BE SMUGGLED IN AS THE RECORDING
   ----------------------------------------------------
