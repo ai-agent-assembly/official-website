@@ -57,6 +57,18 @@ The re-run reproduced the committed recording byte for byte. The transcript
 is deterministic, so a future difference in this file is a difference in
 behaviour rather than in the weather.
 
+  A SEVERED RUN CANNOT BE SMUGGLED IN AS THE RECORDING
+  ----------------------------------------------------
+  `--sever-enforcement` writes to stdout and never to the recording, but a
+  hand copy would defeat that, so the checker refuses one on sight. Proven
+  by copying the severed run over the recording:
+
+  $ python3 scripts/denied-action-proof.py check build
+  FAIL: denied-action-proof.json is the output of a --sever-enforcement run and must never be committed as the recording
+  EXIT=2
+
+  Restored; `git diff --quiet metadata/` is clean.
+
 ================================================================
 2. RENDER DRIFT — the page stops rendering what was recorded
 ================================================================
