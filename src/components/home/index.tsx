@@ -668,7 +668,7 @@ interface ProofItem {
   readonly text: string;
   readonly linkLabel: string;
   readonly href: string;
-  readonly targetProduct: 'docs' | 'github';
+  readonly targetProduct: 'docs' | 'github' | 'agent_assembly';
 }
 
 /**
@@ -677,11 +677,36 @@ interface ProofItem {
  *
  * The second half is as load-bearing as the first: where the evidence does not
  * exist yet, this page says what is true (Unmeasured, Planned) rather than
- * reaching. A named prevented-outcome demonstration is gated on AAASM-5532 /
- * AAASM-5529 and is stated as absent rather than quietly omitted.
+ * reaching.
+ *
+ * The prevented-outcome entry moved from the second list to the first in
+ * AAASM-5589: the run exists now, and `/denied-action-proof` publishes it with
+ * its two controls. It is the only item here that links to this site rather
+ * than out, because the evidence is a page and not a document — which is why
+ * `targetProduct` gained an on-site value and why that one card does not open
+ * away. Its card is written to carry the run's bound with it: an editor who
+ * shortens it to "the product prevents X" has broadened what the run showed,
+ * which is the thing ADR 0034 forbids a downstream layer from doing.
  */
 export function Proof(): ReactNode {
   const items: readonly ProofItem[] = [
+    {
+      title: translate({
+        id: 'home.proof.denied.title',
+        message: 'See an action denied, and the effect it did not have',
+      }),
+      text: translate({
+        id: 'home.proof.denied.text',
+        message:
+          'One recorded run: an agent tool call refused before its body ran, with the file that body writes shown missing afterwards by a separate process that took no part in the decision. Two control runs sit beside it — one that allows the same call, one that removes the enforcement point — and both wrote the file. It is one tool on one path at one version, and the page says so.',
+      }),
+      linkLabel: translate({
+        id: 'home.proof.denied.link',
+        message: 'The denied-action proof →',
+      }),
+      href: '/denied-action-proof',
+      targetProduct: 'agent_assembly',
+    },
     {
       title: translate({
         id: 'home.proof.chain.title',
@@ -754,11 +779,6 @@ export function Proof(): ReactNode {
 
   const notYet: readonly string[] = [
     translate({
-      id: 'home.proof.notyet.demo',
-      message:
-        'A named prevented-outcome demonstration. The negative control for the story above is designed and has not been run, so this page describes the decision that was made, never the consequence that was avoided.',
-    }),
-    translate({
       id: 'home.proof.notyet.audit',
       message:
         'That every decision reaches the log. Emission is best-effort: the chain head advances before the send, and a dropped entry is indistinguishable from a deleted one. Where a record is attempted, whether it durably arrives is Unmeasured. The SDK path is not that case and that word does not cover it: a denied SDK call emits nothing at all, which is measured rather than unknown (AAASM-5665).',
@@ -783,7 +803,7 @@ export function Proof(): ReactNode {
         </div>
         <h2 className={styles.h2}>
           <Translate id="home.proof.title">
-            Four things you can check without taking our word for it
+            Five things you can check without taking our word for it
           </Translate>
         </h2>
         <div className={styles.outcomeGrid}>
@@ -796,9 +816,22 @@ export function Proof(): ReactNode {
                 eventName="cta_view_docs_click"
                 ctaLocation="body"
                 targetProduct={p.targetProduct}
-                alsoFire={['docs_click']}
+                alsoFire={
+                  p.targetProduct === 'agent_assembly'
+                    ? undefined
+                    : ['docs_click']
+                }
                 to={p.href}
-                linkProps={{rel: 'noopener noreferrer', target: '_blank'}}
+                /*
+                 * Same-hostname destinations stay in the tab. Opening one away
+                 * would also make `docs_click` fire for a route that is not the
+                 * Docs Hub, which is why the companion event is dropped with it.
+                 */
+                linkProps={
+                  p.targetProduct === 'agent_assembly'
+                    ? undefined
+                    : {rel: 'noopener noreferrer', target: '_blank'}
+                }
               >
                 {p.linkLabel}
               </TrackedLink>
@@ -809,7 +842,7 @@ export function Proof(): ReactNode {
         <div className={styles.notYet}>
           <h3 className={styles.notYetTitle}>
             <Translate id="home.proof.notyet.title">
-              And four things this page will not claim yet
+              And three things this page will not claim yet
             </Translate>
           </h3>
           <ul className={styles.notYetList}>
