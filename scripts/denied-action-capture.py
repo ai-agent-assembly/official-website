@@ -75,8 +75,10 @@ Reproducing
     uv venv --python 3.12 .proofenv
     VIRTUAL_ENV=.proofenv uv pip install 'agent-assembly==0.0.1rc6' \
         'smolagents>=1.26.0,<2.0.0'
+    git show HEAD:metadata/denied-action-proof.json > /tmp/baseline.json
     .proofenv/bin/python scripts/denied-action-capture.py
     pnpm exec prettier --write metadata/denied-action-proof.json
+    python3 scripts/denied-action-proof.py compare /tmp/baseline.json
     pnpm proof:generate
 
 The `prettier` step is cosmetic and required: `format:check` is a CI gate and
@@ -84,6 +86,15 @@ this script writes `json.dumps` output, which keeps short arrays expanded where
 `prettier` collapses them. Nothing downstream cares -- the checker reads the
 file with `json.loads` -- so the formatting run is the last step rather than a
 constraint on this script's output.
+
+What a re-record should and should not change
+---------------------------------------------
+Every measured field is reproduced exactly. `provenance.capturedOn` is not, and
+must not be: it advances to the day the re-record ran, because the measurement
+was genuinely re-taken. `compare` is the check for exactly that shape -- it
+requires equality everywhere else and reports the two dates -- so "the
+transcript is deterministic" stays a claim someone can test rather than a claim
+that quietly excuses any difference.
 """
 
 from __future__ import annotations
@@ -261,7 +272,7 @@ def _arm(
     }
 
 
-def capture(*, severed: bool, captured_on: str) -> dict[str, Any]:
+def capture(*, severed: bool) -> dict[str, Any]:
     arms = [
         _arm(
             "denied",
@@ -287,7 +298,10 @@ def capture(*, severed: bool, captured_on: str) -> dict[str, Any]:
             "ticket": TICKET,
             "epic": EPIC,
             "methodTicket": METHOD_TICKET,
-            "capturedOn": captured_on,
+            # Taken here rather than passed in. There is deliberately no way to
+            # tell this script what day it is: a re-record stamps the day it
+            # actually ran, so the field cannot disagree with the run it labels.
+            "capturedOn": date.today().isoformat(),
             "sdk": importlib_metadata.version("agent-assembly"),
             "framework": importlib_metadata.version("smolagents"),
             "python": ".".join(str(part) for part in sys.version_info[:3]),
@@ -312,20 +326,31 @@ def capture(*, severed: bool, captured_on: str) -> dict[str, Any]:
     }
 
 
-# `--out` used to exist here and was removed rather than validated.
+# This script used to take `--out` and `--date`. Both were removed rather than
+# validated, and one argument remains.
 #
-# It was never useful: `scripts/denied-action-proof.py` reads exactly one path,
-# so a recording written anywhere else is a file nothing reads. It was also the
-# script's only taint source -- an argv string reaching `write_text` -- and a
-# validator behind an `argparse` `type=` callable is not recognised as one by
-# dataflow analysis, so the finding survived the validation
-# (SonarCloud `pythonsecurity:S8707` on PR #101). Deleting the argument removes
-# the path instead of guarding it, and costs nothing.
+# `--out` was never useful: `scripts/denied-action-proof.py` reads exactly one
+# path, so a recording written anywhere else is a file nothing reads.
+#
+# `--date` is the more interesting deletion, because it was removed for a
+# reason that stands on its own. It let a re-record carry a date other than the
+# day it ran -- someone could re-measure today and stamp last week. On a page
+# whose entire argument is that a stated fact was checked rather than asserted,
+# a hand-settable timestamp is a small untruth pointed directly at the subject
+# matter. `capturedOn` is now taken inside the run and cannot disagree with it.
+#
+# Both were also this script's only taint sources -- argv values reaching
+# `write_text` -- and validating them did not clear SonarCloud
+# `pythonsecurity:S8707`: a sanitiser behind an `argparse` `type=` callable is
+# not recognised as one by dataflow analysis, and an inline `date.fromisoformat`
+# round-trip did not clear it either. Removing a source beats guarding it, and
+# in both cases the deletion improved the artifact independently of the
+# scanner. What is left, `--sever-enforcement`, is a `store_true` whose branch
+# writes to stdout and never reaches the recording.
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--date", default=date.today().isoformat(), metavar="YYYY-MM-DD")
     ap.add_argument(
         "--sever-enforcement",
         action="store_true",
@@ -333,17 +358,7 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    # `--date` is the last argument that reaches a written file, and the value
-    # is published on a public page, so it is parsed into a real date and
-    # re-serialised rather than copied through. Anything that is not an ISO
-    # date raises here, before a run happens. Validated inline rather than in an
-    # `argparse` `type=` callable: the callable version of this check was not
-    # recognised as a sanitizer by dataflow analysis (SonarCloud
-    # `pythonsecurity:S8707`, PR #101), and a check the analyser cannot see is
-    # a check the next reader will assume is missing.
-    captured_on = date.fromisoformat(args.date).isoformat()
-
-    recording = capture(severed=args.sever_enforcement, captured_on=captured_on)
+    recording = capture(severed=args.sever_enforcement)
     text = json.dumps(recording, indent=2, ensure_ascii=False) + "\n"
 
     if args.sever_enforcement:
@@ -351,12 +366,13 @@ def main() -> int:
         sys.stdout.write(text)
     else:
         # The destination is `RECORDING`, a module constant built from
-        # `__file__`. No argument reaches it: `--out` no longer exists, and the
-        # only argv-derived value on this line is `text`, which is what gets
-        # written, not where. That property is the reason this script needs no
-        # path validation, and it is worth stating because it is easy to break
-        # -- the moment a destination is computed from an input, this line needs
-        # the check it does not need today.
+        # `__file__`, and `text` is built entirely inside this process. No
+        # command-line value reaches either operand: the only argument left is
+        # `--sever-enforcement`, whose branch writes to stdout and never gets
+        # here. That is why this script needs no path validation, and it is
+        # worth stating because it is easy to break -- the moment a destination
+        # or a payload is computed from an input, this line needs the check it
+        # does not need today.
         RECORDING.parent.mkdir(parents=True, exist_ok=True)
         RECORDING.write_text(text, encoding="utf-8")
         print(f"wrote {RECORDING.relative_to(REPO)}")
