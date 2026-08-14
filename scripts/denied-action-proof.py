@@ -144,7 +144,13 @@ def _check_captured_on(data: dict[str, Any]) -> None:
     `compare` without asserting it separately would create exactly the hole the
     exclusion was meant to be narrow enough to avoid.
     """
-    raw = data.get("provenance", {}).get("capturedOn")
+    provenance = data.get("provenance")
+    if not isinstance(provenance, dict):
+        raise ValueError(
+            f"provenance is not an object but a {type(provenance).__name__} — "
+            "the recording is malformed"
+        )
+    raw = provenance.get("capturedOn")
     try:
         captured = date.fromisoformat(str(raw))
     except (TypeError, ValueError) as exc:
@@ -457,18 +463,66 @@ def cmd_check(args: argparse.Namespace) -> int:
 def _strip_exclusions(data: dict[str, Any]) -> dict[str, Any]:
     stripped = json.loads(json.dumps(data))
     for path in REPRODUCTION_EXCLUSIONS:
-        node = stripped
+        # Walk into `stripped` itself. The earlier version used
+        # `node.get(key, {})`, which on a missing intermediate key returned a
+        # throwaway dict and popped the exclusion out of THAT -- leaving the
+        # field in place in the copy being compared. On a malformed input that
+        # silently changed what the comparison covered, which is the one
+        # failure a checker must not have.
+        node: Any = stripped
         for key in path[:-1]:
-            node = node.get(key, {})
-        node.pop(path[-1], None)
+            if not isinstance(node, dict) or key not in node:
+                node = None
+                break
+            node = node[key]
+        if isinstance(node, dict):
+            node.pop(path[-1], None)
     return stripped
+
+
+#: Printed for an excluded field a recording does not carry. A named constant
+#: rather than a repeated literal so the two sides of the comparison cannot
+#: drift into reporting a missing field differently from each other.
+MISSING = "<missing>"
+
+
+def _dig(data: Any, path: tuple[str, ...]) -> Any:
+    """Follow a dotted path, reporting MISSING rather than raising."""
+    node = data
+    for key in path:
+        if not isinstance(node, dict) or key not in node:
+            return MISSING
+        node = node[key]
+    return node
+
+
+def _read_baseline(path: Path) -> dict[str, Any]:
+    """Load the baseline, holding it to the same shape as the recording.
+
+    The baseline arrives from outside -- typically `git show HEAD:...` -- so it
+    is the one input here that has not already been through `read_recording`.
+    Left unvalidated it produced an unhandled `AttributeError` and an exit code
+    of 1, which a caller reads as "the recording drifted" when what actually
+    happened is "the file you handed me is not a recording". Those two need
+    different answers, so a malformed baseline exits 2 like every other input
+    this script cannot work with.
+    """
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError(f"{path} is not a JSON object")
+    for key in ("provenance", "scenario", "arms", "totals"):
+        if key not in data:
+            raise ValueError(f"{path} has no {key!r} key — it is not a recording")
+    if not isinstance(data["provenance"], dict):
+        raise ValueError(f"{path} has a non-object 'provenance'")
+    return data
 
 
 def cmd_compare(args: argparse.Namespace) -> int:
     """Assert a re-record reproduces a baseline everywhere it is allowed to."""
     try:
         current = read_recording()
-        baseline = json.loads(Path(args.baseline).read_text(encoding="utf-8"))
+        baseline = _read_baseline(Path(args.baseline))
     except (OSError, ValueError) as exc:
         print(f"FAIL: {exc}")
         return 2
@@ -476,14 +530,10 @@ def cmd_compare(args: argparse.Namespace) -> int:
     print(f"baseline  : {args.baseline}")
     print(f"current   : {RECORDING.relative_to(REPO)}")
     for path in REPRODUCTION_EXCLUSIONS:
-        dotted = ".".join(path)
-        was = baseline
-        now = current
-        for key in path:
-            was = was.get(key, "<missing>") if isinstance(was, dict) else "<missing>"
-            now = now.get(key, "<missing>") if isinstance(now, dict) else "<missing>"
+        was = _dig(baseline, path)
+        now = _dig(current, path)
         moved = "advanced" if was != now else "unchanged"
-        print(f"excluded  : {dotted}  {was} -> {now}  ({moved})")
+        print(f"excluded  : {'.'.join(path)}  {was} -> {now}  ({moved})")
 
     if _strip_exclusions(current) != _strip_exclusions(baseline):
         print(
