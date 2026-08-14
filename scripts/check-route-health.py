@@ -36,6 +36,7 @@ from urllib.parse import urlsplit, urlunsplit
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _audit_support import (  # noqa: E402  - path set above
     Recorder,
+    safe_input_dir,
     safe_output_path,
     validated_request_url,
 )
@@ -48,6 +49,10 @@ _LOC = re.compile(r"<loc>([^<]*)</loc>")
 
 # A path no build produces. Appended to each live sweep as the control.
 CONTROL_PATH = "/aaasm-5590-control-no-such-page/"
+
+# Used by the self-test only; named so the expectation and the input cannot drift.
+_SELFTEST_ORIGIN = "http://localhost:5590"
+_SELFTEST_REBASED = f"{_SELFTEST_ORIGIN}/trust"
 
 
 @dataclass
@@ -130,8 +135,8 @@ def self_test() -> int:
 
     check(
         "rebase keeps the path and swaps the origin",
-        rebase("https://agent-assembly.com/trust", "http://localhost:5590") == "http://localhost:5590/trust",
-        rebase("https://agent-assembly.com/trust", "http://localhost:5590"),
+        rebase("https://agent-assembly.com/trust", _SELFTEST_ORIGIN) == _SELFTEST_REBASED,
+        rebase("https://agent-assembly.com/trust", _SELFTEST_ORIGIN),
     )
 
     # The guards added for the scanner findings, each with the input that must
@@ -146,7 +151,7 @@ def self_test() -> int:
             check(f"a non-http(s) target is refused: {bad}", False, "accepted")
     check(
         "an ordinary http url is accepted",
-        validated_request_url("http://localhost:5590/trust") == "http://localhost:5590/trust",
+        validated_request_url(_SELFTEST_REBASED) == _SELFTEST_REBASED,
     )
     try:
         safe_output_path("../../escaped.json")
@@ -175,7 +180,7 @@ def main() -> int:
     if not args.origin:
         parser.error("--origin is required unless --self-test is given")
 
-    build = Path(args.build)
+    build = safe_input_dir(args.build)
     sitemaps = sorted(build.rglob("sitemap.xml"))
     if not sitemaps:
         print(f"no sitemap under {build}", file=sys.stderr)

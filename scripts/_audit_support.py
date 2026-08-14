@@ -1,8 +1,9 @@
 """Shared plumbing for the AAASM-5590 audit scripts.
 
-Two things both `audit-page-metadata.py` and `check-route-health.py` need and
-were holding their own copy of: the self-test result reporter, and a guard on
-the path they are told to write JSON to.
+Three things both `audit-page-metadata.py` and `check-route-health.py` need:
+the self-test result reporter, guards on the paths they are told to read and
+write, and a check on the URLs the sweep is pointed at. The reporter was
+previously a copy in each file.
 
 The reporter lives here because a checker whose self-test reporting differs
 between scripts is a checker whose self-test can quietly stop counting in one
@@ -15,7 +16,7 @@ The module name uses underscores because these two are imported; the sibling
 from __future__ import annotations
 
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlunsplit
 
 SelfTestResult = tuple[str, bool, str]
 
@@ -48,33 +49,50 @@ class Recorder:
         return 1 if failed else 0
 
 
-def safe_output_path(raw: str, *, root: Path | None = None) -> Path:
-    """Resolve an operator-supplied output path, refusing to leave `root`.
+def _resolved_within(raw: str, root: Path | None, verb: str) -> Path:
+    """Resolve `raw` against `root` and refuse a result that escapes it.
 
-    These scripts take `--json <path>` and write it. Resolving first and then
-    requiring the result to sit inside the working tree means a path assembled
-    from `..` segments fails loudly here rather than writing somewhere the
-    operator did not mean. The check is on the RESOLVED path, so it is not
-    fooled by a symlink or by separators embedded mid-string.
+    Resolving first and then testing the RESOLVED path is what makes this
+    worth having: it is not fooled by `..` segments, by a symlink, or by
+    separators embedded mid-string, all of which survive a check on the raw
+    text.
     """
     base = (root or Path.cwd()).resolve()
     candidate = Path(raw).expanduser()
     resolved = (base / candidate).resolve() if not candidate.is_absolute() else candidate.resolve()
     if resolved != base and base not in resolved.parents:
-        raise ValueError(f"refusing to write outside {base}: {raw}")
+        raise ValueError(f"refusing to {verb} outside {base}: {raw}")
     return resolved
 
 
+def safe_output_path(raw: str, *, root: Path | None = None) -> Path:
+    """Resolve the `--json <path>` these scripts write, refusing to leave `root`."""
+    return _resolved_within(raw, root, "write")
+
+
+def safe_input_dir(raw: str, *, root: Path | None = None) -> Path:
+    """Resolve the `--build <dir>` the sweep walks, refusing to leave `root`."""
+    return _resolved_within(raw, root, "read")
+
+
 def validated_request_url(raw: str) -> str:
-    """Return `raw` if it is an ordinary http(s) URL, else raise.
+    """Rebuild `raw` from parts that have each been checked, else raise.
 
     The sweep builds request URLs from an operator-supplied `--origin`. Pinning
     the scheme keeps a mistyped or hostile origin from turning the sweep into a
     reader of `file://` or of some other scheme urllib is willing to open.
+
+    The return value is reassembled with `urlunsplit` from the checked
+    components rather than handed back as the original string: what the caller
+    requests is then the thing this function validated, with no room for a
+    fragment or an embedded credential to ride along unexamined.
     """
     parts = urlsplit(raw)
     if parts.scheme not in ALLOWED_URL_SCHEMES:
         raise ValueError(f"unsupported URL scheme {parts.scheme!r}: {raw}")
-    if not parts.netloc:
+    if not parts.hostname:
         raise ValueError(f"URL has no host: {raw}")
-    return raw
+    if parts.username or parts.password:
+        raise ValueError(f"URL carries credentials, refusing: {raw}")
+    netloc = parts.hostname if parts.port is None else f"{parts.hostname}:{parts.port}"
+    return urlunsplit((parts.scheme, netloc, parts.path, parts.query, ""))
