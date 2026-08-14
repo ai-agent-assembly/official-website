@@ -93,6 +93,20 @@ jobs:
       # those. Stdlib Python only — no extra install step. AAASM-5696.
       - name: Forbidden claims (ADR 0033)
         run: pnpm claims:check
+      # `/trust` publishes counts taken from the capability manifest in
+      # `agent-assembly` (ADR 0034's layer T2). This asserts that the built page
+      # still renders `metadata/trust-evidence.json` exactly — every claim term,
+      # every area, every platform row and the provenance line — so a hand edit
+      # to the page or to the generated module fails here rather than shipping a
+      # number the manifest does not carry. Stdlib Python, no network.
+      #
+      # The other half of the loop, `pnpm trust:upstream`, is NOT run here: it
+      # fetches the manifest from another repository, and whether a merge there
+      # may turn this repository red is a cross-repo policy call that
+      # AAASM-5587 deferred for `check-register-drift.py`. Run it by hand after
+      # a manifest release. AAASM-5588.
+      - name: Trust page matches the capability manifest projection
+        run: pnpm trust:check
 
   sonar:
     name: SonarCloud
