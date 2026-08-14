@@ -1,5 +1,5 @@
 AAASM-5589 — falsification evidence for the denied-action proof
-Recorded against tree b337b42b8ccacd04d338b227320aaf143a8e78bd on 2026-08-14T01:52:22Z
+Recorded against tree b5a923f369f621eb40a9d1c16473ae60b4c0b936 on 2026-08-14T01:58:13Z
 Artifact under test: metadata/denied-action-proof.json
   sha256 56325ec7655a7c0903de948226911dc284f7fd4c0a86e5f65bb85f6f61235c4b
   Written by scripts/denied-action-capture.py against agent-assembly 0.0.1rc6
@@ -89,6 +89,25 @@ argument is that a stated fact was checked. It was removed.
 
   B is the one that matters: without it, "everything else matched" would be
   a claim about a comparison nobody had shown capable of disagreeing.
+
+  Review of `compare` then found three defects in it, each reproduced before
+  being fixed (`b5a923f`). The first is the one worth recording here:
+
+    `_strip_exclusions` walked the copy with `node.get(key, {})`. On a
+    missing intermediate key that returns a THROWAWAY dict, and the
+    exclusion was popped out of that -- leaving `capturedOn` in the copy
+    actually being compared. A checker that silently changes what it
+    covers is the failure this whole file exists to rule out, and it was
+    sitting inside the mechanism that rules it out.
+
+  The other two: a non-object `provenance` raised an unhandled
+  AttributeError and exited 1, which a caller reads as "drifted" rather than
+  "this is not a recording"; and the baseline, the one input arriving from
+  outside via `git show`, was never validated. Both now exit 2.
+
+    R1 baseline missing provenance   -> EXIT=2  (was 1, via a wrong route)
+    R2 baseline provenance = "oops"  -> EXIT=2  (was an AttributeError)
+    R3 recording provenance = "oops" -> EXIT=2  (was an AttributeError)
 
   A SEVERED RUN CANNOT BE SMUGGLED IN AS THE RECORDING
   ----------------------------------------------------
