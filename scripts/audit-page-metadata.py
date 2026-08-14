@@ -69,6 +69,12 @@ def _load_terms() -> tuple[tuple[str, str], ...]:
     if spec is None or spec.loader is None:  # pragma: no cover - defensive
         raise RuntimeError("cannot load scripts/trust-evidence.py")
     module = importlib.util.module_from_spec(spec)
+    # Registered before execution, not after. `@dataclass` resolves its own
+    # module through `sys.modules[cls.__module__]`, so a module that gains a
+    # module-level dataclass would raise AttributeError on a bare exec_module.
+    # Costs one line; removes a way for this loader to break on a file it does
+    # not own.
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return tuple(module.TERMS)
 
