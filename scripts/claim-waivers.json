@@ -1,0 +1,4 @@
+{
+  "$comment": "Reviewed exceptions to scripts/forbidden-claims.json. AAASM-5796. Each entry names one catalogue phrase this build is allowed to publish, and who accepted that: owner, reason, approver, expiry (ISO date). An expired or malformed entry fails CI on its own -- see validate_waivers() in check-forbidden-claims.py -- so a waiver cannot silently outlive its review. class 'fd-7' can never appear here: the 14 ADR 0033 forbidden-design-7 absolutes are unwaivable by anyone, for any period (ADR 0034 Decision 10), and check-forbidden-claims.py rejects a waiver that tries.",
+  "waivers": []
+}
