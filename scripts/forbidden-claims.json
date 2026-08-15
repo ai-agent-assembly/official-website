@@ -49,18 +49,20 @@
     },
     {
       "class": "rejected-hero",
-      "why": "The hero framing AAASM-5585 removed from the homepage: the product described as a governance layer for agents. 'governance {unit} for' replaces the three literal 'governance layer for ...' entries -- it covers them plus the noun the rewording used ('the governance plane for autonomous software') and does not depend on guessing what follows 'for'.",
+      "why": "The hero framing AAASM-5585 removed from the homepage: the product described as a governance layer for agents. 'governance {unit} for' replaces the three literal 'governance layer for ...' entries -- it covers them plus the noun the rewording used ('the governance plane for autonomous software') and does not depend on guessing what follows 'for'. Scoped to the marked hero position (AAASM-5761): these phrases match at the product homepage L1 hero, never elsewhere -- an L0 company-level portfolio summary using the same framing (e.g. content-ownership.md's worked example) is a different, ADR-0034-compliant position and must not trip this class.",
       "locale": "en",
       "any_units": ["governance {unit} for"],
       "any": [
         "governance runtime for AI agents",
         "governance layer that sits between"
-      ]
+      ],
+      "position": "hero"
     },
     {
       "class": "rejected-hero",
       "locale": "zh-Hant",
-      "any": ["代理而生的治理層", "之間的治理層"]
+      "any": ["代理而生的治理層", "之間的治理層"],
+      "position": "hero"
     },
     {
       "class": "approval",

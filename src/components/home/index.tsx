@@ -66,7 +66,12 @@ const EARLY_ACCESS_ROUTE = '/early-access';
 
 export function Hero(): ReactNode {
   return (
-    <header className={styles.hero}>
+    // data-claims-position="hero" marks this element as the ONE position
+    // scripts/check-forbidden-claims.py's rejected-hero class targets
+    // (AAASM-5761) -- not source, a build-output signal the gate reads so
+    // the class does not also fire on unrelated pages using similar wording
+    // in a different, compliant position (e.g. an L0 company summary).
+    <header className={styles.hero} data-claims-position="hero">
       <GovernedField />
       <div className={styles.heroInner}>
         <div className={styles.heroEyebrow}>

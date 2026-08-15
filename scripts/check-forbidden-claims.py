@@ -209,6 +209,56 @@ def strip_exempt_quotes(raw: str) -> str:
     return _EXEMPT_SPAN.sub(" ", raw)
 
 
+# Position scope for the `rejected-hero` class (AAASM-5761). Its phrases match
+# the ONE former framing of the product homepage's above-the-fold hero (an L1
+# position) -- not any occurrence of the same wording anywhere a page scans.
+# Unscoped, the class also fired on `content-ownership.md`'s worked-compliant
+# example, the Horonomy company blurb, which uses the same "governance layer
+# for" framing but is an L0 company-level portfolio summary: a different
+# position, permitted by ADR 0034's layering rule (upper layers may simplify,
+# never broaden). The fix is not an exception list for every page an L0
+# summary may legitimately appear on -- that grows unbounded and is exactly
+# what a "cross-site linter can import the class without a hand-maintained
+# exception list" rules out. Instead the class only matches inside the one
+# position it actually targets: an element the real hero component marks with
+# this attribute (`src/components/home/index.tsx`'s `Hero()`). A page that
+# never marks anything as the hero position can say the same words anywhere
+# else on it without tripping the class -- proven by self_test()'s hero-marked
+# vs unmarked pair, using the actual blurb sentence.
+POSITION_ATTR = "data-claims-position"
+HERO_POSITION = "hero"
+_POSITION_SPAN = re.compile(
+    # Minified HTML output drops attribute quotes entirely (verified on the
+    # real build -- `data-claims-position=hero`, no quotes at all), so the
+    # value has to be matched quoted OR bare, never assumed quoted like a
+    # hand-authored fixture.
+    r'<([a-zA-Z0-9]+)\b[^>]*\bdata-claims-position=(?:"([^"]*)"|\'([^\']*)\'|([^\s"\'>]+))[^>]*>(.*?)</\1>',
+    re.DOTALL,
+)
+
+
+def position_scoped_markup(raw: str, position: str) -> str:
+    """Raw markup found only inside elements marked `data-claims-position="<position>"`.
+
+    Same non-nested-tag assumption as `_EXEMPT_SPAN` above: the real hero
+    element is a single, unnested `<header>`, so a backreference to its own
+    tag name is enough without a full HTML parse.
+    """
+    return " ".join(
+        m.group(5)
+        for m in _POSITION_SPAN.finditer(raw)
+        if (m.group(2) or m.group(3) or m.group(4)) == position
+    )
+
+
+def hero_text(raw: str) -> str:
+    """Visible text restricted to the marked hero position. See POSITION_ATTR."""
+    scoped = position_scoped_markup(strip_exempt_quotes(raw), HERO_POSITION)
+    p = _Visible()
+    p.feed(scoped)
+    return _WS.sub(" ", " ".join(p.chunks)).strip()
+
+
 class _Visible(HTMLParser):
     """Reader-facing text: body copy plus the metadata search results quote.
 
@@ -303,7 +353,9 @@ def matches(needle: str, hay: str, *, boundary: bool) -> bool:
     return re.search(rf"\b{re.escape(n)}\b", hay) is not None
 
 
-def _entry(cls: str, locale: str, phrase: str, prose_only: bool, severity: str) -> dict:
+def _entry(
+    cls: str, locale: str, phrase: str, prose_only: bool, severity: str, position: str | None = None
+) -> dict:
     return {
         "class": cls,
         "locale": locale,
@@ -313,6 +365,9 @@ def _entry(cls: str, locale: str, phrase: str, prose_only: bool, severity: str) 
         # distinctive enough and CJK has no \b.
         "boundary": prose_only and " " not in phrase,
         "severity": severity,
+        # AAASM-5761: None for every class except rejected-hero, which is
+        # restricted to the marked hero position. See POSITION_ATTR.
+        "position": position,
     }
 
 
@@ -405,11 +460,14 @@ def load_phrases(data: dict | None = None):
         prose_only = bool(group.get("prose_only"))
         severity = group.get("severity", "error")
         locale = group.get("locale", "en")
+        position = group.get("position")
         for phrase in group.get("any", []):
-            out.append(_entry(cls, locale, phrase, prose_only, severity))
+            out.append(_entry(cls, locale, phrase, prose_only, severity, position))
         for template in group.get("any_units", []):
             for unit in _units_for_locale(locale):
-                out.append(_entry(cls, locale, template.replace("{unit}", unit), prose_only, severity))
+                out.append(
+                    _entry(cls, locale, template.replace("{unit}", unit), prose_only, severity, position)
+                )
     for phrase in FD7_ABSOLUTES:
         out.append(_entry("fd-7", "en", phrase, True, "error"))
     seen, deduped = set(), []
@@ -442,27 +500,39 @@ def positive_control(phrases) -> list[tuple[tuple[str, str, str], str]]:
     for p in phrases:
         enc = p["phrase"].replace("&", "&amp;")
         b = p["boundary"]
-        fixtures = {
-            "html-body": (
-                "<html><head><style>a{color:red}</style></head><body>"
-                f"<div class=x id=probe data-k=v><span>lead </span>{enc}<em> trail</em></div>"
-                "<script>window.x={}</script></body></html>",
-                html_text,
-            ),
-            "html-meta": (
-                f'<html><head><meta name=description content="{enc}">'
-                "</head><body>x</body></html>",
-                html_text,
-            ),
-            "xml-feed": (
-                "<?xml version='1.0'?><feed><entry><content type='html'>"
-                f"&lt;p&gt;lead {enc.replace('&', '&amp;amp;')}&lt;/p&gt;"
-                "</content></entry></feed>",
-                xml_text,
-            ),
-        }
-        if not p["prose_only"]:
-            fixtures["js-bundle"] = (f'e.jsx("p",{{children:"lead {enc} trail"}})', js_text)
+        if p["position"]:
+            # Position-scoped phrases (rejected-hero, AAASM-5761) are only
+            # ever checked against the marked hero position, so the only
+            # fixture that means anything is one that marks it.
+            fixtures = {
+                "html-hero": (
+                    f'<html><body><header data-claims-position="{p["position"]}">'
+                    f"<span>lead </span>{enc}<em> trail</em></header></body></html>",
+                    hero_text,
+                ),
+            }
+        else:
+            fixtures = {
+                "html-body": (
+                    "<html><head><style>a{color:red}</style></head><body>"
+                    f"<div class=x id=probe data-k=v><span>lead </span>{enc}<em> trail</em></div>"
+                    "<script>window.x={}</script></body></html>",
+                    html_text,
+                ),
+                "html-meta": (
+                    f'<html><head><meta name=description content="{enc}">'
+                    "</head><body>x</body></html>",
+                    html_text,
+                ),
+                "xml-feed": (
+                    "<?xml version='1.0'?><feed><entry><content type='html'>"
+                    f"&lt;p&gt;lead {enc.replace('&', '&amp;amp;')}&lt;/p&gt;"
+                    "</content></entry></feed>",
+                    xml_text,
+                ),
+            }
+            if not p["prose_only"]:
+                fixtures["js-bundle"] = (f'e.jsx("p",{{children:"lead {enc} trail"}})', js_text)
         for name, (fx, fn) in fixtures.items():
             if not matches(p["phrase"], fn(fx), boundary=b):
                 fails.append((_key(p), f"[{p['class']}/{p['locale']}] {name}: {p['phrase']!r}"))
@@ -496,7 +566,11 @@ def scan(build: Path, phrases):
         kind, extract = surf
         rel = str(f.relative_to(build))
         files.append((rel, kind))
-        text = extract(f.read_text(encoding="utf-8", errors="replace"))
+        raw = f.read_text(encoding="utf-8", errors="replace")
+        text = extract(raw)
+        # Position-scoped phrases only ever exist inside the html surface's
+        # marked region (AAASM-5761) -- computed once per file, not per phrase.
+        hero = hero_text(raw) if kind == "html" else ""
         locale = "zh-Hant" if rel.startswith("zh-Hant/") else "en"
         for p in phrases:
             if p["prose_only"] and kind == "js":
@@ -505,7 +579,13 @@ def scan(build: Path, phrases):
             # English phrases are checked on every page regardless of locale.
             if p["locale"] == "zh-Hant" and locale != "zh-Hant":
                 continue
-            if matches(p["phrase"], text, boundary=p["boundary"]):
+            if p["position"]:
+                if kind != "html":
+                    continue
+                haystack = hero
+            else:
+                haystack = text
+            if matches(p["phrase"], haystack, boundary=p["boundary"]):
                 hits.append({**p, "file": rel, "surface": kind})
     return files, hits
 
@@ -574,6 +654,14 @@ MUST_CLEAR = (
     "價格分為三個階層：免費、團隊與企業。",
     "報告需要經過多個層級審核。",
     "系統運行於作業系統底層。",
+    # The real collision AAASM-5761 records: agent-assembly's
+    # content-ownership.md quotes this Horonomy company blurb as the worked
+    # COMPLIANT L0 example, but unscoped it matched rejected-hero's "governance
+    # {unit} for" template. Ordinary (non-hero-marked) prose, it must clear --
+    # self_test() proves the same sentence still fires when marked as the hero
+    # position, so this is narrowing by position, not by widening MUST_CLEAR
+    # past what the class should catch.
+    "A governance layer for AI agents — permissions, approval checkpoints, and evidence.",
 )
 
 # Floors on the control corpora themselves. Emptying the must-catch list used to
@@ -588,15 +676,41 @@ MIN_MUST_CATCH = 12
 MIN_MUST_CLEAR = 6
 
 
-def _prose_hits(sentence: str, phrases):
+def _prose_hits(sentence: str, phrases, *, hero: bool = False):
     """Every catalogue phrase that fires on one sentence of reader-facing prose.
 
     No locale filter: the zh-Hant groups have to be assertable too, and the
     scan()-time rule that confines them to zh-Hant pages is a property of the
     page tree, not of the matcher.
+
+    `hero=True` marks the sentence as the hero position first (AAASM-5761),
+    for asserting a position-scoped group's coverage. Plain (the default) is
+    what MUST_CLEAR needs: proof the sentence does not fire in ordinary,
+    unmarked prose -- including the L0-blurb entry that is this class's own
+    once-real false positive.
+
+    A position-scoped phrase is matched ONLY against the hero-extracted text
+    (empty when `hero` is False, same as scan() would see on an unmarked
+    page) -- never against the plain text, which would still contain the
+    sentence verbatim and defeat the whole point of scoping.
     """
-    text = html_text(f"<html><body><div class=x id=p><p>{sentence}</p></div></body></html>")
-    return [p for p in phrases if matches(p["phrase"], text, boundary=p["boundary"])]
+    if hero:
+        raw = (
+            f'<html><body><header data-claims-position="{HERO_POSITION}">'
+            f"<p>{sentence}</p></header></body></html>"
+        )
+    else:
+        raw = f"<html><body><div class=x id=p><p>{sentence}</p></div></body></html>"
+    plain = html_text(raw)
+    scoped = hero_text(raw)
+    return [
+        p for p in phrases
+        if matches(p["phrase"], scoped if p["position"] else plain, boundary=p["boundary"])
+    ]
+
+
+def _group_is_positioned(key: str, phrases) -> bool:
+    return any(_group_key(p) == key and p["position"] for p in phrases)
 
 
 def _group_key(p) -> str:
@@ -627,7 +741,11 @@ def sentence_control(phrases, must_catch=None, must_clear=None) -> list[str]:
         )
     covered = set()
     for key, sentence in must_catch:
-        hits = _prose_hits(sentence, phrases)
+        # Position-scoped groups (rejected-hero, AAASM-5761) only fire at the
+        # hero position, so their coverage sentence has to be checked there --
+        # a plain-prose check would report their own real false positive as
+        # if it were still missing coverage.
+        hits = _prose_hits(sentence, phrases, hero=_group_is_positioned(key, phrases))
         if any(_group_key(h) == key for h in hits):
             covered.add(key)
         else:
@@ -737,8 +855,43 @@ def self_test() -> int:
         "NOTHING FIRED" if not other_attr_hits else "",
     )
 
+    # Position scope (AAASM-5761). The real collision: the same sentence fires
+    # when it IS the product homepage hero, and clears when it is the
+    # Horonomy L0 company blurb content-ownership.md holds up as compliant.
+    blurb = "A governance layer for AI agents — permissions, approval checkpoints, and evidence."
+    hero_breach_hits = _prose_hits(blurb, phrases, hero=True)
+    check(
+        hero_breach_hits,
+        f"rejected-hero fires on the blurb WHEN marked as the hero position: {blurb!r}",
+        "NOTHING FIRED" if not hero_breach_hits else "",
+    )
+    l0_blurb_hits = _prose_hits(blurb, phrases)
+    check(
+        not l0_blurb_hits,
+        f"rejected-hero clears the SAME blurb text when it is not the hero position (AAASM-5761): {blurb!r}",
+        ", ".join(f"{_group_key(h)} {h['phrase']!r}" for h in l0_blurb_hits),
+    )
+    # An unrelated element carrying an unrelated data-claims-position value
+    # must not count as the hero position -- proves the scope is keyed to
+    # HERO_POSITION's value, not "any marked element."
+    wrong_position_html = (
+        f'<html><body><header data-claims-position="footer"><p>{blurb}</p></header></body></html>'
+    )
+    wrong_position_hits = [
+        p for p in phrases if p["position"] and matches(p["phrase"], hero_text(wrong_position_html), boundary=p["boundary"])
+    ]
+    check(
+        not wrong_position_hits,
+        f"a differently-valued data-claims-position does not count as the hero position: {blurb!r}",
+        ", ".join(f"{_group_key(h)} {h['phrase']!r}" for h in wrong_position_hits),
+    )
+
     for key, s in MUST_CATCH:
-        hits = [h for h in _prose_hits(s, phrases) if _group_key(h) == key]
+        hits = [
+            h
+            for h in _prose_hits(s, phrases, hero=_group_is_positioned(key, phrases))
+            if _group_key(h) == key
+        ]
         check(hits, f"caught by {key}: {s}", hits[0]["phrase"] if hits else "NOTHING FIRED")
     for s in MUST_CLEAR:
         hits = _prose_hits(s, phrases)
