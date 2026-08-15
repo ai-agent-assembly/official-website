@@ -159,6 +159,56 @@ _TAG = re.compile(r"<[^>]*>")
 # --------------------------------------------------------------------------- #
 # extraction
 # --------------------------------------------------------------------------- #
+# The quote-exemption marker (AAASM-5744). A page that quotes a forbidden claim
+# in order to forbid, retract, or critique it -- rather than assert it -- wraps
+# the quoted span in an element carrying this attribute:
+#
+#     <span data-claims-gate-quote>a fixed stack of three tiers, each one
+#     catching what the tier above it missed</span>
+#
+# Plain HTML, not `<!-- -->`: MDX does not parse HTML comments (`Unexpected
+# character '!'... to create a comment in MDX, use {/* text */}`), and `{/*
+# */}` JSX comments compile out of the React tree entirely -- verified by
+# building a page with one and finding zero trace of it, marker or content, in
+# build/. A `<span>` is real markup: it renders (so the quote stays visible to
+# readers, which "prohibition pages must paraphrase, never quote" would not)
+# and its attribute survives into build/ output, where this script reads it.
+#
+# The exemption is deliberately narrow and code-owned, not data-owned:
+# EXEMPT_ATTR is a constant in this file, not something the catalogue or a page
+# can redefine, so recognising it is not decidable from data alone -- the
+# AAASM-5730 lesson this ticket's own acceptance criteria restates. What page
+# content controls is only WHERE the one fixed attribute is placed, and that
+# placement is a visible, reviewable line in the content diff -- the same
+# property that makes a marked region "explicit, greppable, and ... reviewable"
+# per the option this implements. It is not scoped further (no required nearby
+# "retracted"/"forbidden" signal word): the marker itself is the signal, and
+# requiring specific prose near it would make the exemption fragile to
+# copy-editing instead of narrower. sentence_control's MUST_CATCH corpus proves
+# the same phrase, unmarked, still fails -- the control this ticket's
+# acceptance criteria requires.
+#
+# One regex, applied to raw file bytes before any of the three per-surface
+# extractors run, rather than three separate parsers each re-implementing the
+# exemption. The span reaches build/ in three different serialisations of the
+# same literal markup -- verbatim in .html, verbatim inside a CDATA block in
+# .xml (the RSS/Atom feeds embed the rendered post body unescaped), and
+# verbatim inside a JS string literal in .js (the raw MDX source, embedded for
+# the blog archive/search index) -- so `<span ...data-claims-gate-quote...>
+# ... </span>` is a literal substring to strip in all three, proven by the
+# self-test asserting all three surfaces on the same fixture. DOTALL, because
+# the quoted text can (and in the wild, will) span lines.
+EXEMPT_ATTR = "data-claims-gate-quote"
+_EXEMPT_SPAN = re.compile(
+    rf'<span\b[^>]*\b{re.escape(EXEMPT_ATTR)}\b[^>]*>.*?</span>',
+    re.DOTALL,
+)
+
+
+def strip_exempt_quotes(raw: str) -> str:
+    return _EXEMPT_SPAN.sub(" ", raw)
+
+
 class _Visible(HTMLParser):
     """Reader-facing text: body copy plus the metadata search results quote.
 
@@ -200,6 +250,7 @@ class _Visible(HTMLParser):
 
 
 def html_text(raw: str) -> str:
+    raw = strip_exempt_quotes(raw)
     p = _Visible()
     p.feed(raw)
     return _WS.sub(" ", " ".join(p.chunks)).strip()
@@ -212,7 +263,12 @@ def xml_text(raw: str) -> str:
     yields markup and the tags must then come out. The blog's fd-1 sentence
     reaches readers through four feeds, and a sweep that skipped them would
     under-report the denominator.
+
+    The exempt span is stripped before either unescape: RSS/Atom wrap item
+    bodies in CDATA, where the markup (this span included) is already literal,
+    unescaped HTML -- verified on the built feed rather than assumed.
     """
+    raw = strip_exempt_quotes(raw)
     s = html.unescape(raw)
     s = _TAG.sub(" ", s)
     s = html.unescape(s)
@@ -220,6 +276,7 @@ def xml_text(raw: str) -> str:
 
 
 def js_text(raw: str) -> str:
+    raw = strip_exempt_quotes(raw)
     s = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m.group(1), 16)), raw)
     return _WS.sub(" ", s.replace('\\"', '"')).strip()
 
@@ -647,6 +704,37 @@ def self_test() -> int:
     check(
         not integrity(junked) and sentence_control(load_phrases(junked)),
         "group's phrases junked at the same count -> integrity passes, sentence control fails",
+    )
+
+    # Quote exemption (AAASM-5744). QUOTE_FIXTURE is a real MUST_CATCH phrase --
+    # its own coverage is separately asserted a few lines down, so this proves
+    # the exemption against a phrase already proven to fire, not a phrase
+    # chosen because it happens to fire.
+    quote_fixture = "Agent Assembly ships three independently deployable tiers."
+    exempt_hits = _prose_hits(
+        f"<span data-claims-gate-quote>{quote_fixture}</span>", phrases
+    )
+    check(
+        not exempt_hits,
+        f"quote-exempt span clears a real catalogue phrase: {quote_fixture!r}",
+        ", ".join(f"{_group_key(h)} {h['phrase']!r}" for h in exempt_hits),
+    )
+    unexempt_hits = _prose_hits(quote_fixture, phrases)
+    check(
+        unexempt_hits,
+        f"the same phrase, unmarked, still fails -- narrowness control: {quote_fixture!r}",
+        "NOTHING FIRED" if not unexempt_hits else "",
+    )
+    # A phrase not wrapped in the marker, but wrapped in an UNRELATED tag with
+    # an unrelated attribute, must still fire -- proves the exemption is keyed
+    # to the specific EXEMPT_ATTR value, not "any wrapping tag."
+    other_attr_hits = _prose_hits(
+        f'<span data-something-else>{quote_fixture}</span>', phrases
+    )
+    check(
+        other_attr_hits,
+        f"an unrelated attribute does not exempt anything: {quote_fixture!r}",
+        "NOTHING FIRED" if not other_attr_hits else "",
     )
 
     for key, s in MUST_CATCH:
