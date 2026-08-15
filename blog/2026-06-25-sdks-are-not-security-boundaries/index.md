@@ -12,8 +12,9 @@ security boundary. Anything running in the same process can bypass it.
 
 :::note[Editorial note — 13 August 2026]
 
-As published, this post framed the product as a fixed stack of interception tiers, each one
-catching what the tier above it missed. That framing has since been **retracted**. ADR 0033 records it as
+As published, this post framed the product as <span data-claims-gate-quote>a fixed stack of
+interception tiers, each one catching what the tier above it missed</span>. That framing has since
+been **retracted**. ADR 0033 records it as
 a forbidden design: it presents one deployment shape as the architecture, and "the tier below
 catches it" implies a continuity of coverage the product does not have — an absent component
 governs nothing, and nothing behind it picks up the slack.
