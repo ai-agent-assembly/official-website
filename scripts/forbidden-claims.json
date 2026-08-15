@@ -1,6 +1,5 @@
 {
   "$comment": "Forbidden-claim catalogue for the built site (AAASM-5696). Checked by scripts/check-forbidden-claims.py against build/ output, NOT source. Canonical authority is ADR 0033 in ai-agent-assembly/agent-assembly (docs/src/adr/0033-canonical-governance-and-enforcement-architecture.md) -- its 'Explicitly forbidden designs' section and the section 6 claim vocabulary. Do not restate the ADR here; add phrases and cite the design they violate.",
-
   "$rules": {
     "framing_not_sentences": "Entries MUST be the bare FRAMING, never a full sentence copied from one page. The first version of this catalogue held '/product's whole sentence, so it matched that one page and missed the same framing on the blog, which continues '...layers: SDK (in-process)'. A sentence-shaped entry finds an instance; a framing-shaped entry finds the class. This is the single most important rule in this file.",
     "prose_only": "Single common words (universal, complete, comprehensive) are marked prose_only. They are searched in reader-facing text only, never in JS bundles, where 'autocomplete' and React internals produce pure noise -- 22 false positives when this was measured.",
@@ -8,7 +7,6 @@
     "positive_control": "Every phrase is proven matchable against a synthetic fixture before any absence is reported. An absence with no positive control is not a measurement.",
     "additive_only": "This file may EXTEND the gate, never narrow it. The 14 ADR 0033 fd-7 absolutes are not here: they are FD7_ABSOLUTES in check-forbidden-claims.py, because they are never waivable (ADR 0034 Decision 10) and deleting a line from a data file does not look like disabling a check, whereas deleting a line from the script does. An fd-7 group added back here is ignored and reported as an integrity failure. AAASM-5730."
   },
-
   "phrases": [
     {
       "class": "fd-1",
@@ -27,14 +25,9 @@
     {
       "class": "fd-1",
       "locale": "zh-Hant",
-      "any": [
-        "可獨立部署的層級",
-        "強制執行層",
-        "核心層",
-        "核心掛鉤",
-        "三個攔截層",
-        "依你所需採用相應的深度"
-      ]
+      "any": ["核心層", "核心掛鉤", "依你所需採用相應的深度"],
+      "any_units": ["可獨立部署的{unit}", "強制執行{unit}", "三個攔截{unit}"],
+      "why": "zh-Hant framings equivalent to fd-1/en. any_units carries the Chinese unit slot expanded over 層/層級/階層/層面 in check-forbidden-claims.py (UNIT_SYNONYMS_ZH), for the same reason as the English set: the noun is interchangeable, the anchoring phrase is what is forbidden. 核心層 (kernel layer) stays literal on purpose, mirroring the English 'kernel layer' -- 在核心層執行 (runs at the kernel level) is ordinary technical prose, not a claim. AAASM-5741."
     },
     {
       "class": "fd-2",
@@ -82,13 +75,16 @@
     },
     {
       "class": "fd-7-adjacent",
-      "why": "Not on the ADR's literal list, so NOT an fd-7 violation and not treated as one. These are the same claim shape reached by synonym, found on the blog during AAASM-5696. Recorded here so the class is visible; if the owners want them binding, they belong in the ADR's list first, not in this file.",
+      "why": "Not on the ADR's literal list, so NOT an fd-7 violation and not treated as one. These are the same claim shape reached by synonym, found on the blog during AAASM-5696. Recorded here so the class is visible; if the owners want them binding, they belong in the ADR's list first, not in this file. AAASM-5741 added the possessive-qualifier evasion ('no agent code change(s)') and 'without requiring changes to the agent', both measured live on the docs repo (faq.md, README.md) during AAASM-5727's review -- not this repo's build, but the same paraphrase class this catalogue exists to catch wherever it is published. Still warn-tier: promoting to fd-7 error severity would bind ADR 0033's literal 14-item list to a paraphrase, and that decision belongs in the ADR, not a repo-local JSON file (see WARN_ONLY_CLASSES).",
       "locale": "en",
       "severity": "warn",
       "any": [
         "without touching agent code",
         "with no code change",
-        "without code changes"
+        "without code changes",
+        "no agent code changes",
+        "no agent code change",
+        "without requiring changes to the agent"
       ]
     }
   ]

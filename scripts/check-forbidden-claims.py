@@ -113,6 +113,24 @@ WARN_ONLY_CLASSES = frozenset({"fd-7-adjacent"})
 # is a normal thing to write, so "kernel layer" stays literal. AAASM-5730.
 UNIT_SYNONYMS = ("layer", "tier", "level", "stage", "plane")
 
+# The zh-Hant unit slot, expanded only into zh-Hant `any_units` templates
+# (never into `en` ones, and vice versa -- see `_units_for_locale`). AAASM-5741.
+#
+# CJK has no `\b`, and 層 is a common morpheme across ordinary compounds
+# unrelated to this claim ("表層" surface, "底層" underlying, "階層" hierarchy in
+# a non-architecture sense). The English design's answer to that -- restrict
+# expansion to `{unit}` templates anchored in interception context, so a bare
+# unit noun never becomes a searched phrase -- carries over unchanged and is
+# what actually bounds the risk here; it is not solved by anything Chinese-
+# specific. Four unit nouns, not a stem set: 層/層級/階層/層面 are the distinct
+# words the AAASM-5741 discovery measured as escaping the un-expanded zh-Hant
+# group's literal `any` list.
+UNIT_SYNONYMS_ZH = ("層", "層級", "階層", "層面")
+
+
+def _units_for_locale(locale: str) -> tuple[str, ...]:
+    return UNIT_SYNONYMS_ZH if locale == "zh-Hant" else UNIT_SYNONYMS
+
 # Minimum number of AUTHORED entries per `class/locale` group in
 # forbidden-claims.json.
 #
@@ -333,7 +351,7 @@ def load_phrases(data: dict | None = None):
         for phrase in group.get("any", []):
             out.append(_entry(cls, locale, phrase, prose_only, severity))
         for template in group.get("any_units", []):
-            for unit in UNIT_SYNONYMS:
+            for unit in _units_for_locale(locale):
                 out.append(_entry(cls, locale, template.replace("{unit}", unit), prose_only, severity))
     for phrase in FD7_ABSOLUTES:
         out.append(_entry("fd-7", "en", phrase, True, "error"))
@@ -461,10 +479,19 @@ MUST_CATCH = (
     ("fd-1/en", "Governance arrives at three levels: in-process, sidecar, and kernel."),
     ("fd-1/en", "This is the three-tier interception model in practice."),
     ("fd-1/zh-Hant", "Agent Assembly 由三個攔截層組成，逐層收斂。"),
+    # A reworded escape: the old zh-Hant group had no {unit} expansion, so only
+    # the literal 層 forms above were caught. This substitutes 階層 -- one of
+    # UNIT_SYNONYMS_ZH -- into the same anchored slot; it must fire only through
+    # the new any_units template, never through a pre-existing literal string.
+    # AAASM-5741.
+    ("fd-1/zh-Hant", "這是三個可獨立部署的階層架構。"),
     ("fd-2/en", "SDK then proxy then eBPF: each stage sees what the one before it missed."),
     ("fd-3/en", "The sidecars feed a central gateway that makes the decision."),
     ("fd-7/en", "The kernel hooks give comprehensive coverage of every host."),
     ("fd-7-adjacent/en", "Enforcement arrives without touching agent code."),
+    # The possessive-qualifier evasion this class was missing before AAASM-5741
+    # -- measured live on the docs repo (README.md), not this repo's build.
+    ("fd-7-adjacent/en", "Get started -- no agent code changes are required."),
     ("rejected-hero/en", "Agent Assembly is the governance plane for autonomous software."),
     ("rejected-hero/zh-Hant", "這是為 AI 代理而生的治理層。"),
     ("approval/en", "Sensitive tool calls wait behind human-in-the-loop approval."),
@@ -482,6 +509,14 @@ MUST_CLEAR = (
     "Pricing comes in three tiers: Free, Team, and Enterprise.",
     "Logging supports three levels: debug, info, and error.",
     "The migration runs in three stages over the next quarter.",
+    # The zh-Hant equivalents of the over-reach negative controls above,
+    # exercising UNIT_SYNONYMS_ZH the same way: 層 (and 層級/階層/層面) are
+    # common morphemes with no word boundary to lean on, so what actually
+    # bounds these is that no anchor prefix ("可獨立部署的"/"強制執行"/
+    # "三個攔截") precedes the unit noun. AAASM-5741.
+    "價格分為三個階層：免費、團隊與企業。",
+    "報告需要經過多個層級審核。",
+    "系統運行於作業系統底層。",
 )
 
 # Floors on the control corpora themselves. Emptying the must-catch list used to
