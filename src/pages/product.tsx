@@ -544,7 +544,7 @@ export default function Product(): ReactNode {
           'Agent Assembly decides whether an AI agent’s action is allowed before that action runs — on the paths you route through it — and records what was decided, so a risky call can be refused, or blocked pending a decision, instead of discovered afterwards.',
       })}
     >
-      <div className={styles.wrap}>
+      <main className={styles.wrap}>
         <div className={styles.kicker}>
           <Translate id="product.kicker">Product</Translate>
         </div>
@@ -1067,7 +1067,7 @@ export default function Product(): ReactNode {
             </span>
           </span>
         </div>
-      </div>
+      </main>
     </Layout>
   );
 }

@@ -155,7 +155,7 @@ export default function DeniedActionProof(): ReactNode {
           'One recorded run in which a policy denial kept an agent tool body from taking effect — with the effect checked afterwards by a separate process that took no part in the decision.',
       })}
     >
-      <div className={narrative.wrap}>
+      <main className={narrative.wrap}>
         <div className={narrative.kicker}>
           <Translate id="proof.kicker">Evidence</Translate>
         </div>
@@ -655,7 +655,7 @@ export default function DeniedActionProof(): ReactNode {
             </Translate>
           </Link>
         </div>
-      </div>
+      </main>
     </Layout>
   );
 }

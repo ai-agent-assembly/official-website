@@ -2641,5 +2641,14 @@
   },
   "proof.cta.roles": {
     "message": "閱讀你角色的簡介"
+  },
+  "blog.tags.list.meta.description": {
+    "message": "依主題瀏覽 Agent Assembly 部落格文章。"
+  },
+  "blog.authors.list.meta.description": {
+    "message": "撰寫 Agent Assembly 部落格的作者，以及每位作者已發表的文章數。"
+  },
+  "blog.authors.posts.meta.description": {
+    "message": "{name} 在 Agent Assembly 部落格發表的文章。"
   }
 }
