@@ -75,7 +75,7 @@
     },
     {
       "class": "fd-7-adjacent",
-      "why": "Not on the ADR's literal list, so NOT an fd-7 violation and not treated as one. These are the same claim shape reached by synonym, found on the blog during AAASM-5696. Recorded here so the class is visible; if the owners want them binding, they belong in the ADR's list first, not in this file. AAASM-5741 added the possessive-qualifier evasion ('no agent code change(s)') and 'without requiring changes to the agent', both measured live on the docs repo (faq.md, README.md) during AAASM-5727's review -- not this repo's build, but the same paraphrase class this catalogue exists to catch wherever it is published. Still warn-tier: promoting to fd-7 error severity would bind ADR 0033's literal 14-item list to a paraphrase, and that decision belongs in the ADR, not a repo-local JSON file (see WARN_ONLY_CLASSES).",
+      "why": "Not on the ADR's literal list, so NOT an fd-7 violation and not treated as one. These are the same claim shape reached by synonym, found on the blog during AAASM-5696. Recorded here so the class is visible; if the owners want them binding, they belong in the ADR's list first, not in this file. AAASM-5741 added the possessive-qualifier evasion ('no agent code change(s)'), measured live on the docs repo (faq.md, README.md) during AAASM-5727's review -- not this repo's build, but the same paraphrase class this catalogue exists to catch wherever it is published. 'without requiring changes to the agent' was tried and reverted in the same change: it fires on blog/2026-06-25-sdks-are-not-security-boundaries's transport-mediation bullet, which is accurately scoped ('refuses network egress ... on traffic that is routed to it') rather than an unqualified no-code-changes claim -- a false positive on correctly-qualified prose, not a paraphrase of the banned absolute.",
       "locale": "en",
       "severity": "warn",
       "any": [
@@ -83,8 +83,7 @@
         "with no code change",
         "without code changes",
         "no agent code changes",
-        "no agent code change",
-        "without requiring changes to the agent"
+        "no agent code change"
       ]
     }
   ]
