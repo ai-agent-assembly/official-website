@@ -34,6 +34,7 @@ Three traps this deliberately avoids
 from __future__ import annotations
 
 import copy
+import fnmatch
 import html
 import json
 import re
@@ -45,7 +46,6 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 CATALOGUE = HERE / "forbidden-claims.json"
 WAIVERS = HERE / "claim-waivers.json"
-BASELINE = HERE / "claim-baseline.json"
 
 # --------------------------------------------------------------------------- #
 # What the catalogue is NOT allowed to own
@@ -380,104 +380,126 @@ def read_catalogue() -> dict:
 
 def read_waivers() -> dict:
     if not WAIVERS.exists():
-        return {"waivers": []}
+        return {"exceptions": []}
     return json.loads(WAIVERS.read_text(encoding="utf-8"))
 
 
-def read_baseline() -> dict:
-    if not BASELINE.exists():
-        return {"baseline": []}
-    return json.loads(BASELINE.read_text(encoding="utf-8"))
+# --------------------------------------------------------------------------- #
+# waivers (AAASM-5796, ADR 0034 Decision 10)
+# --------------------------------------------------------------------------- #
+# ONE scheme, not a repo-invented one. claim-vocabulary.md 7.1 and ADR 0034
+# Decision 10 both state that AAASM-5599 (this class of checker) is the reader
+# of a single canonical waiver shape -- nine fields, scoped to a string,
+# expiring at most 90 days from issue, renewed only by a fresh approval, never
+# covering an unwaivable category. The first version of this file invented a
+# 7-field ad hoc shape instead of reading the ADR first; this is the
+# corrected one. `rule` here is `<class>/<locale>` from forbidden-claims.json
+# -- this checker's rule shape is a phrase catalogue, not ADR 0034 2.1's
+# D-dimension tuple, and claim-vocabulary.md 7.1 licenses each caller to state
+# what a field means for its own rule shape without adding a field or a
+# location.
+#
+# There is deliberately no separate "baseline" mechanism. A file of
+# unreviewed, non-expiring exempted strings IS a non-expiring waiver in
+# effect -- forbidden design 9, "by another route" per claim-vocabulary.md
+# 6.6 -- regardless of what it is named. Grandfathering existing content goes
+# through this same reviewed, bounded, expiring path; there is no unreviewed
+# alternative.
+EXCEPTION_REQUIRED_FIELDS = (
+    "id", "rule", "text", "scope", "justification", "evidence", "approver", "issued", "expires",
+)
+SCOPE_REQUIRED_FIELDS = ("repository", "paths", "surfaces")
+WAIVER_MAX_DAYS = 90  # ADR 0034 Decision 10: at most 90 days from `issued`
 
 
-# --------------------------------------------------------------------------- #
-# waivers and baseline (AAASM-5796)
-# --------------------------------------------------------------------------- #
-# Two different things, kept structurally distinct so neither can be used to
-# silence the other's category of problem:
-#
-# A WAIVER is a reviewed acceptance of one catalogue phrase, with an owner,
-# a reason, an approver and an expiry -- it says "this is fine, on purpose,
-# until this date." class "fd-7" can never be waived (ADR 0034 Decision 10):
-# validate_waivers() rejects that entry outright, the same way integrity()
-# rejects an fd-7 group appearing in the catalogue.
-#
-# A BASELINE entry is not a review -- it has no owner, reason, approver or
-# expiry. It records that one (class, locale, phrase, file) combination is
-# currently unremediated, so it does not fail CI *today*, without granting
-# anyone permission to leave it there. It suppresses nothing else: the same
-# phrase in a file not listed keeps failing, and a newly-introduced file is
-# never covered by an existing entry -- baselining cannot silently widen.
-WAIVER_REQUIRED_FIELDS = ("class", "locale", "phrase", "owner", "reason", "approver", "expiry")
-BASELINE_REQUIRED_FIELDS = ("class", "locale", "phrase", "file")
+def _parse_rule(rule: str) -> tuple[str, str] | None:
+    """`rule` is `<class>/<locale>` here. None if malformed."""
+    parts = rule.split("/", 1) if isinstance(rule, str) else []
+    if len(parts) != 2 or not all(parts):
+        return None
+    return parts[0], parts[1]
 
 
 def validate_waivers(data: dict, *, today: date | None = None) -> list[str]:
     today = today or date.today()
     errs: list[str] = []
-    seen: set[tuple[str, str, str]] = set()
-    for i, w in enumerate(data.get("waivers", [])):
-        where = f"waivers[{i}]"
-        missing = [k for k in WAIVER_REQUIRED_FIELDS if not w.get(k)]
+    seen_ids: set[str] = set()
+    for i, w in enumerate(data.get("exceptions", [])):
+        where = f"exceptions[{i}]"
+        missing = [k for k in EXCEPTION_REQUIRED_FIELDS if not w.get(k)]
         if missing:
             errs.append(f"{where}: missing required field(s) {', '.join(missing)}")
             continue
-        if w["class"] == "fd-7":
+        scope = w["scope"]
+        if not isinstance(scope, dict) or any(k not in scope for k in SCOPE_REQUIRED_FIELDS):
+            errs.append(f"{where}: 'scope' must be an object with {SCOPE_REQUIRED_FIELDS}")
+            continue
+        parsed_rule = _parse_rule(w["rule"])
+        if parsed_rule is None:
+            errs.append(f"{where}: rule {w['rule']!r} is not '<class>/<locale>'")
+            continue
+        cls, _ = parsed_rule
+        if cls == "fd-7":
             errs.append(
                 f"{where}: class 'fd-7' is never waivable, by anyone, for any period "
-                "(ADR 0034 Decision 10) -- remove this entry"
+                "(ADR 0034 Decision 10, category 2 of the four things that may never be "
+                "waived) -- remove this entry"
             )
             continue
         try:
-            expiry = date.fromisoformat(w["expiry"])
+            issued = date.fromisoformat(w["issued"])
+            expires = date.fromisoformat(w["expires"])
         except ValueError:
-            errs.append(f"{where}: expiry {w['expiry']!r} is not an ISO date (YYYY-MM-DD)")
+            errs.append(f"{where}: 'issued'/'expires' must be ISO dates (YYYY-MM-DD)")
             continue
-        if expiry < today:
+        if expires < today:
             errs.append(
-                f"{where}: waiver for {w['phrase']!r} expired {w['expiry']} (owner {w['owner']}) "
-                "-- renew with a new expiry or remove it"
+                f"{where}: waiver {w['id']} expired {w['expires']} (approver {w['approver']}) -- "
+                "expiry fails closed; renew with a NEW approval and fresh evidence, not an "
+                "edited date (that renewal shape is itself forbidden design 9)"
             )
             continue
-        key = (w["class"], w["locale"], w["phrase"])
-        if key in seen:
-            errs.append(f"{where}: duplicate waiver for {key}")
-        seen.add(key)
-    return errs
-
-
-def validate_baseline(data: dict) -> list[str]:
-    errs: list[str] = []
-    seen: set[tuple[str, str, str, str]] = set()
-    for i, b in enumerate(data.get("baseline", [])):
-        where = f"baseline[{i}]"
-        missing = [k for k in BASELINE_REQUIRED_FIELDS if not b.get(k)]
-        if missing:
-            errs.append(f"{where}: missing required field(s) {', '.join(missing)}")
+        if (expires - issued).days > WAIVER_MAX_DAYS:
+            errs.append(
+                f"{where}: waiver {w['id']} runs {(expires - issued).days} days "
+                f"({w['issued']} -> {w['expires']}) -- at most {WAIVER_MAX_DAYS} days from "
+                "'issued' (ADR 0034 Decision 10)"
+            )
             continue
-        key = (b["class"], b["locale"], b["phrase"], b["file"])
-        if key in seen:
-            errs.append(f"{where}: duplicate baseline entry for {key}")
-        seen.add(key)
+        if w["id"] in seen_ids:
+            errs.append(f"{where}: duplicate waiver id {w['id']!r}")
+        seen_ids.add(w["id"])
     return errs
 
 
-def annotate_suppressions(hits: list[dict], waivers: list[dict], baseline: list[dict]) -> list[dict]:
-    """Mark each hit `waived` or `baselined` where a matching entry exists.
+def annotate_suppressions(hits: list[dict], exceptions: list[dict]) -> list[dict]:
+    """Mark each hit `waived` where a matching, valid exception covers it.
 
-    A pure function over plain hit/waiver/baseline dicts -- not folded into
-    scan() -- so self_test() can prove the suppression logic against synthetic
-    hits without a real build directory.
+    A pure function over plain hit/exception dicts -- not folded into scan()
+    -- so self_test() can prove the suppression logic against synthetic hits
+    without a real build directory. Callers pass only exceptions that already
+    passed validate_waivers(), the same way load_phrases() only ever runs
+    after integrity() -- an invalid entry is a build failure on its own, never
+    silently ignored here.
     """
-    waiver_keys = {(w["class"], w["locale"], w["phrase"]) for w in waivers}
-    baseline_keys = {(b["class"], b["locale"], b["phrase"], b["file"]) for b in baseline}
     out = []
     for h in hits:
         h = dict(h)
-        if (h["class"], h["locale"], h["phrase"]) in waiver_keys:
+        for w in exceptions:
+            if _parse_rule(w.get("rule", "")) != (h["class"], h["locale"]):
+                continue
+            if w.get("text") != h["phrase"]:
+                continue
+            scope = w.get("scope") or {}
+            paths = scope.get("paths") or []
+            if not any(fnmatch.fnmatch(h["file"], pat) for pat in paths):
+                continue
+            surfaces = scope.get("surfaces") or []
+            if surfaces and h["surface"] not in surfaces:
+                continue
             h["waived"] = True
-        elif (h["class"], h["locale"], h["phrase"], h["file"]) in baseline_keys:
-            h["baselined"] = True
+            h["waiver_id"] = w.get("id")
+            break
         out.append(h)
     return out
 
@@ -662,7 +684,7 @@ def negative_control(phrases) -> list[tuple[tuple[str, str, str], str]]:
     return fails
 
 
-def scan(build: Path, phrases, *, waivers: list[dict] | None = None, baseline: list[dict] | None = None):
+def scan(build: Path, phrases, *, waivers: list[dict] | None = None):
     files, hits = [], []
     for f in sorted(build.rglob("*")):
         if not f.is_file():
@@ -694,7 +716,7 @@ def scan(build: Path, phrases, *, waivers: list[dict] | None = None, baseline: l
                 haystack = text
             if matches(p["phrase"], haystack, boundary=p["boundary"]):
                 hits.append({**p, "file": rel, "surface": kind})
-    hits = annotate_suppressions(hits, waivers or [], baseline or [])
+    hits = annotate_suppressions(hits, waivers or [])
     return files, hits
 
 
@@ -1017,51 +1039,73 @@ def self_test() -> int:
     check(not positive_control(phrases), f"positive control passes ({len(phrases)} phrases)")
     check(not negative_control(phrases), "negative control passes")
 
-    # Waivers and baseline (AAASM-5796).
-    check(not validate_waivers({"waivers": []}), "empty waiver file passes")
-    check(not validate_baseline({"baseline": []}), "empty baseline file passes")
+    # Waivers (AAASM-5796, ADR 0034 Decision 10's own field shape).
+    check(not validate_waivers({"exceptions": []}), "empty waiver file passes")
 
-    malformed_waiver = {"waivers": [{"class": "fd-1", "locale": "en", "phrase": "x"}]}
+    malformed_waiver = {"exceptions": [{"id": "WV-1", "rule": "fd-1/en"}]}
     check(
         validate_waivers(malformed_waiver),
-        "waiver missing owner/reason/approver/expiry fails validation",
+        "waiver missing justification/evidence/approver/issued/expires/scope/text fails validation",
     )
 
-    fd7_waiver = {
-        "waivers": [
-            {
-                "class": "fd-7",
-                "locale": "en",
-                "phrase": "catch everything",
-                "owner": "someone",
-                "reason": "x",
-                "approver": "someone-else",
-                "expiry": "2099-01-01",
-            }
-        ]
-    }
+    def _waiver(**over):
+        base = {
+            "id": "WV-TEST-01",
+            "rule": "fd-1/en",
+            "text": "test waiver phrase",
+            "scope": {
+                "repository": "ai-agent-assembly/official-website",
+                "paths": ["index.html"],
+                "surfaces": ["html"],
+            },
+            "justification": "x",
+            "evidence": "x",
+            "approver": "someone-else",
+            "issued": "2026-01-01",
+            "expires": "2026-03-01",  # 59 days -- within the 90-day cap
+        }
+        base.update(over)
+        return base
+
     check(
-        validate_waivers(fd7_waiver),
-        "fd-7 (unwaivable, ADR 0034 Decision 10) cannot be waived even if otherwise well-formed",
+        validate_waivers({"exceptions": [{**_waiver(), "scope": "not-an-object"}]}),
+        "waiver with a malformed (non-object) scope fails validation",
+    )
+    check(
+        validate_waivers({"exceptions": [{**_waiver(), "rule": "not-a-rule-locale-pair"}]}),
+        "waiver whose rule is not '<class>/<locale>' fails validation",
     )
 
-    well_formed = {
-        "class": "fd-1",
-        "locale": "en",
-        "phrase": "test waiver phrase",
-        "owner": "someone",
-        "reason": "x",
-        "approver": "someone-else",
-        "expiry": "2027-01-01",
-    }
-    expired = {**well_formed, "expiry": "2020-01-01"}
+    fd7_waiver = _waiver(rule="fd-7/en", text="catch everything")
     check(
-        not validate_waivers({"waivers": [well_formed]}, today=date(2026, 1, 1)),
-        "well-formed, non-expired waiver passes validation",
+        validate_waivers({"exceptions": [fd7_waiver]}),
+        "fd-7 (unwaivable, ADR 0034 Decision 10 category 2) cannot be waived even if otherwise well-formed",
     )
+
+    well_formed = _waiver()
     check(
-        validate_waivers({"waivers": [expired]}, today=date(2026, 1, 1)),
-        "expired waiver fails validation on its own -- independent of whether a matching hit exists",
+        not validate_waivers({"exceptions": [well_formed]}, today=date(2026, 1, 15)),
+        "well-formed, non-expired, within-90-days waiver passes validation",
+    )
+
+    expired = _waiver(id="WV-TEST-02", expires="2026-01-10")
+    check(
+        validate_waivers({"exceptions": [expired]}, today=date(2026, 1, 15)),
+        "expired waiver fails validation on its own -- independent of whether a matching hit exists "
+        "(expiry fails closed)",
+    )
+
+    over_90 = _waiver(id="WV-TEST-03", issued="2026-01-01", expires="2026-06-01")
+    check(
+        validate_waivers({"exceptions": [over_90]}, today=date(2026, 1, 15)),
+        "a waiver running more than 90 days from 'issued' fails validation, even if not yet expired "
+        "(ADR 0034 Decision 10's expiry cap)",
+    )
+
+    dup = [well_formed, _waiver()]
+    check(
+        validate_waivers({"exceptions": dup}, today=date(2026, 1, 15)),
+        "duplicate waiver id fails validation",
     )
 
     synthetic_hit = {
@@ -1072,50 +1116,36 @@ def self_test() -> int:
         "file": "index.html",
         "surface": "html",
     }
-    waived = annotate_suppressions([synthetic_hit], [well_formed], [])
-    check(
-        waived[0].get("waived") is True,
-        "a hit matching a valid waiver is marked waived",
-    )
+    waived = annotate_suppressions([synthetic_hit], [well_formed])
+    check(waived[0].get("waived") is True, "a hit matching a valid waiver's rule/text/scope is marked waived")
+
     unwaived_other_phrase = annotate_suppressions(
-        [{**synthetic_hit, "phrase": "a different phrase"}], [well_formed], []
+        [{**synthetic_hit, "phrase": "a different phrase"}], [well_formed]
     )
     check(
         not unwaived_other_phrase[0].get("waived"),
-        "a waiver for one phrase does not suppress a different phrase -- narrowness control",
+        "a waiver for one exact 'text' does not suppress a different phrase -- narrowness control",
     )
-
-    malformed_baseline = {"baseline": [{"class": "fd-1", "locale": "en", "phrase": "x"}]}
-    check(validate_baseline(malformed_baseline), "baseline entry missing 'file' fails validation")
-
-    baseline_entry = {"class": "fd-1", "locale": "en", "phrase": "test baseline phrase", "file": "old.html"}
-    check(not validate_baseline({"baseline": [baseline_entry]}), "well-formed baseline entry passes validation")
-
-    baselined_same_file = annotate_suppressions(
-        [{**synthetic_hit, "phrase": "test baseline phrase", "file": "old.html"}], [], [baseline_entry]
+    unwaived_other_path = annotate_suppressions(
+        [{**synthetic_hit, "file": "other-page.html"}], [well_formed]
     )
     check(
-        baselined_same_file[0].get("baselined") is True,
-        "a hit matching a baseline entry's (class, locale, phrase, file) is marked baselined",
+        not unwaived_other_path[0].get("waived"),
+        "a waiver scoped to one path does not suppress the same phrase on a different page -- "
+        "scope.paths is enforced, not decorative",
     )
-    baselined_different_file = annotate_suppressions(
-        [{**synthetic_hit, "phrase": "test baseline phrase", "file": "new.html"}], [], [baseline_entry]
+    unwaived_other_surface = annotate_suppressions(
+        [{**synthetic_hit, "surface": "xml"}], [well_formed]
     )
     check(
-        not baselined_different_file[0].get("baselined"),
-        "the SAME phrase in a file NOT in the baseline still fires -- baselining cannot silently widen "
-        "to a new file (AAASM-5599 AC: does not silently disable future checks)",
+        not unwaived_other_surface[0].get("waived"),
+        "a waiver scoped to the html surface does not suppress the same phrase on a different surface",
     )
 
     committed_waivers = read_waivers()
-    committed_baseline = read_baseline()
     check(
         not validate_waivers(committed_waivers),
-        f"committed claim-waivers.json passes validation ({len(committed_waivers.get('waivers', []))} entries)",
-    )
-    check(
-        not validate_baseline(committed_baseline),
-        f"committed claim-baseline.json passes validation ({len(committed_baseline.get('baseline', []))} entries)",
+        f"committed claim-waivers.json passes validation ({len(committed_waivers.get('exceptions', []))} entries)",
     )
 
     failed = 0
@@ -1147,18 +1177,14 @@ def main() -> int:
         return 2
 
     waivers_data = read_waivers()
-    baseline_data = read_baseline()
     werr = validate_waivers(waivers_data)
-    berr = validate_baseline(baseline_data)
-    print(f"waivers        : {'PASS' if not werr else 'FAIL'} ({len(waivers_data.get('waivers', []))} entries)")
+    print(f"waivers        : {'PASS' if not werr else 'FAIL'} "
+          f"({len(waivers_data.get('exceptions', []))} entries)")
     for e in werr:
         print("  WAIVER INVALID:", e)
-    print(f"baseline       : {'PASS' if not berr else 'FAIL'} ({len(baseline_data.get('baseline', []))} entries)")
-    for e in berr:
-        print("  BASELINE INVALID:", e)
-    if werr or berr:
-        print("\nAn expired or malformed waiver/baseline entry fails the build on its own -- "
-              "fix or remove it in claim-waivers.json / claim-baseline.json.")
+    if werr:
+        print("\nAn expired or malformed waiver fails the build on its own -- "
+              "fix or remove it in claim-waivers.json.")
         return 2
 
     phrases = load_phrases(data)
@@ -1181,30 +1207,27 @@ def main() -> int:
         print("\nControls failed -- any absence below would not be a measurement.")
         return 2
 
-    files, hits = scan(build, phrases, waivers=waivers_data.get("waivers", []), baseline=baseline_data.get("baseline", []))
+    files, hits = scan(build, phrases, waivers=waivers_data.get("exceptions", []))
     by_kind: dict[str, int] = {}
     for _, k in files:
         by_kind[k] = by_kind.get(k, 0) + 1
     print(f"scanned        : {len(files)} files "
           f"({', '.join(f'{v} {k}' for k, v in sorted(by_kind.items()))})")
 
-    suppressed = [h for h in hits if h.get("waived") or h.get("baselined")]
-    live = [h for h in hits if not h.get("waived") and not h.get("baselined")]
+    waived = [h for h in hits if h.get("waived")]
+    live = [h for h in hits if not h.get("waived")]
     errors = [h for h in live if h["severity"] == "error"]
     warns = [h for h in live if h["severity"] != "error"]
-    print(f"forbidden hits : {len(errors)}   warnings: {len(warns)}   "
-          f"suppressed: {len(suppressed)} (waived/baselined)\n")
+    print(f"forbidden hits : {len(errors)}   warnings: {len(warns)}   waived: {len(waived)}\n")
 
     for h in sorted(hits, key=lambda x: (x["class"], x["file"])):
         if h.get("waived"):
-            tag = "waived   "
-        elif h.get("baselined"):
-            tag = "baselined"
+            tag = f"waived({h.get('waiver_id')})"
         elif h["severity"] == "error":
             tag = "FORBIDDEN"
         else:
             tag = "warn     "
-        print(f"  {tag} {h['class']:16s} {h['surface']:5s} {h['file']:58s} {h['phrase']!r}")
+        print(f"  {tag:16s} {h['class']:16s} {h['surface']:5s} {h['file']:58s} {h['phrase']!r}")
 
     if errors:
         print(f"\nFAIL: {len(errors)} forbidden claim(s) published. "

@@ -1,4 +1,0 @@
-{
-  "$comment": "Currently-known forbidden-claim hits this build is not yet failing on. AAASM-5796/AAASM-5599: existing approved content can be baselined without silently disabling future checks. An entry suppresses exactly one (class, locale, phrase, file) combination -- the SAME phrase appearing in a file not listed here still fails, and a NEW file is never covered by an existing entry. This is not a waiver: a baseline entry records unremediated debt, not a reviewed acceptance, and carries no owner/reason/approver/expiry. It should shrink toward empty, not grow. Empty today -- the live build has 0 forbidden hits and 0 warnings (AAASM-5741/5744/5761), so there is nothing to baseline; this file exists as tested, working infrastructure for the day there is.",
-  "baseline": []
-}
