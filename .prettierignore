@@ -5,3 +5,9 @@ pnpm-lock.yaml
 blog/
 design/
 verify/
+# AAASM-5763: a pinned snapshot of another repo's file, byte-for-byte, so
+# check-register-drift.py's comparison stays meaningful. Prettier reflowing
+# its markdown emphasis (`_word_` normalization) broke the drift check with a
+# false positive the first time this file was formatted -- see the commit
+# that added this line.
+vendor/
