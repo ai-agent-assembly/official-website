@@ -107,6 +107,20 @@ jobs:
       # a manifest release. AAASM-5588.
       - name: Trust page matches the capability manifest projection
         run: pnpm trust:check
+      # `docs/src/role-narratives.md` (ADR 0034 layer T5) owns the role claim
+      # register this site's `/roles/*` pages copy; AAASM-5584 predicted a copy
+      # drifts within one release, and review of PR #99 found four before
+      # merge. `vendor/role-narratives.md` is a pinned, committed snapshot
+      # (AAASM-5763, `sync-role-register.py`, mirroring the capability-surface
+      # precedent) so this asserts against build/ with zero network access,
+      # same shape as trust:check above.
+      #
+      # `pnpm role-register:upstream` is NOT run here: it fetches the register
+      # from another repository, the same cross-repo-policy deferral
+      # `trust:upstream` makes above — a merge in `docs` must not be able to
+      # turn this repository's CI red. Run it by hand after a docs release.
+      - name: Role register matches the pinned docs Hub snapshot
+        run: pnpm role-register:check
       # `/denied-action-proof` publishes one recorded run, and the whole page is
       # worth reading only if what it renders is what was measured. This asserts
       # the built HTML still carries the three runs, the decision the enforcement
