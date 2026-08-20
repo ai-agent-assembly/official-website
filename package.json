@@ -20,6 +20,8 @@
     "trust:upstream": "python3 scripts/trust-evidence.py upstream",
     "proof:generate": "python3 scripts/denied-action-proof.py generate && prettier --write src/generated/denied-action-proof.ts",
     "proof:check": "python3 scripts/denied-action-proof.py check build",
+    "role-register:check": "python3 scripts/check-register-drift.py build --register vendor/role-narratives.md",
+    "role-register:upstream": "python3 scripts/check-role-register-upstream.py",
     "typecheck": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
