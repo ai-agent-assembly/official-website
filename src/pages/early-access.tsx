@@ -1,5 +1,6 @@
 import React, {type ReactNode, useEffect, useState} from 'react';
 import Layout from '@theme/Layout';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {trackEvent} from '@site/src/analytics/trackEvent';
 import {EarlyAccessForm} from '@site/src/components/EarlyAccess/EarlyAccessForm';
 import {ThankYou} from '@site/src/components/EarlyAccess/ThankYou';
@@ -21,6 +22,7 @@ import styles from '@site/src/components/home/styles.module.css';
  */
 export default function EarlyAccess(): ReactNode {
   const [submitted, setSubmitted] = useState(false);
+  const {i18n} = useDocusaurusContext();
 
   useEffect(() => {
     trackEvent('cloud_early_access_page_view');
@@ -31,9 +33,14 @@ export default function EarlyAccess(): ReactNode {
       title="Cloud Early Access — Agent Assembly"
       description="Cloud is in early access as a design-partner program. Agent Assembly Cloud is not generally available. The OSS runtime is available today."
     >
-      <main>
+      <main lang="en">
         <section className={`${styles.section} ${styles.center}`}>
           <div className={styles.inner}>
+            {i18n.currentLocale === 'zh-Hant' && (
+              <p lang="zh-Hant">
+                此頁的說明、表單欄位及回覆訊息目前僅提供英文。
+              </p>
+            )}
             <div className={styles.eyebrow}>Cloud early access</div>
             <h1 className={styles.h2}>
               Cloud is a design-partner program, not generally available.
