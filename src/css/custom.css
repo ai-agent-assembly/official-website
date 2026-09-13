@@ -73,6 +73,14 @@ html[data-theme='dark'] .navbar {
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--aa-border);
 }
+@media (max-width: 996px) {
+  html[data-theme='dark'] .navbar {
+    /* A backdrop filter makes the 60px header the fixed drawer's containing
+       block. Keep the mobile reading surface opaque and the drawer viewport-sized. */
+    backdrop-filter: none;
+    background: var(--aa-bg);
+  }
+}
 
 /* Utility pages retain publisher navigation and content, with less empty chrome. */
 .aa-archive-surface .hero {
