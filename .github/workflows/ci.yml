@@ -2,9 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, uiux/visual-experience-overhaul]
   push:
-    branches: [main]
+    branches: [main, uiux/visual-experience-overhaul]
 
 permissions:
   contents: read
