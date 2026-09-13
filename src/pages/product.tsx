@@ -556,7 +556,7 @@ export default function Product(): ReactNode {
          * They are the homepage's pair too, deliberately: a reader arriving
          * here from `/` must not meet a second, differently-worded promise.
          */}
-        <h1 className={styles.title}>
+        <h1 className={`${styles.title} ${styles.productTitle}`}>
           <Translate id="product.promise.headline">
             Decide what an AI agent may do — before it does it.
           </Translate>

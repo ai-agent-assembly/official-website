@@ -1,4 +1,9 @@
 import React, {type ReactNode, useEffect, useRef} from 'react';
+import {
+  createFrameGate,
+  projectSafeRects,
+  shouldAnimate,
+} from './sceneLifecycle.mjs';
 import styles from './styles.module.css';
 
 /**
@@ -24,10 +29,10 @@ import styles from './styles.module.css';
  * that cover for each other is the inference the architecture exists to stop.
  *
  * Rendered aria-hidden with pointer-events disabled (via styles.field). Honors
- * prefers-reduced-motion by drawing a single static frame with no animation
- * loop and no cursor parallax. Theme palette (light/dark) is tracked live via a
- * MutationObserver, and line/label opacity is raised in the light theme so the
- * structure reads on white.
+ * prefers-reduced-motion and narrow layouts with a static frame; offscreen and
+ * background scenes freeze instead of running a decorative loop. Theme changes
+ * repaint even a paused still. The canvas is cleared around the live text and
+ * action bounds without changing the governed/unrouted diagram semantics.
  */
 
 /**
@@ -128,18 +133,16 @@ export function GovernedField(): ReactNode {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const reduced = window.matchMedia(
+    const motionPreference = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
-    ).matches;
-
+    );
     let palette = readPalette();
-    const themeObserver = new MutationObserver(() => {
-      palette = readPalette();
-    });
-    themeObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
+    const safeTargets = [
+      ...(root
+        .closest('header[data-claims-position="hero"]')
+        ?.querySelectorAll('[data-scene-safe-plane]') ?? []),
+    ];
+    let safeRects: ReturnType<typeof projectSafeRects> = [];
 
     const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
     // Ray carrying the boundary label and the OUTSIDE cue, so the cross-section
@@ -166,6 +169,9 @@ export function GovernedField(): ReactNode {
     let rd = 0; // the governed-path boundary
     let rOut = 0; // faint outside cue — not a control, just the world
     let diag = 0;
+    // The centered semantic diagram now has a reserved static band at every
+    // viewport width; the old animated background remains dormant.
+    const compact = true;
 
     const COUNT = 32;
     const particles: Particle[] = [];
@@ -246,12 +252,38 @@ export function GovernedField(): ReactNode {
       canvas!.width = Math.round(width * dpr);
       canvas!.height = Math.round(height * dpr);
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cx = width * 0.5;
-      cy = height * 0.46;
-      const maxR = Math.min(width * 0.46, height * 0.66, 540);
-      rOut = maxR;
-      rd = maxR * 0.6;
+      if (compact) {
+        // A reserved band has room for the same open boundary, but not for a
+        // scaled-down copy of the desktop scene and its tiny orbit labels.
+        rd = Math.min(width * 0.28, height * 0.3);
+        rOut = Math.min(width * 0.42, height * 0.44);
+        cx = Math.max(width * 0.5, Math.min(width * 0.66, rd + 114));
+        cy = height * 0.5;
+      } else {
+        cx = width * 0.5;
+        cy = height * 0.46;
+        const maxR = Math.min(width * 0.46, height * 0.66, 540);
+        rOut = maxR;
+        rd = maxR * 0.6;
+      }
       diag = Math.hypot(width, height);
+    }
+
+    function measureSafePlane() {
+      safeRects = projectSafeRects(
+        root!.getBoundingClientRect(),
+        safeTargets.map((target) => target.getBoundingClientRect()),
+      );
+    }
+
+    function intersectsViewport() {
+      const rect = root!.getBoundingClientRect();
+      return (
+        rect.bottom > 0 &&
+        rect.top < window.innerHeight &&
+        rect.right > 0 &&
+        rect.left < window.innerWidth
+      );
     }
 
     function pickFate(angle: number): Fate {
@@ -376,7 +408,7 @@ export function GovernedField(): ReactNode {
       const refusedAt = -0.9;
       const redactedAt = 0.5;
       particles.push(
-        mk(-1.6, rd * 1.35, 'allow', false, false), // through, outside
+        mk(-0.75, rd * 1.35, 'allow', false, false), // through, outside; clear of the top label
         mk(-2.35, rd * 0.62, 'allow', false, false), // mid-flight
         mk(refusedAt, rd, 'refuse', false, true), // refused at the boundary
         mk(redactedAt, rd * 1.22, 'redact', false, false), // sanitized
@@ -467,6 +499,26 @@ export function GovernedField(): ReactNode {
     function boundaryLabel(): void {
       const ecx = cx + parX;
       const ecy = cy + parY;
+      if (compact) {
+        const top = ecy - rd;
+        ctx!.beginPath();
+        ctx!.moveTo(ecx, 39);
+        ctx!.lineTo(ecx, top - 5);
+        ctx!.strokeStyle = lineColor(0.55);
+        ctx!.lineWidth = 1;
+        ctx!.stroke();
+        label({
+          text: 'GOVERNED PATH',
+          x: ecx,
+          y: 24,
+          color: lineColor(1),
+          alpha: 1,
+          size: 14,
+          align: 'center',
+          bold: true,
+        });
+        return;
+      }
       const lx = ecx + Math.cos(LABEL_ANGLE) * rd;
       const ly = ecy + Math.sin(LABEL_ANGLE) * rd;
       ctx!.beginPath();
@@ -489,6 +541,21 @@ export function GovernedField(): ReactNode {
     function gapLabel(): void {
       const ecx = cx + parX;
       const ecy = cy + parY;
+      if (compact) {
+        ctx!.font = `bold 14px ${MONO}`;
+        const textWidth = ctx!.measureText('NOT ROUTED').width;
+        label({
+          text: 'NOT ROUTED',
+          x: Math.max(12, ecx - rd - textWidth - 12),
+          y: ecy,
+          color: lineColor(0.85),
+          alpha: 1,
+          size: 14,
+          align: 'left',
+          bold: true,
+        });
+        return;
+      }
       // Pushed well clear of the boundary: the left flank is where the CTA
       // row ends and the terminal card begins, and a label sitting on the arc
       // lands underneath one of them.
@@ -571,10 +638,12 @@ export function GovernedField(): ReactNode {
       label({
         text: 'AGENT',
         x: ecx,
-        y: ecy + r0 + 13,
-        color: palette.allow,
+        y: ecy + r0 + (compact ? 18 : 13),
+        // The scene accent is 3.74:1 on white; the essential 14px label
+        // needs the darker teal already used by nearby small UI copy.
+        color: compact && !palette.dark ? '#0f766e' : palette.allow,
         alpha: 1,
-        size: 10,
+        size: compact ? 14 : 10,
         align: 'center',
         bold: true,
       });
@@ -607,22 +676,25 @@ export function GovernedField(): ReactNode {
       boundaryLabel();
       gapLabel();
 
-      // Inside↔outside cue: OUTSIDE sits beyond the world circle on the ray.
-      const ox = ecx + Math.cos(LABEL_ANGLE) * (rOut + 44);
-      const oy = ecy + Math.sin(LABEL_ANGLE) * (rOut + 44);
-      label({
-        text: 'OUTSIDE',
-        x: ox + 9,
-        y: oy,
-        color: lineColor(0.6),
-        alpha: 1,
-        size: 9.5,
-        align: 'left',
-      });
+      if (!compact) {
+        // These decorative labels cannot fit whole in the compact band. The
+        // open boundary, three essential labels and static actions remain.
+        const ox = ecx + Math.cos(LABEL_ANGLE) * (rOut + 44);
+        const oy = ecy + Math.sin(LABEL_ANGLE) * (rOut + 44);
+        label({
+          text: 'OUTSIDE',
+          x: ox + 9,
+          y: oy,
+          color: lineColor(0.6),
+          alpha: 1,
+          size: 9.5,
+          align: 'left',
+        });
 
-      externalNode('LLM', -1.15);
-      externalNode('EXTERNAL API', 0.32);
-      externalNode('SERVICES', 2.3);
+        externalNode('LLM', -1.15);
+        externalNode('EXTERNAL API', 0.32);
+        externalNode('SERVICES', 2.3);
+      }
 
       // Action particles (faded near the core so the headline stays calm).
       for (const p of particles) {
@@ -687,7 +759,7 @@ export function GovernedField(): ReactNode {
       ctx!.globalAlpha = 1;
 
       // Ephemeral event text near each flash / crossing point.
-      for (const ev of labels) {
+      for (const ev of compact ? [] : labels) {
         const k = ev.life / ev.maxLife;
         const lx = ecx + Math.cos(ev.angle) * (ev.radius + 15);
         const ly = ecy + Math.sin(ev.angle) * (ev.radius + 15);
@@ -705,6 +777,11 @@ export function GovernedField(): ReactNode {
       }
 
       drawCore();
+      // The full transparent clearing also handles overlapping safe regions:
+      // an even-odd clip would accidentally reopen their intersections.
+      for (const rect of safeRects) {
+        ctx!.clearRect(rect.x, rect.y, rect.width, rect.height);
+      }
     }
 
     function update() {
@@ -728,19 +805,11 @@ export function GovernedField(): ReactNode {
       parY += (tParY - parY) * 0.06;
     }
 
-    let raf = 0;
-    function frame() {
-      update();
-      draw();
-      raf = requestAnimationFrame(frame);
-    }
-
-    resize();
-
-    if (reduced) {
-      buildStatic();
-      draw();
-    } else {
+    function seedMotion() {
+      particles.length = 0;
+      flashes.length = 0;
+      secrets.length = 0;
+      labels.length = 0;
       for (let i = 0; i < COUNT; i++) {
         const p: Particle = {
           angle: 0,
@@ -759,54 +828,131 @@ export function GovernedField(): ReactNode {
         p.alpha = 0.9;
         particles.push(p);
       }
-      raf = requestAnimationFrame(frame);
     }
 
-    // Resizing clears the canvas; under reduced-motion there is no loop to
-    // repaint, so rebuild and redraw the single static frame after each resize.
+    let inView = intersectsViewport();
+    let mode: 'none' | 'still' | 'active' = 'none';
+    let moveAttached = false;
+    let disposed = false;
+
+    function conditions() {
+      return {
+        reduced: motionPreference.matches,
+        narrow: true,
+        inView,
+        pageVisible: document.visibilityState === 'visible',
+      };
+    }
+
+    const onMove = (event: MouseEvent) => {
+      const rect = root!.getBoundingClientRect();
+      tParX = ((event.clientX - rect.left) / rect.width - 0.5) * 26;
+      tParY = ((event.clientY - rect.top) / rect.height - 0.5) * 26;
+    };
+    const frameGate = createFrameGate(
+      requestAnimationFrame,
+      cancelAnimationFrame,
+      () => {
+        if (!shouldAnimate(conditions())) {
+          reconcile();
+          return;
+        }
+        update();
+        draw();
+      },
+    );
+
+    function stopMotion() {
+      frameGate.stop();
+      if (moveAttached) window.removeEventListener('mousemove', onMove);
+      moveAttached = false;
+    }
+
+    function canPaint() {
+      return inView && document.visibilityState === 'visible';
+    }
+
+    function reconcile() {
+      const state = conditions();
+      if (state.reduced || state.narrow) {
+        stopMotion();
+        if (mode !== 'still') buildStatic();
+        mode = 'still';
+        if (canPaint()) draw();
+        return;
+      }
+      if (!shouldAnimate(state)) {
+        stopMotion();
+        // An initially hidden scene still has a meaningful frame ready to
+        // paint when it enters view, without starting a decorative loop.
+        if (mode === 'none') {
+          buildStatic();
+          mode = 'still';
+        }
+        return;
+      }
+      if (mode !== 'active') seedMotion();
+      mode = 'active';
+      draw();
+      if (!moveAttached) window.addEventListener('mousemove', onMove);
+      moveAttached = true;
+      frameGate.start();
+    }
+
     const onResize = () => {
       resize();
-      if (reduced) {
-        buildStatic();
-        draw();
-      }
+      measureSafePlane();
+      inView = intersectsViewport();
+      if (mode === 'still') buildStatic();
+      reconcile();
     };
+    const onVisibilityChange = () => {
+      inView = intersectsViewport();
+      reconcile();
+    };
+    const themeObserver = new MutationObserver(() => {
+      palette = readPalette();
+      if (mode === 'still') buildStatic();
+      if (canPaint()) draw();
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      inView = entries.some((entry) => entry.isIntersecting);
+      reconcile();
+    });
+    intersectionObserver.observe(root);
+    const geometryObserver = new ResizeObserver(onResize);
+    geometryObserver.observe(root);
+    for (const target of safeTargets) geometryObserver.observe(target);
     window.addEventListener('resize', onResize);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    motionPreference.addEventListener('change', reconcile);
 
-    // Cursor parallax gives the field a subtle sense of depth.
-    let onMove: ((e: MouseEvent) => void) | null = null;
-    if (!reduced) {
-      onMove = (e: MouseEvent) => {
-        const rect = root!.getBoundingClientRect();
-        tParX = ((e.clientX - rect.left) / rect.width - 0.5) * 26;
-        tParY = ((e.clientY - rect.top) / rect.height - 0.5) * 26;
-      };
-      window.addEventListener('mousemove', onMove);
-    }
+    resize();
+    measureSafePlane();
+    reconcile();
+    void document.fonts.ready.then(() => {
+      if (!disposed) onResize();
+    });
 
     return () => {
-      cancelAnimationFrame(raf);
+      disposed = true;
+      stopMotion();
       window.removeEventListener('resize', onResize);
-      if (onMove) window.removeEventListener('mousemove', onMove);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      motionPreference.removeEventListener('change', reconcile);
       themeObserver.disconnect();
+      intersectionObserver.disconnect();
+      geometryObserver.disconnect();
     };
   }, []);
 
   return (
     <div ref={rootRef} className={styles.field} aria-hidden="true">
       <canvas ref={canvasRef} className={styles.canvas} />
-      {/* Softer than the CSS default so the agent core + boundary read while
-          the headline stays legible (particles are also faded near center). */}
-      <div
-        className={styles.vignette}
-        style={{
-          background:
-            'radial-gradient(ellipse 600px 340px at 50% 46%, ' +
-            'color-mix(in srgb, var(--aa-bg) 76%, transparent) 0%, ' +
-            'color-mix(in srgb, var(--aa-bg) 40%, transparent) 58%, ' +
-            'transparent 100%)',
-        }}
-      />
       <div className={styles.logStrip}>
         ROUTED → DECIDED · NOT ROUTED → NOT INSPECTED
       </div>

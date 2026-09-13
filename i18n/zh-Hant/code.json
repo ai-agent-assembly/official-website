@@ -2650,5 +2650,11 @@
   },
   "blog.authors.posts.meta.description": {
     "message": "{name} 在 Agent Assembly 部落格發表的文章。"
+  },
+  "recovery.productHome": {
+    "message": "產品首頁"
+  },
+  "recovery.documentation": {
+    "message": "技術文件"
   }
 }

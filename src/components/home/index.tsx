@@ -72,9 +72,8 @@ export function Hero(): ReactNode {
     // the class does not also fire on unrelated pages using similar wording
     // in a different, compliant position (e.g. an L0 company summary).
     <header className={styles.hero} data-claims-position="hero">
-      <GovernedField />
       <div className={styles.heroInner}>
-        <div className={styles.heroEyebrow}>
+        <div className={styles.heroEyebrow} data-scene-safe-plane>
           <span className={styles.eyebrowLine} />{' '}
           <Translate id="home.hero.eyebrow">
             Decisions before the action, not alerts after it
@@ -90,12 +89,12 @@ export function Hero(): ReactNode {
          * screen, above the fold. Quote them; do not paraphrase — a paraphrase
          * is a new claim with its own evidence burden.
          */}
-        <h1 className={styles.heroTitle}>
+        <h1 className={styles.heroTitle} data-scene-safe-plane>
           <Translate id="home.hero.title">
             Decide what an AI agent may do — before it does it.
           </Translate>
         </h1>
-        <p className={styles.heroSub}>
+        <p className={styles.heroSub} data-scene-safe-plane>
           <Translate id="home.hero.sub">
             Agent Assembly evaluates the actions you route through it against
             your policy, refuses them, or blocks them pending a decision, and
@@ -110,7 +109,10 @@ export function Hero(): ReactNode {
          * validation via GitHub. Wording avoids "Learn more" and
          * "Coming soon" fake-doors (§4.6).
          */}
-        <div className={`${styles.ctaRow} ${styles.ctaRowCenter}`}>
+        <div
+          className={`${styles.ctaRow} ${styles.ctaRowCenter}`}
+          data-scene-safe-plane
+        >
           <TrackedLink
             className={styles.btnPrimary}
             eventName="cta_start_self_hosting_click"
@@ -151,6 +153,7 @@ export function Hero(): ReactNode {
             <Translate id="home.cta.starRepo">Star the core repo</Translate>
           </TrackedLink>
         </div>
+        <GovernedField />
         {/*
          * A governed launch, as it actually reads. Decision-scoped only: it
          * shows what was decided, never an averted consequence — that is
@@ -163,6 +166,7 @@ export function Hero(): ReactNode {
          */}
         <div
           className={`${styles.terminal} ${styles.heroTerminal}`}
+          data-scene-safe-plane
           aria-hidden="true"
         >
           <div className={styles.terminalBar}>

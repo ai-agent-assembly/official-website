@@ -31,7 +31,7 @@ export default function BlogAuthorsListPageWrapper(props: Props): ReactNode {
         <meta name="description" content={description} />
         <meta property="og:description" content={description} />
       </Head>
-      <BlogAuthorsListPage {...props} />
+      <div className="aa-author-surface"><BlogAuthorsListPage {...props} /></div>
     </>
   );
 }

@@ -69,6 +69,24 @@ export default function RolesIndex(): ReactNode {
             reaches, what it does not cover, and what to read next.
           </Translate>
         </p>
+        <div className={styles.chooserGrid}>
+          {ROLE_BRIEFS.map((b) => (
+            <div key={b.slug} className={narrative.card}>
+              <h2 className={narrative.cardTitle}>{b.name}</h2>
+              <p className={narrative.cardText}>{b.job}</p>
+              <p className={styles.chooserJob}>
+                <Translate id="roles.index.audienceLabel">
+                  Written for
+                </Translate>{' '}
+                <code>{b.audience}</code>
+              </p>
+              <Link className={narrative.link} to={rolePath(b.slug)}>
+                <Translate id="roles.index.read">Read the brief →</Translate>
+              </Link>
+            </div>
+          ))}
+        </div>
+
         {/*
          * The consistency promise, stated on the page rather than only in the
          * source. It is the reason these are four pages and not four pitches,
@@ -103,24 +121,6 @@ export default function RolesIndex(): ReactNode {
             </Translate>
           </TrackedLink>
         </p>
-
-        <div className={styles.chooserGrid}>
-          {ROLE_BRIEFS.map((b) => (
-            <div key={b.slug} className={narrative.card}>
-              <h2 className={narrative.cardTitle}>{b.name}</h2>
-              <p className={narrative.cardText}>{b.job}</p>
-              <p className={styles.chooserJob}>
-                <Translate id="roles.index.audienceLabel">
-                  Written for
-                </Translate>{' '}
-                <code>{b.audience}</code>
-              </p>
-              <Link className={narrative.link} to={rolePath(b.slug)}>
-                <Translate id="roles.index.read">Read the brief →</Translate>
-              </Link>
-            </div>
-          ))}
-        </div>
 
         <p className={narrative.sectionFoot}>
           <Translate id="roles.index.notYours">

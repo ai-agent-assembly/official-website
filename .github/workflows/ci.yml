@@ -2,9 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, uiux/visual-experience-overhaul]
   push:
-    branches: [main]
+    branches: [main, uiux/visual-experience-overhaul]
 
 permissions:
   contents: read
@@ -135,6 +135,10 @@ jobs:
       # with `scripts/denied-action-capture.py`. AAASM-5589.
       - name: Denied-action page matches the recorded run
         run: pnpm proof:check
+      - name: Install browser engines for public-surface regression
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - name: Public-surface browser regression
+        run: pnpm test:e2e
 
   sonar:
     name: SonarCloud

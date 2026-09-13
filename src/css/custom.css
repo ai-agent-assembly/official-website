@@ -73,3 +73,38 @@ html[data-theme='dark'] .navbar {
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--aa-border);
 }
+@media (max-width: 996px) {
+  html[data-theme='dark'] .navbar {
+    /* A backdrop filter makes the 60px header the fixed drawer's containing
+       block. Keep the mobile reading surface opaque and the drawer viewport-sized. */
+    backdrop-filter: none;
+    background: var(--aa-bg);
+  }
+}
+
+/* Utility pages retain publisher navigation and content, with less empty chrome. */
+.aa-archive-surface .hero {
+  padding-block: 32px;
+}
+.aa-archive-surface .hero__subtitle {
+  display: none;
+}
+.aa-author-surface .avatar__intro small {
+  display: block;
+  line-clamp: none;
+  -webkit-line-clamp: unset;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+.aa-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+.aa-recovery-actions .button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}

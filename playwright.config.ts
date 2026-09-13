@@ -1,0 +1,28 @@
+import {defineConfig} from '@playwright/test';
+
+const baseURL = process.env.BASE_URL ?? 'http://127.0.0.1:3068';
+
+export default defineConfig({
+  testDir: './tests/e2e',
+  fullyParallel: false,
+  workers: 1,
+  timeout: 60_000,
+  projects: ['chromium', 'firefox', 'webkit'].map((name) => ({
+    name,
+    use: {browserName: name as 'chromium' | 'firefox' | 'webkit'},
+  })),
+  use: {
+    baseURL,
+    headless: true,
+    trace: 'retain-on-failure',
+  },
+  webServer: process.env.BASE_URL
+    ? undefined
+    : {
+        // Run against the same build already checked by CI's claims gates.
+        command: 'pnpm serve --host 127.0.0.1 --port 3068',
+        url: baseURL,
+        reuseExistingServer: false,
+        timeout: 120_000,
+      },
+});
