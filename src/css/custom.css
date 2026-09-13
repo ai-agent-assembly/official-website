@@ -90,6 +90,9 @@ html[data-theme='dark'] .navbar {
   display: none;
 }
 .aa-author-surface .avatar__intro small {
+  display: block;
+  line-clamp: none;
+  -webkit-line-clamp: unset;
   white-space: normal;
   overflow: visible;
   text-overflow: clip;
