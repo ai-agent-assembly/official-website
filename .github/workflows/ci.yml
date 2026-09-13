@@ -135,8 +135,8 @@ jobs:
       # with `scripts/denied-action-capture.py`. AAASM-5589.
       - name: Denied-action page matches the recorded run
         run: pnpm proof:check
-      - name: Install Chromium for public-surface regression
-        run: pnpm exec playwright install --with-deps chromium
+      - name: Install browser engines for public-surface regression
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
       - name: Public-surface browser regression
         run: pnpm test:e2e
 
