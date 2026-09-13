@@ -16,7 +16,8 @@ export default defineConfig({
   webServer: process.env.BASE_URL
     ? undefined
     : {
-        command: 'pnpm build && pnpm serve -- --host 127.0.0.1 --port 3068',
+        // Run against the same build already checked by CI's claims gates.
+        command: 'pnpm serve --host 127.0.0.1 --port 3068',
         url: baseURL,
         reuseExistingServer: false,
         timeout: 120_000,
