@@ -39,7 +39,7 @@ export default function BlogAuthorsPostsPageWrapper(props: Props): ReactNode {
         <meta name="description" content={description} />
         <meta property="og:description" content={description} />
       </Head>
-      <BlogAuthorsPostsPage {...props} />
+      <div className="aa-author-surface"><BlogAuthorsPostsPage {...props} /></div>
     </>
   );
 }

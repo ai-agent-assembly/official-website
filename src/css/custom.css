@@ -73,3 +73,27 @@ html[data-theme='dark'] .navbar {
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--aa-border);
 }
+
+/* Utility pages retain publisher navigation and content, with less empty chrome. */
+.aa-archive-surface .hero {
+  padding-block: 32px;
+}
+.aa-archive-surface .hero__subtitle {
+  display: none;
+}
+.aa-author-surface .avatar__subtitle {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+.aa-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+.aa-recovery-actions .button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
