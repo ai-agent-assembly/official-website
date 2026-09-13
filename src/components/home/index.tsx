@@ -72,7 +72,6 @@ export function Hero(): ReactNode {
     // the class does not also fire on unrelated pages using similar wording
     // in a different, compliant position (e.g. an L0 company summary).
     <header className={styles.hero} data-claims-position="hero">
-      <GovernedField />
       <div className={styles.heroInner}>
         <div className={styles.heroEyebrow} data-scene-safe-plane>
           <span className={styles.eyebrowLine} />{' '}
@@ -154,6 +153,7 @@ export function Hero(): ReactNode {
             <Translate id="home.cta.starRepo">Star the core repo</Translate>
           </TrackedLink>
         </div>
+        <GovernedField />
         {/*
          * A governed launch, as it actually reads. Decision-scoped only: it
          * shows what was decided, never an averted consequence — that is
