@@ -639,7 +639,9 @@ export function GovernedField(): ReactNode {
         text: 'AGENT',
         x: ecx,
         y: ecy + r0 + (compact ? 18 : 13),
-        color: palette.allow,
+        // The scene accent is 3.74:1 on white; the essential 14px label
+        // needs the darker teal already used by nearby small UI copy.
+        color: compact && !palette.dark ? '#0f766e' : palette.allow,
         alpha: 1,
         size: compact ? 14 : 10,
         align: 'center',
@@ -951,18 +953,6 @@ export function GovernedField(): ReactNode {
   return (
     <div ref={rootRef} className={styles.field} aria-hidden="true">
       <canvas ref={canvasRef} className={styles.canvas} />
-      {/* Softer than the CSS default so the agent core + boundary read while
-          the headline stays legible (particles are also faded near center). */}
-      <div
-        className={styles.vignette}
-        style={{
-          background:
-            'radial-gradient(ellipse 600px 340px at 50% 46%, ' +
-            'color-mix(in srgb, var(--aa-bg) 76%, transparent) 0%, ' +
-            'color-mix(in srgb, var(--aa-bg) 40%, transparent) 58%, ' +
-            'transparent 100%)',
-        }}
-      />
       <div className={styles.logStrip}>
         ROUTED → DECIDED · NOT ROUTED → NOT INSPECTED
       </div>
