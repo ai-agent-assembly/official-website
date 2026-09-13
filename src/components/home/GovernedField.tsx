@@ -1,4 +1,9 @@
 import React, {type ReactNode, useEffect, useRef} from 'react';
+import {
+  createFrameGate,
+  projectSafeRects,
+  shouldAnimate,
+} from './sceneLifecycle.mjs';
 import styles from './styles.module.css';
 
 /**
@@ -24,10 +29,10 @@ import styles from './styles.module.css';
  * that cover for each other is the inference the architecture exists to stop.
  *
  * Rendered aria-hidden with pointer-events disabled (via styles.field). Honors
- * prefers-reduced-motion by drawing a single static frame with no animation
- * loop and no cursor parallax. Theme palette (light/dark) is tracked live via a
- * MutationObserver, and line/label opacity is raised in the light theme so the
- * structure reads on white.
+ * prefers-reduced-motion and narrow layouts with a static frame; offscreen and
+ * background scenes freeze instead of running a decorative loop. Theme changes
+ * repaint even a paused still. The canvas is cleared around the live text and
+ * action bounds without changing the governed/unrouted diagram semantics.
  */
 
 /**
@@ -128,18 +133,16 @@ export function GovernedField(): ReactNode {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const reduced = window.matchMedia(
+    const motionPreference = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
-    ).matches;
-
+    );
     let palette = readPalette();
-    const themeObserver = new MutationObserver(() => {
-      palette = readPalette();
-    });
-    themeObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
+    const safeTargets = [
+      ...(root
+        .closest('header[data-claims-position="hero"]')
+        ?.querySelectorAll('[data-scene-safe-plane]') ?? []),
+    ];
+    let safeRects: ReturnType<typeof projectSafeRects> = [];
 
     const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
     // Ray carrying the boundary label and the OUTSIDE cue, so the cross-section
@@ -252,6 +255,23 @@ export function GovernedField(): ReactNode {
       rOut = maxR;
       rd = maxR * 0.6;
       diag = Math.hypot(width, height);
+    }
+
+    function measureSafePlane() {
+      safeRects = projectSafeRects(
+        root!.getBoundingClientRect(),
+        safeTargets.map((target) => target.getBoundingClientRect()),
+      );
+    }
+
+    function intersectsViewport() {
+      const rect = root!.getBoundingClientRect();
+      return (
+        rect.bottom > 0 &&
+        rect.top < window.innerHeight &&
+        rect.right > 0 &&
+        rect.left < window.innerWidth
+      );
     }
 
     function pickFate(angle: number): Fate {
@@ -705,6 +725,11 @@ export function GovernedField(): ReactNode {
       }
 
       drawCore();
+      // The full transparent clearing also handles overlapping safe regions:
+      // an even-odd clip would accidentally reopen their intersections.
+      for (const rect of safeRects) {
+        ctx!.clearRect(rect.x, rect.y, rect.width, rect.height);
+      }
     }
 
     function update() {
@@ -728,19 +753,11 @@ export function GovernedField(): ReactNode {
       parY += (tParY - parY) * 0.06;
     }
 
-    let raf = 0;
-    function frame() {
-      update();
-      draw();
-      raf = requestAnimationFrame(frame);
-    }
-
-    resize();
-
-    if (reduced) {
-      buildStatic();
-      draw();
-    } else {
+    function seedMotion() {
+      particles.length = 0;
+      flashes.length = 0;
+      secrets.length = 0;
+      labels.length = 0;
       for (let i = 0; i < COUNT; i++) {
         const p: Particle = {
           angle: 0,
@@ -759,36 +776,125 @@ export function GovernedField(): ReactNode {
         p.alpha = 0.9;
         particles.push(p);
       }
-      raf = requestAnimationFrame(frame);
     }
 
-    // Resizing clears the canvas; under reduced-motion there is no loop to
-    // repaint, so rebuild and redraw the single static frame after each resize.
+    let inView = intersectsViewport();
+    let mode: 'none' | 'still' | 'active' = 'none';
+    let moveAttached = false;
+    let disposed = false;
+
+    function conditions() {
+      return {
+        reduced: motionPreference.matches,
+        narrow: window.innerWidth < 1024,
+        inView,
+        pageVisible: document.visibilityState === 'visible',
+      };
+    }
+
+    const onMove = (event: MouseEvent) => {
+      const rect = root!.getBoundingClientRect();
+      tParX = ((event.clientX - rect.left) / rect.width - 0.5) * 26;
+      tParY = ((event.clientY - rect.top) / rect.height - 0.5) * 26;
+    };
+    const frameGate = createFrameGate(
+      requestAnimationFrame,
+      cancelAnimationFrame,
+      () => {
+        if (!shouldAnimate(conditions())) {
+          reconcile();
+          return;
+        }
+        update();
+        draw();
+      },
+    );
+
+    function stopMotion() {
+      frameGate.stop();
+      if (moveAttached) window.removeEventListener('mousemove', onMove);
+      moveAttached = false;
+    }
+
+    function canPaint() {
+      return inView && document.visibilityState === 'visible';
+    }
+
+    function reconcile() {
+      const state = conditions();
+      if (state.reduced || state.narrow) {
+        stopMotion();
+        if (mode !== 'still') buildStatic();
+        mode = 'still';
+        if (canPaint()) draw();
+        return;
+      }
+      if (!shouldAnimate(state)) {
+        stopMotion();
+        // An initially hidden scene still has a meaningful frame ready to
+        // paint when it enters view, without starting a decorative loop.
+        if (mode === 'none') {
+          buildStatic();
+          mode = 'still';
+        }
+        return;
+      }
+      if (mode !== 'active') seedMotion();
+      mode = 'active';
+      draw();
+      if (!moveAttached) window.addEventListener('mousemove', onMove);
+      moveAttached = true;
+      frameGate.start();
+    }
+
     const onResize = () => {
       resize();
-      if (reduced) {
-        buildStatic();
-        draw();
-      }
+      measureSafePlane();
+      inView = intersectsViewport();
+      if (mode === 'still') buildStatic();
+      reconcile();
     };
+    const onVisibilityChange = () => {
+      inView = intersectsViewport();
+      reconcile();
+    };
+    const themeObserver = new MutationObserver(() => {
+      palette = readPalette();
+      if (mode === 'still') buildStatic();
+      if (canPaint()) draw();
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      inView = entries.some((entry) => entry.isIntersecting);
+      reconcile();
+    });
+    intersectionObserver.observe(root);
+    const geometryObserver = new ResizeObserver(onResize);
+    geometryObserver.observe(root);
+    for (const target of safeTargets) geometryObserver.observe(target);
     window.addEventListener('resize', onResize);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    motionPreference.addEventListener('change', reconcile);
 
-    // Cursor parallax gives the field a subtle sense of depth.
-    let onMove: ((e: MouseEvent) => void) | null = null;
-    if (!reduced) {
-      onMove = (e: MouseEvent) => {
-        const rect = root!.getBoundingClientRect();
-        tParX = ((e.clientX - rect.left) / rect.width - 0.5) * 26;
-        tParY = ((e.clientY - rect.top) / rect.height - 0.5) * 26;
-      };
-      window.addEventListener('mousemove', onMove);
-    }
+    resize();
+    measureSafePlane();
+    reconcile();
+    void document.fonts.ready.then(() => {
+      if (!disposed) onResize();
+    });
 
     return () => {
-      cancelAnimationFrame(raf);
+      disposed = true;
+      stopMotion();
       window.removeEventListener('resize', onResize);
-      if (onMove) window.removeEventListener('mousemove', onMove);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      motionPreference.removeEventListener('change', reconcile);
       themeObserver.disconnect();
+      intersectionObserver.disconnect();
+      geometryObserver.disconnect();
     };
   }, []);
 
