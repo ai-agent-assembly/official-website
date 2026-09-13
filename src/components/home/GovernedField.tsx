@@ -408,7 +408,7 @@ export function GovernedField(): ReactNode {
       const refusedAt = -0.9;
       const redactedAt = 0.5;
       particles.push(
-        mk(-1.6, rd * 1.35, 'allow', false, false), // through, outside
+        mk(-0.75, rd * 1.35, 'allow', false, false), // through, outside; clear of the top label
         mk(-2.35, rd * 0.62, 'allow', false, false), // mid-flight
         mk(refusedAt, rd, 'refuse', false, true), // refused at the boundary
         mk(redactedAt, rd * 1.22, 'redact', false, false), // sanitized
