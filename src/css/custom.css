@@ -81,7 +81,7 @@ html[data-theme='dark'] .navbar {
 .aa-archive-surface .hero__subtitle {
   display: none;
 }
-.aa-author-surface .avatar__subtitle {
+.aa-author-surface .avatar__intro small {
   white-space: normal;
   overflow: visible;
   text-overflow: clip;
