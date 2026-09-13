@@ -30,6 +30,10 @@ export function shouldAnimate({reduced, narrow, inView, pageVisible}) {
   return !reduced && !narrow && inView && pageVisible;
 }
 
+export function isCompactScene(viewportWidth) {
+  return viewportWidth <= 1024;
+}
+
 /** Canvas coordinates remain CSS pixels because its context is DPR-transformed. */
 export function projectSafeRects(root, targets, clearance = 24) {
   return targets

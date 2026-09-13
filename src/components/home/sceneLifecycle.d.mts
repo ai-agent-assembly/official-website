@@ -19,6 +19,7 @@ export function createFrameGate(
 ): {start(): void; stop(): void; isRunning(): boolean};
 
 export function shouldAnimate(conditions: MotionConditions): boolean;
+export function isCompactScene(viewportWidth: number): boolean;
 
 export function projectSafeRects(
   root: RectLike,
