@@ -2,7 +2,6 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {
   createFrameGate,
-  isCompactScene,
   projectSafeRects,
   shouldAnimate,
 } from './sceneLifecycle.mjs';
@@ -76,12 +75,6 @@ test('motion requires every live condition', () => {
     {pageVisible: false},
   ])
     assert.equal(shouldAnimate({...live, ...changed}), false);
-});
-
-test('the reserved static band includes 1024px but not wider desktop', () => {
-  assert.equal(isCompactScene(320), true);
-  assert.equal(isCompactScene(1024), true);
-  assert.equal(isCompactScene(1025), false);
 });
 
 test('safe rectangles use canvas-local CSS pixels and 24px clearance', () => {

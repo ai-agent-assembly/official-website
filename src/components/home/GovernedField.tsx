@@ -1,7 +1,6 @@
 import React, {type ReactNode, useEffect, useRef} from 'react';
 import {
   createFrameGate,
-  isCompactScene,
   projectSafeRects,
   shouldAnimate,
 } from './sceneLifecycle.mjs';
@@ -170,7 +169,9 @@ export function GovernedField(): ReactNode {
     let rd = 0; // the governed-path boundary
     let rOut = 0; // faint outside cue — not a control, just the world
     let diag = 0;
-    let compact = false;
+    // The centered semantic diagram now has a reserved static band at every
+    // viewport width; the old animated background remains dormant.
+    const compact = true;
 
     const COUNT = 32;
     const particles: Particle[] = [];
@@ -247,7 +248,6 @@ export function GovernedField(): ReactNode {
       const rect = root!.getBoundingClientRect();
       width = rect.width;
       height = rect.height;
-      compact = isCompactScene(window.innerWidth);
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas!.width = Math.round(width * dpr);
       canvas!.height = Math.round(height * dpr);
@@ -836,7 +836,7 @@ export function GovernedField(): ReactNode {
     function conditions() {
       return {
         reduced: motionPreference.matches,
-        narrow: isCompactScene(window.innerWidth),
+        narrow: true,
         inView,
         pageVisible: document.visibilityState === 'visible',
       };
