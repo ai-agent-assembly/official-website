@@ -1,6 +1,7 @@
 import React, {type ReactNode, useEffect, useRef} from 'react';
 import {
   createFrameGate,
+  isCompactScene,
   projectSafeRects,
   shouldAnimate,
 } from './sceneLifecycle.mjs';
@@ -169,6 +170,7 @@ export function GovernedField(): ReactNode {
     let rd = 0; // the governed-path boundary
     let rOut = 0; // faint outside cue — not a control, just the world
     let diag = 0;
+    let compact = false;
 
     const COUNT = 32;
     const particles: Particle[] = [];
@@ -245,15 +247,25 @@ export function GovernedField(): ReactNode {
       const rect = root!.getBoundingClientRect();
       width = rect.width;
       height = rect.height;
+      compact = isCompactScene(window.innerWidth);
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas!.width = Math.round(width * dpr);
       canvas!.height = Math.round(height * dpr);
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cx = width * 0.5;
-      cy = height * 0.46;
-      const maxR = Math.min(width * 0.46, height * 0.66, 540);
-      rOut = maxR;
-      rd = maxR * 0.6;
+      if (compact) {
+        // A reserved band has room for the same open boundary, but not for a
+        // scaled-down copy of the desktop scene and its tiny orbit labels.
+        rd = Math.min(width * 0.28, height * 0.3);
+        rOut = Math.min(width * 0.42, height * 0.44);
+        cx = Math.max(width * 0.5, Math.min(width * 0.66, rd + 114));
+        cy = height * 0.5;
+      } else {
+        cx = width * 0.5;
+        cy = height * 0.46;
+        const maxR = Math.min(width * 0.46, height * 0.66, 540);
+        rOut = maxR;
+        rd = maxR * 0.6;
+      }
       diag = Math.hypot(width, height);
     }
 
@@ -487,6 +499,26 @@ export function GovernedField(): ReactNode {
     function boundaryLabel(): void {
       const ecx = cx + parX;
       const ecy = cy + parY;
+      if (compact) {
+        const top = ecy - rd;
+        ctx!.beginPath();
+        ctx!.moveTo(ecx, 39);
+        ctx!.lineTo(ecx, top - 5);
+        ctx!.strokeStyle = lineColor(0.55);
+        ctx!.lineWidth = 1;
+        ctx!.stroke();
+        label({
+          text: 'GOVERNED PATH',
+          x: ecx,
+          y: 24,
+          color: lineColor(1),
+          alpha: 1,
+          size: 14,
+          align: 'center',
+          bold: true,
+        });
+        return;
+      }
       const lx = ecx + Math.cos(LABEL_ANGLE) * rd;
       const ly = ecy + Math.sin(LABEL_ANGLE) * rd;
       ctx!.beginPath();
@@ -509,6 +541,21 @@ export function GovernedField(): ReactNode {
     function gapLabel(): void {
       const ecx = cx + parX;
       const ecy = cy + parY;
+      if (compact) {
+        ctx!.font = `bold 14px ${MONO}`;
+        const textWidth = ctx!.measureText('NOT ROUTED').width;
+        label({
+          text: 'NOT ROUTED',
+          x: Math.max(12, ecx - rd - textWidth - 12),
+          y: ecy,
+          color: lineColor(0.85),
+          alpha: 1,
+          size: 14,
+          align: 'left',
+          bold: true,
+        });
+        return;
+      }
       // Pushed well clear of the boundary: the left flank is where the CTA
       // row ends and the terminal card begins, and a label sitting on the arc
       // lands underneath one of them.
@@ -591,10 +638,10 @@ export function GovernedField(): ReactNode {
       label({
         text: 'AGENT',
         x: ecx,
-        y: ecy + r0 + 13,
+        y: ecy + r0 + (compact ? 18 : 13),
         color: palette.allow,
         alpha: 1,
-        size: 10,
+        size: compact ? 14 : 10,
         align: 'center',
         bold: true,
       });
@@ -627,22 +674,25 @@ export function GovernedField(): ReactNode {
       boundaryLabel();
       gapLabel();
 
-      // Inside↔outside cue: OUTSIDE sits beyond the world circle on the ray.
-      const ox = ecx + Math.cos(LABEL_ANGLE) * (rOut + 44);
-      const oy = ecy + Math.sin(LABEL_ANGLE) * (rOut + 44);
-      label({
-        text: 'OUTSIDE',
-        x: ox + 9,
-        y: oy,
-        color: lineColor(0.6),
-        alpha: 1,
-        size: 9.5,
-        align: 'left',
-      });
+      if (!compact) {
+        // These decorative labels cannot fit whole in the compact band. The
+        // open boundary, three essential labels and static actions remain.
+        const ox = ecx + Math.cos(LABEL_ANGLE) * (rOut + 44);
+        const oy = ecy + Math.sin(LABEL_ANGLE) * (rOut + 44);
+        label({
+          text: 'OUTSIDE',
+          x: ox + 9,
+          y: oy,
+          color: lineColor(0.6),
+          alpha: 1,
+          size: 9.5,
+          align: 'left',
+        });
 
-      externalNode('LLM', -1.15);
-      externalNode('EXTERNAL API', 0.32);
-      externalNode('SERVICES', 2.3);
+        externalNode('LLM', -1.15);
+        externalNode('EXTERNAL API', 0.32);
+        externalNode('SERVICES', 2.3);
+      }
 
       // Action particles (faded near the core so the headline stays calm).
       for (const p of particles) {
@@ -707,7 +757,7 @@ export function GovernedField(): ReactNode {
       ctx!.globalAlpha = 1;
 
       // Ephemeral event text near each flash / crossing point.
-      for (const ev of labels) {
+      for (const ev of compact ? [] : labels) {
         const k = ev.life / ev.maxLife;
         const lx = ecx + Math.cos(ev.angle) * (ev.radius + 15);
         const ly = ecy + Math.sin(ev.angle) * (ev.radius + 15);
@@ -786,7 +836,7 @@ export function GovernedField(): ReactNode {
     function conditions() {
       return {
         reduced: motionPreference.matches,
-        narrow: window.innerWidth < 1024,
+        narrow: isCompactScene(window.innerWidth),
         inView,
         pageVisible: document.visibilityState === 'visible',
       };
