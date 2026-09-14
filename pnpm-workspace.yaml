@@ -1,0 +1,32 @@
+# Transitive-dependency version floors that close Dependabot alerts.
+#
+# These live here rather than in package.json's `pnpm.overrides` field
+# because pnpm 11 ignores that field entirely (it reads overrides only from
+# this file), which would silently drop every floor below on the next pnpm
+# major bump and quietly reopen the alerts.
+#
+# Every entry is a transitive dependency -- none is a direct dependency of
+# this site -- so each floor is the only way to move it.
+#
+# Selectors are scoped (`pkg@major`) wherever more than one major of the
+# package is present in the tree, so raising the vulnerable line cannot drag
+# a co-installed newer major backwards.
+#
+# Deliberately absent: image-size. Its advisories (2 high) have no patched
+# release -- 2.0.2 is the latest published version -- so it is handled by
+# alert dismissal, not by a floor.
+overrides:
+  '@swc/html': ^1.15.47
+  'brace-expansion@1': ^1.1.18
+  'brace-expansion@5': ^5.0.9
+  browserslist: ^4.28.7
+  colord: ^2.9.4
+  fast-uri: ^3.1.6
+  joi: ^17.13.6
+  'js-yaml@4': ^4.3.2
+  'nanoid@3': ^3.3.18
+  postcss: ^8.5.23
+  qs: ^6.16.0
+  serialize-javascript: ^7.0.5
+  svgo: ^3.3.5
+  uuid: ^11.1.1
