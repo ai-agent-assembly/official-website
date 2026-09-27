@@ -35,7 +35,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: "0 3 * * 1"
+    - cron: '0 3 * * 1'
 
 # No paths filter, deliberately. A Dependabot pull request changes only a
 # manifest or a lockfile, and the whole point of this workflow is that such a
@@ -89,4 +89,4 @@ jobs:
       - name: Analyze
         uses: github/codeql-action/analyze@65216971a11ded447a6b76263d5a144519e5eee1 # codeql-bundle-v2.25.2
         with:
-          category: "/language:${{ matrix.language }}"
+          category: '/language:${{ matrix.language }}'
