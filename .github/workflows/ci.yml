@@ -64,6 +64,8 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Typecheck
         run: pnpm typecheck
+      - name: Public analytics privacy regressions
+        run: node --test scripts/public-analytics.test.mjs
 
   build:
     name: Build

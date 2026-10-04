@@ -32,6 +32,29 @@ const config: Config = {
     },
   },
 
+  // Self-managed bootstrap fixes privacy before gtag can emit automatic hits.
+  headTags: [
+    {
+      tagName: 'script',
+      attributes: {},
+      innerHTML: `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('set', {page_location: 'https://agent-assembly.com/', page_referrer: ''});
+      gtag('js', new Date());
+      gtag('config', 'G-EG3PY1X0CC', {anonymize_ip: true, send_page_view: false});
+    `,
+    },
+    {
+      tagName: 'script',
+      attributes: {
+        async: 'true',
+        src: 'https://www.googletagmanager.com/gtag/js?id=G-EG3PY1X0CC',
+      },
+    },
+  ],
+  clientModules: [require.resolve('./src/analytics/publicPageViews.ts')],
+
   presets: [
     [
       'classic',
@@ -51,7 +74,6 @@ const config: Config = {
           onUntruncatedBlogPosts: 'warn',
         },
         theme: {customCss: './src/css/custom.css'},
-        gtag: {trackingID: 'G-EG3PY1X0CC', anonymizeIP: true},
         sitemap: {
           /*
            * AAASM-5590. Each locale's build emits its own sitemap, so
