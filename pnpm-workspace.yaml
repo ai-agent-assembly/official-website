@@ -14,9 +14,9 @@
 #
 # Deliberately absent: image-size. Its advisories (2 high) have no patched
 # release -- 2.0.2 is the latest published version -- so it is handled by
-# alert dismissal, not by a floor. The same rule currently keeps `braces`
-# and `http-cache-semantics` out: their advisories name fixed versions that are
-# not published. HORO-1707 owns re-evaluation when upstream releases them.
+# alert dismissal, not by a floor. `braces` also has no published fixed
+# release. Dependabot reports no first-patched `http-cache-semantics` version;
+# HORO-1707 owns compatibility review of newer published releases.
 overrides:
   '@swc/html': ^1.15.47
   'brace-expansion@1': ^1.1.21
