@@ -1,3 +1,5 @@
+import {publicDestination, publicPageUrl} from './publicPage';
+
 /**
  * Shared analytics helper for the Agent Assembly product site.
  *
@@ -10,10 +12,9 @@
  * Site-wide invariant: every event fired from this bundle carries
  * `surface = 'product_site'`. Docs / Horonomy have their own surfaces.
  *
- * Consent posture: this helper only pushes to `window.dataLayer`. The
- * GTM container is the consent gate — with Consent Mode v2 configured
- * (analytics_storage default-denied), GA4 receives no hits until the
- * visitor grants consent. Same-hostname internal navigation is not
+ * This helper only queues events in `window.dataLayer`; the loaded
+ * analytics configuration controls delivery and consent. This helper
+ * does not establish a consent gate. Same-hostname internal navigation is not
  * tagged with UTM at the URL level (HORO-47 §5.2); UTM lives on
  * cross-hostname links only and is captured by GA4 as session source.
  *
@@ -90,7 +91,7 @@ function readStandardParams(): StandardParams {
   return {
     hostname: window.location.hostname,
     // Strip query + fragment — parameter dictionary §3.1 rule.
-    page_path: window.location.pathname,
+    page_path: new URL(publicPageUrl()).pathname,
     page_title: document.title,
     surface: 'product_site',
   };
@@ -102,10 +103,9 @@ function readStandardParams(): StandardParams {
  * Behavior:
  * - No-op on the server / during SSR (guarded by `typeof window`).
  * - Auto-fills `hostname`, `page_path`, `page_title`, `surface` from
- *   the current document. Callers can override any of these but must
- *   not carry PII (see event taxonomy §9).
- * - The GTM container decides whether the event actually reaches GA4
- *   based on the visitor's consent state.
+ *   the generated public document identity. Caller parameters cannot
+ *   override these fields; request queries and referrers are excluded.
+ * - The loaded analytics configuration controls event delivery.
  *
  * @param name  snake_case GA4 event name (taxonomy §2)
  * @param params event-specific parameters (taxonomy §3.2–§3.5)
@@ -115,10 +115,27 @@ export function trackEvent(name: string, params: TrackEventParams = {}): void {
     return;
   }
   window.dataLayer = window.dataLayer ?? [];
+  const allowed = new Set([
+    'cta_location',
+    'link_url',
+    'link_domain',
+    'target_product',
+    'command_type',
+    'role',
+    'team_size',
+    'deployment',
+    'section_id',
+  ]);
+  const safeParams = Object.fromEntries(
+    Object.entries(params).filter(([key]) => allowed.has(key)),
+  );
   const payload: DataLayerPayload = {
+    ...safeParams,
     event: name,
     ...readStandardParams(),
-    ...params,
+    page_location: publicPageUrl(),
+    page_referrer: '',
+    ...(params.link_url ? {link_url: publicDestination(params.link_url)} : {}),
   };
   window.dataLayer.push(payload);
 }
