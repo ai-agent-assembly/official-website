@@ -1,9 +1,15 @@
 name: Installer drift check
 
-# static/install.sh is a reviewed, immutable copy of the canonical installer in
-# ai-agent-assembly/agent-assembly (scripts/install-cli.sh). This gate fails if the
-# served copy's executable body drifts from the source — on PRs/pushes that touch
-# the copy, and weekly to catch drift introduced by upstream installer changes.
+# static/install.sh is a reviewed, immutable copy of the installer in
+# ai-agent-assembly/agent-assembly (scripts/install-cli.sh) as published in a
+# release. This gate fails if the served copy's executable body drifts from that
+# pinned release — on PRs/pushes that touch the copy, and weekly to detect
+# tampering or regression against the pinned tag.
+#
+# WHY pinned: the site serves the RELEASED installer, so it must not be compared
+# against unreleased upstream HEAD. Bump INSTALLER_SOURCE_REF and static/install.sh
+# in the SAME change, and only after the matching release is published and its
+# installer change has passed QA.
 
 on:
   pull_request:
@@ -20,12 +26,14 @@ permissions:
 jobs:
   drift:
     runs-on: ubuntu-latest
+    env:
+      INSTALLER_SOURCE_REF: v0.0.1-rc.7 # immutable release tag, never a branch
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - name: Compare served installer body against canonical source
+      - name: Compare served installer body against pinned release
         run: |
           set -euo pipefail
-          SRC_URL="https://raw.githubusercontent.com/ai-agent-assembly/agent-assembly/HEAD/scripts/install-cli.sh"
+          SRC_URL="https://raw.githubusercontent.com/ai-agent-assembly/agent-assembly/${INSTALLER_SOURCE_REF}/scripts/install-cli.sh"
           curl -sSfL --proto '=https' "$SRC_URL" -o /tmp/source-install.sh
           # The served copy = the canonical installer + a short provenance-note header.
           # Compare only the executable body (from `set -eu` onward), which must stay
@@ -37,7 +45,7 @@ jobs:
             exit 1
           fi
           if ! diff -u /tmp/source-body.sh /tmp/served-body.sh; then
-            echo "::error::static/install.sh body has drifted from agent-assembly scripts/install-cli.sh — re-sync the served copy."
+            echo "::error::static/install.sh body has drifted from agent-assembly scripts/install-cli.sh at ${INSTALLER_SOURCE_REF} — re-sync the served copy."
             exit 1
           fi
-          echo "OK: served installer body is byte-identical to the canonical source."
+          echo "OK: served installer body is byte-identical to agent-assembly scripts/install-cli.sh at ${INSTALLER_SOURCE_REF}."

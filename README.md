@@ -45,7 +45,8 @@ reads that file and rewrites:
 - A bounded `# BEGIN GENERATED: install-script-url` / `# END GENERATED`
   sentinel block near the top of `static/install.sh`. The executable body
   (from `set -eu` onward) is untouched — it is enforced byte-identical to the
-  canonical upstream installer by `installer-drift.yml`.
+  pinned release of the upstream installer (`INSTALLER_SOURCE_REF`) by
+  `installer-drift.yml`.
 
 To change a URL:
 
