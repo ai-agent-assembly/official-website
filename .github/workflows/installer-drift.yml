@@ -17,7 +17,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '17 6 * * 1' # Mondays — catch upstream install-cli.sh changes
+    - cron: '17 6 * * 1' # Mondays — re-verify the served copy against the pinned release (detects tampering/regression)
   workflow_dispatch:
 
 permissions:
